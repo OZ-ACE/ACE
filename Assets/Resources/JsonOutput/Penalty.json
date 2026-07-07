@@ -1,0 +1,16 @@
+[
+  {
+    "ID": "penalty_01",
+    "penaltyName": "녹내장",
+    "penaltyNameEn": "Glaucoma",
+    "triggerCondition": "공격 행동 2회 반복 시",
+    "effectDescription": "명중률 감소"
+  },
+  {
+    "ID": "penalty_02",
+    "penaltyName": "관절염",
+    "penaltyNameEn": "Arthritis",
+    "triggerCondition": "공격 행동 2회 반복 시",
+    "effectDescription": "공격력 감소"
+  }
+]

@@ -20,7 +20,9 @@ public class GameDataManager : SingletonBase<GameDataManager>
 
     public void LoadAllData()
     {
-        LoadData<Hero>("Hero");
+        LoadData<HeroBattleData>("HeroBattle");
+        LoadData<EnemyBattleData>("EnemyBattle");
+        LoadData<RoomData>("Room");
     }
 
     private void LoadData<T>(string table) where T : GameDataBase

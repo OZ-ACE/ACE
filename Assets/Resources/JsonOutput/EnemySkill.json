@@ -1,0 +1,86 @@
+[
+  {
+    "ID": "enemySkill_01_01",
+    "enemyId": "enemy_01",
+    "enemyName": "임시적01",
+    "skillName": "몸통박치기",
+    "skillNameEn": "Untextured Slam",
+    "skillType": "Attack",
+    "targetType": "Single",
+    "targetCount": 1,
+    "power": 9,
+    "skillDescription": "텍스처가 덜 입혀진 몸으로 그냥 부딪힘"
+  },
+  {
+    "ID": "enemySkill_02_01",
+    "enemyId": "enemy_02",
+    "enemyName": "임시적02",
+    "skillName": "대충펀치",
+    "skillNameEn": "Maybe Punch",
+    "skillType": "Attack",
+    "targetType": "Single",
+    "targetCount": 1,
+    "power": 8,
+    "skillDescription": "대충 만든 슬라임이라 펀치도 흐물흐물함"
+  },
+  {
+    "ID": "enemySkill_03_01",
+    "enemyId": "enemy_03",
+    "enemyName": "임시적03",
+    "skillName": "삐걱펀치",
+    "skillNameEn": "Rusty Punch",
+    "skillType": "Attack",
+    "targetType": "Single",
+    "targetCount": 1,
+    "power": 10,
+    "skillDescription": "관절 렌더링이 덜 돼서 삐걱거리며 팔을 휘두름"
+  },
+  {
+    "ID": "enemySkill_04_01",
+    "enemyId": "enemy_04",
+    "enemyName": "임시적04",
+    "skillName": "물어뜯기",
+    "skillNameEn": "Cheap Bite",
+    "skillType": "Attack",
+    "targetType": "Single",
+    "targetCount": 1,
+    "power": 9,
+    "skillDescription": "저예산 좀비라 이빨 모델링이 대충임"
+  },
+  {
+    "ID": "enemySkill_05_01",
+    "enemyId": "enemy_05",
+    "enemyName": "임시적05",
+    "skillName": "괴성지르기",
+    "skillNameEn": "Recycled Screech",
+    "skillType": "Attack",
+    "targetType": "Single",
+    "targetCount": 1,
+    "power": 7,
+    "skillDescription": "다른 게임에서 가져온 듯한 효과음으로 괴성을 지름"
+  },
+  {
+    "ID": "enemySkill_06_01",
+    "enemyId": "enemy_06",
+    "enemyName": "임시적06",
+    "skillName": "휘두르기",
+    "skillNameEn": "Wobbly Whip",
+    "skillType": "Attack",
+    "targetType": "Single",
+    "targetCount": 1,
+    "power": 11,
+    "skillDescription": "물리 연산이 이상해서 촉수가 제멋대로 흐느적거림"
+  },
+  {
+    "ID": "enemySkill_07_01",
+    "enemyId": "enemy_07",
+    "enemyName": "임시적07",
+    "skillName": "레이저쏘기",
+    "skillNameEn": "Fake Laser",
+    "skillType": "Attack",
+    "targetType": "Single",
+    "targetCount": 1,
+    "power": 12,
+    "skillDescription": "눈에서 나가는 레이저인데 딱 봐도 이펙트가 싸구려임"
+  }
+]
