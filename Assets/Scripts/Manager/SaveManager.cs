@@ -9,7 +9,18 @@ public class SaveManager : SingletonBase<SaveManager>
     public int CurrentSlotIndex { get; private set; }
     public HashSet<int> SlotIndex { get; private set; } = new HashSet<int>();
 
-    public Action OnClearSave;
+    protected override void Awake()
+    {
+        SlotIndex.Clear();
+
+        for (int i = 0; i < 100; i++)
+        {
+            if (HasSaveFile(i))
+            {
+                SlotIndex.Add(i);
+            }
+        }
+    }
 
     private string GetPath(int slotIndex)
     {
@@ -18,8 +29,9 @@ public class SaveManager : SingletonBase<SaveManager>
 
     public void RequestSaveData(int slotIndex, PlayerModel data)
     {
-        string json = json = JsonUtility.ToJson(data, true);
+        string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(GetPath(slotIndex), json);
+        SlotIndex.Add(slotIndex);
     }
 
     public PlayerModel RequestLoadData(int slotIndex)
@@ -38,6 +50,21 @@ public class SaveManager : SingletonBase<SaveManager>
             PlayerModel data = GetDefaultData();
             return data;
         }
+    }
+
+    public bool RequestDeleteData(int slotIndex)
+    {
+        string path = GetPath(slotIndex);
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            SlotIndex.Remove(slotIndex);
+
+            return true;
+        }
+
+        return false;
     }
 
     public PlayerModel GetDefaultData()
