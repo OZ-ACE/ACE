@@ -12,7 +12,10 @@ public enum UIRootType
 
 public enum UIType
 {
-    None
+    None,
+    SaveUI,
+    DialogueUI,
+    TycoonUI
 }
 
 public static class UIExtension
@@ -27,4 +30,14 @@ public static class UIExtension
 
 
     // 이 밑에다가 UI별로 Open 및 Close 함수 작성해주세요.
+
+    public static void OpenSaveUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.Main, UIType.SaveUI);
+    }
+
+    public static void CloseSaveUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.SaveUI);
+    }
 }
