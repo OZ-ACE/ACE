@@ -8,7 +8,8 @@
 /[Uu]ser[Ss]ettings/
 /[Mm]emory[Cc]aptures/
 /[Jj]son[Cc]onverter/
-/[Tt]hird[Pp]arty/
+.history/
+Assets/ThirdParty
 
 # AssetStore 패키지는 프로젝트에 포함되지만, UPM 캐시는 제외됩니다.
 /[Pp]ackages/*
