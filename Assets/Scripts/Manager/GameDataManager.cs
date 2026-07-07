@@ -20,7 +20,8 @@ public class GameDataManager : SingletonBase<GameDataManager>
 
     public void LoadAllData()
     {
-        LoadData<Hero>("Hero");
+        LoadData<HeroBattleData>("HeroBattle");
+        LoadData<EnemyBattleData>("EnemyBattle");
         LoadData<RoomData>("Room");
     }
 
