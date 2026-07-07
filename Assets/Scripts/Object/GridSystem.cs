@@ -36,7 +36,7 @@ public class GridSystem
     }
 
 
-    public List<GridCoord> GetOccupiedCoords(GridCoord originCoord, Vector2Int Size)
+    public List<GridCoord> GetOccupiedCoords(GridCoord originCoord, Vector2Int size)
     {
         var result = new List<GridCoord>();
         for (int c = 0; c < size.x; c++)

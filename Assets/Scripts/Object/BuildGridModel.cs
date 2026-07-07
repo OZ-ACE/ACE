@@ -60,7 +60,7 @@ public class BuildGridModel
 
         var added = new HashSet<PlacedRoomData>();
 
-        foreach (var room in _Rooms.Values)
+        foreach (var room in _rooms.Values)
         {
             if (added.Add(room))
             {
@@ -84,7 +84,7 @@ public class BuildGridModel
 
         foreach (var room in data.PlacedRooms)
         {
-            RoomData roomData = GameDataManager.Instance.GetData<RoomData>(room.RoomId);
+            RoomData roomData = GameDataManager.Inst.GetData<RoomData>(room.RoomId);
             Vector2Int size = (roomData != null) ? roomData.GetSize() : Vector2Int.one;
             AddRoom(room, grid.GetOccupiedCoords(room.Origin, size));
 
