@@ -1,0 +1,20 @@
+[
+  {
+    "itemId": "item_01",
+    "itemName": "돋보기안경",
+    "itemNameEn": "Glasses",
+    "targetPenaltyId": "penalty_01",
+    "targetPenaltyName": "녹내장",
+    "energyCost": 1,
+    "stockCount": 2
+  },
+  {
+    "itemId": "item_02",
+    "itemName": "파스",
+    "itemNameEn": "Patch",
+    "targetPenaltyId": "penalty_02",
+    "targetPenaltyName": "관절염",
+    "energyCost": 2,
+    "stockCount": 2
+  }
+]
