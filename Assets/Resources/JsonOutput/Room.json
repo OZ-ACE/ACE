@@ -1,17 +1,17 @@
 [
   {
-    "Id": "Room_0001",
+    "ID": "Room_0001",
     "Name": "침실",
     "Description": "잠자는 방",
     "SizeW": 2,
     "SizeH": 2,
     "BuildCost": 100,
-    "RequiredCellType": "Earth ",
+    "RequiredCellType": "Earth",
     "EffectType": "Sleep",
     "PrefabPath": "Prefabs/Room/Room_0001"
   },
   {
-    "Id": "Room_0002",
+    "ID": "Room_0002",
     "Name": "정원",
     "Description": "지상 정원",
     "SizeW": 2,
