@@ -1,36 +1,36 @@
 [
   {
-    "heroId": "hero_01",
+    "ID": "hero_01",
     "heroName": "캡틴물렁카",
     "heroNameEn": "Captain Mushmerica"
   },
   {
-    "heroId": "hero_02",
+    "ID": "hero_02",
     "heroName": "오십위도우",
     "heroNameEn": "Frozen Widow"
   },
   {
-    "heroId": "hero_03",
+    "ID": "hero_03",
     "heroName": "호크아이고",
     "heroNameEn": "Squinteye"
   },
   {
-    "heroId": "hero_04",
+    "ID": "hero_04",
     "heroName": "스칼렛트위치",
     "heroNameEn": "Scarlet Twitch"
   },
   {
-    "heroId": "hero_05",
+    "ID": "hero_05",
     "heroName": "또르르",
     "heroNameEn": "Tinnitor"
   },
   {
-    "heroId": "hero_06",
+    "ID": "hero_06",
     "heroName": "고목영감",
     "heroNameEn": "Groan"
   },
   {
-    "heroId": "hero_07",
+    "ID": "hero_07",
     "heroName": "할매프로스트",
     "heroNameEn": "Granny Frostbite"
   }

@@ -1,6 +1,6 @@
 [
   {
-    "itemId": "item_01",
+    "ID": "item_01",
     "itemName": "돋보기안경",
     "itemNameEn": "Glasses",
     "targetPenaltyId": "penalty_01",
@@ -9,7 +9,7 @@
     "stockCount": 2
   },
   {
-    "itemId": "item_02",
+    "ID": "item_02",
     "itemName": "파스",
     "itemNameEn": "Patch",
     "targetPenaltyId": "penalty_02",

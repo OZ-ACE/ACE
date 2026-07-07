@@ -1,6 +1,6 @@
 [
   {
-    "skillId": "heroSkill_01_01",
+    "ID": "heroSkill_01_01",
     "heroId": "hero_01",
     "heroName": "캡틴물렁카",
     "skillName": "뱃살튕기기",
@@ -12,7 +12,7 @@
     "skillDescription": "물렁한 뱃살을 튕겨 거대한 진동을 줌"
   },
   {
-    "skillId": "heroSkill_01_02",
+    "ID": "heroSkill_01_02",
     "heroId": "hero_01",
     "heroName": "캡틴물렁카",
     "skillName": "라떼는말이야",
@@ -24,7 +24,7 @@
     "skillDescription": "옛날 활약상을 늘어놓으며 팀 사기를 올리는데, 본인은 그게 진짜 있었던 일인지 지어낸 건지도 헷갈려 함"
   },
   {
-    "skillId": "heroSkill_01_03",
+    "ID": "heroSkill_01_03",
     "heroId": "hero_01",
     "heroName": "캡틴물렁카",
     "skillName": "럭키방패",
@@ -36,7 +36,7 @@
     "skillDescription": "방패를 던지지만 손이 떨려서 정밀 조준이 안 되고, 대신 이리저리 튕기다 운 좋게 적 2명을 맞힘"
   },
   {
-    "skillId": "heroSkill_02_01",
+    "ID": "heroSkill_02_01",
     "heroId": "hero_02",
     "heroName": "오십위도우",
     "skillName": "오십견킥",
@@ -48,7 +48,7 @@
     "skillDescription": "오십견 때문에 다리가 잘 안 올라가 낮게 걷어참"
   },
   {
-    "skillId": "heroSkill_03_01",
+    "ID": "heroSkill_03_01",
     "heroId": "hero_03",
     "heroName": "호크아이고",
     "skillName": "감으로쏘기",
@@ -60,7 +60,7 @@
     "skillDescription": "눈이 침침해져 감으로 활을 쏨"
   },
   {
-    "skillId": "heroSkill_04_01",
+    "ID": "heroSkill_04_01",
     "heroId": "hero_04",
     "heroName": "스칼렛트위치",
     "skillName": "힘껏노려보기",
@@ -72,7 +72,7 @@
     "skillDescription": "부들부들 떨며 눈에 힘을 주면서 상대를 노려봄"
   },
   {
-    "skillId": "heroSkill_05_01",
+    "ID": "heroSkill_05_01",
     "heroId": "hero_05",
     "heroName": "또르르",
     "skillName": "망치날라가유",
@@ -84,7 +84,7 @@
     "skillDescription": "망치를 던지려다 현기증이 나서 그만 망치가 미끄러져 날아감"
   },
   {
-    "skillId": "heroSkill_06_01",
+    "ID": "heroSkill_06_01",
     "heroId": "hero_06",
     "heroName": "고목영감",
     "skillName": "뿌리감기",
@@ -96,7 +96,7 @@
     "skillDescription": "뿌리로 아군을 감싸 보호하는데, 관절이 뻣뻣해져 한번 감으면 안 풀리는 튼튼한 방어막이 됨"
   },
   {
-    "skillId": "heroSkill_07_01",
+    "ID": "heroSkill_07_01",
     "heroId": "hero_07",
     "heroName": "할매프로스트",
     "skillName": "아몬드가죽으면",
