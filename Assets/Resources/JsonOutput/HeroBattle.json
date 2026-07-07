@@ -1,6 +1,6 @@
 [
   {
-    "heroId": "hero_01",
+    "ID": "hero_01",
     "position": "Attack",
     "maxHp": 100,
     "speed": 30,
@@ -8,7 +8,7 @@
     "defensePower": 9
   },
   {
-    "heroId": "hero_02",
+    "ID": "hero_02",
     "position": "Attack",
     "maxHp": 90,
     "speed": 50,
@@ -16,7 +16,7 @@
     "defensePower": 7
   },
   {
-    "heroId": "hero_03",
+    "ID": "hero_03",
     "position": "Attack",
     "maxHp": 80,
     "speed": 60,
@@ -24,7 +24,7 @@
     "defensePower": 5
   },
   {
-    "heroId": "hero_04",
+    "ID": "hero_04",
     "position": "Support",
     "maxHp": 85,
     "speed": 35,
@@ -32,7 +32,7 @@
     "defensePower": 6
   },
   {
-    "heroId": "hero_05",
+    "ID": "hero_05",
     "position": "Attack",
     "maxHp": 95,
     "speed": 45,
@@ -40,7 +40,7 @@
     "defensePower": 7
   },
   {
-    "heroId": "hero_06",
+    "ID": "hero_06",
     "position": "Support",
     "maxHp": 110,
     "speed": 20,
@@ -48,7 +48,7 @@
     "defensePower": 12
   },
   {
-    "heroId": "hero_07",
+    "ID": "hero_07",
     "position": "Attack",
     "maxHp": 95,
     "speed": 35,

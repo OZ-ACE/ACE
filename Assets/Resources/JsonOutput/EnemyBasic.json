@@ -1,36 +1,36 @@
 [
   {
-    "enemyId": "enemy_01",
+    "ID": "enemy_01",
     "enemyName": "임시적01",
     "enemyNameEn": "TempEnemy01"
   },
   {
-    "enemyId": "enemy_02",
+    "ID": "enemy_02",
     "enemyName": "임시적02",
     "enemyNameEn": "TempEnemy02"
   },
   {
-    "enemyId": "enemy_03",
+    "ID": "enemy_03",
     "enemyName": "임시적03",
     "enemyNameEn": "TempEnemy03"
   },
   {
-    "enemyId": "enemy_04",
+    "ID": "enemy_04",
     "enemyName": "임시적04",
     "enemyNameEn": "TempEnemy04"
   },
   {
-    "enemyId": "enemy_05",
+    "ID": "enemy_05",
     "enemyName": "임시적05",
     "enemyNameEn": "TempEnemy05"
   },
   {
-    "enemyId": "enemy_06",
+    "ID": "enemy_06",
     "enemyName": "임시적06",
     "enemyNameEn": "TempEnemy06"
   },
   {
-    "enemyId": "enemy_07",
+    "ID": "enemy_07",
     "enemyName": "임시적07",
     "enemyNameEn": "TempEnemy07"
   }
