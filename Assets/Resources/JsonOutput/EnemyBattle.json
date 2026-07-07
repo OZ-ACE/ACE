@@ -1,0 +1,51 @@
+[
+  {
+    "enemyId": "enemy_01",
+    "maxHp": 100,
+    "speed": 30,
+    "attackPower": 12,
+    "defensePower": 9
+  },
+  {
+    "enemyId": "enemy_02",
+    "maxHp": 90,
+    "speed": 50,
+    "attackPower": 8,
+    "defensePower": 7
+  },
+  {
+    "enemyId": "enemy_03",
+    "maxHp": 80,
+    "speed": 60,
+    "attackPower": 9,
+    "defensePower": 5
+  },
+  {
+    "enemyId": "enemy_04",
+    "maxHp": 85,
+    "speed": 35,
+    "attackPower": 14,
+    "defensePower": 6
+  },
+  {
+    "enemyId": "enemy_05",
+    "maxHp": 95,
+    "speed": 45,
+    "attackPower": 10,
+    "defensePower": 7
+  },
+  {
+    "enemyId": "enemy_06",
+    "maxHp": 110,
+    "speed": 20,
+    "attackPower": 6,
+    "defensePower": 12
+  },
+  {
+    "enemyId": "enemy_07",
+    "maxHp": 95,
+    "speed": 35,
+    "attackPower": 11,
+    "defensePower": 10
+  }
+]
