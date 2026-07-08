@@ -32,7 +32,7 @@ public class UIManager : SingletonBase<UIManager>
         return openedUI;
     }
 
-    public void CloseUI(UIRootType root, UIType type)
+    public void CloseUI(UIType type)
     {
         if (_openedUI.Contains(type) == true)
         {
