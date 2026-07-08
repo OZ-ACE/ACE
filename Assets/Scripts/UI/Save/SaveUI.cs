@@ -11,18 +11,23 @@ public class SaveUI : UIBase
     [SerializeField] private GameObject Text_InfoText;
 
     private SaveViewModel _saveVM;
-    private HashSet<int> _createdSlot = new HashSet<int>();
+
+    private List<SaveSlot> _saveSlots = new List<SaveSlot>();
 
     private void Awake()
     {
         Button_Close.onClick.AddListener(OnClickClose);
+
+        _saveVM = new SaveViewModel();
+        BindViewModel(_saveVM);
     }
 
     public void BindViewModel(SaveViewModel saveVM)
     {
         _saveVM = saveVM;
         _saveVM.PropertyChanged += OnSavePropertyChanged;
-        _saveVM.InvokeOnceOnInit();
+
+        _saveVM.RefreshActiveSlots();
     }
 
     private void OnDestroy()
@@ -45,27 +50,34 @@ public class SaveUI : UIBase
 
     private async UniTask RefreshSlotViews()
     {
-        ClearAllSlot();
+        int requiredSlot = _saveVM.ActiveSlotIndex.Count;
 
-        foreach (int slotIndex in _saveVM.ActiveSlotIndex)
+        if (_saveSlots.Count < requiredSlot)
         {
-            if (_createdSlot.Contains(slotIndex) == false)
+            int createCount = requiredSlot - _saveSlots.Count;
+
+            for (int i = 0; i < createCount; i++)
             {
                 GameObject prefab = await ResourceManager.Inst.InstantiateAsync("Prefabs/UI/SaveSlot", Transform_SlotParent);
+                _saveSlots.Add(prefab.GetComponent<SaveSlot>());
+            }
+        }
+
+        for (int i = 0; i < _saveSlots.Count; i++)
+        {
+            if (i < requiredSlot)
+            {
+                int slotIndex = _saveVM.ActiveSlotIndex[i];
+                _saveSlots[i].gameObject.SetActive(true);
+                _saveSlots[i].BindSlot(_saveVM, slotIndex);
+            }
+            else
+            {
+                _saveSlots[i].gameObject.SetActive(false);
             }
         }
 
         UpdateInfoText();
-    }
-
-    private void ClearAllSlot()
-    {
-        foreach (Transform child in Transform_SlotParent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        _createdSlot.Clear();
     }
 
     private void UpdateInfoText()

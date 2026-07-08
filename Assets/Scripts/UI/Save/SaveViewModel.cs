@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
 
 public class SaveViewModel : ViewModelBase
 {
@@ -22,11 +20,36 @@ public class SaveViewModel : ViewModelBase
 
     public void InvokeOnceOnInit()
     {
-        OnPropertyChanged(nameof(ActiveSlotIndex));
+        RefreshActiveSlots();
     }
 
     public PlayerModel GetPlayerModel(int slotIndex)
     {
         return SaveManager.Inst.RequestLoadData(slotIndex);
+    }
+
+    public void RequestDeleteSlot(int slotIndex)
+    {
+        SaveManager.Inst.RequestDeleteData(slotIndex);
+
+        RefreshActiveSlots();
+    }
+
+    public void RefreshActiveSlots()
+    {
+        List<int> updatedSlot = new List<int>();
+
+        foreach (int i in SaveManager.Inst.SlotIndex)
+        {
+            updatedSlot.Add(i);
+        }
+
+        ActiveSlotIndex = updatedSlot;
+    }
+
+    // 나중에 연결
+    public void RequestConfirmSlot(int slotIndex)
+    {
+
     }
 }

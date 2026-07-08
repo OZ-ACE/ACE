@@ -44,11 +44,11 @@ public class SaveSlot : ViewBase
 
     private void OnClickDelete()
     {
-        SaveService.Inst.RequestDeleteSlot(_slotIndex);
+        _saveVM.RequestDeleteSlot(_slotIndex);
     }
 
     private void OnClickConfirm()
     {
-        SaveService.Inst.RequestConfirmSlot(_slotIndex);
+        _saveVM.RequestConfirmSlot(_slotIndex);
     }
 }

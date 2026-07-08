@@ -1,0 +1,191 @@
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.ComponentModel;
+using System.Threading;
+using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class DialogueUI : UIBase
+{
+    [SerializeField] private Image Image_Background;
+    [SerializeField] private Button Button_Dialogue;
+    [SerializeField] private Button Button_Skip;
+    [SerializeField] private Toggle Toggle_Auto;
+    [SerializeField] private TextMeshProUGUI Text_Content;
+    [SerializeField] private TextMeshProUGUI Text_Speaker;
+    [SerializeField] private Image Image_NextArrow;
+    [SerializeField] private Image Image_Speaker;
+
+    private bool _isTyping = false;
+    private float _typingWaitTime = 0.03f;
+    private bool _isAuto = false;
+    private float _autoWaitTime = 0.2f;
+    private CancellationTokenSource _typingToken;
+
+    private DialogueViewModel _dialogueVM;
+
+    private void Awake()
+    {
+        Button_Dialogue.onClick.AddListener(OnClickDialogue);
+        Toggle_Auto.isOn = _isAuto;
+        Toggle_Auto.onValueChanged.AddListener(OnClickAuto);
+        Button_Skip.onClick.AddListener(OnClickSkip);
+    }
+
+    private void OnEnable()
+    {
+        if (_dialogueVM == null)
+        {
+            _dialogueVM = new DialogueViewModel();
+            BindViewModel(_dialogueVM);
+        }
+
+        _dialogueVM.UpdateState(GameManager.Inst.CurrentDialogueID);
+    }
+
+    public void BindViewModel(DialogueViewModel dialogueVM)
+    {
+        _dialogueVM = dialogueVM;
+        _dialogueVM.PropertyChanged += OnViewModelPropertyChanged;
+        _dialogueVM.InvokeOnceOnInit();
+    }
+
+    private void OnDestroy()
+    {
+        CancelTyping();
+
+        if (_dialogueVM != null)
+        {
+            _dialogueVM.PropertyChanged -= OnViewModelPropertyChanged;
+        }
+    }
+
+    private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(DialogueViewModel.Speaker):
+                Text_Speaker.text = _dialogueVM.Speaker;
+                break;
+            case nameof(DialogueViewModel.IsSpeakerActive):
+                Image_Speaker.gameObject.SetActive(_dialogueVM.IsSpeakerActive);
+                break;
+            case nameof(DialogueViewModel.Background):
+                SetBackground(_dialogueVM.Background).Forget();
+                break;
+            case nameof(DialogueViewModel.BGM):
+                //PlayBGM();
+                break;
+            case nameof(DialogueViewModel.SFX):
+                //PlaySFX();
+                break;
+            case nameof(DialogueViewModel.IsNextArrow):
+                Image_NextArrow.gameObject.SetActive(_dialogueVM.IsNextArrow);
+                break;
+            case nameof(DialogueViewModel.CurrentDialogueID):
+                string content = GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).Content;
+                Typing(content).Forget();
+                break;
+        }
+    }
+
+    private void OnClickDialogue()
+    {
+        if (_isTyping)
+        {
+            CancelTyping();
+            _isTyping = false;
+            Text_Content.maxVisibleCharacters = Text_Content.text.Length;
+            _dialogueVM.IsNextArrow = true;
+            return;
+        }
+
+        _dialogueVM.RequestNext();
+    }
+
+    private void OnClickAuto(bool isOn)
+    {
+        if (isOn)
+        {
+            _isAuto = true;
+
+            if (!_isTyping)
+            {
+                _dialogueVM.RequestNext();
+            }
+        }
+        else
+        {
+            _isAuto = false;
+        }
+    }
+
+    private void OnClickSkip()
+    {
+        CancelTyping();
+
+        string nextID = GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).NextID;
+
+        foreach (var data in GameDataManager.Inst.GetDataList<Dialogue>())
+        {
+            if (nextID == "0")
+            {
+                break;
+            }
+
+            GameManager.Inst.SetDialogueID(nextID);
+            nextID = GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).NextID;
+        }
+;
+        Typing(GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).Content).Forget();
+    }
+
+    private async UniTask Typing(string content)
+    {
+        CancelTyping();
+        _typingToken = new CancellationTokenSource();
+
+        _isTyping = true;
+        Text_Content.text = content;
+        Text_Content.maxVisibleCharacters = 0;
+
+        for (int i = 0; i < content.Length; i++)
+        {
+            Text_Content.maxVisibleCharacters = i;
+
+            await UniTask.Delay(TimeSpan.FromSeconds(_typingWaitTime), cancellationToken: _typingToken.Token);
+        }
+
+        _isTyping = false;
+        _dialogueVM.IsNextArrow = true;
+
+        if (_isAuto)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(_autoWaitTime), cancellationToken: _typingToken.Token);
+
+            _dialogueVM.RequestNext();
+        }
+    }
+
+    private void CancelTyping()
+    {
+        if (_typingToken != null)
+        {
+            _typingToken.Cancel();
+            _typingToken.Dispose();
+            _typingToken = null;
+        }
+    }
+
+    private async UniTask SetBackground(string background)
+    {
+        if (string.IsNullOrEmpty(background))
+        {
+            return;
+        }
+
+        Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/{background}");
+    }
+}
