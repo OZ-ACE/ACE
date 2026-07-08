@@ -17,6 +17,15 @@ public class BuildGridViewModel : ViewModelBase
         _buildGridModel = buildGridModel;
     }
 
+    public void InitGrid(GridBounds bounds)
+    {
+        _buildGridModel.SetBounds(bounds);
+    }
+
+
+
+
+
     //뷰가 바인딩 직후 1회 호출
     public void InvokeOnceOnInit()
     {
