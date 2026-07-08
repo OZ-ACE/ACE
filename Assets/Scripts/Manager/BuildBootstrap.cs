@@ -41,7 +41,8 @@ public class BuildBootstrap : MonoBehaviour
         Build_GridView.Bind(viewModel);
 
  
-        viewModel.EnterBuildMode();       //삭제하자
+        viewModel.EnterBuildMode();       //테스트 후에 삭제하자
+        viewModel.SelectRoom("Room_0001"); //이거도 테스트 후에 삭제하자
 
         Debug.Log("[BuildBootstrap] 건설 시스템 배선 완료 + 건설모드 진입");
     }

@@ -18,18 +18,25 @@ public class BuildGridView : ViewBase
     [Header("색상")]
     [SerializeField] private Color _normalColor = new Color(1f, 1f, 1f, 0.2f);
     [SerializeField] private Color _hoverColor = new Color(1f, 1f, 0f, 0.5f);
+    [SerializeField] private Color _ghostValidColor = new Color(0f, 1f, 0f, 0.5f);   // 배치 가능(초록)
+    [SerializeField] private Color _ghostInvalidColor = new Color(1f, 0f, 0f, 0.5f); // 배치 불가(빨강)
+    [SerializeField] private Color _placedColor = new Color(0.3f, 0.5f, 1f, 0.8f);   // 배치된 방(파랑)
 
 
     private BuildGridViewModel _viewModel;
-
     private Camera _mainCamera;
 
 
     private Dictionary<GridCoord, SpriteRenderer> _cellRenderers = new Dictionary<GridCoord, SpriteRenderer>();
     private bool _isOverlayCreated;
 
+
     private GridCoord _lastHoverCoord;
     private bool _hasHover;
+
+
+    private GameObject _ghostObject;
+    private SpriteRenderer _ghostRenderer;
 
 
     public void Bind(BuildGridViewModel viewModel)
@@ -37,10 +44,12 @@ public class BuildGridView : ViewBase
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            _viewModel.OnPlaceRoom -= OnPlaceRoom;
         }
 
         _viewModel = viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        _viewModel.OnPlaceRoom += OnPlaceRoom;
 
         _viewModel.InvokeOnceOnInit();
     }
@@ -55,6 +64,8 @@ public class BuildGridView : ViewBase
         if (_viewModel != null )
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            _viewModel.OnPlaceRoom -= OnPlaceRoom;
+
         }
     }
 
@@ -64,9 +75,14 @@ public class BuildGridView : ViewBase
         {
             ApplyBuildMode(_viewModel.IsBuildMode);
         }
+        else if (e.PropertyName == nameof(BuildGridViewModel.SelectedRoomId))
+        {
+            ApplySelectedRoom();
+        }
     }
 
-    private void ApplyBuildMode(bool isBuildMode)
+
+    private void ApplyBuildMode (bool isBuildMode)
     {
         if (isBuildMode == true)
         {
@@ -74,14 +90,28 @@ public class BuildGridView : ViewBase
             {
                 CreateGridOverlay();
             }
-
             SetOverlayActive(true);
         }
         else
         {
             SetOverlayActive(false);
+            HideGhost();
         }
     }
+
+    private void ApplySelectedRoom()
+    {
+        RoomData room = _viewModel.GetSelectedRoomData();
+        if (room == null)
+        {
+            HideGhost();
+            return;
+        }
+        PrepareGhost(room);
+    }
+
+
+
 
     //격자 범위만큼 셀 프리팹을 깔아 오버레이 생성
     private void CreateGridOverlay()
@@ -130,23 +160,19 @@ public class BuildGridView : ViewBase
         }
 
         UpdateHover();
-
+        UpdateGhost();
+        UpdateClick();
     }
 
 
     //마우스가 올라간 칸을 하이라이트
     private void UpdateHover()
     {
-        if (_mainCamera == null || Mouse.current == null)
+        GridCoord coord;
+        if (TryGetMouseCoord(out coord) == false)
         {
             return;
         }
-
-        Vector2 mousePos = Mouse.current.position.ReadValue();
-        Vector3 mouseScreen = new Vector3(mousePos.x, mousePos.y, -_mainCamera.transform.position.z);
-        Vector3 mouseWorld = _mainCamera.ScreenToWorldPoint(mouseScreen);
-
-        GridCoord coord = _viewModel.GridSystem.GetCoord(mouseWorld);
 
         if (_hasHover && coord == _lastHoverCoord)
         {
@@ -173,4 +199,140 @@ public class BuildGridView : ViewBase
         }
         _hasHover = false;
     }
+
+    // 고스트 준비/갱신/숨김
+    private void PrepareGhost(RoomData room)
+    {
+        if (_ghostObject == null)
+        {
+            _ghostObject = Instantiate(Prefab_Cell, Vector3.zero, Quaternion.identity, this.transform);
+            _ghostObject.name = "Ghost";
+            _ghostRenderer = _ghostObject.GetComponent<SpriteRenderer>();
+        }
+
+        Vector2Int size = room.GetSize();
+        _ghostObject.transform.localScale = new Vector3(size.x, size.y, 1f);
+        _ghostObject.SetActive(true);
+    }
+    private void UpdateGhost()
+    {
+        if (_ghostObject == null || _ghostObject.activeSelf == false)
+        {
+            return;
+        }
+
+        GridCoord coord;
+        if (TryGetMouseCoord(out coord) == false)
+        {
+            return;
+        }
+
+        RoomData room = _viewModel.GetSelectedRoomData();
+        if (room == null)
+        {
+            HideGhost();
+            return;
+        }
+
+        Vector2Int size = room.GetSize();
+        GridSystem grid = _viewModel.GridSystem;
+        Vector3 originWorld = grid.GetWorldPosition(coord);
+        float offsetX = (size.x - 1) * 0.5f * grid.CellWidth;
+        float offsetY = (size.y - 1) * 0.5f * grid.CellHeight;
+        _ghostObject.transform.position = new Vector3(originWorld.x + offsetX, originWorld.y + offsetY, 0f);
+
+        PlacementResult result = _viewModel.CheckSelectedRoomPlaceable(coord);
+        if (_ghostRenderer != null)
+        {
+            _ghostRenderer.color = (result == PlacementResult.Success) ? _ghostValidColor : _ghostInvalidColor;
+        }
+    }
+    private void HideGhost()
+    {
+        if (_ghostObject != null)
+        {
+            _ghostObject.SetActive(false);
+        }
+    }
+
+
+
+    // 클릭 배치
+    private void UpdateClick()
+    {
+        if (Mouse.current == null)
+        {
+            return;
+        }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame == false)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_viewModel.SelectedRoomId) == true)
+        {
+            return;
+        }
+
+        GridCoord coord;
+        if (TryGetMouseCoord(out coord) == false)
+        {
+            return;
+        }
+
+        PlacementResult result = _viewModel.TryPlaceRoom(_viewModel.SelectedRoomId, coord);
+        if (result != PlacementResult.Success)
+        {
+            Debug.Log($"[BuildGridView] 배치 실패: {result}");
+        }
+    }
+
+
+    // 배치 성공 시 그 자리에 방 표시
+    private void OnPlaceRoom(PlacedRoomData placed)
+    {
+        RoomData room = GameDataManager.Inst.GetData<RoomData>(placed.RoomId);
+        if (room == null)
+        {
+            return;
+        }
+
+        Vector2Int size = room.GetSize();
+        GridSystem grid = _viewModel.GridSystem;
+        Vector3 originWorld = grid.GetWorldPosition(placed.Origin);
+        float offsetX = (size.x - 1) * 0.5f * grid.CellWidth;
+        float offsetY = (size.y - 1) * 0.5f * grid.CellHeight;
+
+        GameObject roomObj = Instantiate(Prefab_Cell, this.transform);
+        roomObj.name = $"Room_{placed.RoomId}_{placed.Origin}";
+        roomObj.transform.position = new Vector3(originWorld.x + offsetX, originWorld.y + offsetY, 0f);
+        roomObj.transform.localScale = new Vector3(size.x, size.y, 1f);
+
+        SpriteRenderer renderer = roomObj.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.color = _placedColor;
+        }
+    }
+
+
+    // 공통: 마우스 셀 좌표
+    private bool TryGetMouseCoord(out GridCoord coord)
+    {
+        coord = default;
+        if (_mainCamera == null || Mouse.current == null)
+        {
+            return false;
+        }
+
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Vector3 mouseScreen = new Vector3(mousePos.x, mousePos.y, -_mainCamera.transform.position.z);
+        Vector3 mouseWorld = _mainCamera.ScreenToWorldPoint(mouseScreen);
+
+        coord = _viewModel.GridSystem.GetCoord(mouseWorld);
+        return true;
+    }
+
+
 }

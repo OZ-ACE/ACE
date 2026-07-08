@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 
 
 //Model 역할 + ViewModel 역할
@@ -7,6 +9,7 @@ public class BuildGridViewModel : ViewModelBase
 {
     private readonly GridSystem _gridSystem;
     private readonly BuildGridModel _buildGridModel;
+    public event Action<PlacedRoomData> OnPlaceRoom;
 
     public GridSystem GridSystem { get { return _gridSystem; } }
     public BuildGridModel BuildGridModel { get { return _buildGridModel; } }
@@ -21,9 +24,6 @@ public class BuildGridViewModel : ViewModelBase
     {
         _buildGridModel.SetBounds(bounds);
     }
-
-
-
 
 
     //뷰가 바인딩 직후 1회 호출
@@ -62,6 +62,31 @@ public class BuildGridViewModel : ViewModelBase
         }
     }
 
+
+
+    //방 크기·타입 조회 헬퍼
+    public RoomData GetSelectedRoomData()
+    {
+        if (string.IsNullOrEmpty(_selectedRoomId) == true)
+        {
+            return null;
+        }
+        return GameDataManager.Inst.GetData<RoomData>(SelectedRoomId);
+    }
+    public PlacementResult CheckSelectedRoomPlaceable(GridCoord originCoord)
+    {
+        RoomData room = GetSelectedRoomData();
+        if (room == null)
+        {
+            return PlacementResult.WrongCellType;
+        }
+        return _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem);
+    }
+
+
+
+
+
     //------
     //뷰가 호출하는 명령들
     //------
@@ -98,20 +123,23 @@ public class BuildGridViewModel : ViewModelBase
         Vector2Int size = roomData.GetSize();
         CellType requiredType = roomData.GetRequiredCellType();
 
-        // 1) 판정
         PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, size, requiredType, _gridSystem);
         if (result != PlacementResult.Success)
         {
             return result;
         }
 
-        // 2) 배치 등록
         PlacedRoomData placed = new PlacedRoomData();
         placed.RoomId = roomId;
         placed.Origin = originCoord;
 
         List<GridCoord> coords = _gridSystem.GetOccupiedCoords(originCoord, size);
         _buildGridModel.AddRoom(placed, coords);
+
+        if (OnPlaceRoom != null)
+        {
+            OnPlaceRoom.Invoke(placed);
+        }
 
         Debug.Log($"[BuildGridViewModel] 방 배치 성공: {roomId} @ {originCoord}");
         return PlacementResult.Success;
