@@ -1,16 +1,57 @@
-using UnityEngine;
+﻿using System.Collections.Generic;
 
-public class InventoryViewModel : MonoBehaviour
+public class InventoryViewModel : ViewModelBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public List<ItemModel> InventoryItems;
+
+    private string _selectedItemID = string.Empty;
+
+    public string SelectedItemID
     {
-        
+        get => _selectedItemID;
+        set
+        {
+            if (_selectedItemID != value)
+            {
+                _selectedItemID = value;
+
+                OnPropertyChanged(nameof(SelectedItemID));
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Init(List<ItemModel> inventoryItems)
     {
-        
+        InventoryItems = inventoryItems;
+    }
+
+    public void InvokeOnceOnInit()
+    {
+       OnPropertyChanged(nameof(InventoryItems));
+    }
+
+    public void UseItem(string itemID)
+    {
+        for (int i = 0; i < InventoryItems.Count; i++)
+        {
+            if (InventoryItems[i].ItemID == itemID)
+            {
+                InventoryItems[i].ItemCount--;
+            
+                if (InventoryItems[i].ItemCount == 0 )
+                {
+                    InventoryItems.RemoveAt(i);
+                }
+
+                break;
+            }
+        }
+
+        OnPropertyChanged(nameof(InventoryItems));
+    }
+
+    public void SetSelectItem(string itemID)
+    {
+        SelectedItemID = itemID;
     }
 }

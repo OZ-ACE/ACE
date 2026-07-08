@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -11,16 +12,25 @@ public enum TycoonPanelType
     Inventory,
     Pick,
     Hero,
-    Construct
+    Construct,
+    Setting,
+    Home
 }
 
 public class TycoonMainUI : UIBase
 {
     [Serializable]
-    public struct Panel
+    public struct PanelStruct
     {
         public TycoonPanelType Type;
         public GameObject PanelObject;
+    }
+
+    [Serializable]
+    public struct ButtonStruct
+    {
+        public TycoonPanelType Type;
+        public Image BackgroundImage;
     }
 
     [Header("버튼")]
@@ -31,6 +41,7 @@ public class TycoonMainUI : UIBase
     [SerializeField] Button Button_Construct;
     [SerializeField] Button Button_Setting;
     [SerializeField] Button Button_Home;
+    [SerializeField] List<ButtonStruct> ButtonList;
 
     [Header("패널")]
     [SerializeField] GameObject Panel_Quest;
@@ -38,7 +49,7 @@ public class TycoonMainUI : UIBase
     //[SerializeField] GameObject Panel_Pick;
     [SerializeField] GameObject Panel_Hero;
     [SerializeField] GameObject Panel_Construct;
-    [SerializeField] List<Panel> PanelList;
+    [SerializeField] List<PanelStruct> PanelList;
 
     [Header("텍스트")]
     [SerializeField] TextMeshProUGUI Text_Day;
@@ -52,6 +63,11 @@ public class TycoonMainUI : UIBase
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
         Button_Home.onClick.AddListener(OnClickHome);
+    }
+
+    private void OnEnable()
+    {
+        ChangePanel(TycoonPanelType.Quest);
     }
 
     private void OnClickQuest()
@@ -81,9 +97,26 @@ public class TycoonMainUI : UIBase
 
     private void ChangePanel(TycoonPanelType type)
     {
-        foreach (Panel panel in PanelList)
+        foreach (PanelStruct panel in PanelList)
         {
             panel.PanelObject.SetActive(panel.Type == type);
+        }
+
+        UpdateButton(type).Forget();
+    }
+
+    private async UniTask UpdateButton(TycoonPanelType type)
+    {
+        foreach (ButtonStruct button in ButtonList)
+        {
+            if (button.Type == type)
+            {
+                button.BackgroundImage.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Select");
+            }
+            else
+            {
+                button.BackgroundImage.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Unselect");
+            }
         }
     }
 
