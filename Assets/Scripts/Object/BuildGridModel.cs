@@ -9,9 +9,10 @@ public class BuildGridModel
     private readonly Dictionary<GridCoord, CellType> _cells = new Dictionary<GridCoord, CellType>();
     private readonly Dictionary<GridCoord, PlacedRoomData> _rooms = new Dictionary<GridCoord, PlacedRoomData>();
     private GridBounds _bounds;
+    private int _unlockedMinFloor;
+
     public GridBounds Bounds { get { return _bounds; } }
-
-
+    public int UnlockedMinFloor { get { return _unlockedMinFloor; } }
 
     //지상 지하 셀타입 초기화
     public void InitCellTypes(GridBounds bounds)
@@ -33,6 +34,13 @@ public class BuildGridModel
                 }
             }
         }
+    }
+
+
+    //지하층 해금상태 초기화
+    public void InitUnlock(int initialMinFloor)
+    {
+        _unlockedMinFloor = initialMinFloor;
     }
 
 
@@ -126,6 +134,7 @@ public class BuildGridModel
         _bounds = bounds;
     }
 
+
     //건설가능 판정
     public bool IsPlaceable(GridCoord originCoord, Vector2Int size, CellType requiredCellType, GridSystem grid)
     {
@@ -141,6 +150,12 @@ public class BuildGridModel
             if (_bounds.IsInside(coord) == false)
             {
                 return PlacementResult.OutOfRange;
+            }
+
+            // 잠긴 층 검사
+            if (IsFloorUnlocked(coord.Floor) == false)
+            {
+                return PlacementResult.Locked;
             }
 
             //충돌 검사
@@ -180,6 +195,26 @@ public class BuildGridModel
     }
 
 
+
+
+    //지하층 해금(한층씩)
+    public bool TryUnlockNextFloor()
+    {
+        int next = _unlockedMinFloor - 1;  
+        if (next < _bounds.MinFloor)
+        {
+            return false;  
+        }
+
+        _unlockedMinFloor = next;
+        return true;
+    }
+
+    //지하층 언락 여부 확인
+    public bool IsFloorUnlocked(int floor)
+    {
+        return floor >= _unlockedMinFloor;
+    }
 
 
 }

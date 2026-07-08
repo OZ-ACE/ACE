@@ -16,6 +16,7 @@ public class BuildBootstrap : MonoBehaviour
     [SerializeField] private BuildToggleView Build_ToggleView;
     [SerializeField] private DemolishToggleView Build_DemolishView;
     [SerializeField] private MoveToggleView Build_MoveView;
+    [SerializeField] private UnlockFloorView Build_UnlockView;
 
 
     [Header("셀의 크기")]
@@ -34,6 +35,11 @@ public class BuildBootstrap : MonoBehaviour
     [SerializeField] private List<string> _buildableRoomIds = new List<string>();
 
 
+    [Header("초기 해금 최저 층")]
+    [SerializeField] private int _initialMinFloor = -3;   
+
+
+
     private BuildService _buildService;
 
 
@@ -46,7 +52,7 @@ public class BuildBootstrap : MonoBehaviour
         BuildGridViewModel viewModel = _buildService.CreateBuildGridViewModel(gridSystem, gridModel);
 
         GridBounds bounds = new GridBounds(_minFloor, _maxFloor, _minColumn, _maxColumn);
-        viewModel.InitGrid(bounds);
+        viewModel.InitGrid(bounds, _initialMinFloor);
         viewModel.SetBuildableRooms(_buildableRoomIds);
 
 
@@ -55,6 +61,7 @@ public class BuildBootstrap : MonoBehaviour
         Build_ToggleView.Bind(viewModel);
         Build_DemolishView.Bind(viewModel);
         Build_MoveView.Bind(viewModel);
+        Build_UnlockView.Bind(viewModel);
 
         viewModel.LoadGrid();
 

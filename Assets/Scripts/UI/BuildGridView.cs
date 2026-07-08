@@ -43,12 +43,14 @@ public class BuildGridView : ViewBase
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.OnPlaceRoom -= OnPlaceRoom;
             _viewModel.OnRemoveRoom -= OnRemoveRoom;
+            _viewModel.OnUnlockFloor -= OnUnlockFloor;
         }
 
         _viewModel = viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         _viewModel.OnPlaceRoom += OnPlaceRoom;
         _viewModel.OnRemoveRoom += OnRemoveRoom;
+        _viewModel.OnUnlockFloor += OnUnlockFloor;
 
         _viewModel.InvokeOnceOnInit();
     }
@@ -65,6 +67,7 @@ public class BuildGridView : ViewBase
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.OnPlaceRoom -= OnPlaceRoom;
             _viewModel.OnRemoveRoom -= OnRemoveRoom;
+            _viewModel.OnUnlockFloor -= OnUnlockFloor;
 
         }
     }
@@ -116,31 +119,54 @@ public class BuildGridView : ViewBase
     //격자 범위만큼 셀 프리팹을 깔아 오버레이 생성
     private void CreateGridOverlay()
     {
-        GridSystem grid = _viewModel.GridSystem;
-        GridBounds bounds = _viewModel.Bounds;   
+        GridBounds bounds = _viewModel.Bounds;
+        int unlockedMin = _viewModel.UnlockedMinFloor;   
 
-        for (int floor = bounds.MinFloor; floor <= bounds.MaxFloor; floor++)
+        for (int floor = unlockedMin; floor <= bounds.MaxFloor; floor++)
         {
             for (int column = bounds.MinColumn; column <= bounds.MaxColumn; column++)
             {
-                GridCoord coord = new GridCoord(floor, column);
-                Vector3 worldPos = grid.GetWorldPosition(coord);
-
-                GameObject cell = Instantiate(Prefab_Cell, worldPos, Quaternion.identity, this.transform);
-                cell.name = $"Cell_{coord}";
-
-                SpriteRenderer renderer = cell.GetComponent<SpriteRenderer>();
-                if (renderer != null)
-                {
-                    renderer.color = _normalColor;
-                    _cellRenderers[coord] = renderer;
-                }
+                CreateCell(new GridCoord(floor, column));
             }
         }
 
         _isOverlayCreated = true;
-        Debug.Log($"[BuildGridView] 셀 오버레이 {_cellRenderers.Count}개 생성");
+        Debug.Log($"[BuildGridView] 셀 오버레이 {_cellRenderers.Count}개 생성 (열린 최저층: {unlockedMin})");
     }
+    private void CreateCell(GridCoord coord)
+    {
+        if (_cellRenderers.ContainsKey(coord) == true)
+        {
+            return;   
+        }
+
+        GridSystem grid = _viewModel.GridSystem;
+        Vector3 worldPos = grid.GetWorldPosition(coord);
+
+        GameObject cell = Instantiate(Prefab_Cell, worldPos, Quaternion.identity, this.transform);
+        cell.name = $"Cell_{coord}";
+
+        SpriteRenderer renderer = cell.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.color = _normalColor;
+            _cellRenderers[coord] = renderer;
+        }
+    }
+
+    //해금된 층 셀 생성
+    private void OnUnlockFloor(int newUnlockedMin)
+    {
+        GridBounds bounds = _viewModel.Bounds;
+
+        for (int column = bounds.MinColumn; column <= bounds.MaxColumn; column++)
+        {
+            CreateCell(new GridCoord(newUnlockedMin, column));
+        }
+
+        Debug.Log($"[BuildGridView] {newUnlockedMin}층 셀 추가 생성");
+    }
+
 
 
     private void SetOverlayActive(bool isActive)

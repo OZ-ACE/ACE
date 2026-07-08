@@ -11,6 +11,7 @@ public class BuildGridViewModel : ViewModelBase
     private readonly BuildGridModel _buildGridModel;
     public event Action<PlacedRoomData> OnPlaceRoom;
     public event Action<PlacedRoomData> OnRemoveRoom;
+    public event Action<int> OnUnlockFloor;
     public GridBounds Bounds { get { return _buildGridModel.Bounds; } }
 
     private List<string> _buildableRoomIds = new List<string>();
@@ -19,6 +20,13 @@ public class BuildGridViewModel : ViewModelBase
     {
         _buildableRoomIds = roomIds;
     }
+    public GridSystem GridSystem { get { return _gridSystem; } }
+    public BuildGridModel BuildGridModel { get { return _buildGridModel; } }
+
+    private PlacedRoomData _pickedRoom;
+    public PlacedRoomData PickedRoom { get { return _pickedRoom; } }
+    public bool IsHoldingRoom { get { return _pickedRoom != null; } }
+    public int UnlockedMinFloor { get { return _buildGridModel.UnlockedMinFloor; } }
 
     //뷰가 바인딩
     private bool _isBuildMode;
@@ -78,12 +86,8 @@ public class BuildGridViewModel : ViewModelBase
 
 
 
-    public GridSystem GridSystem { get { return _gridSystem; } }
-    public BuildGridModel BuildGridModel { get { return _buildGridModel; } }
 
-    private PlacedRoomData _pickedRoom;
-    public PlacedRoomData PickedRoom { get { return _pickedRoom; } }
-    public bool IsHoldingRoom { get { return _pickedRoom != null; } }
+
 
 
 
@@ -100,10 +104,11 @@ public class BuildGridViewModel : ViewModelBase
         _buildGridModel = buildGridModel;
     }
 
-    public void InitGrid(GridBounds bounds)
+    public void InitGrid(GridBounds bounds, int initialMinFloor)
     {
         _buildGridModel.SetBounds(bounds);
         _buildGridModel.InitCellTypes(bounds);
+        _buildGridModel.InitUnlock(initialMinFloor);   
     }
 
 
@@ -269,6 +274,9 @@ public class BuildGridViewModel : ViewModelBase
     }
 
 
+
+
+
     //방 집기
     public bool TryPickRoom(GridCoord coord)
     {
@@ -351,6 +359,35 @@ public class BuildGridViewModel : ViewModelBase
         }
         return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem);
     }
+
+
+
+    //최저 층 노출 + 해금 명령
+
+    public bool TryUnlockNextFloor()
+    {
+        bool success = _buildGridModel.TryUnlockNextFloor();
+        if (success == false)
+        {
+            Debug.Log("[BuildGridViewModel] 더 해금할 층 없음");
+            return false;
+        }
+
+        // TODO: 해금 비용 차감 (경제 시스템 연동 후)
+
+        if (OnUnlockFloor != null)
+        {
+            OnUnlockFloor.Invoke(_buildGridModel.UnlockedMinFloor);
+        }
+
+        SaveGrid();   // 해금 상태 저장
+        Debug.Log($"[BuildGridViewModel] 층 해금: 이제 {_buildGridModel.UnlockedMinFloor}층까지 열림");
+        return true;
+    }
+
+
+
+
 
 
 
