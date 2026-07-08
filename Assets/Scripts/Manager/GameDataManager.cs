@@ -20,7 +20,10 @@ public class GameDataManager : SingletonBase<GameDataManager>
 
     public void LoadAllData()
     {
-        LoadData<Hero>("Hero");
+        LoadData<Dialogue>("Dialogue");
+        LoadData<HeroBattleData>("HeroBattle");
+        LoadData<EnemyBattleData>("EnemyBattle");
+        LoadData<RoomData>("Room");
     }
 
     private void LoadData<T>(string table) where T : GameDataBase
@@ -89,5 +92,18 @@ public class GameDataManager : SingletonBase<GameDataManager>
         }
 
         return null;
+    }
+
+    public List<T> GetDataList<T>() where T : GameDataBase
+    {
+        if (allDataDict.TryGetValue(typeof(T), out object dictObj))
+        {
+            if (dictObj is Dictionary<string, T> dict)
+            {
+                return new List<T>(dict.Values);
+            }
+        }
+
+        return new List<T>();
     }
 }

@@ -15,6 +15,7 @@ public class UIManager : SingletonBase<UIManager>
     private void Start()
     {
         // 시작 시 처음 열리는 UI메서드
+        this.InitStartUI();
     }
 
     public UIBase OpenUI(UIRootType root, UIType type, bool isActive = true)
@@ -32,7 +33,7 @@ public class UIManager : SingletonBase<UIManager>
         return openedUI;
     }
 
-    public void CloseUI(UIRootType root, UIType type)
+    public void CloseUI(UIType type)
     {
         if (_openedUI.Contains(type) == true)
         {
