@@ -7,7 +7,14 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 /[Mm]emory[Cc]aptures/
-/[Jj]son[Cc]onverter/
+
+!/[Jj]son[Cc]onverter
+
+/[Jj]son[Cc]onverter/*
+
+!/[Jj]son[Cc]onverter/ExcelFiles/
+!/[Jj]son[Cc]onverter/ExcelFiles/**
+
 .history/
 Assets/ThirdParty
 
