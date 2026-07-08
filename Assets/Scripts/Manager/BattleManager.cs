@@ -71,4 +71,40 @@ public class BattleManager : SingletonBase<BattleManager>
 
         return _actionQueue.Dequeue();
     }
+
+    //전체 유닛 리스트를 받아 승패를 판정한다. 적이 하나도 안 남으면 승리, 영웅이 하나도 안 남으면 패배
+    public BattleResult CheckBattleResult(List<BattleUnitModel> allUnits)
+    {
+        bool isAnyHeroAlive = false;
+        bool isAnyEnemyAlive = false;
+
+        foreach (BattleUnitModel unit in allUnits)
+        {
+            if (unit.IsDefeated)
+            {
+                continue;
+            }
+
+            if (unit.IsHero)
+            {
+                isAnyHeroAlive = true;
+            }
+            else
+            {
+                isAnyEnemyAlive = true;
+            }
+        }
+
+        if (!isAnyEnemyAlive)
+        {
+            return BattleResult.Victory;
+        }
+
+        if (!isAnyHeroAlive)
+        {
+            return BattleResult.Defeat;
+        }
+
+        return BattleResult.Ongoing;
+    }
 }
