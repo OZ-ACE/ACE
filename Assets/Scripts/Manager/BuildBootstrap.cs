@@ -15,6 +15,7 @@ public class BuildBootstrap : MonoBehaviour
     [SerializeField] private BuildMenuView Build_MenuView;
     [SerializeField] private BuildToggleView Build_ToggleView;
     [SerializeField] private DemolishToggleView Build_DemolishView;
+    [SerializeField] private MoveToggleView Build_MoveView;
 
 
     [Header("셀의 크기")]
@@ -53,6 +54,7 @@ public class BuildBootstrap : MonoBehaviour
         Build_MenuView.Bind(viewModel);
         Build_ToggleView.Bind(viewModel);
         Build_DemolishView.Bind(viewModel);
+        Build_MoveView.Bind(viewModel);
 
         viewModel.LoadGrid();
 

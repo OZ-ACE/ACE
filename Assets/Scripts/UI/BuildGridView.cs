@@ -167,6 +167,10 @@ public class BuildGridView : ViewBase
             HideGhost();
             UpdateDemolishClick();
         }
+        else if (_viewModel.IsMoveMode == true) 
+        {
+            UpdateMove();
+        }
         else
         {
             UpdateGhost();
@@ -376,6 +380,121 @@ public class BuildGridView : ViewBase
             _placedRoomObjects.Remove(removed.Origin);
         }
     }
+
+
+
+    // 방 이동
+    private void UpdateMove()
+    {
+        if (_viewModel.IsHoldingRoom == false)
+        {
+            HideGhost();
+
+            if (IsClickedThisFrame() == false)
+            {
+                return;
+            }
+
+            GridCoord coord;
+            if (TryGetMouseCoord(out coord) == false)
+            {
+                return;
+            }
+
+            _viewModel.TryPickRoom(coord);
+            return;
+        }
+
+        UpdatePickedGhost();
+
+        if (IsClickedThisFrame() == true)
+        {
+            GridCoord coord;
+            if (TryGetMouseCoord(out coord) == false)
+            {
+                return;
+            }
+
+            bool dropped = _viewModel.TryDropRoom(coord);
+            if (dropped == true)
+            {
+                HideGhost();
+            }
+            else
+            {
+                Debug.Log("[BuildGridView] 그 자리엔 놓을 수 없음 (계속 들고 있음)");
+            }
+        }
+    }
+
+    //집은 방의 고스트 표시
+    private void UpdatePickedGhost()
+    {
+        PlacedRoomData picked = _viewModel.PickedRoom;
+        if (picked == null)
+        {
+            HideGhost();
+            return;
+        }
+
+        RoomData room = GameDataManager.Inst.GetData<RoomData>(picked.RoomId);
+        if (room == null)
+        {
+            HideGhost();
+            return;
+        }
+
+        GridCoord coord;
+        if (TryGetMouseCoord(out coord) == false)
+        {
+            return;
+        }
+
+        if (_ghostObject == null)
+        {
+            _ghostObject = Instantiate(Prefab_Cell, Vector3.zero, Quaternion.identity, this.transform);
+            _ghostObject.name = "Ghost";
+            _ghostRenderer = _ghostObject.GetComponent<SpriteRenderer>();
+        }
+
+        Vector2Int size = room.GetSize();
+        _ghostObject.transform.localScale = new Vector3(size.x, size.y, 1f);
+        _ghostObject.SetActive(true);
+
+        GridSystem grid = _viewModel.GridSystem;
+        Vector3 originWorld = grid.GetWorldPosition(coord);
+        float offsetX = (size.x - 1) * 0.5f * grid.CellWidth;
+        float offsetY = (size.y - 1) * 0.5f * grid.CellHeight;
+        _ghostObject.transform.position = new Vector3(originWorld.x + offsetX, originWorld.y + offsetY, 0f);
+
+        PlacementResult result = _viewModel.CheckPickedRoomPlaceable(coord);
+        if (_ghostRenderer != null)
+        {
+            _ghostRenderer.color = (result == PlacementResult.Success) ? _ghostValidColor : _ghostInvalidColor;
+        }
+    }
+
+    //왼쪽 클릭 여부 및 UI 위 클릭 판정
+    private bool IsClickedThisFrame()
+    {
+        if (Mouse.current == null)
+        {
+            return false;
+        }
+        if (Mouse.current.leftButton.wasPressedThisFrame == false)
+        {
+            return false;
+        }
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject() == true)
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+
+
 
 
     // 공통: 마우스 셀 좌표

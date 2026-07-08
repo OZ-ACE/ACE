@@ -23,7 +23,9 @@ public class BuildGridViewModel : ViewModelBase
     //뷰가 바인딩
     private bool _isBuildMode;
     private bool _isDemolishMode;
+    private bool _isMoveMode;
     private string _selectedRoomId;
+
 
     public bool IsBuildMode
     {
@@ -49,6 +51,18 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
+    public bool IsMoveMode
+    {
+        get => _isMoveMode;
+        set
+        {
+            if (_isMoveMode != value)
+            {
+                _isMoveMode = value;
+                OnPropertyChanged(nameof(IsMoveMode));
+            }
+        }
+    }
     public string SelectedRoomId
     {
         get => _selectedRoomId;
@@ -67,7 +81,9 @@ public class BuildGridViewModel : ViewModelBase
     public GridSystem GridSystem { get { return _gridSystem; } }
     public BuildGridModel BuildGridModel { get { return _buildGridModel; } }
 
-
+    private PlacedRoomData _pickedRoom;
+    public PlacedRoomData PickedRoom { get { return _pickedRoom; } }
+    public bool IsHoldingRoom { get { return _pickedRoom != null; } }
 
 
 
@@ -136,6 +152,8 @@ public class BuildGridViewModel : ViewModelBase
     //철거모드 토글
     public void ToggleDemolishMode()
     {
+        IsMoveMode = false;
+
         if (IsDemolishMode == true)
         {
             IsDemolishMode = false;
@@ -147,7 +165,22 @@ public class BuildGridViewModel : ViewModelBase
         }
     }
 
+    //이동모드 토글
+    public void ToggleMoveMode()
+    {
+        IsDemolishMode = false;
 
+        if (IsMoveMode == true)
+        {
+            IsMoveMode = false;
+            _pickedRoom = null;
+        }
+        else
+        {
+            IsMoveMode = true;
+            SelectedRoomId = null;   
+        }
+    }
 
 
 
@@ -164,6 +197,8 @@ public class BuildGridViewModel : ViewModelBase
         IsBuildMode = false;
         SelectedRoomId = null;
         IsDemolishMode = false;
+        IsMoveMode = false;   
+        _pickedRoom = null;
     }
 
     //건설메뉴에서 방 선택
@@ -234,10 +269,88 @@ public class BuildGridViewModel : ViewModelBase
     }
 
 
+    //방 집기
+    public bool TryPickRoom(GridCoord coord)
+    {
+        if (_pickedRoom != null)
+        {
+            return false;   
+        }
 
+        PlacedRoomData room = _buildGridModel.RemoveRoomAt(coord, _gridSystem);
+        if (room == null)
+        {
+            return false;   
+        }
 
+        _pickedRoom = room;
 
+        // 뷰가 원래 방 오브젝트를 치우도록 철거 이벤트 재활용
+        if (OnRemoveRoom != null)
+        {
+            OnRemoveRoom.Invoke(room);
+        }
 
+        Debug.Log($"[BuildGridViewModel] 방 집음: {room.RoomId} @ {room.Origin}");
+        return true;
+    }
+
+    //방 놓기
+    public bool TryDropRoom(GridCoord newOrigin)
+    {
+        if (_pickedRoom == null)
+        {
+            return false;
+        }
+
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(_pickedRoom.RoomId);
+        if (roomData == null)
+        {
+            return false;
+        }
+
+        Vector2Int size = roomData.GetSize();
+        CellType requiredType = roomData.GetRequiredCellType();
+
+        PlacementResult result = _buildGridModel.CheckPlaceable(newOrigin, size, requiredType, _gridSystem);
+        if (result != PlacementResult.Success)
+        {
+            return false;   
+        }
+
+        PlacedRoomData moved = new PlacedRoomData();
+        moved.RoomId = _pickedRoom.RoomId;
+        moved.Origin = newOrigin;
+
+        List<GridCoord> coords = _gridSystem.GetOccupiedCoords(newOrigin, size);
+        _buildGridModel.AddRoom(moved, coords);
+
+        if (OnPlaceRoom != null)
+        {
+            OnPlaceRoom.Invoke(moved);
+        }
+
+        _pickedRoom = null;  
+        SaveGrid();
+
+        Debug.Log($"[BuildGridViewModel] 방 이동 완료: {moved.RoomId} → {newOrigin}");
+        return true;
+    }
+
+    //집은 방의 판정
+    public PlacementResult CheckPickedRoomPlaceable(GridCoord newOrigin)
+    {
+        if (_pickedRoom == null)
+        {
+            return PlacementResult.WrongCellType;
+        }
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(_pickedRoom.RoomId);
+        if (roomData == null)
+        {
+            return PlacementResult.WrongCellType;
+        }
+        return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem);
+    }
 
 
 
