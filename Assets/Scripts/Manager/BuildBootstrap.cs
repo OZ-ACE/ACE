@@ -14,6 +14,7 @@ public class BuildBootstrap : MonoBehaviour
     [SerializeField] private BuildGridView Build_GridView;
     [SerializeField] private BuildMenuView Build_MenuView;
     [SerializeField] private BuildToggleView Build_ToggleView;
+    [SerializeField] private DemolishToggleView Build_DemolishView;
 
 
     [Header("셀의 크기")]
@@ -47,11 +48,15 @@ public class BuildBootstrap : MonoBehaviour
         viewModel.InitGrid(bounds);
         viewModel.SetBuildableRooms(_buildableRoomIds);
 
+
         Build_GridView.Bind(viewModel);
         Build_MenuView.Bind(viewModel);
         Build_ToggleView.Bind(viewModel);
+        Build_DemolishView.Bind(viewModel);
 
-        Debug.Log("[BuildBootstrap] 건설 시스템 배선 완료 + 건설모드 진입");
+        viewModel.LoadGrid();
+
+        Debug.Log("[BuildBootstrap] 건설 시스템 배선 완료");
     }
 
 }

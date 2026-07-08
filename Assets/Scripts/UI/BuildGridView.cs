@@ -29,6 +29,7 @@ public class BuildGridView : ViewBase
 
 
     private Dictionary<GridCoord, SpriteRenderer> _cellRenderers = new Dictionary<GridCoord, SpriteRenderer>();
+    private Dictionary<GridCoord, GameObject> _placedRoomObjects = new Dictionary<GridCoord, GameObject>();
     private bool _isOverlayCreated;
 
 
@@ -40,17 +41,20 @@ public class BuildGridView : ViewBase
     private SpriteRenderer _ghostRenderer;
 
 
+
     public void Bind(BuildGridViewModel viewModel)
     {
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.OnPlaceRoom -= OnPlaceRoom;
+            _viewModel.OnRemoveRoom -= OnRemoveRoom;
         }
 
         _viewModel = viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         _viewModel.OnPlaceRoom += OnPlaceRoom;
+        _viewModel.OnRemoveRoom += OnRemoveRoom;
 
         _viewModel.InvokeOnceOnInit();
     }
@@ -66,6 +70,7 @@ public class BuildGridView : ViewBase
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.OnPlaceRoom -= OnPlaceRoom;
+            _viewModel.OnRemoveRoom -= OnRemoveRoom;
 
         }
     }
@@ -161,8 +166,17 @@ public class BuildGridView : ViewBase
         }
 
         UpdateHover();
-        UpdateGhost();
-        UpdateClick();
+
+        if (_viewModel.IsDemolishMode == true)
+        {
+            HideGhost();
+            UpdateDemolishClick();
+        }
+        else
+        {
+            UpdateGhost();
+            UpdateClick();
+        }
     }
 
 
@@ -295,8 +309,41 @@ public class BuildGridView : ViewBase
         }
     }
 
+    // 방 철거 클릭
+    private void UpdateDemolishClick()
+    {
+        if (Mouse.current == null)
+        {
+            return;
+        }
 
-    // 배치 성공 시 그 자리에 방 표시
+        if (Mouse.current.leftButton.wasPressedThisFrame == false)
+        {
+            return;
+        }
+
+        // UI 위 클릭은 무시
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject() == true)
+        {
+            return;
+        }
+
+        GridCoord coord;
+        if (TryGetMouseCoord(out coord) == false)
+        {
+            return;
+        }
+
+        bool success = _viewModel.TryDemolishRoom(coord);
+        if (success == false)
+        {
+            Debug.Log($"[BuildGridView] 철거할 방 없음 @ {coord}");
+        }
+    }
+
+
+
+    // 방 건설
     private void OnPlaceRoom(PlacedRoomData placed)
     {
         RoomData room = GameDataManager.Inst.GetData<RoomData>(placed.RoomId);
@@ -320,6 +367,18 @@ public class BuildGridView : ViewBase
         if (renderer != null)
         {
             renderer.color = _placedColor;
+        }
+
+        _placedRoomObjects[placed.Origin] = roomObj;
+    }
+
+    // 방 철거
+    private void OnRemoveRoom(PlacedRoomData removed)
+    {
+        if (_placedRoomObjects.TryGetValue(removed.Origin, out var roomObj))
+        {
+            Destroy(roomObj);
+            _placedRoomObjects.Remove(removed.Origin);
         }
     }
 

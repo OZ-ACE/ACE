@@ -102,6 +102,8 @@ public class BuildGridModel
         _cells.Clear();
         _rooms.Clear();
 
+        InitCellTypes(_bounds);
+
         foreach (var cell in data.ChangedCells)
         {
             _cells[cell.Coord] = cell.Type;
@@ -154,6 +156,28 @@ public class BuildGridModel
         }
         return PlacementResult.Success;
     }
+
+    //방 제거
+    public PlacedRoomData RemoveRoomAt(GridCoord coord, GridSystem grid)
+    {
+        PlacedRoomData room = GetRoomAt(coord);
+        if (room == null)
+        {
+            return null;
+        }
+
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(room.RoomId);
+        Vector2Int size = (roomData != null) ? roomData.GetSize() : Vector2Int.one;
+        List<GridCoord> coords = grid.GetOccupiedCoords(room.Origin, size);
+
+        foreach (GridCoord c in coords)
+        {
+            _rooms.Remove(c);
+        }
+
+        return room;
+    }
+
 
 
 
