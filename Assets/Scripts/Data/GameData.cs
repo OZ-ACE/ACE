@@ -55,6 +55,7 @@ public class RoomData : GameDataBase
         {
             return CellType.Sky;
         }
+
         return CellType.Earth;
     }
 
