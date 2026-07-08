@@ -11,6 +11,16 @@ public class BuildGridViewModel : ViewModelBase
     private readonly BuildGridModel _buildGridModel;
     public event Action<PlacedRoomData> OnPlaceRoom;
 
+    private List<string> _buildableRoomIds = new List<string>();
+    public List<string> BuildableRoomIds { get { return _buildableRoomIds; } }
+    public void SetBuildableRooms(List<string> roomIds)
+    {
+        _buildableRoomIds = roomIds;
+    }
+
+
+
+
     public GridSystem GridSystem { get { return _gridSystem; } }
     public BuildGridModel BuildGridModel { get { return _buildGridModel; } }
 
@@ -23,6 +33,7 @@ public class BuildGridViewModel : ViewModelBase
     public void InitGrid(GridBounds bounds)
     {
         _buildGridModel.SetBounds(bounds);
+        _buildGridModel.InitCellTypes(bounds);
     }
 
 
@@ -84,6 +95,19 @@ public class BuildGridViewModel : ViewModelBase
     }
 
 
+
+    //건설모드 토글
+    public void ToggleBuildMode()
+    {
+        if (IsBuildMode == true)
+        {
+            ExitBuildMode();
+        }
+        else
+        {
+            EnterBuildMode();
+        }
+    }
 
 
 

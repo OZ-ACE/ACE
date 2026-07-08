@@ -12,6 +12,29 @@ public class BuildGridModel
 
 
 
+    //지상 지하 셀타입 초기화
+    public void InitCellTypes(GridBounds bounds)
+    {
+        for (int floor = bounds.MinFloor; floor <= bounds.MaxFloor; floor++)
+        {
+            for (int column = bounds.MinColumn; column <= bounds.MaxColumn; column++)
+            {
+                GridCoord coord = new GridCoord(floor, column);
+
+
+                if (floor >= 0)
+                {
+                    _cells[coord] = CellType.Sky;
+                }
+                else
+                {
+                    _cells[coord] = CellType.Earth;
+                }
+            }
+        }
+    }
+
+
     //칸의 상태 조회
     public CellType GetCellType(GridCoord coord)
     {

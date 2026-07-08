@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System.ComponentModel;
+using UnityEngine.EventSystems;
 
 
 public class BuildGridView : ViewBase
@@ -269,6 +270,12 @@ public class BuildGridView : ViewBase
         {
             return;
         }
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject() == true)
+        {
+            return;
+        }
+
 
         if (string.IsNullOrEmpty(_viewModel.SelectedRoomId) == true)
         {

@@ -14,7 +14,7 @@
     "ID": "Room_0002",
     "Name": "정원",
     "Description": "지상 정원",
-    "SizeW": 2,
+    "SizeW": 3,
     "SizeH": 2,
     "BuildCost": 150,
     "RequiredCellType": "Sky",

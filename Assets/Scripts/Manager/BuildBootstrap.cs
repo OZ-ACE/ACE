@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 /// <summary>
@@ -11,6 +12,8 @@ public class BuildBootstrap : MonoBehaviour
 
     [Header("씬의 건설 뷰")]
     [SerializeField] private BuildGridView Build_GridView;
+    [SerializeField] private BuildMenuView Build_MenuView;
+    [SerializeField] private BuildToggleView Build_ToggleView;
 
 
     [Header("셀의 크기")]
@@ -23,6 +26,11 @@ public class BuildBootstrap : MonoBehaviour
     [SerializeField] private int _maxFloor = 1;
     [SerializeField] private int _minColumn = 0;
     [SerializeField] private int _maxColumn = 19;
+
+
+    [Header("건설 가능한 방 목록")]
+    [SerializeField] private List<string> _buildableRoomIds = new List<string>();
+
 
     private BuildService _buildService;
 
@@ -37,12 +45,11 @@ public class BuildBootstrap : MonoBehaviour
 
         GridBounds bounds = new GridBounds(_minFloor, _maxFloor, _minColumn, _maxColumn);
         viewModel.InitGrid(bounds);
+        viewModel.SetBuildableRooms(_buildableRoomIds);
 
         Build_GridView.Bind(viewModel);
-
- 
-        viewModel.EnterBuildMode();       //테스트 후에 삭제하자
-        viewModel.SelectRoom("Room_0001"); //이거도 테스트 후에 삭제하자
+        Build_MenuView.Bind(viewModel);
+        Build_ToggleView.Bind(viewModel);
 
         Debug.Log("[BuildBootstrap] 건설 시스템 배선 완료 + 건설모드 진입");
     }
