@@ -10,12 +10,6 @@ public class BuildGridView : ViewBase
     [Header("셀 프리팹 (반투명 사각형)")]
     [SerializeField] private GameObject Prefab_Cell;
 
-    [Header("그리드 설정")]
-    [SerializeField] private int _minFloor = -10;
-    [SerializeField] private int _maxFloor = 1;
-    [SerializeField] private int _minColumn = 0;
-    [SerializeField] private int _maxColumn = 19;
-
     [Header("색상")]
     [SerializeField] private Color _normalColor = new Color(1f, 1f, 1f, 0.2f);
     [SerializeField] private Color _hoverColor = new Color(1f, 1f, 0f, 0.5f);
@@ -123,10 +117,11 @@ public class BuildGridView : ViewBase
     private void CreateGridOverlay()
     {
         GridSystem grid = _viewModel.GridSystem;
+        GridBounds bounds = _viewModel.Bounds;   
 
-        for (int floor = _minFloor; floor <= _maxFloor; floor++)
+        for (int floor = bounds.MinFloor; floor <= bounds.MaxFloor; floor++)
         {
-            for (int column = _minColumn; column <= _maxColumn; column++)
+            for (int column = bounds.MinColumn; column <= bounds.MaxColumn; column++)
             {
                 GridCoord coord = new GridCoord(floor, column);
                 Vector3 worldPos = grid.GetWorldPosition(coord);

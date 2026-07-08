@@ -9,6 +9,7 @@ public class BuildGridModel
     private readonly Dictionary<GridCoord, CellType> _cells = new Dictionary<GridCoord, CellType>();
     private readonly Dictionary<GridCoord, PlacedRoomData> _rooms = new Dictionary<GridCoord, PlacedRoomData>();
     private GridBounds _bounds;
+    public GridBounds Bounds { get { return _bounds; } }
 
 
 

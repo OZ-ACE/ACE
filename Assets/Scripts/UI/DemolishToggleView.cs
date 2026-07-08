@@ -49,15 +49,9 @@ public class DemolishToggleView : ViewBase
 
     private void OnClickToggle()
     {
-        Debug.Log("[DemolishToggleView] 철거 버튼 클릭됨");   // ★ 임시 확인용
         if (_viewModel != null)
         {
             _viewModel.ToggleDemolishMode();
-        }
-
-        else
-        {
-            Debug.LogWarning("[DemolishToggleView] _viewModel이 null!");  // ★
         }
     }
 

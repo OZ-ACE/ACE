@@ -11,6 +11,7 @@ public class BuildGridViewModel : ViewModelBase
     private readonly BuildGridModel _buildGridModel;
     public event Action<PlacedRoomData> OnPlaceRoom;
     public event Action<PlacedRoomData> OnRemoveRoom;
+    public GridBounds Bounds { get { return _buildGridModel.Bounds; } }
 
     private List<string> _buildableRoomIds = new List<string>();
     public List<string> BuildableRoomIds { get { return _buildableRoomIds; } }
