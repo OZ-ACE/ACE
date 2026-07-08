@@ -58,5 +58,16 @@ public class RoomData : GameDataBase
 
         return CellType.Earth;
     }
+}
 
+[Serializable]
+public class SupportItem : GameDataBase
+{
+    public string itemName;
+    public string itemNameEn;
+    public string targetPaneltyId;
+    public string targetPaneltyName;
+    public int energyCost;
+    public int stockCount;
+    public string Description;
 }
