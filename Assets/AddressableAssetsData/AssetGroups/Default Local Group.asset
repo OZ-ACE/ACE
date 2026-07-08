@@ -14,7 +14,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Default Local Group
   m_GUID: 23850c18bd752de4e9d0bcbd8c737d67
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 441d3d17b6bda2045a0d939db9733e36
+    m_Address: Image/Button/Select
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 70e23b9b2669f11428d7abe3757907cc
+    m_Address: Image/Button/Unselect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a2e0dc92988daea4da87c346f2f3cb33
+    m_Address: Prefabs/UI/InventorySlot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b07262cf55756be47b2c4c8615544ecb
+    m_Address: Image/UI/Selected
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b661c9b4e85ac5d46bc2ac5e60aa9525
+    m_Address: Image/Item
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba6aacedc85e5454d9e142c4663972ff
+    m_Address: Assets/ThirdParty/Vector_UI_Pack_dobo_ui/Buttons/buttonSquare_white.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fba5ff936ccb1b84aa468d6f618deb99
+    m_Address: Image/UI/Unselected
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f41632a1bcf00474bbbaad14ab01183a, type: 2}
   m_SchemaSet:
