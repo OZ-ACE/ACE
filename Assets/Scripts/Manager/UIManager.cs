@@ -15,7 +15,7 @@ public class UIManager : SingletonBase<UIManager>
     private void Start()
     {
         // 시작 시 처음 열리는 UI메서드
-        this.StartInit();
+        this.InitStartUI();
     }
 
     public UIBase OpenUI(UIRootType root, UIType type, bool isActive = true)
