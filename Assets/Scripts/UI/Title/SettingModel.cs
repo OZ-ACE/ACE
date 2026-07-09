@@ -22,6 +22,7 @@ public class SettingModel
         SFXVolume = PlayerPrefs.GetFloat("SFX", DefaultVolume);
         IsFullScreen = PlayerPrefs.GetInt("FullScreen", DefaultFullScreen) == 1;
         Brightness = PlayerPrefs.GetFloat("Brightness", DefaultBrightness);
+        TextSpeedIndex = PlayerPrefs.GetInt("TextSpeedIndex", DefaultTextSpeed);
     }
 
     public void SaveAndApplySetting()
@@ -29,6 +30,7 @@ public class SettingModel
         PlayerPrefs.SetFloat("BGM", BGMVolume);
         PlayerPrefs.SetFloat("SFX", SFXVolume);
         PlayerPrefs.SetInt("FullScreen", IsFullScreen ? 1 : 0);
+        PlayerPrefs.SetInt("TextSpeedIndex", TextSpeedIndex);
         PlayerPrefs.SetFloat("TextSpeed", _textSpeed[TextSpeedIndex]);
         PlayerPrefs.SetFloat("Brightness", Brightness);
         PlayerPrefs.Save();

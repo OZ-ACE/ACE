@@ -80,7 +80,7 @@ public class SettingPopup : UIBase
 
             case nameof(_settingVM.SFXVolume):
                 Slider_SFX.value = _settingVM.SFXVolume;
-                ApplySFXVolume(_settingVM.BGMVolume);
+                ApplySFXVolume(_settingVM.SFXVolume);
                 break;
 
             case nameof(_settingVM.IsFullScreen):
@@ -127,6 +127,16 @@ public class SettingPopup : UIBase
 
     private void OnClickClose()
     {
+        float originalBGM = PlayerPrefs.GetFloat("BGM", 0.5f);
+        float originalSFX = PlayerPrefs.GetFloat("SFX", 0.5f);
+        bool originalFull = PlayerPrefs.GetInt("FullScreen", 1) == 1;
+        float originalBright = PlayerPrefs.GetFloat("Brightness", 0f);
+
+        ApplyBGMVolume(originalBGM);
+        ApplySFXVolume(originalSFX);
+        ApplyFullScreen(originalFull);
+        ApplyBrightness(originalBright);
+
         UIManager.Inst.CloseSettingPopup();
     }
 

@@ -28,6 +28,7 @@ public class NamePopup : UIBase
     private void OnClickConfirm()
     {
         SaveManager.Inst.SaveVM.CreateAndSavePlayer(InputField_Name.text);
+        GameManager.Inst.SetDialogueID("Opening_01");
 
         UIManager.Inst.CloseNamePopup();
         UIManager.Inst.OpenDialogueUI();

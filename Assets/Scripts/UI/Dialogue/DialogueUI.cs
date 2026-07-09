@@ -18,7 +18,7 @@ public class DialogueUI : UIBase
     [SerializeField] private Image Image_Speaker;
 
     private bool _isTyping = false;
-    private float _typingWaitTime = 0.03f;
+    private float _typingWaitTime = 0.06f;
     private bool _isAuto = false;
     private float _autoWaitTime = 0.2f;
     private CancellationTokenSource _typingToken;
@@ -35,6 +35,8 @@ public class DialogueUI : UIBase
 
     private void OnEnable()
     {
+        _typingWaitTime = PlayerPrefs.GetFloat("TextSpeed", 0.06f);
+
         if (_dialogueVM == null)
         {
             _dialogueVM = new DialogueViewModel();
@@ -98,6 +100,12 @@ public class DialogueUI : UIBase
             _isTyping = false;
             Text_Content.maxVisibleCharacters = Text_Content.text.Length;
             _dialogueVM.IsNextArrow = true;
+
+            if (_isAuto)
+            {
+                WaitAuto().Forget();
+            }
+
             return;
         }
 
@@ -129,7 +137,7 @@ public class DialogueUI : UIBase
 
         foreach (var data in GameDataManager.Inst.GetDataList<Dialogue>())
         {
-            if (nextID == "0")
+            if (nextID == "0" || string.IsNullOrEmpty(nextID))
             {
                 break;
             }
@@ -138,7 +146,7 @@ public class DialogueUI : UIBase
             nextID = GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).NextID;
         }
 ;
-        Typing(GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).Content).Forget();
+        _dialogueVM.UpdateState(GameManager.Inst.CurrentDialogueID);
     }
 
     private async UniTask Typing(string content)
@@ -147,14 +155,22 @@ public class DialogueUI : UIBase
         _typingToken = new CancellationTokenSource();
 
         _isTyping = true;
+        _dialogueVM.IsNextArrow = false;
         Text_Content.text = content;
         Text_Content.maxVisibleCharacters = 0;
 
-        for (int i = 0; i < content.Length; i++)
+        if (_typingWaitTime <= 0f)
         {
-            Text_Content.maxVisibleCharacters = i;
+            Text_Content.maxVisibleCharacters = content.Length;
+        }
+        else
+        {
+            for (int i = 0; i < content.Length; i++)
+            {
+                Text_Content.maxVisibleCharacters = i;
 
-            await UniTask.Delay(TimeSpan.FromSeconds(_typingWaitTime), cancellationToken: _typingToken.Token);
+                await UniTask.Delay(TimeSpan.FromSeconds(_typingWaitTime), cancellationToken: _typingToken.Token);
+            }
         }
 
         _isTyping = false;
@@ -162,10 +178,15 @@ public class DialogueUI : UIBase
 
         if (_isAuto)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(_autoWaitTime), cancellationToken: _typingToken.Token);
-
-            _dialogueVM.RequestNext();
+            await WaitAuto();
         }
+    }
+
+    private async UniTask WaitAuto()
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(_autoWaitTime), cancellationToken: _typingToken.Token);
+
+        _dialogueVM.RequestNext();
     }
 
     private void CancelTyping()

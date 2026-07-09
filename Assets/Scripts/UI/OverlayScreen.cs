@@ -8,6 +8,8 @@ public class OverlayScreen : UIBase
     private void Awake()
     {
         GameManager.Inst.OnChangeBrightness += ChangeBrightness;
+
+        ChangeBrightness(PlayerPrefs.GetFloat("Brightness"));
     }
 
     private void OnDestroy()

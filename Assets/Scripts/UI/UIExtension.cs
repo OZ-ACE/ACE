@@ -53,7 +53,7 @@ public static class UIExtension
 
     public static void OpenLoadingUI(this UIManager uiManager)
     {
-        uiManager.OpenUI(UIRootType.Front, UIType.LoadingUI);
+        uiManager.OpenUI(UIRootType.Popup, UIType.LoadingUI);
     }
 
     public static void CloseLoadingUI(this UIManager uiManager)
