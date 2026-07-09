@@ -16,6 +16,7 @@ public enum UIType
     TitleUI,
     NamePopup,
     SaveUI,
+    LoadingUI,
     DialogueUI,
     TycoonMainUI
 }
@@ -45,6 +46,16 @@ public static class UIExtension
     public static void CloseTitleUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.TitleUI);
+    }
+
+    public static void OpenLoadingUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.Front, UIType.LoadingUI);
+    }
+
+    public static void CloseLoadingUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.LoadingUI);
     }
 
     public static void OpenNamePopup(this UIManager uIManager)

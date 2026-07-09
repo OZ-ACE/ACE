@@ -173,6 +173,7 @@ public class DialogueViewModel : ViewModelBase
         if (nextID == "0")
         {
             UIManager.Inst.OpenTycoonMainUI();
+            UIManager.Inst.OpenLoadingUI();
             UIManager.Inst.CloseDialogueUI();
             return;
         }

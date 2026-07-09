@@ -81,3 +81,9 @@ public class SupportItem : GameDataBase
     public int stockCount;
     public string Description;
 }
+
+[Serializable]
+public class Loading : GameDataBase
+{
+    public string Content;
+}
