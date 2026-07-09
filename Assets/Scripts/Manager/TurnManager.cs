@@ -22,6 +22,6 @@ public class TurnManager : SingletonBase<TurnManager>
             return b.Speed - a.Speed; //양수를 반환하면 b가 더 빠르므로 먼저 출격함
         }
 
-        return b.AttackPower - a.AttackPower; //스피드 동률 시 공격력 순 정렬
+        return b.AttackPower - a.AttackPower; //스피드 동률 시 공격력 순 정렬, 공격력도 같을 시 추가 로직 만들어야 함...ToDo...
     }
 }
