@@ -6,8 +6,9 @@ using UnityEngine;
 public class SaveManager : SingletonBase<SaveManager>
 {
     public PlayerModel CurrentPlayerModel { get; private set; } = new PlayerModel();
-    public int CurrentSlotIndex { get; private set; }
-    public HashSet<int> SlotIndex { get; private set; } = new HashSet<int>();
+    public SaveViewModel SaveVM {  get; private set; } = new SaveViewModel();
+    public int CurrentSlotIndex { get; private set; } = 0;
+    public SortedSet<int> SlotIndex { get; private set; } = new SortedSet<int>();
 
     protected override void Awake()
     {
@@ -24,22 +25,18 @@ public class SaveManager : SingletonBase<SaveManager>
         }
     }
 
-    //[테스트 코드]
-    private void OnEnable()
-    {
-        CurrentPlayerModel = RequestLoadData(0);
-    }
-
     private string GetPath(int slotIndex)
     {
         return Path.Combine(Application.persistentDataPath, $"Hero{slotIndex}.json");
     }
 
-    public void RequestSaveData(int slotIndex, PlayerModel data)
+    public void RequestSaveData(PlayerModel data)
     {
         string json = JsonUtility.ToJson(data, true);
-        File.WriteAllText(GetPath(slotIndex), json);
-        SlotIndex.Add(slotIndex);
+        File.WriteAllText(GetPath(CurrentSlotIndex), json);
+        SlotIndex.Add(CurrentSlotIndex);
+
+        Debug.Log(CurrentSlotIndex);
     }
 
     public PlayerModel RequestLoadData(int slotIndex)
@@ -56,7 +53,7 @@ public class SaveManager : SingletonBase<SaveManager>
         else
         {
             PlayerModel data = GetDefaultData();
-            RequestSaveData(slotIndex, data);
+            RequestSaveData(data);
 
             return data;
         }
@@ -108,8 +105,42 @@ public class SaveManager : SingletonBase<SaveManager>
         return items;
     }
 
+    public void SetCurrentSlotIndex(int slotIndex)
+    {
+        CurrentSlotIndex = slotIndex;
+    }
+
+    public void SetPlayerName(string name)
+    {
+        CurrentPlayerModel.PlayerName = name;
+    }
+
     public bool HasSaveFile(int slotIndex)
     {
         return File.Exists(GetPath(slotIndex));
+    }
+
+    public int GetEmptySlot()
+    {
+        if (SlotIndex == null || SlotIndex.Count == 0)
+        {
+            return 0;
+        }
+
+        int nextIndex = 0;
+        
+        foreach (int index in SlotIndex)
+        {
+            if (index == nextIndex)
+            {
+                nextIndex++;
+            }
+            else if (index > nextIndex)
+            {
+                break;
+            }
+        }
+
+        return nextIndex;
     }
 }

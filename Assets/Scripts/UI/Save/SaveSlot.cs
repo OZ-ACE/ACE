@@ -9,7 +9,6 @@ public class SaveSlot : ViewBase
     [SerializeField] private Button Button_Confirm;
 
     [Header("Text")]
-    [SerializeField] private TextMeshProUGUI Text_Index;
     [SerializeField] private TextMeshProUGUI Text_PlayerName;
     [SerializeField] private TextMeshProUGUI Text_Day;
     [SerializeField] private TextMeshProUGUI Text_Gold;
@@ -24,9 +23,9 @@ public class SaveSlot : ViewBase
         Button_Confirm.onClick.AddListener(OnClickConfirm);
     }
 
-    public void BindSlot(SaveViewModel saveVM, int slotIndex)
+    public void BindSlot(int slotIndex)
     {
-        _saveVM = saveVM;
+        _saveVM = SaveManager.Inst.SaveVM;
         _slotIndex = slotIndex;
 
         _playerModel = _saveVM.GetPlayerModel(_slotIndex);
@@ -36,7 +35,6 @@ public class SaveSlot : ViewBase
 
     private void UpdateSlotDisplay()
     {
-        Text_Index.text = $"Slot {_slotIndex + 1}";
         Text_PlayerName.text = _playerModel.PlayerName;
         Text_Day.text = $"Day: {_playerModel.Day}";
         Text_Gold.text = $"Gold: {_playerModel.Gold}";
