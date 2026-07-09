@@ -79,6 +79,7 @@ public class SupportItem : GameDataBase
     public string targetPaneltyName;
     public int energyCost;
     public int stockCount;
+    public int Price;
     public string Description;
 }
 

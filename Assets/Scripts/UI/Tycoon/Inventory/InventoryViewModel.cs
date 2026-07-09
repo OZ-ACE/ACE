@@ -50,6 +50,47 @@ public class InventoryViewModel : ViewModelBase
         OnPropertyChanged(nameof(InventoryItems));
     }
 
+
+    public void AddItem(string itemID, int count)
+    {
+        if (count <= 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < InventoryItems.Count; i++)
+        {
+            if (InventoryItems[i].ItemID == itemID)
+            {
+                InventoryItems[i].ItemCount += count;
+                OnPropertyChanged(nameof(InventoryItems));
+                return;
+            }
+        }
+
+        ItemModel newItem = new ItemModel();
+        newItem.ItemID = itemID;
+        newItem.ItemCount = count;
+        InventoryItems.Add(newItem);
+
+        OnPropertyChanged(nameof(InventoryItems));
+    }
+    public int GetItemCount(string itemID)
+    {
+        foreach (ItemModel item in InventoryItems)
+        {
+            if (item.ItemID == itemID)
+            {
+                return item.ItemCount;
+            }
+        }
+        return 0;
+    }
+
+
+
+
+
     public void SetSelectItem(string itemID)
     {
         SelectedItemID = itemID;
