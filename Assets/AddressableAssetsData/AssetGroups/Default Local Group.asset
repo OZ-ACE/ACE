@@ -40,11 +40,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ba6aacedc85e5454d9e142c4663972ff
-    m_Address: Assets/ThirdParty/Vector_UI_Pack_dobo_ui/Buttons/buttonSquare_white.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fba5ff936ccb1b84aa468d6f618deb99
     m_Address: Image/UI/Unselected
     m_ReadOnly: 0

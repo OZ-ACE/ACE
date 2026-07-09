@@ -24,11 +24,11 @@ public class SaveManager : SingletonBase<SaveManager>
         }
     }
 
-    //[테스트 코드]
-    private void OnEnable()
-    {
-        CurrentPlayerModel = RequestLoadData(0);
-    }
+    ////[테스트 코드]
+    //private void OnEnable()
+    //{
+    //    CurrentPlayerModel = RequestLoadData(0);
+    //}
 
     private string GetPath(int slotIndex)
     {
