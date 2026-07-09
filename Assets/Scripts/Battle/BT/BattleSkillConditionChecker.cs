@@ -46,6 +46,16 @@ public static class BattleSkillConditionChecker
             return false;
         }
 
+        if (BattleManager.Inst != null)
+        {
+            bool isBlocked = BattleManager.Inst.IsSkillBlockedByPenalty(unit, skillId);
+
+            if (isBlocked == true)
+            {
+                return false;
+            }
+        }
+
         if (targetList == null || targetList.Count <= 0)
         {
             return false;
