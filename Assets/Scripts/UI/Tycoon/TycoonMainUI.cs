@@ -13,6 +13,7 @@ public enum TycoonPanelType
     Pick,
     Hero,
     Construct,
+    Market,
     Setting,
     Home
 }
@@ -39,6 +40,7 @@ public class TycoonMainUI : UIBase
     [SerializeField] Button Button_Pick;
     [SerializeField] Button Button_Hero;
     [SerializeField] Button Button_Construct;
+    [SerializeField] Button Button_Market;
     [SerializeField] Button Button_Setting;
     [SerializeField] Button Button_Home;
     [SerializeField] List<ButtonStruct> ButtonList;
@@ -49,6 +51,7 @@ public class TycoonMainUI : UIBase
     //[SerializeField] GameObject Panel_Pick;
     [SerializeField] GameObject Panel_Hero;
     [SerializeField] GameObject Panel_Construct;
+    [SerializeField] GameObject Panel_Market;
     [SerializeField] List<PanelStruct> PanelList;
 
     [Header("텍스트")]
@@ -62,12 +65,23 @@ public class TycoonMainUI : UIBase
         Button_Pick.onClick.AddListener(OnClickPick);
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
+        Button_Market.onClick.AddListener(OnClickMarket);
         Button_Home.onClick.AddListener(OnClickHome);
     }
 
     private void OnEnable()
     {
+        GameManager.Inst.CurrencyService.OnChangeCurrency += SetGoldText;
+        SetGoldText();
         ChangePanel(TycoonPanelType.Quest);
+    }
+
+    private void OnDisable()
+    {
+        if (GameManager.Inst != null)
+        {
+            GameManager.Inst.CurrencyService.OnChangeCurrency -= SetGoldText;
+        }
     }
 
     private void OnClickQuest()
@@ -93,6 +107,11 @@ public class TycoonMainUI : UIBase
     private void OnClickConstruct()
     {
         ChangePanel(TycoonPanelType.Construct);
+    }
+
+    private void OnClickMarket()  
+    {
+        ChangePanel(TycoonPanelType.Market);
     }
 
     private void ChangePanel(TycoonPanelType type)
@@ -132,6 +151,14 @@ public class TycoonMainUI : UIBase
 
     private void SetGoldText()
     {
-        
+        if (Text_Gold == null)
+        {
+            Debug.LogError("[TycoonMainUI] Text_Gold 인스펙터 할당 안 됨!");
+            return;
+        }
+
+        int gold = GameManager.Inst.CurrencyService.CurrentGold;
+        Debug.Log($"[TycoonMainUI] SetGoldText 호출됨. Gold = {gold}");
+        Text_Gold.text = $"{gold}";
     }
 }
