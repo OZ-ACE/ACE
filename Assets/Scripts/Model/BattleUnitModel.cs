@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 //전투 참가자(영웅, 적)의 턴 순서 결정에 필요한 런타임 정보를 담는 모델
 public class BattleUnitModel
@@ -11,6 +12,10 @@ public class BattleUnitModel
     public int MaxHp { get; set; }
 
     public int CurrentHp { get; set; }
+
+    public bool IsActionBlocked { get; set; } //BT에서 행동 가능 여부를 검사할 때 사용
+
+    public List<string> SkillIdList { get; set; } = new List<string>(); //BT에서 사용 가능한 스킬 후보를 확인할 때 사용
 
     //CurrentHp를 순간순간 자동 계산해줌
     public bool IsDefeated
