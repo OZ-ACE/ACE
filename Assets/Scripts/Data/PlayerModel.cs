@@ -8,6 +8,7 @@ public class PlayerModel
     public string PlayerName;
     public int Day;
     public int Gold;
+    public int MemoryFragment;
 
     public BuildGridData BuildGridData = new BuildGridData();
     public List<ItemModel> Inventory = new List<ItemModel>();
