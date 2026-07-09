@@ -17,6 +17,12 @@ public class BattleUnitModel
 
     public List<string> SkillIdList { get; set; } = new List<string>(); //BT에서 사용 가능한 스킬 후보를 확인할 때 사용
 
+    public string LastSkillId { get; set; } //직전에 사용한 스킬 ID (반복 카운트 기준)
+    public int RepeatSkillCount { get; set; } //같은 스킬 연속 사용 횟수
+
+    public string ActivePenaltyId { get; set; } //현재 발동 중인 페널티 ID, 없으면 null
+    public int PenaltyRemainingRounds { get; set; } //페널티 지속 남은 라운드 수
+
     //CurrentHp를 순간순간 자동 계산해줌
     public bool IsDefeated
     {
