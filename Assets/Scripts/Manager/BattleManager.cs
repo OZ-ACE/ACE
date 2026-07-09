@@ -21,6 +21,7 @@ public class BattleManager : SingletonBase<BattleManager>
     public void BuildActionQueue(List<BattleUnitModel> turnOrder)
     {
         _currentRound++;
+        UpdatePenaltyDuration(turnOrder);
 
         _actionQueue.Clear();
 
@@ -156,5 +157,79 @@ public class BattleManager : SingletonBase<BattleManager>
     public int CalculatePrimeLevel(int battleParticipateCount)
     {
         return battleParticipateCount / ParticipateCountPerLevel;
+    }
+
+    //유닛이 스킬을 사용했을 때 페널티 게이지를 갱신한다. 이미 페널티가 발동 중인 유닛은 중첩 방지를 위해 게이지 갱신을 건너뛴다
+    public void UpdatePenaltyGauge(BattleUnitModel unit, string usedSkillId)
+    {
+        if (!string.IsNullOrEmpty(unit.ActivePenaltyId))
+        {
+            return;
+        }
+
+        if (unit.LastSkillId == usedSkillId)
+        {
+            unit.RepeatSkillCount++;
+        }
+        else
+        {
+            unit.LastSkillId = usedSkillId;
+            unit.RepeatSkillCount = 1;
+        }
+
+        foreach (Penalty penalty in GameDataManager.Inst.GetDataList<Penalty>())
+        {
+            if (penalty.TriggerSkillId != usedSkillId)
+            {
+                continue;
+            }
+
+            if (unit.RepeatSkillCount >= penalty.TriggerCount)
+            {
+                unit.ActivePenaltyId = penalty.ID;
+                unit.PenaltyRemainingRounds = penalty.DurationRounds;
+                unit.RepeatSkillCount = 0;
+            }
+
+            break;
+        }
+    }
+
+    //해당 유닛이 지금 skillId를 사용할 수 있는지(페널티로 막혀있는지) 검사한다. BT의 스킬 선택 단계에서 CanUseSkill과 함께 호출되어야 함
+    public bool IsSkillBlockedByPenalty(BattleUnitModel unit, string skillId)
+    {
+        if (string.IsNullOrEmpty(unit.ActivePenaltyId))
+        {
+            return false;
+        }
+
+        Penalty penalty = GameDataManager.Inst.GetData<Penalty>(unit.ActivePenaltyId);
+
+        if (penalty == null)
+        {
+            return false;
+        }
+
+        return penalty.TriggerSkillId == skillId;
+    }
+
+    //라운드 시작 시 각 유닛의 페널티 지속 라운드를 감소시키고, 0이 되면 해제한다
+    private void UpdatePenaltyDuration(List<BattleUnitModel> turnOrder)
+    {
+        foreach (BattleUnitModel unit in turnOrder)
+        {
+            if (string.IsNullOrEmpty(unit.ActivePenaltyId))
+            {
+                continue;
+            }
+
+            unit.PenaltyRemainingRounds--;
+
+            if (unit.PenaltyRemainingRounds <= 0)
+            {
+                unit.ActivePenaltyId = null;
+                unit.PenaltyRemainingRounds = 0;
+            }
+        }
     }
 }

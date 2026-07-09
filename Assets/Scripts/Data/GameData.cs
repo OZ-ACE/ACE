@@ -82,3 +82,17 @@ public class SupportItem : GameDataBase
     public int Price;
     public string Description;
 }
+
+//전투 페널티 데이터
+[Serializable]
+public class Penalty : GameDataBase
+{
+    public string PenaltyName;
+    public string PenaltyNameEn;
+    public string TriggerSkillId;
+    public int TriggerCount;
+    public string EffectType;
+    public int EffectValue;
+    public int DurationRounds;
+    public string Description;
+}
