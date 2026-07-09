@@ -55,12 +55,10 @@ public class SaveUI : UIBase
     private async UniTask RefreshSlotViews()
     {
         int requiredSlot = _saveVM.ActiveSlotIndex.Count;
-        Debug.Log(requiredSlot);
 
         if (_saveSlots.Count < requiredSlot)
         {
             int createCount = requiredSlot - _saveSlots.Count;
-            Debug.Log(createCount);
 
             for (int i = 0; i < createCount; i++)
             {

@@ -35,8 +35,6 @@ public class SaveManager : SingletonBase<SaveManager>
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(GetPath(CurrentSlotIndex), json);
         SlotIndex.Add(CurrentSlotIndex);
-
-        Debug.Log(CurrentSlotIndex);
     }
 
     public PlayerModel RequestLoadData(int slotIndex)
@@ -84,6 +82,7 @@ public class SaveManager : SingletonBase<SaveManager>
 
         newPlayer.Inventory = SetDefaultItem();
 
+        CurrentPlayerModel = newPlayer;
         return newPlayer;
     }
 

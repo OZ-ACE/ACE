@@ -30,7 +30,7 @@ public class NamePopup : UIBase
         SaveManager.Inst.SaveVM.CreateAndSavePlayer(InputField_Name.text);
 
         UIManager.Inst.ClsoeNamePopup();
-        UIManager.Inst.OpenTycoonMainUI();
+        UIManager.Inst.OpenDialogueUI();
         UIManager.Inst.CloseTitleUI();
     }
 }
