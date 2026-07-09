@@ -3,14 +3,14 @@
 public static class BattleSkillConditionChecker
 {
     //유닛이 기본적으로 행동 가능한 상태인지 검사한다.
-    public static bool CanAct(BattleUnit unit)
+    public static bool CanAct(BattleUnitModel unit)
     {
         if (unit == null)
         {
             return false;
         }
 
-        if (unit.IsDead == true)
+        if (unit.IsDefeated == true)
         {
             return false;
         }
@@ -26,10 +26,10 @@ public static class BattleSkillConditionChecker
     //스킬 사용에 필요한 기본 조건을 검사
     //Wait는 스킬 데이터에 포함하지 않으므로 skillId와 targetList가 없어도 사용 가능
     public static bool CanUseSkill(
-        BattleUnit unit,
+        BattleUnitModel unit,
         string skillId,
         ActionType actionType,
-        List<BattleUnit> targetList)
+        List<BattleUnitModel> targetList)
     {
         if (CanAct(unit) == false)
         {
@@ -60,16 +60,16 @@ public static class BattleSkillConditionChecker
     }
 
     //대상 목록에 살아있는 대상이 하나라도 있는지 검사
-    private static bool HasAliveTarget(List<BattleUnit> targetList)
+    private static bool HasAliveTarget(List<BattleUnitModel> targetList)
     {
-        foreach (BattleUnit target in targetList)
+        foreach (BattleUnitModel target in targetList)
         {
             if (target == null)
             {
                 continue;
             }
 
-            if (target.IsDead == true)
+            if (target.IsDefeated == true)
             {
                 continue;
             }
