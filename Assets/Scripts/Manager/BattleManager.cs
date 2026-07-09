@@ -3,16 +3,18 @@
 //전투 라운드의 액션 큐를 생성하고 전체 진행을 관리하는 매니저
 public class BattleManager : SingletonBase<BattleManager>
 {
-    private const int MaxEnergyGauge = 3; //플레이어 개입 턴의 에너지 게이지 총량
+    private const int MaxEnergyGauge = 5; //플레이어 개입 턴의 에너지 게이지 총량, 전투 전체 통틀어 처음1회만 채워짐, 라운드별 리셋 안됨
 
     private Queue<BattleActionModel> _actionQueue = new Queue<BattleActionModel>();
     private int _energyGauge;
+    private int _currentRound;
 
     //턴 순서 리스트를 받아와 각 유닛을 큐에 넣고, 마지막에 플레이어 개입 액션을 추가한다
     public void BuildActionQueue(List<BattleUnitModel> turnOrder)
     {
+        _currentRound++;
+
         _actionQueue.Clear();
-        _energyGauge = MaxEnergyGauge;
 
         foreach (BattleUnitModel unit in turnOrder)
         {
@@ -55,6 +57,11 @@ public class BattleManager : SingletonBase<BattleManager>
     public int GetRemainingEnergy()
     {
         return _energyGauge;
+    }
+
+    public int GetCurrentRound()
+    {
+        return _currentRound;
     }
 
     public bool HasNextAction()
@@ -106,5 +113,12 @@ public class BattleManager : SingletonBase<BattleManager>
         }
 
         return BattleResult.Ongoing;
+    }
+
+    //새 전투 시작 시 라운드와 에너지 게이지를 초기화한다. 실제 전투 시작 지점(씬 진입 로직)에서 반드시 1회 호출되어야 함 — 아직 호출부 없음(M3에서 연동 예정)
+    public void ResetBattleState()
+    {
+        _currentRound = 0;
+        _energyGauge = MaxEnergyGauge;
     }
 }
