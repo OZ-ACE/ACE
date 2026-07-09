@@ -12,6 +12,7 @@ public class PlayerModel
 
     public BuildGridData BuildGridData = new BuildGridData();
     public List<ItemModel> Inventory = new List<ItemModel>();
+    public List<ShopStockData> ShopStocks = new List<ShopStockData>();
     public List<HeroProgressModel> HeroProgressList = new List<HeroProgressModel>();
 }
 
@@ -20,6 +21,14 @@ public class ItemModel
 {
     public string ItemID;
     public int ItemCount;
+}
+
+
+[Serializable]
+public class ShopStockData
+{
+    public string ItemID;
+    public int RemainStock;
 }
 
 [Serializable]
