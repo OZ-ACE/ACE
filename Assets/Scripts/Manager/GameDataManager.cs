@@ -24,6 +24,7 @@ public class GameDataManager : SingletonBase<GameDataManager>
         LoadData<HeroBattleData>("HeroBattle");
         LoadData<EnemyBattleData>("EnemyBattle");
         LoadData<RoomData>("Room");
+        LoadData<SupportItem>("SupportItem");
     }
 
     private void LoadData<T>(string table) where T : GameDataBase

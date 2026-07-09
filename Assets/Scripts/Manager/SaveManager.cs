@@ -11,6 +11,8 @@ public class SaveManager : SingletonBase<SaveManager>
 
     protected override void Awake()
     {
+        base.Awake();
+
         SlotIndex.Clear();
 
         for (int i = 0; i < 100; i++)
@@ -20,6 +22,12 @@ public class SaveManager : SingletonBase<SaveManager>
                 SlotIndex.Add(i);
             }
         }
+    }
+
+    //[테스트 코드]
+    private void OnEnable()
+    {
+        CurrentPlayerModel = RequestLoadData(0);
     }
 
     private string GetPath(int slotIndex)
@@ -48,6 +56,8 @@ public class SaveManager : SingletonBase<SaveManager>
         else
         {
             PlayerModel data = GetDefaultData();
+            RequestSaveData(slotIndex, data);
+
             return data;
         }
     }
@@ -72,9 +82,30 @@ public class SaveManager : SingletonBase<SaveManager>
         PlayerModel newPlayer = new PlayerModel();
 
         newPlayer.PlayerName = "요양보조사";
-        newPlayer.Day = 1000;
+        newPlayer.Day = 1;
+        newPlayer.Gold = 1000;
+
+        newPlayer.Inventory = SetDefaultItem();
 
         return newPlayer;
+    }
+
+    private List<ItemModel> SetDefaultItem()
+    {
+        List<ItemModel> items = new List<ItemModel>();
+
+        foreach (SupportItem item in GameDataManager.Inst.GetDataList<SupportItem>())
+        {
+            ItemModel itemModel = new ItemModel
+            {
+                ItemID = item.ID,
+                ItemCount = item.stockCount
+            };
+
+            items.Add(itemModel);
+        }
+
+        return items;
     }
 
     public bool HasSaveFile(int slotIndex)
