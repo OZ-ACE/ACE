@@ -45,6 +45,7 @@ public class SaveManager : SingletonBase<SaveManager>
         {
             string json = File.ReadAllText(path);
             PlayerModel data = JsonUtility.FromJson<PlayerModel>(json);
+            CurrentPlayerModel = data;
 
             return data;
         }

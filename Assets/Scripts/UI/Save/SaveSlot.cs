@@ -48,5 +48,11 @@ public class SaveSlot : ViewBase
     private void OnClickConfirm()
     {
         _saveVM.RequestConfirmSlot(_slotIndex);
+
+        UIManager.Inst.OpenTycoonMainUI();
+        UIManager.Inst.OpenLoadingUI();
+
+        UIManager.Inst.CloseTitleUI();
+        UIManager.Inst.CloseSaveUI();
     }
 }
