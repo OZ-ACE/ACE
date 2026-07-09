@@ -4,6 +4,11 @@
 public class BattleManager : SingletonBase<BattleManager>
 {
     private const int MaxEnergyGauge = 5; //플레이어 개입 턴의 에너지 게이지 총량, 전투 전체 통틀어 처음1회만 채워짐, 라운드별 리셋 안됨
+    private const int BaseRewardAmount = 100; //더미값, 추후 밸런싱(9단계)에서 데이터 테이블로 전환 예정
+    private const float DoubleBonusMultiplier = 2f;
+    private const float HalfBonusMultiplier = 1.5f;
+    private const int DoubleBonusRoundThreshold = 2; //2라운드 이내 클리어 시 2배
+    private const int HalfBonusRoundThreshold = 3; //3라운드 이내 클리어 시 1.5배
 
     private Queue<BattleActionModel> _actionQueue = new Queue<BattleActionModel>();
     private int _energyGauge;
@@ -120,5 +125,27 @@ public class BattleManager : SingletonBase<BattleManager>
     {
         _currentRound = 0;
         _energyGauge = MaxEnergyGauge;
+    }
+
+    //전투 결과와 소요 라운드 수를 받아 지급할 기억의파편 수량을 계산한다. 승리가 아니면 0 반환
+    //실제 PlayerModel 반영은 M3에서 ViewModel을 통해 연동 예정, 여기서는 계산 값만 반환
+    public int CalculateReward(BattleResult result, int roundCount)
+    {
+        if (result != BattleResult.Victory)
+        {
+            return 0;
+        }
+
+        if (roundCount <= DoubleBonusRoundThreshold)
+        {
+            return (int)(BaseRewardAmount * DoubleBonusMultiplier);
+        }
+
+        if (roundCount <= HalfBonusRoundThreshold)
+        {
+            return (int)(BaseRewardAmount * HalfBonusMultiplier);
+        }
+
+        return BaseRewardAmount;
     }
 }
