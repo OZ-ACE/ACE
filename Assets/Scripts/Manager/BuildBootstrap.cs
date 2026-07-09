@@ -48,6 +48,9 @@ public class BuildBootstrap : MonoBehaviour
         GridSystem gridSystem = new GridSystem(_cellWidth, _cellHeight, Vector2.zero);
         BuildGridModel gridModel = new BuildGridModel();
 
+ 
+
+
         _buildService = new BuildService();
         BuildGridViewModel viewModel = _buildService.CreateBuildGridViewModel(gridSystem, gridModel);
 
