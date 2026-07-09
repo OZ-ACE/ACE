@@ -12,6 +12,7 @@ public class PlayerModel
 
     public BuildGridData BuildGridData = new BuildGridData();
     public List<ItemModel> Inventory = new List<ItemModel>();
+    public List<HeroProgressModel> HeroProgressList = new List<HeroProgressModel>();
 }
 
 [Serializable]
@@ -19,4 +20,11 @@ public class ItemModel
 {
     public string ItemID;
     public int ItemCount;
+}
+
+[Serializable]
+public class HeroProgressModel
+{
+    public string HeroId;
+    public int BattleParticipateCount; //누적 전투 참여 횟수 (승패 무관), 프라임 레벨 산정 기준
 }
