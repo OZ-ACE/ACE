@@ -16,9 +16,11 @@ public class BuildMenuView : ViewBase
     [Header("메뉴 전체 루트 (켜고 끌 대상)")]
     [SerializeField] private GameObject Object_MenuRoot;
 
+    private bool _isButtonsCreated;
 
     private BuildGridViewModel _viewModel;
     private List<GameObject> _roomButtons = new List<GameObject>();
+
 
     public void Bind(BuildGridViewModel viewModel)
     {
@@ -30,12 +32,21 @@ public class BuildMenuView : ViewBase
         _viewModel = viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
 
-        CreateRoomButtons();
-        ApplyBuildMode(_viewModel.IsBuildMode); 
+        if (_isButtonsCreated == false)
+        {
+            CreateRoomButtons();
+            _isButtonsCreated = true;
+        }
+
+        ApplyBuildMode(_viewModel.IsBuildMode);
     }
 
 
-
+    private void OnEnable()
+    {
+        BuildGridViewModel viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
+        Bind(viewModel);
+    }
     private void OnDestroy()
     {
         if (_viewModel != null)
@@ -67,40 +78,30 @@ public class BuildMenuView : ViewBase
 
     private void CreateRoomButtons()
     {
-        ClearButtons();
-
         List<string> roomIds = _viewModel.BuildableRoomIds;
-        foreach (string roomId in roomIds)
+
+        for (int i = 0; i < roomIds.Count; i++)
         {
-            RoomData room = GameDataManager.Inst.GetData<RoomData>(roomId);
+            RoomData room = GameDataManager.Inst.GetData<RoomData>(roomIds[i]);
             if (room == null)
             {
-                Debug.LogWarning($"[BuildMenuView] 방 데이터 없음: {roomId}");
                 continue;
             }
 
-            GameObject buttonObj = Instantiate(Prefab_RoomButton, Transform_ButtonRoot);
-            buttonObj.name = $"Button_{roomId}";
+            GameObject slotObj = Instantiate(Prefab_RoomButton, Transform_ButtonRoot);
+            slotObj.name = $"ConstructSlot_{room.ID}";
+            _roomButtons.Add(slotObj);
 
-            TextMeshProUGUI label = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-            if (label != null)
+            ConstructSlot slot = slotObj.GetComponent<ConstructSlot>();
+            if (slot != null)
             {
-                label.text = room.Name;
+                slot.SetSlotData(room, _viewModel);
             }
-
-            Button button = buttonObj.GetComponent<Button>();
-            if (button != null)
-            {
-                RoomButtonHandler handler = buttonObj.AddComponent<RoomButtonHandler>();
-                handler.Setup(_viewModel, roomId);
-                button.onClick.AddListener(handler.OnClickSelect);
-            }
-
-            _roomButtons.Add(buttonObj);
         }
 
-        Debug.Log($"[BuildMenuView] 방 버튼 {_roomButtons.Count}개 생성");
+        Debug.Log($"[BuildMenuView] 방 버튼 {roomIds.Count}개 생성");
     }
+
 
     private void ClearButtons()
     {

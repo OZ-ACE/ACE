@@ -32,6 +32,12 @@ public class MoveToggleView : ViewBase
         UpdateLabel();
     }
 
+    private void OnEnable()
+    {
+        BuildGridViewModel viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
+        Bind(viewModel);
+    }
+
     private void OnDestroy()
     {
         if (_viewModel != null)

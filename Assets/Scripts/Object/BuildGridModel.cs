@@ -11,6 +11,24 @@ public class BuildGridModel
     private GridBounds _bounds;
     private int _unlockedMinFloor;
 
+    /// <summary> 현재 배치된 방 전체 </summary>
+    public List<PlacedRoomData> GetAllRooms()
+    {
+        List<PlacedRoomData> result = new List<PlacedRoomData>();
+        HashSet<PlacedRoomData> added = new HashSet<PlacedRoomData>();
+
+        foreach (PlacedRoomData room in _rooms.Values)
+        {
+            if (added.Add(room) == true)
+            {
+                result.Add(room);
+            }
+        }
+        return result;
+    }
+
+
+
     public GridBounds Bounds { get { return _bounds; } }
     public int UnlockedMinFloor { get { return _unlockedMinFloor; } }
 
@@ -87,6 +105,8 @@ public class BuildGridModel
     {
         var data = new BuildGridData();
 
+        data.UnlockedMinFloor = _unlockedMinFloor;
+
         foreach (var pair in _cells)
         {
             data.ChangedCells.Add(new CellStateData { Coord = pair.Key, Type = pair.Value });
@@ -113,6 +133,11 @@ public class BuildGridModel
 
         InitCellTypes(_bounds);
 
+        if (data.UnlockedMinFloor < 0)
+        {
+            _unlockedMinFloor = data.UnlockedMinFloor;
+        }
+
         foreach (var cell in data.ChangedCells)
         {
             _cells[cell.Coord] = cell.Type;
@@ -123,7 +148,6 @@ public class BuildGridModel
             RoomData roomData = GameDataManager.Inst.GetData<RoomData>(room.RoomId);
             Vector2Int size = (roomData != null) ? roomData.GetSize() : Vector2Int.one;
             AddRoom(room, grid.GetOccupiedCoords(room.Origin, size));
-
         }
     }
 

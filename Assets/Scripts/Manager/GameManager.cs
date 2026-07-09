@@ -13,6 +13,11 @@ public class GameManager : SingletonBase<GameManager>
     /// <summary> 인벤토리 뷰모델 (상점·인벤토리 UI가 공유) </summary>
     public InventoryViewModel InventoryViewModel { get; private set; }
 
+    /// <summary> 건설 뷰모델 보관 서비스 </summary>
+    public BuildService BuildService { get; private set; }
+
+
+
     protected override void Awake()
     {
         base.Awake();
@@ -20,6 +25,7 @@ public class GameManager : SingletonBase<GameManager>
         CurrencyService = new CurrencyService();
         ShopService = new ShopService(CurrencyService);
         InventoryViewModel = new InventoryViewModel();
+        BuildService = new BuildService(CurrencyService); 
     }
 
     public void SetDialogueID(string dialogueID)

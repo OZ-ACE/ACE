@@ -21,11 +21,22 @@ public class UnlockFloorView : ViewBase
 
         if (Button_Unlock != null)
         {
+            Button_Unlock.onClick.RemoveListener(OnClickUnlock);
             Button_Unlock.onClick.AddListener(OnClickUnlock);
         }
 
+        GameManager.Inst.CurrencyService.OnChangeCurrency -= UpdateLabel;
+        GameManager.Inst.CurrencyService.OnChangeCurrency += UpdateLabel;
+
         UpdateLabel();
     }
+
+    private void OnEnable()
+    {
+        BuildGridViewModel viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
+        Bind(viewModel);
+    }
+
 
     private void OnDestroy()
     {
@@ -33,23 +44,35 @@ public class UnlockFloorView : ViewBase
         {
             Button_Unlock.onClick.RemoveListener(OnClickUnlock);
         }
+
+        if (GameManager.Inst != null)
+        {
+            GameManager.Inst.CurrencyService.OnChangeCurrency -= UpdateLabel;
+        }
     }
 
     private void OnClickUnlock()
     {
-        if (_viewModel != null)
-        {
-            _viewModel.TryUnlockNextFloor();
-            UpdateLabel();
-        }
+        _viewModel.TryUnlockNextFloor();
+        UpdateLabel();
     }
 
     private void UpdateLabel()
     {
-        if (Text_Label == null || _viewModel == null)
+        if (_viewModel == null)
         {
             return;
         }
-        Text_Label.text = $"해금 (현재 {_viewModel.UnlockedMinFloor}층)";
+
+        if (_viewModel.IsFloorRemaining() == false)
+        {
+            Text_Label.text = "최하층 도달";
+            Button_Unlock.interactable = false;
+            return;
+        }
+
+        int cost = _viewModel.GetNextUnlockCost();
+        Text_Label.text = $"굴착 ({cost}G)";
+        Button_Unlock.interactable = _viewModel.IsUnlockable();
     }
 }
