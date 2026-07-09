@@ -22,14 +22,14 @@ public class NamePopup : UIBase
 
     private void OnClickClose()
     {
-        UIManager.Inst.ClsoeNamePopup();
+        UIManager.Inst.CloseNamePopup();
     }
 
     private void OnClickConfirm()
     {
         SaveManager.Inst.SaveVM.CreateAndSavePlayer(InputField_Name.text);
 
-        UIManager.Inst.ClsoeNamePopup();
+        UIManager.Inst.CloseNamePopup();
         UIManager.Inst.OpenDialogueUI();
         UIManager.Inst.CloseTitleUI();
     }

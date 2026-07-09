@@ -13,8 +13,10 @@ public enum UIRootType
 public enum UIType
 {
     None,
+    OverlayScreen,
     TitleUI,
     NamePopup,
+    SettingPopup,
     SaveUI,
     LoadingUI,
     DialogueUI,
@@ -35,6 +37,7 @@ public static class UIExtension
     // 이 밑에다가 UI별로 Open 및 Close 함수 작성해주세요.
     public static void InitStartUI(this UIManager uiManager)
     {
+        uiManager.OpenUI(UIRootType.Front, UIType.OverlayScreen);
         uiManager.OpenTitleUI();
     }
 
@@ -63,9 +66,19 @@ public static class UIExtension
        uIManager.OpenUI(UIRootType.Popup, UIType.NamePopup);
     }
 
-    public static void ClsoeNamePopup(this UIManager uIManager)
+    public static void CloseNamePopup(this UIManager uIManager)
     {
         uIManager.CloseUI(UIType.NamePopup);
+    }
+
+    public static void OpenSettingPopup(this UIManager uIManager)
+    {
+        uIManager.OpenUI(UIRootType.Popup, UIType.SettingPopup);
+    }
+
+    public static void CloseSettingPopup(this UIManager uIManager)
+    {
+        uIManager.CloseUI(UIType.SettingPopup);
     }
 
     public static void OpenDialogueUI(this UIManager uiManager)

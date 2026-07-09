@@ -31,7 +31,7 @@ public class TitleUI : UIBase
 
     private void OnClickSetting()
     {
-
+        UIManager.Inst.OpenSettingPopup();
     }
 
     private void OnClickQuit()

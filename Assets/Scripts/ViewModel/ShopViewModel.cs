@@ -178,6 +178,6 @@ public class ShopViewModel : ViewModelBase
         {
             return;
         }
-        SaveManager.Inst.RequestSaveData(SaveManager.Inst.CurrentSlotIndex, player);
+        SaveManager.Inst.RequestSaveData(player);
     }
 }
