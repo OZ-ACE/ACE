@@ -37,11 +37,6 @@ public class GameManager : SingletonBase<GameManager>
         ApplySetting().Forget();
     }
 
-    public void SetDialogueID(string dialogueID)
-    {
-        CurrentDialogueID = dialogueID;
-    }
-
     private async UniTask ApplySetting()
     {
         AudioMixer audioMixer = await ResourceManager.Inst.LoadAsset<AudioMixer>("Audio/AudioMixer");
