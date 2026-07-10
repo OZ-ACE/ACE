@@ -102,3 +102,15 @@ public class Loading : GameDataBase
 {
     public string Content;
 }
+
+//전투 보상/프라임레벨 계산에 쓰이는 밸런스 수치 데이터 (단일 row, ID=default)
+[Serializable]
+public class BattleConfig : GameDataBase
+{
+    public int BaseRewardAmount;
+    public int DoubleBonusPercent; //200 = x2.0배
+    public int HalfBonusPercent; //150 = x1.5배
+    public int DoubleBonusRoundThreshold;
+    public int HalfBonusRoundThreshold;
+    public int ParticipateCountPerLevel;
+}

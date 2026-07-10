@@ -27,6 +27,7 @@ public class GameDataManager : SingletonBase<GameDataManager>
         LoadData<SupportItem>("SupportItem");
         LoadData<Penalty>("Penalty");
         LoadData<Loading>("Loading");
+        LoadData<BattleConfig>("BattleConfig");
     }
 
     private void LoadData<T>(string table) where T : GameDataBase
