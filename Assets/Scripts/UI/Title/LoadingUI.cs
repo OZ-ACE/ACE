@@ -20,7 +20,7 @@ public class LoadingUI : UIBase
 
     private string SetLoadingText()
     {
-        int randomNum = UnityEngine.Random.Range(0, GameDataManager.Inst.GetDataList<Loading>().Count - 1);
+        int randomNum = UnityEngine.Random.Range(1, GameDataManager.Inst.GetDataList<Loading>().Count - 1);
 
         string loadingText = GameDataManager.Inst.GetData<Loading>($"Loading_{randomNum}").Content;
         return loadingText;
