@@ -22,6 +22,10 @@ public class GameManager : SingletonBase<GameManager>
 
     public Action<float> OnChangeBrightness;
 
+
+
+
+
     protected override void Awake()
     {
         base.Awake();

@@ -17,6 +17,8 @@ public class BuildService
 
     private const int INITIAL_MIN_FLOOR = -3;
 
+    private static readonly Vector2 GRID_ORIGIN = new Vector2(-9.5f, -6f);
+
     private readonly ICurrencyService _currencyService;
 
     private BuildGridViewModel _buildGridViewModel;
@@ -30,7 +32,7 @@ public class BuildService
     /// <summary> 그리드·모델·뷰모델 조립 후 저장 데이터 복원 </summary>
     private void InitBuildSystem()
     {
-        GridSystem gridSystem = new GridSystem(CELL_WIDTH, CELL_HEIGHT, Vector2.zero);
+        GridSystem gridSystem = new GridSystem(CELL_WIDTH, CELL_HEIGHT, GRID_ORIGIN);
         BuildGridModel gridModel = new BuildGridModel();
 
         _buildGridViewModel = new BuildGridViewModel(gridSystem, gridModel, _currencyService);
