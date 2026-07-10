@@ -3,8 +3,7 @@
 public enum BattleActionResult
 {
     None = 0,
-    Success,
-    Reinforce,
+    Reinforce, //지원하기
     ChangeUnit, //다른 영웅으로 행동 변경(에너지 많이 소모)
-    Fail
+    HealUnit //영웅 회복
 }
