@@ -13,7 +13,12 @@ public enum UIRootType
 public enum UIType
 {
     None,
+    OverlayScreen,
+    TitleUI,
+    NamePopup,
+    SettingPopup,
     SaveUI,
+    LoadingUI,
     DialogueUI,
     TycoonMainUI
 }
@@ -30,12 +35,50 @@ public static class UIExtension
 
 
     // 이 밑에다가 UI별로 Open 및 Close 함수 작성해주세요.
-
-    // 테스트용
     public static void InitStartUI(this UIManager uiManager)
     {
-        //uiManager.OpenDialogueUI();
-        uiManager.OpenTycoonMainUI();
+        uiManager.OpenUI(UIRootType.Front, UIType.OverlayScreen);
+        uiManager.OpenTitleUI();
+    }
+
+    public static void OpenTitleUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.Main, UIType.TitleUI);
+    }
+
+    public static void CloseTitleUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.TitleUI);
+    }
+
+    public static void OpenLoadingUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.Popup, UIType.LoadingUI);
+    }
+
+    public static void CloseLoadingUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.LoadingUI);
+    }
+
+    public static void OpenNamePopup(this UIManager uIManager)
+    {
+       uIManager.OpenUI(UIRootType.Popup, UIType.NamePopup);
+    }
+
+    public static void CloseNamePopup(this UIManager uIManager)
+    {
+        uIManager.CloseUI(UIType.NamePopup);
+    }
+
+    public static void OpenSettingPopup(this UIManager uIManager)
+    {
+        uIManager.OpenUI(UIRootType.Popup, UIType.SettingPopup);
+    }
+
+    public static void CloseSettingPopup(this UIManager uIManager)
+    {
+        uIManager.CloseUI(UIType.SettingPopup);
     }
 
     public static void OpenDialogueUI(this UIManager uiManager)
@@ -50,7 +93,7 @@ public static class UIExtension
 
     public static void OpenSaveUI(this UIManager uiManager)
     {
-        uiManager.OpenUI(UIRootType.Main, UIType.SaveUI);
+        uiManager.OpenUI(UIRootType.Popup, UIType.SaveUI);
     }
 
     public static void CloseSaveUI(this UIManager uiManager)
