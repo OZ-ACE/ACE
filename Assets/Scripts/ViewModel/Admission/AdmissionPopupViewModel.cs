@@ -2,45 +2,45 @@
 
 public class AdmissionPopupViewModel : ViewModelBase
 {
-    private readonly List<AdmissionData> _admissionDatas = new List<AdmissionData>();
+    private readonly List<AdmissionCandidateModel> _candidateModels = new List<AdmissionCandidateModel>();
 
-    public IReadOnlyList<AdmissionData> AdmissionDatas => _admissionDatas;
-    public AdmissionData SelectedAdmissionData { get; private set; }
+    public IReadOnlyList<AdmissionCandidateModel> CandidateModels => _candidateModels;
+    public AdmissionCandidateModel SelectedCandidateModel { get; private set; }
 
     public void Initialize()
     {
-        _admissionDatas.Clear();
+        _candidateModels.Clear();
 
-        // TEST
-        AddAdmissionData("admission_01");
-        AddAdmissionData("admission_02");
-        AddAdmissionData("admission_03");
+        List<AdmissionCandidateModel> candidateModels = AdmissionManager.Inst.GetCandidateModels();
+
+        for (int i = 0; i < candidateModels.Count; i++)
+        {
+            _candidateModels.Add(candidateModels[i]);
+        }
     }
 
-    public void SelectAdmissionData(string id)
+    public HeroData GetHeroData(int index)
     {
-        SelectedAdmissionData = null;
-
-        foreach (AdmissionData admissionData in _admissionDatas)
+        if (index < 0 || index >= _candidateModels.Count)
         {
-            if (admissionData.ID == id)
+            return null;
+        }
+
+        return GameDataManager.Inst.GetData<HeroData>(_candidateModels[index].HeroId);
+    }
+
+    public void SelectCandidateModel(int candidateId)
+    {
+        SelectedCandidateModel = null;
+
+        for (int i = 0; i < _candidateModels.Count; i++)
+        {
+            if (_candidateModels[i].CandidateId == candidateId)
             {
-                SelectedAdmissionData = admissionData;
-                OnPropertyChanged(nameof(SelectedAdmissionData));
+                SelectedCandidateModel = _candidateModels[i];
+                OnPropertyChanged(nameof(SelectedCandidateModel));
                 return;
             }
         }
-    }
-
-    private void AddAdmissionData(string id)
-    {
-        AdmissionData admissionData = GameDataManager.Inst.GetData<AdmissionData>(id);
-
-        if (admissionData == null)
-        {
-            return;
-        }
-
-        _admissionDatas.Add(admissionData);
     }
 }
