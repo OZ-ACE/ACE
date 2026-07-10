@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class UIManager : SingletonBase<UIManager>
 {
-    [SerializeField] Canvas Canvas_Background;
-    [SerializeField] Canvas Canvas_Main;
-    [SerializeField] Canvas Canvas_Content;
-    [SerializeField] Canvas Canvas_Popup;
-    [SerializeField] Canvas Canvas_Front;
+    [SerializeField] private Canvas Canvas_Background;
+    [SerializeField] private Canvas Canvas_Main;
+    [SerializeField] private Canvas Canvas_Content;
+    [SerializeField] private Canvas Canvas_Popup;
+    [SerializeField] private Canvas Canvas_Front;
 
     private Dictionary<UIType, UIBase> _createdUI = new Dictionary<UIType, UIBase>();
     private HashSet<UIType> _openedUI = new HashSet<UIType>();

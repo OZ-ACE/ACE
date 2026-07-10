@@ -21,6 +21,7 @@ public enum UIType
     LoadingUI,
     DialogueUI,
     TycoonMainUI,
+    UIAdmissionPopup
     BattleMainUI
 }
 
@@ -40,6 +41,8 @@ public static class UIExtension
     {
         uiManager.OpenUI(UIRootType.Front, UIType.OverlayScreen);
         uiManager.OpenTitleUI();
+
+        AdmissionManager.Inst.Initialize();
     }
 
     public static void OpenTitleUI(this UIManager uiManager)
@@ -110,6 +113,29 @@ public static class UIExtension
     public static void CloseTycoonMainUI(this UIManager uIManager)
     {
         uIManager.CloseUI(UIType.TycoonMainUI);
+    }
+
+    public static void OpenAdmissionPopup(this UIManager uiManager)
+    {
+        Debug.Log("팝업 열기");
+
+        UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.UIAdmissionPopup);
+
+        if (uiBase == null)
+        {
+            Debug.LogWarning("UIAdmissionPopup 생성 실패");
+            return;
+        }
+
+        if (uiBase is UIAdmissionPopup admissionPopup)
+        {
+            admissionPopup.Initialize();
+        }
+    }
+
+    public static void CloseAdmissionPopup(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.UIAdmissionPopup);
     }
 
     public static void OpenBattleMainUI(this UIManager uiManager)

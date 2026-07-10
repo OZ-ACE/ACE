@@ -18,25 +18,38 @@ public class Dialogue : GameDataBase
     public string BGM;
     public string SFX;
 }
+
+[Serializable]
+public class HeroData : GameDataBase
+{
+    public string HeroName;
+    public string HeroNameEn;
+    public string Age;
+    public string Remarks;
+    public string MainSkillId;
+    public int CandidateWeight;
+    public string ProfileImage;
+}
+
 //영웅 전투 스탯 데이터
 [Serializable]
 public class HeroBattleData : GameDataBase
 {
-    public string position;
-    public int maxHp;
-    public int speed;
-    public int attackPower;
-    public int defensePower;
+    public string Position;
+    public int MaxHp;
+    public int Speed;
+    public int AttackPower;
+    public int DefensePower;
 }
 
 //적 전투 스탯 데이터
 [Serializable]
 public class EnemyBattleData : GameDataBase
 {
-    public int maxHp;
-    public int speed;
-    public int attackPower;
-    public int defensePower;
+    public int MaxHp;
+    public int Speed;
+    public int AttackPower;
+    public int DefensePower;
 }
 
 //영웅 스킬 데이터
