@@ -122,12 +122,12 @@ public class RoomData : GameDataBase
 [Serializable]
 public class SupportItem : GameDataBase
 {
-    public string itemName;
-    public string itemNameEn;
-    public string targetPenaltyId;
-    public string targetPenaltyName;
-    public int energyCost;
-    public int stockCount;
+    public string ItemName;
+    public string ItemNameEn;
+    public string TargetPenaltyId;
+    public string TargetPenaltyName;
+    public int EnergyCost;
+    public int StockCount;
     public int Price;
     public string Description;
 }

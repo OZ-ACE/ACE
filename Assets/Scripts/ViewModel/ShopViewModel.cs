@@ -61,7 +61,7 @@ public class ShopViewModel : ViewModelBase
             {
                 ShopStockData stock = new ShopStockData();
                 stock.ItemID = item.ID;
-                stock.RemainStock = item.stockCount;
+                stock.RemainStock = item.StockCount;
                 player.ShopStocks.Add(stock);
             }
         }
@@ -170,7 +170,7 @@ public class ShopViewModel : ViewModelBase
 
         SaveShop();
 
-        Debug.Log($"[ShopViewModel] 구매 성공: {item.itemName} ({item.Price}G) → 잔여 재고 {GetRemainStock(itemID)}");
+        Debug.Log($"[ShopViewModel] 구매 성공: {item.ItemName} ({item.Price}G) → 잔여 재고 {GetRemainStock(itemID)}");
         return PurchaseResult.Success;
     }
 

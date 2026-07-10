@@ -25,7 +25,7 @@ public class ShopSlot : MonoBehaviour
         Button_Buy.onClick.RemoveListener(OnClickBuy);
         Button_Buy.onClick.AddListener(OnClickBuy);
 
-        Text_Name.text = item.itemName;
+        Text_Name.text = item.ItemName;
         Text_Price.text = $"{item.Price} G";
 
         UpdateState();
