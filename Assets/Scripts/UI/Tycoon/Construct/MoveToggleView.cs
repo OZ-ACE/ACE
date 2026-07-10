@@ -26,10 +26,17 @@ public class MoveToggleView : ViewBase
 
         if (Button_Toggle != null)
         {
+            Button_Toggle.onClick.RemoveListener(OnClickToggle);
             Button_Toggle.onClick.AddListener(OnClickToggle);
         }
 
         UpdateLabel();
+    }
+
+    private void OnEnable()
+    {
+        BuildGridViewModel viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
+        Bind(viewModel);
     }
 
     private void OnDestroy()

@@ -9,6 +9,8 @@ public class BuildGridViewModel : ViewModelBase
 {
     private readonly GridSystem _gridSystem;
     private readonly BuildGridModel _buildGridModel;
+    private readonly ICurrencyService _currencyService;
+
     public event Action<PlacedRoomData> OnPlaceRoom;
     public event Action<PlacedRoomData> OnRemoveRoom;
     public event Action<int> OnUnlockFloor;
@@ -27,6 +29,19 @@ public class BuildGridViewModel : ViewModelBase
     public PlacedRoomData PickedRoom { get { return _pickedRoom; } }
     public bool IsHoldingRoom { get { return _pickedRoom != null; } }
     public int UnlockedMinFloor { get { return _buildGridModel.UnlockedMinFloor; } }
+
+    /// <summary> 현재 배치된 방 전체 (뷰가 초기 렌더링할 때 사용) </summary>
+    public List<PlacedRoomData> GetPlacedRooms()
+    {
+        return _buildGridModel.GetAllRooms();
+    }
+
+    // 철거 환불 비율 (건설비의 50%)
+    private const float REFUND_RATIO = 0.5f;
+
+    // 층 해금 비용 (깊이 1당)
+    private const int UNLOCK_COST_PER_FLOOR = 500;
+
 
     //뷰가 바인딩
     private bool _isBuildMode;
@@ -98,10 +113,11 @@ public class BuildGridViewModel : ViewModelBase
 
 
 
-    public BuildGridViewModel(GridSystem gridSystem, BuildGridModel buildGridModel)
+    public BuildGridViewModel(GridSystem gridSystem, BuildGridModel buildGridModel, ICurrencyService currencyService)
     {
         _gridSystem = gridSystem;
         _buildGridModel = buildGridModel;
+        _currencyService = currencyService;
     }
 
     public void InitGrid(GridBounds bounds, int initialMinFloor)
@@ -136,7 +152,20 @@ public class BuildGridViewModel : ViewModelBase
         {
             return PlacementResult.WrongCellType;
         }
-        return _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem);
+
+        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem);
+        if (result != PlacementResult.Success)
+        {
+            return result;
+        }
+
+        // 돈 부족도 배치 불가로 (고스트 빨강)
+        if (_currencyService.IsAffordable(room.BuildCost) == false)
+        {
+            return PlacementResult.NotEnoughGold;
+        }
+
+        return PlacementResult.Success;
     }
 
 
@@ -157,6 +186,7 @@ public class BuildGridViewModel : ViewModelBase
     //철거모드 토글
     public void ToggleDemolishMode()
     {
+        RestorePickedRoom();
         IsMoveMode = false;
 
         if (IsDemolishMode == true)
@@ -178,7 +208,7 @@ public class BuildGridViewModel : ViewModelBase
         if (IsMoveMode == true)
         {
             IsMoveMode = false;
-            _pickedRoom = null;
+            RestorePickedRoom();
         }
         else
         {
@@ -199,11 +229,11 @@ public class BuildGridViewModel : ViewModelBase
     //건설모드 종료
     public void ExitBuildMode()
     {
+        RestorePickedRoom();
         IsBuildMode = false;
         SelectedRoomId = null;
         IsDemolishMode = false;
         IsMoveMode = false;   
-        _pickedRoom = null;
     }
 
     //건설메뉴에서 방 선택
@@ -231,6 +261,16 @@ public class BuildGridViewModel : ViewModelBase
             return result;
         }
 
+        if (_currencyService.IsAffordable(roomData.BuildCost) == false)
+        {
+            return PlacementResult.NotEnoughGold;
+        }
+
+        if (_currencyService.TrySpend(roomData.BuildCost) == false)
+        {
+            return PlacementResult.NotEnoughGold;
+        }
+
         PlacedRoomData placed = new PlacedRoomData();
         placed.RoomId = roomId;
         placed.Origin = originCoord;
@@ -244,9 +284,7 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         SaveGrid();
-        Debug.Log($"세이브 경로: {Application.persistentDataPath}");
-
-        Debug.Log($"[BuildGridViewModel] 방 배치 성공: {roomId} @ {originCoord}");
+        Debug.Log($"[BuildGridViewModel] 방 배치 성공: {roomId} @ {originCoord} (-{roomData.BuildCost}G)");
         return PlacementResult.Success;
     }
 
@@ -261,16 +299,31 @@ public class BuildGridViewModel : ViewModelBase
             return false;
         }
 
+        int refund = GetRefundAmount(removed.RoomId);
+        if (refund > 0)
+        {
+            _currencyService.AddGold(refund);
+        }
+
         if (OnRemoveRoom != null)
         {
             OnRemoveRoom.Invoke(removed);
         }
 
-        // TODO: 환불 (경제 시스템 연동 후) — RoomData.BuildCost 일부 환불
-
-        SaveGrid();  
-        Debug.Log($"[BuildGridViewModel] 방 철거: {removed.RoomId} @ {removed.Origin}");
+        SaveGrid();
+        Debug.Log($"[BuildGridViewModel] 방 철거: {removed.RoomId} @ {removed.Origin} (+{refund}G 환불)");
         return true;
+    }
+
+    //해당 방의 철거 환불액 (건설비의 일정 비율)
+    public int GetRefundAmount(string roomId)
+    {
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(roomId);
+        if (roomData == null)
+        {
+            return 0;
+        }
+        return Mathf.FloorToInt(roomData.BuildCost * REFUND_RATIO);
     }
 
 
@@ -361,32 +414,98 @@ public class BuildGridViewModel : ViewModelBase
     }
 
 
+    //집고 있던 방 환불
+    private void RestorePickedRoom()
+    {
+        if (_pickedRoom == null)
+        {
+            return;
+        }
+
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(_pickedRoom.RoomId);
+        if (roomData == null)
+        {
+            _pickedRoom = null;
+            return;
+        }
+
+        List<GridCoord> coords = _gridSystem.GetOccupiedCoords(_pickedRoom.Origin, roomData.GetSize());
+        _buildGridModel.AddRoom(_pickedRoom, coords);
+
+        if (OnPlaceRoom != null)
+        {
+            OnPlaceRoom.Invoke(_pickedRoom);
+        }
+
+        Debug.Log($"[BuildGridViewModel] 집은 방 원위치: {_pickedRoom.RoomId} @ {_pickedRoom.Origin}");
+        _pickedRoom = null;
+
+        SaveGrid();   
+    }
+
+
+
+
 
     //최저 층 노출 + 해금 명령
-
     public bool TryUnlockNextFloor()
     {
-        bool success = _buildGridModel.TryUnlockNextFloor();
-        if (success == false)
+        if (IsFloorRemaining() == false)
         {
             Debug.Log("[BuildGridViewModel] 더 해금할 층 없음");
             return false;
         }
 
-        // TODO: 해금 비용 차감 (경제 시스템 연동 후)
+        int cost = GetNextUnlockCost();
+        if (_currencyService.IsAffordable(cost) == false)
+        {
+            Debug.Log($"[BuildGridViewModel] 해금 비용 부족 (필요 {cost}G)");
+            return false;
+        }
+
+        bool success = _buildGridModel.TryUnlockNextFloor();
+        if (success == false)
+        {
+            return false;  
+        }
+
+        _currencyService.TrySpend(cost);
 
         if (OnUnlockFloor != null)
         {
             OnUnlockFloor.Invoke(_buildGridModel.UnlockedMinFloor);
         }
 
-        SaveGrid();   // 해금 상태 저장
-        Debug.Log($"[BuildGridViewModel] 층 해금: 이제 {_buildGridModel.UnlockedMinFloor}층까지 열림");
+        SaveGrid();
+        Debug.Log($"[BuildGridViewModel] 층 해금: 이제 {_buildGridModel.UnlockedMinFloor}층까지 열림 (-{cost}G)");
         return true;
     }
 
 
+    //층 해금 비용
+    public int GetNextUnlockCost()
+    {
+        int nextFloor = _buildGridModel.UnlockedMinFloor - 1;
+        if (nextFloor < _buildGridModel.Bounds.MinFloor)
+        {
+            return 0;   
+        }
 
+        int depth = Mathf.Abs(nextFloor);
+        return UNLOCK_COST_PER_FLOOR * depth;
+    }
+    public bool IsFloorRemaining()
+    {
+        return _buildGridModel.UnlockedMinFloor - 1 >= _buildGridModel.Bounds.MinFloor;
+    }
+    public bool IsUnlockable()
+    {
+        if (IsFloorRemaining() == false)
+        {
+            return false;
+        }
+        return _currencyService.IsAffordable(GetNextUnlockCost());
+    }
 
 
 
@@ -418,14 +537,6 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         _buildGridModel.LoadFromSaveData(player.BuildGridData, _gridSystem);
-
-        foreach (PlacedRoomData room in player.BuildGridData.PlacedRooms)
-        {
-            if(OnPlaceRoom !=null)
-            {
-                OnPlaceRoom.Invoke(room);
-            }
-        }
 
         Debug.Log($"[BuildGridViewModel] 그리드 복원: 방 {player.BuildGridData.PlacedRooms.Count}개");
 

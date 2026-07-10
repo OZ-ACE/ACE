@@ -8,7 +8,11 @@ public class ShopViewModel : ViewModelBase
     private readonly ICurrencyService _currencyService;
     private readonly InventoryViewModel _inventoryViewModel;
 
+    // 되팔기 가격 비율 (구매가의 50%)
+    private const float SELL_PRICE_RATIO = 0.5f;
+
     public event Action<string> OnPurchaseItem;
+    public event Action<string> OnSellItem;
 
     private List<SupportItem> _shopItems = new List<SupportItem>();
     public List<SupportItem> ShopItems { get { return _shopItems; } }
@@ -180,4 +184,69 @@ public class ShopViewModel : ViewModelBase
         }
         SaveManager.Inst.RequestSaveData(player);
     }
+
+    // ── 판매 ──
+    // 아이템의 판매 가격 (구매가의 일정 비율)
+    public int GetSellPrice(string itemID)
+    {
+        SupportItem item = GameDataManager.Inst.GetData<SupportItem>(itemID);
+        if (item == null)
+        {
+            return 0;
+        }
+        return Mathf.FloorToInt(item.Price * SELL_PRICE_RATIO);
+    }
+
+    //  판매 가능 여부 판정
+    public SellResult CheckSellable(string itemID)
+    {
+        SupportItem item = GameDataManager.Inst.GetData<SupportItem>(itemID);
+        if (item == null)
+        {
+            return SellResult.InvalidItem;
+        }
+
+        if (_inventoryViewModel.GetItemCount(itemID) <= 0)
+        {
+            return SellResult.NoItem;
+        }
+
+        return SellResult.Success;
+    }
+
+    // 판매 가능 여부 (버튼 활성화용)
+    public bool IsSellable(string itemID)
+    {
+        return CheckSellable(itemID) == SellResult.Success;
+    }
+
+    // 판매 시도. 성공 시 인벤토리에서 제거 + Gold 증가 + 저장 
+    public SellResult TrySell(string itemID)
+    {
+        SellResult result = CheckSellable(itemID);
+        if (result != SellResult.Success)
+        {
+            return result;
+        }
+
+        if (_inventoryViewModel.TryRemoveItem(itemID, 1) == false)
+        {
+            return SellResult.NoItem;
+        }
+
+        int sellPrice = GetSellPrice(itemID);
+        _currencyService.AddGold(sellPrice);
+
+        if (OnSellItem != null)
+        {
+            OnSellItem.Invoke(itemID);
+        }
+        OnPropertyChanged(nameof(CurrentGold));
+
+        SaveShop();
+
+        Debug.Log($"[ShopViewModel] 판매 성공: {itemID} (+{sellPrice}G)");
+        return SellResult.Success;
+    }
+
 }

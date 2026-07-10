@@ -23,6 +23,8 @@ public class SaveManager : SingletonBase<SaveManager>
                 SlotIndex.Add(i);
             }
         }
+
+        CurrentPlayerModel = RequestLoadData(CurrentSlotIndex);
     }
 
     private string GetPath(int slotIndex)
@@ -79,7 +81,7 @@ public class SaveManager : SingletonBase<SaveManager>
 
         newPlayer.PlayerName = "요양보조사";
         newPlayer.Day = 1;
-        newPlayer.Gold = 1000;
+        newPlayer.Gold = 99999;
         newPlayer.MemoryFragment = 0;
 
         newPlayer.Inventory = SetDefaultItem();

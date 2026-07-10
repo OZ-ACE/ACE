@@ -52,6 +52,8 @@ public class BuildGridView : ViewBase
         _viewModel.OnRemoveRoom += OnRemoveRoom;
         _viewModel.OnUnlockFloor += OnUnlockFloor;
 
+
+        RefreshAllRooms();
         _viewModel.InvokeOnceOnInit();
     }
 
@@ -59,6 +61,17 @@ public class BuildGridView : ViewBase
     {
         _mainCamera = Camera.main;
     }
+
+
+
+
+    private void Start()
+    {
+        BuildGridViewModel viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
+        Bind(viewModel);
+    }
+
+
 
     private void OnDestroy()
     {
@@ -87,6 +100,8 @@ public class BuildGridView : ViewBase
 
     private void ApplyBuildMode (bool isBuildMode)
     {
+        Debug.Log($"[BuildGridView] ApplyBuildMode({isBuildMode}), 오버레이생성됨={_isOverlayCreated}");
+
         if (isBuildMode == true)
         {
             if (_isOverlayCreated == false)
@@ -405,6 +420,28 @@ public class BuildGridView : ViewBase
             Destroy(roomObj);
             _placedRoomObjects.Remove(removed.Origin);
         }
+    }
+
+    // 방 생성
+
+    private void RefreshAllRooms()
+    {
+        foreach (KeyValuePair<GridCoord, GameObject> pair in _placedRoomObjects)
+        {
+            if (pair.Value != null)
+            {
+                Destroy(pair.Value);
+            }
+        }
+        _placedRoomObjects.Clear();
+
+        List<PlacedRoomData> rooms = _viewModel.GetPlacedRooms();
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            OnPlaceRoom(rooms[i]);
+        }
+
+        Debug.Log($"[BuildGridView] 방 {rooms.Count}개 재생성");
     }
 
 
