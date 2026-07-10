@@ -57,6 +57,9 @@ public class TycoonMainUI : UIBase
     [Header("텍스트")]
     [SerializeField] TextMeshProUGUI Text_Day;
     [SerializeField] TextMeshProUGUI Text_Gold;
+    [SerializeField] TextMeshProUGUI Text_Memory;
+
+    public Action OnCloseSetting;
 
     private void Awake()
     {
@@ -66,7 +69,15 @@ public class TycoonMainUI : UIBase
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
         Button_Market.onClick.AddListener(OnClickMarket);
+        Button_Setting.onClick.AddListener(OnClickSetting);
         Button_Home.onClick.AddListener(OnClickHome);
+
+        OnCloseSetting += OnClickQuest;
+    }
+
+    private void OnDestroy()
+    {
+        OnCloseSetting -= OnClickQuest;
     }
 
     private void OnEnable()
@@ -109,6 +120,13 @@ public class TycoonMainUI : UIBase
         ChangePanel(TycoonPanelType.Construct);
     }
 
+    private void OnClickSetting()
+    {
+        UIManager.Inst.OpenSettingPopup();
+        ChangePanel(TycoonPanelType.None);
+        UpdateButton(TycoonPanelType.Setting).Forget();
+    }
+
     private void OnClickMarket()  
     {
         ChangePanel(TycoonPanelType.Market);
@@ -116,6 +134,16 @@ public class TycoonMainUI : UIBase
 
     private void ChangePanel(TycoonPanelType type)
     {
+        if (type == TycoonPanelType.None)
+        {
+            foreach (PanelStruct panel in PanelList)
+            {
+                panel.PanelObject.SetActive(false);
+            }
+
+            return;
+        }
+
         foreach (PanelStruct panel in PanelList)
         {
             panel.PanelObject.SetActive(panel.Type == type);
@@ -161,5 +189,10 @@ public class TycoonMainUI : UIBase
         int gold = GameManager.Inst.CurrencyService.CurrentGold;
         Debug.Log($"[TycoonMainUI] SetGoldText 호출됨. Gold = {gold}");
         Text_Gold.text = $"{gold}";
+    }
+
+    private void SetMemory()
+    {
+
     }
 }

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Cysharp.Threading.Tasks;
 
 
 public class MoveToggleView : ViewBase
@@ -30,7 +31,7 @@ public class MoveToggleView : ViewBase
             Button_Toggle.onClick.AddListener(OnClickToggle);
         }
 
-        UpdateLabel();
+        UpdateLabel().Forget();
     }
 
     private void OnEnable()
@@ -63,11 +64,11 @@ public class MoveToggleView : ViewBase
     {
         if (e.PropertyName == nameof(BuildGridViewModel.IsMoveMode))
         {
-            UpdateLabel();
+            UpdateLabel().Forget();
         }
     }
 
-    private void UpdateLabel()
+    private async UniTask UpdateLabel()
     {
         if (Text_Label == null || _viewModel == null)
         {
@@ -77,10 +78,12 @@ public class MoveToggleView : ViewBase
         if (_viewModel.IsMoveMode == true)
         {
             Text_Label.text = "이동 중";
+            Button_Toggle.image.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Select");
         }
         else
         {
             Text_Label.text = "이동";
+            Button_Toggle.image.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Unselect");
         }
     }
 }

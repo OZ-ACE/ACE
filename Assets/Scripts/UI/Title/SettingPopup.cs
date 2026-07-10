@@ -130,12 +130,24 @@ public class SettingPopup : UIBase
         float originalBGM = PlayerPrefs.GetFloat("BGM", 0.5f);
         float originalSFX = PlayerPrefs.GetFloat("SFX", 0.5f);
         bool originalFull = PlayerPrefs.GetInt("FullScreen", 1) == 1;
+        int originalSpeed = PlayerPrefs.GetInt("TextSpeedIndex", 0);
         float originalBright = PlayerPrefs.GetFloat("Brightness", 0f);
 
         ApplyBGMVolume(originalBGM);
         ApplySFXVolume(originalSFX);
         ApplyFullScreen(originalFull);
         ApplyBrightness(originalBright);
+
+        OnBGMChanged(originalBGM);
+        OnSFXChanged(originalSFX);
+        OnFullScreenChanged(originalFull);
+        OnTextSpeedChanged(originalSpeed);
+        OnBrightSliderChanged(originalBright);
+
+        if (UIManager.Inst.IsOpened(UIType.TycoonMainUI) is TycoonMainUI tycoon)
+        {
+            tycoon.OnCloseSetting?.Invoke();
+        }
 
         UIManager.Inst.CloseSettingPopup();
     }
