@@ -96,3 +96,9 @@ public class Penalty : GameDataBase
     public int DurationRounds;
     public string Description;
 }
+
+[Serializable]
+public class Loading : GameDataBase
+{
+    public string Content;
+}

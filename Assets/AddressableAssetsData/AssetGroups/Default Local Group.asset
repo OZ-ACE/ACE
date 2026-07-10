@@ -20,6 +20,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 56e2ddc4f5da593479a3b8323d685403
+    m_Address: Audio/AudioMixer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 70e23b9b2669f11428d7abe3757907cc
     m_Address: Image/Button/Unselect
     m_ReadOnly: 0
