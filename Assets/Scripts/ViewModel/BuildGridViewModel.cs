@@ -186,6 +186,7 @@ public class BuildGridViewModel : ViewModelBase
     //철거모드 토글
     public void ToggleDemolishMode()
     {
+        RestorePickedRoom();
         IsMoveMode = false;
 
         if (IsDemolishMode == true)
@@ -207,7 +208,7 @@ public class BuildGridViewModel : ViewModelBase
         if (IsMoveMode == true)
         {
             IsMoveMode = false;
-            _pickedRoom = null;
+            RestorePickedRoom();
         }
         else
         {
@@ -228,11 +229,11 @@ public class BuildGridViewModel : ViewModelBase
     //건설모드 종료
     public void ExitBuildMode()
     {
+        RestorePickedRoom();
         IsBuildMode = false;
         SelectedRoomId = null;
         IsDemolishMode = false;
         IsMoveMode = false;   
-        _pickedRoom = null;
     }
 
     //건설메뉴에서 방 선택
@@ -411,6 +412,38 @@ public class BuildGridViewModel : ViewModelBase
         }
         return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem);
     }
+
+
+    //집고 있던 방 환불
+    private void RestorePickedRoom()
+    {
+        if (_pickedRoom == null)
+        {
+            return;
+        }
+
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(_pickedRoom.RoomId);
+        if (roomData == null)
+        {
+            _pickedRoom = null;
+            return;
+        }
+
+        List<GridCoord> coords = _gridSystem.GetOccupiedCoords(_pickedRoom.Origin, roomData.GetSize());
+        _buildGridModel.AddRoom(_pickedRoom, coords);
+
+        if (OnPlaceRoom != null)
+        {
+            OnPlaceRoom.Invoke(_pickedRoom);
+        }
+
+        Debug.Log($"[BuildGridViewModel] 집은 방 원위치: {_pickedRoom.RoomId} @ {_pickedRoom.Origin}");
+        _pickedRoom = null;
+
+        SaveGrid();   
+    }
+
+
 
 
 

@@ -3579,6 +3579,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6573720911273432731}
+  - component: {fileID: 8007833589225049998}
   m_Layer: 0
   m_Name: Construct Panel
   m_TagString: Untagged
@@ -3610,6 +3611,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0.19354248, y: 0}
   m_SizeDelta: {x: -0.7800293, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8007833589225049998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3041372502667919175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c5381dd70bc709438f84576f0dc695e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConstructPanelView
 --- !u!1 &3352488034491745157
 GameObject:
   m_ObjectHideFlags: 0
@@ -7104,8 +7117,6 @@ GameObject:
   - component: {fileID: 6693942787558933642}
   - component: {fileID: 1527887028305307814}
   - component: {fileID: 5390616246782858349}
-  - component: {fileID: 8980941438451672273}
-  - component: {fileID: 1050628988249253134}
   m_Layer: 0
   m_Name: Construct Button
   m_TagString: Untagged
@@ -7215,35 +7226,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8980941438451672273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7801414844588477828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89bc543e8c0975145a9dd1b359e1386a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BuildToggleView
-  Button_Toggle: {fileID: 5390616246782858349}
-  Text_Label: {fileID: 6528222579303056602}
---- !u!114 &1050628988249253134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7801414844588477828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76d435fa204918f43b19a0a59800079b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BuildMenuView
-  Prefab_RoomButton: {fileID: 3463282802498860537, guid: faaa00d48c478b54e9d02f9201de6771, type: 3}
-  Transform_ButtonRoot: {fileID: 3424988649042403328}
-  Object_MenuRoot: {fileID: 0}
 --- !u!1 &7919646744117136578
 GameObject:
   m_ObjectHideFlags: 0
@@ -7877,6 +7859,7 @@ GameObject:
   - component: {fileID: 7317358795772388249}
   - component: {fileID: 5881331576354468381}
   - component: {fileID: 8085970980885175664}
+  - component: {fileID: 1471345751967027996}
   m_Layer: 0
   m_Name: Scroll View
   m_TagString: Untagged
@@ -7972,6 +7955,20 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1471345751967027996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8806214983761165976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d435fa204918f43b19a0a59800079b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildMenuView
+  Prefab_RoomButton: {fileID: 3463282802498860537, guid: faaa00d48c478b54e9d02f9201de6771, type: 3}
+  Transform_ButtonRoot: {fileID: 3424988649042403328}
 --- !u!1 &8989689170150559187
 GameObject:
   m_ObjectHideFlags: 0

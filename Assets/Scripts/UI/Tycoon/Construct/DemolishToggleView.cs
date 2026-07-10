@@ -29,6 +29,7 @@ public class DemolishToggleView : ViewBase
 
         if (Button_Toggle != null)
         {
+            Button_Toggle.onClick.RemoveListener(OnClickToggle);
             Button_Toggle.onClick.AddListener(OnClickToggle);
         }
 

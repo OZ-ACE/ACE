@@ -100,6 +100,8 @@ public class BuildGridView : ViewBase
 
     private void ApplyBuildMode (bool isBuildMode)
     {
+        Debug.Log($"[BuildGridView] ApplyBuildMode({isBuildMode}), 오버레이생성됨={_isOverlayCreated}");
+
         if (isBuildMode == true)
         {
             if (_isOverlayCreated == false)
