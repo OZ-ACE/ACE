@@ -85,7 +85,7 @@ public class SaveManager : SingletonBase<SaveManager>
         newPlayer.MemoryFragment = 0;
 
         newPlayer.Inventory = SetDefaultItem();
-        //newPlayer.HeroStats = 
+        newPlayer.HeroStats = SetDefaultHero();
 
         CurrentPlayerModel = newPlayer;
         return newPlayer;
@@ -100,7 +100,7 @@ public class SaveManager : SingletonBase<SaveManager>
             ItemModel itemModel = new ItemModel
             {
                 ItemID = item.ID,
-                ItemCount = item.StockCount
+                ItemCount = item.stockCount
             };
 
             items.Add(itemModel);
@@ -109,24 +109,26 @@ public class SaveManager : SingletonBase<SaveManager>
         return items;
     }
 
-    //private List<HeroStat> SetDefaultHero()
-    //{
-    //    List<HeroStat> hero = new List<HeroStat>();
+    private List<HeroStat> SetDefaultHero()
+    {
+        List<HeroStat> hero = new List<HeroStat>();
 
-    //    for (int i = 1; i <= 3; i++)
-    //    {
-    //        HeroStat heroModel = new HeroStat
-    //        {
-    //            HeroID = GameDataManager.Inst.GetDataList<HeroBasic>
-    //            Affection = 0,
-    //            Satisfaction = 0
-    //        };
+        List<HeroData> data = GameDataManager.Inst.GetDataList<HeroData>();
 
-    //        hero.Add(heroModel);
-    //    }
+        for (int i = 1; i <= 3; i++)
+        {
+            HeroStat heroModel = new HeroStat
+            {
+                HeroID = data[i].ID,
+                Affection = 0,
+                Satisfaction = 0
+            };
 
-    //    return hero;
-    //}
+            hero.Add(heroModel);
+        }
+
+        return hero;
+    }
 
     public void SetCurrentSlotIndex(int slotIndex)
     {

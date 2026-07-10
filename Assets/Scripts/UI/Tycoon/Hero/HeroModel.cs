@@ -6,7 +6,7 @@ public class HeroModel
     public string Name;
     public string Description;
     public string DiseaseName;
-    public int Age;
+    public string Age;
     public string Skill;
 
     public int Affection;
@@ -14,22 +14,22 @@ public class HeroModel
 
     public void LoadHeroData(string heroID)
     {
-        var heroData = GameDataManager.Inst.GetData<HeroBasic>(heroID);
+        var heroData = GameDataManager.Inst.GetData<HeroData>(heroID);
 
         HeroID = heroID;
-        Name = heroData.Name;
+        Name = heroData.HeroName;
         Description = heroData.Description;
         DiseaseName = heroData.DiseaseName;
         Age = heroData.Age;
         Skill = heroData.Skill;
 
-        Affection = SaveManager.Inst.CurrentPlayerModel.Hero.Affection;
-        Satisfaction = SaveManager.Inst.CurrentPlayerModel.Hero.Satisfaction;
+        Affection = SaveManager.Inst.CurrentPlayerModel.HeroStats.Affection;
+        Satisfaction = SaveManager.Inst.CurrentPlayerModel.HeroStats.Satisfaction;
     }
 
     public void SaveHeroProgress()
     {
-        SaveManager.Inst.CurrentPlayerModel.Hero.Affection = Affection;
-        SaveManager.Inst.CurrentPlayerModel.Hero.Satisfaction = Satisfaction;
+        SaveManager.Inst.CurrentPlayerModel.HeroStats.Affection = Affection;
+        SaveManager.Inst.CurrentPlayerModel.HeroStats.Satisfaction = Satisfaction;
     }
 }
