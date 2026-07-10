@@ -29,14 +29,17 @@ public class GameManager : SingletonBase<GameManager>
         CurrencyService = new CurrencyService();
         ShopService = new ShopService(CurrencyService);
         InventoryViewModel = new InventoryViewModel();
-        BuildService = new BuildService(CurrencyService); 
+        BuildService = new BuildService(CurrencyService);
+    }
+
+    private void Start()
+    {
+        ApplySetting().Forget();
     }
 
     public void SetDialogueID(string dialogueID)
     {
         CurrentDialogueID = dialogueID;
-
-        ApplySetting().Forget();
     }
 
     private async UniTask ApplySetting()
