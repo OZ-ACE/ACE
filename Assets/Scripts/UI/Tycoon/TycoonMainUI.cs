@@ -107,7 +107,7 @@ public class TycoonMainUI : UIBase
 
     private void OnClickPick()
     {
-        //ChangePanel(TycoonPanelType.Pick);
+        UIManager.Inst.OpenAdmissionPopup();
     }
 
     private void OnClickHero()
