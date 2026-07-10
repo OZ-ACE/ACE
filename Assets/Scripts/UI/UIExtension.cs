@@ -21,7 +21,7 @@ public enum UIType
     LoadingUI,
     DialogueUI,
     TycoonMainUI,
-    UIAdmissionPopup
+    UIAdmissionPopup,
     BattleMainUI
 }
 
