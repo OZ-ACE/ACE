@@ -1,37 +1,72 @@
 [
   {
     "ID": "hero_01",
-    "heroName": "캡틴물렁카",
-    "heroNameEn": "Captain Mushmerica"
+    "HeroName": "캡틴물렁카",
+    "HeroNameEn": "Captain Mushmerica",
+    "Age": "88세",
+    "Remarks": "방패를 베개처럼 끌어안고 잠. 회의가 길어지면 영웅담이 자동 재생됨.",
+    "MainSkillId": "heroSkill_01_01",
+    "CandidateWeight": 100,
+    "ProfileImage": null
   },
   {
     "ID": "hero_02",
-    "heroName": "오십위도우",
-    "heroNameEn": "Frozen Widow"
+    "HeroName": "오십위도우",
+    "HeroNameEn": "Frozen Widow",
+    "Age": "50세",
+    "Remarks": "냉기보다 오십견이 더 무서움. 팔을 높이 들면 표정이 급격히 차가워짐.",
+    "MainSkillId": "heroSkill_02_01",
+    "CandidateWeight": 100,
+    "ProfileImage": null
   },
   {
     "ID": "hero_03",
-    "heroName": "호크아이고",
-    "heroNameEn": "Squinteye"
+    "HeroName": "호크아이고",
+    "HeroNameEn": "Squinteye",
+    "Age": "67세",
+    "Remarks": "작은 글씨를 못 봄. 표적판보다 돋보기를 먼저 찾는 원거리 담당.",
+    "MainSkillId": "heroSkill_03_01",
+    "CandidateWeight": 100,
+    "ProfileImage": null
   },
   {
     "ID": "hero_04",
-    "heroName": "스칼렛트위치",
-    "heroNameEn": "Scarlet Twitch"
+    "HeroName": "스칼렛트위치",
+    "HeroNameEn": "Scarlet Twitch",
+    "Age": "나이 미상",
+    "Remarks": "감정 기복이 공간을 흔듦. 집중하면 주변 사물이 살짝 떨림.",
+    "MainSkillId": "heroSkill_04_01",
+    "CandidateWeight": 100,
+    "ProfileImage": null
   },
   {
     "ID": "hero_05",
-    "heroName": "또르르",
-    "heroNameEn": "Tinnitor"
+    "HeroName": "또르르",
+    "HeroNameEn": "Tinnitor",
+    "Age": "약 1500세",
+    "Remarks": "천둥 소리보다 관절 소리가 먼저 남. 망치를 자주 놓침.",
+    "MainSkillId": "heroSkill_05_01",
+    "CandidateWeight": 100,
+    "ProfileImage": null
   },
   {
     "ID": "hero_06",
-    "heroName": "고목영감",
-    "heroNameEn": "Groan"
+    "HeroName": "고목영감",
+    "HeroNameEn": "Groan",
+    "Age": "수령 732년",
+    "Remarks": "햇빛 좋은 곳을 선호함. 대화 중에도 가끔 잎이 떨어짐.",
+    "MainSkillId": "heroSkill_06_01",
+    "CandidateWeight": 100,
+    "ProfileImage": null
   },
   {
     "ID": "hero_07",
-    "heroName": "할매프로스트",
-    "heroNameEn": "Granny Frostbite"
+    "HeroName": "할매프로스트",
+    "HeroNameEn": "Granny Frostbite",
+    "Age": "83세",
+    "Remarks": "피부가 단단해지는 대신 간식 취향도 단단함. 아몬드를 늘 챙김.",
+    "MainSkillId": "heroSkill_07_01",
+    "CandidateWeight": 100,
+    "ProfileImage": null
   }
 ]

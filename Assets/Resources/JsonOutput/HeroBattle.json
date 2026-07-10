@@ -1,58 +1,58 @@
 [
   {
     "ID": "hero_01",
-    "position": "Attack",
-    "maxHp": 100,
-    "speed": 30,
-    "attackPower": 12,
-    "defensePower": 9
+    "Position": "Attack",
+    "MaxHp": 100,
+    "Speed": 30,
+    "AttackPower": 12,
+    "DefensePower": 9
   },
   {
     "ID": "hero_02",
-    "position": "Attack",
-    "maxHp": 90,
-    "speed": 50,
-    "attackPower": 8,
-    "defensePower": 7
+    "Position": "Attack",
+    "MaxHp": 90,
+    "Speed": 50,
+    "AttackPower": 8,
+    "DefensePower": 7
   },
   {
     "ID": "hero_03",
-    "position": "Attack",
-    "maxHp": 80,
-    "speed": 60,
-    "attackPower": 9,
-    "defensePower": 5
+    "Position": "Attack",
+    "MaxHp": 80,
+    "Speed": 60,
+    "AttackPower": 9,
+    "DefensePower": 5
   },
   {
     "ID": "hero_04",
-    "position": "Support",
-    "maxHp": 85,
-    "speed": 35,
-    "attackPower": 14,
-    "defensePower": 6
+    "Position": "Support",
+    "MaxHp": 85,
+    "Speed": 35,
+    "AttackPower": 14,
+    "DefensePower": 6
   },
   {
     "ID": "hero_05",
-    "position": "Attack",
-    "maxHp": 95,
-    "speed": 45,
-    "attackPower": 10,
-    "defensePower": 7
+    "Position": "Attack",
+    "MaxHp": 95,
+    "Speed": 45,
+    "AttackPower": 10,
+    "DefensePower": 7
   },
   {
     "ID": "hero_06",
-    "position": "Support",
-    "maxHp": 110,
-    "speed": 20,
-    "attackPower": 6,
-    "defensePower": 12
+    "Position": "Support",
+    "MaxHp": 110,
+    "Speed": 20,
+    "AttackPower": 6,
+    "DefensePower": 12
   },
   {
     "ID": "hero_07",
-    "position": "Attack",
-    "maxHp": 95,
-    "speed": 35,
-    "attackPower": 11,
-    "defensePower": 10
+    "Position": "Attack",
+    "MaxHp": 95,
+    "Speed": 35,
+    "AttackPower": 11,
+    "DefensePower": 10
   }
 ]

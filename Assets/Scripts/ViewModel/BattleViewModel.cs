@@ -23,8 +23,8 @@ public class BattleViewModel : ViewModelBase
             BattleUnitModel unit = new BattleUnitModel();
             unit.ID = data.ID;
             unit.IsHero = true;
-            unit.Speed = data.speed;
-            unit.AttackPower = data.attackPower;
+            unit.Speed = data.Speed;
+            unit.AttackPower = data.AttackPower;
 
             participats.Add(unit);
         }
@@ -41,8 +41,8 @@ public class BattleViewModel : ViewModelBase
             BattleUnitModel unit = new BattleUnitModel();
             unit.ID = data.ID;
             unit.IsHero = false;
-            unit.Speed = data.speed;
-            unit.AttackPower = data.attackPower;
+            unit.Speed = data.Speed;
+            unit.AttackPower = data.AttackPower;
 
             participats.Add(unit);
         }
