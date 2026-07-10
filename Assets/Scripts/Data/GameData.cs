@@ -40,6 +40,42 @@ public class EnemyBattleData : GameDataBase
     public int defensePower;
 }
 
+//영웅 스킬 데이터
+[Serializable]
+public class HeroSkill : GameDataBase
+{
+    public string HeroId;
+    public string HeroName;
+    public string SkillName;
+    public string SkillNameEn;
+    public string ActionType;
+    public string SkillType;
+    public string TargetSelectType;
+    public string TargetType;
+    public int TargetCount;
+    public int CoolTime;
+    public int Power;
+    public string SkillDescription;
+}
+
+//적 스킬 데이터
+[Serializable]
+public class EnemySkill : GameDataBase
+{
+    public string EnemyId;
+    public string EnemyName;
+    public string SkillName;
+    public string SkillNameEn;
+    public string ActionType;
+    public string SkillType;
+    public string TargetSelectType;
+    public string TargetType;
+    public int TargetCount;
+    public int CoolTime;
+    public int Power;
+    public string SkillDescription;
+}
+
 [Serializable]
 public class RoomData : GameDataBase
 {

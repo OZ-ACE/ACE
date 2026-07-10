@@ -17,7 +17,7 @@ public class BuildService
 
     private const int INITIAL_MIN_FLOOR = -3;
 
-    private static readonly Vector2 GRID_ORIGIN = new Vector2(-9.5f, -6f);
+    private static readonly Vector2 GRID_ORIGIN = new Vector2(-9.5f, 4f);
 
     private readonly ICurrencyService _currencyService;
 

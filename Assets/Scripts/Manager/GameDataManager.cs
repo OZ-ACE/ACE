@@ -23,6 +23,8 @@ public class GameDataManager : SingletonBase<GameDataManager>
         LoadData<Dialogue>("Dialogue");
         LoadData<HeroBattleData>("HeroBattle");
         LoadData<EnemyBattleData>("EnemyBattle");
+        LoadData<HeroSkill>("HeroSkill");
+        LoadData<EnemySkill>("EnemySkill");
         LoadData<RoomData>("Room");
         LoadData<SupportItem>("SupportItem");
         LoadData<Penalty>("Penalty");
