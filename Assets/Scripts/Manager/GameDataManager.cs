@@ -10,7 +10,7 @@ public class GameDataManager : SingletonBase<GameDataManager>
         public List<T> datas;
     }
 
-    private Dictionary<Type, object> allDataDict = new Dictionary<Type, object>();
+    private Dictionary<Type, object> _allDataDict = new Dictionary<Type, object>();
 
     protected override void Awake()
     {
@@ -21,6 +21,7 @@ public class GameDataManager : SingletonBase<GameDataManager>
     public void LoadAllData()
     {
         LoadData<Dialogue>("Dialogue");
+        LoadData<HeroData>("HeroBasic");
         LoadData<HeroBattleData>("HeroBattle");
         LoadData<EnemyBattleData>("EnemyBattle");
         LoadData<HeroSkill>("HeroSkill");
@@ -65,10 +66,27 @@ public class GameDataManager : SingletonBase<GameDataManager>
             }
         }
 
-        if (!allDataDict.ContainsKey(typeof(T)))
+        if (!_allDataDict.ContainsKey(typeof(T)))
         {
-            allDataDict.Add(typeof(T), dataDict);
+            _allDataDict.Add(typeof(T), dataDict);
         }
+    }
+
+    public List<T> GetAllData<T>() where T : GameDataBase
+    {
+        if (_allDataDict.TryGetValue(typeof(T), out object dictObj) == false)
+        {
+            return new List<T>();
+        }
+
+        Dictionary<string, T> dict = dictObj as Dictionary<string, T>;
+
+        if (dict == null)
+        {
+            return new List<T>();
+        }
+
+        return new List<T>(dict.Values);
     }
 
     // 매 스크립트마다 캐싱을 하기 귀찮고, 캐싱을 안하면 메모리 부담이 생기기에 미리 캐싱을 해두는 방식입니다.
@@ -83,7 +101,7 @@ public class GameDataManager : SingletonBase<GameDataManager>
 
         object dictObj;
 
-        if (allDataDict.TryGetValue(typeof(T), out dictObj))
+        if (_allDataDict.TryGetValue(typeof(T), out dictObj))
         {
             Dictionary<string, T> dict = dictObj as Dictionary<string, T>;
 
@@ -103,7 +121,7 @@ public class GameDataManager : SingletonBase<GameDataManager>
 
     public List<T> GetDataList<T>() where T : GameDataBase
     {
-        if (allDataDict.TryGetValue(typeof(T), out object dictObj))
+        if (_allDataDict.TryGetValue(typeof(T), out object dictObj))
         {
             if (dictObj is Dictionary<string, T> dict)
             {

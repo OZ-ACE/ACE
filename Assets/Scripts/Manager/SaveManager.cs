@@ -100,7 +100,7 @@ public class SaveManager : SingletonBase<SaveManager>
             ItemModel itemModel = new ItemModel
             {
                 ItemID = item.ID,
-                ItemCount = item.stockCount
+                ItemCount = item.StockCount
             };
 
             items.Add(itemModel);
