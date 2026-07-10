@@ -75,8 +75,8 @@ public class SupportItem : GameDataBase
 {
     public string itemName;
     public string itemNameEn;
-    public string targetPaneltyId;
-    public string targetPaneltyName;
+    public string targetPenaltyId;
+    public string targetPenaltyName;
     public int energyCost;
     public int stockCount;
     public int Price;
