@@ -141,6 +141,7 @@ public class TycoonMainUI : UIBase
 
     private void OnClickHome()
     {
+        UIManager.Inst.OpenTitleUI();
         UIManager.Inst.CloseTycoonMainUI();
     }
 

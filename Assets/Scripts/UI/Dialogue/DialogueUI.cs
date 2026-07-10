@@ -3,7 +3,6 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,23 +18,29 @@ public class DialogueUI : UIBase
     [SerializeField] private Image Image_Speaker;
 
     private bool _isTyping = false;
-    private float _typingWaitTime = 0.03f;
+    private float _typingWaitTime = 0.06f;
     private bool _isAuto = false;
-    private float _autoWaitTime = 0.2f;
+    private float _autoWaitTime = 0.5f;
+
     private CancellationTokenSource _typingToken;
+    private CancellationTokenSource _autoWaitToken;
 
     private DialogueViewModel _dialogueVM;
 
     private void Awake()
     {
         Button_Dialogue.onClick.AddListener(OnClickDialogue);
-        Toggle_Auto.isOn = _isAuto;
         Toggle_Auto.onValueChanged.AddListener(OnClickAuto);
         Button_Skip.onClick.AddListener(OnClickSkip);
     }
 
     private void OnEnable()
     {
+        _isAuto = false;
+        Toggle_Auto.isOn = _isAuto;
+
+        _typingWaitTime = PlayerPrefs.GetFloat("TextSpeed", 0.06f);
+
         if (_dialogueVM == null)
         {
             _dialogueVM = new DialogueViewModel();
@@ -93,13 +98,29 @@ public class DialogueUI : UIBase
 
     private void OnClickDialogue()
     {
+        if (_dialogueVM == null)
+        {
+            Debug.Log("asdf");
+        }
+
         if (_isTyping)
         {
             CancelTyping();
             _isTyping = false;
             Text_Content.maxVisibleCharacters = Text_Content.text.Length;
             _dialogueVM.IsNextArrow = true;
+
+            if (_isAuto)
+            {
+                WaitAuto().Forget();
+            }
+
             return;
+        }
+
+        if (_isAuto)
+        {
+            CancelAutoWait();
         }
 
         _dialogueVM.RequestNext();
@@ -130,7 +151,7 @@ public class DialogueUI : UIBase
 
         foreach (var data in GameDataManager.Inst.GetDataList<Dialogue>())
         {
-            if (nextID == "0")
+            if (nextID == "0" || string.IsNullOrEmpty(nextID))
             {
                 break;
             }
@@ -139,7 +160,7 @@ public class DialogueUI : UIBase
             nextID = GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).NextID;
         }
 ;
-        Typing(GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).Content).Forget();
+        _dialogueVM.UpdateState(GameManager.Inst.CurrentDialogueID);
     }
 
     private async UniTask Typing(string content)
@@ -148,14 +169,24 @@ public class DialogueUI : UIBase
         _typingToken = new CancellationTokenSource();
 
         _isTyping = true;
+        _dialogueVM.IsNextArrow = false;
         Text_Content.text = content;
         Text_Content.maxVisibleCharacters = 0;
 
-        for (int i = 0; i < content.Length; i++)
+        if (_typingWaitTime <= 0f)
         {
-            Text_Content.maxVisibleCharacters = i;
+            Text_Content.maxVisibleCharacters = content.Length;
 
-            await UniTask.Delay(TimeSpan.FromSeconds(_typingWaitTime), cancellationToken: _typingToken.Token);
+            await UniTask.Yield(cancellationToken: _typingToken.Token);
+        }
+        else
+        {
+            for (int i = 0; i < content.Length; i++)
+            {
+                Text_Content.maxVisibleCharacters = i;
+
+                await UniTask.Delay(TimeSpan.FromSeconds(_typingWaitTime), cancellationToken: _typingToken.Token);
+            }
         }
 
         _isTyping = false;
@@ -163,10 +194,18 @@ public class DialogueUI : UIBase
 
         if (_isAuto)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(_autoWaitTime), cancellationToken: _typingToken.Token);
-
-            _dialogueVM.RequestNext();
+            await WaitAuto();
         }
+    }
+
+    private async UniTask WaitAuto()
+    {
+        CancelAutoWait();
+        _autoWaitToken = new CancellationTokenSource();
+
+        await UniTask.Delay(TimeSpan.FromSeconds(_autoWaitTime), cancellationToken: _autoWaitToken.Token);
+
+        _dialogueVM.RequestNext();
     }
 
     private void CancelTyping()
@@ -176,6 +215,16 @@ public class DialogueUI : UIBase
             _typingToken.Cancel();
             _typingToken.Dispose();
             _typingToken = null;
+        }
+    }
+
+    private void CancelAutoWait()
+    {
+        if (_autoWaitToken != null)
+        {
+            _autoWaitToken.Cancel();
+            _autoWaitToken.Dispose();
+            _autoWaitToken = null;
         }
     }
 

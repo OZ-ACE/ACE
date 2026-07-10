@@ -523,7 +523,7 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         player.BuildGridData = _buildGridModel.GetSaveData();
-        SaveManager.Inst.RequestSaveData(SaveManager.Inst.CurrentSlotIndex, player);
+        SaveManager.Inst.RequestSaveData(player);
     }
 
     //그리드 불러오기

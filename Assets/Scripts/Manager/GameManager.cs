@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using UnityEngine;
+using UnityEngine.Audio;
 
 public class GameManager : SingletonBase<GameManager>
 {
@@ -17,6 +20,7 @@ public class GameManager : SingletonBase<GameManager>
     public BuildService BuildService { get; private set; }
 
 
+    public Action<float> OnChangeBrightness;
 
     protected override void Awake()
     {
@@ -31,5 +35,29 @@ public class GameManager : SingletonBase<GameManager>
     public void SetDialogueID(string dialogueID)
     {
         CurrentDialogueID = dialogueID;
+
+        ApplySetting().Forget();
+    }
+
+    public void SetDialogueID(string dialogueID)
+    {
+        CurrentDialogueID = dialogueID;
+    }
+
+    private async UniTask ApplySetting()
+    {
+        AudioMixer audioMixer = await ResourceManager.Inst.LoadAsset<AudioMixer>("Audio/AudioMixer");
+
+        float bgm = PlayerPrefs.GetFloat("BGM", 0.5f);
+        float sfx = PlayerPrefs.GetFloat("SFX", 0.5f);
+
+        if (audioMixer != null)
+        {
+            audioMixer.SetFloat("BGM", Mathf.Log10(Mathf.Max(bgm, 0.0001f)) * 20);
+            audioMixer.SetFloat("SFX", Mathf.Log10(Mathf.Max(sfx, 0.0001f)) * 20);
+        }
+
+        bool isFull = PlayerPrefs.GetInt("FullScreen", 1) == 1;
+        Screen.fullScreen = isFull;
     }
 }

@@ -4,6 +4,8 @@ public class SaveViewModel : ViewModelBase
 {
     private List<int> _activeSlotIndex = new List<int>();
 
+    public int SelectedSlotIndex { get; private set; }
+
     public List<int> ActiveSlotIndex
     {
         get => _activeSlotIndex;
@@ -16,6 +18,22 @@ public class SaveViewModel : ViewModelBase
                 OnPropertyChanged(nameof(ActiveSlotIndex));
             }
         }
+    }
+
+    public void PrepareNewSave(int slotIndex)
+    {
+        SelectedSlotIndex = slotIndex;
+        SaveManager.Inst.SetCurrentSlotIndex(slotIndex);
+    }
+
+    public void CreateAndSavePlayer(string playerName)
+    {
+        PlayerModel newPlayer = SaveManager.Inst.GetDefaultData();
+        newPlayer.PlayerName = playerName;
+
+        SaveManager.Inst.RequestSaveData(newPlayer);
+
+        RefreshActiveSlots();
     }
 
     public void InvokeOnceOnInit()
@@ -47,9 +65,9 @@ public class SaveViewModel : ViewModelBase
         ActiveSlotIndex = updatedSlot;
     }
 
-    // 나중에 연결
     public void RequestConfirmSlot(int slotIndex)
     {
-
+        SaveManager.Inst.SetCurrentSlotIndex(slotIndex);
+        SaveManager.Inst.RequestLoadData(slotIndex);
     }
 }
