@@ -41,6 +41,7 @@ public class TycoonMainUI : UIBase
     [SerializeField] Button Button_Hero;
     [SerializeField] Button Button_Construct;
     [SerializeField] Button Button_Market;
+    [SerializeField] Button Button_Battle;
     [SerializeField] Button Button_Setting;
     [SerializeField] Button Button_Home;
     [SerializeField] List<ButtonStruct> ButtonList;
@@ -69,6 +70,7 @@ public class TycoonMainUI : UIBase
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
         Button_Market.onClick.AddListener(OnClickMarket);
+        Button_Battle.onClick.AddListener(OnClickBattle);
         Button_Setting.onClick.AddListener(OnClickSetting);
         Button_Home.onClick.AddListener(OnClickHome);
 
@@ -130,6 +132,11 @@ public class TycoonMainUI : UIBase
     private void OnClickMarket()  
     {
         ChangePanel(TycoonPanelType.Market);
+    }
+
+    private void OnClickBattle()
+    {
+        
     }
 
     private void ChangePanel(TycoonPanelType type)
