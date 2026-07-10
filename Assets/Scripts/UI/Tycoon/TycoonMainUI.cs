@@ -57,6 +57,7 @@ public class TycoonMainUI : UIBase
     [Header("텍스트")]
     [SerializeField] TextMeshProUGUI Text_Day;
     [SerializeField] TextMeshProUGUI Text_Gold;
+    [SerializeField] TextMeshProUGUI Text_Memory;
 
     public Action OnCloseSetting;
 
@@ -188,5 +189,10 @@ public class TycoonMainUI : UIBase
         int gold = GameManager.Inst.CurrencyService.CurrentGold;
         Debug.Log($"[TycoonMainUI] SetGoldText 호출됨. Gold = {gold}");
         Text_Gold.text = $"{gold}";
+    }
+
+    private void SetMemory()
+    {
+
     }
 }
