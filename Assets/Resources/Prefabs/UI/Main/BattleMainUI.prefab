@@ -3639,6 +3639,9 @@ MonoBehaviour:
   - {fileID: 4267045057284547544}
   - {fileID: 5010393730699557321}
   - {fileID: 3424802006373120024}
+  Button_Reinforce: {fileID: 7713300627932599515}
+  Button_HealUnit: {fileID: 5477157991608673616}
+  Button_ChangeUnit: {fileID: 8247527180954921007}
 --- !u!114 &7508893211830350805
 MonoBehaviour:
   m_ObjectHideFlags: 0

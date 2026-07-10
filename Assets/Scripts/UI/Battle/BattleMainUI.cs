@@ -35,9 +35,10 @@ public class BattleMainUI : UIBase
     private void BindViewModel(BattleViewModel viewModel)
     {
         _viewModel.PropertyChanged += OnPropertyChanged_View;
+
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
-        Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
+        Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
     }
 
     private void OnDestroy()
@@ -45,9 +46,10 @@ public class BattleMainUI : UIBase
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnPropertyChanged_View;
+
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
-            Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
+            Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
         }
     }
 
