@@ -33,6 +33,13 @@ public class BattleBTContext : MonoBehaviour
         return _createdBattleAction != null;
     }
 
+    public bool TryGetCreatedBattleAction(out BattleActionModel battleAction)
+    {
+        battleAction = _createdBattleAction;
+
+        return battleAction != null;
+    }
+
     public void SetBattleContext(
         BattleUnitModel unit,
         List<BattleUnitModel> heroList,
