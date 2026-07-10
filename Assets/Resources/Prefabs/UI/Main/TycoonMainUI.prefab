@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &121852682531293404
 GameObject:
@@ -4399,30 +4399,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &715035293103565218
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5738671599061778362}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 329112584771077167}
-  - {fileID: 4851638800253394150}
-  - {fileID: 4674792158478530364}
-  - {fileID: 6573720911273432731}
-  - {fileID: 3094571861154424111}
-  m_Father: {fileID: 6472381096194587191}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -89.525, y: 0}
-  m_SizeDelta: {x: 665.61, y: 1080}
-  m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &5951296083212918727
 GameObject:
   m_ObjectHideFlags: 0
