@@ -20,21 +20,25 @@ public class DialogueUI : UIBase
     private bool _isTyping = false;
     private float _typingWaitTime = 0.06f;
     private bool _isAuto = false;
-    private float _autoWaitTime = 0.2f;
+    private float _autoWaitTime = 0.5f;
+
     private CancellationTokenSource _typingToken;
+    private CancellationTokenSource _autoWaitToken;
 
     private DialogueViewModel _dialogueVM;
 
     private void Awake()
     {
         Button_Dialogue.onClick.AddListener(OnClickDialogue);
-        Toggle_Auto.isOn = _isAuto;
         Toggle_Auto.onValueChanged.AddListener(OnClickAuto);
         Button_Skip.onClick.AddListener(OnClickSkip);
     }
 
     private void OnEnable()
     {
+        _isAuto = false;
+        Toggle_Auto.isOn = _isAuto;
+
         _typingWaitTime = PlayerPrefs.GetFloat("TextSpeed", 0.06f);
 
         if (_dialogueVM == null)
@@ -94,6 +98,11 @@ public class DialogueUI : UIBase
 
     private void OnClickDialogue()
     {
+        if (_dialogueVM == null)
+        {
+            Debug.Log("asdf");
+        }
+
         if (_isTyping)
         {
             CancelTyping();
@@ -107,6 +116,11 @@ public class DialogueUI : UIBase
             }
 
             return;
+        }
+
+        if (_isAuto)
+        {
+            CancelAutoWait();
         }
 
         _dialogueVM.RequestNext();
@@ -162,6 +176,8 @@ public class DialogueUI : UIBase
         if (_typingWaitTime <= 0f)
         {
             Text_Content.maxVisibleCharacters = content.Length;
+
+            await UniTask.Yield(cancellationToken: _typingToken.Token);
         }
         else
         {
@@ -184,7 +200,10 @@ public class DialogueUI : UIBase
 
     private async UniTask WaitAuto()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(_autoWaitTime), cancellationToken: _typingToken.Token);
+        CancelAutoWait();
+        _autoWaitToken = new CancellationTokenSource();
+
+        await UniTask.Delay(TimeSpan.FromSeconds(_autoWaitTime), cancellationToken: _autoWaitToken.Token);
 
         _dialogueVM.RequestNext();
     }
@@ -196,6 +215,16 @@ public class DialogueUI : UIBase
             _typingToken.Cancel();
             _typingToken.Dispose();
             _typingToken = null;
+        }
+    }
+
+    private void CancelAutoWait()
+    {
+        if (_autoWaitToken != null)
+        {
+            _autoWaitToken.Cancel();
+            _autoWaitToken.Dispose();
+            _autoWaitToken = null;
         }
     }
 
