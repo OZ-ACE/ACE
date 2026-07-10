@@ -104,4 +104,14 @@ public class UIManager : SingletonBase<UIManager>
 
         return _createdUI[type];
     }
+
+    public UIBase IsOpened(UIType type)
+    {
+        if (_openedUI.Contains(type))
+        {
+            return _createdUI[type];
+        }
+
+        return null;
+    }
 }

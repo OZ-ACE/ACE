@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// 철거 모드 토글 버튼 뷰. ViewBase 상속.
@@ -33,7 +34,7 @@ public class DemolishToggleView : ViewBase
             Button_Toggle.onClick.AddListener(OnClickToggle);
         }
 
-        UpdateLabel();
+        UpdateLabel().Forget();
     }
 
     private void OnEnable()
@@ -67,11 +68,11 @@ public class DemolishToggleView : ViewBase
         if (e.PropertyName == nameof(BuildGridViewModel.IsDemolishMode)
             || e.PropertyName == nameof(BuildGridViewModel.IsBuildMode))
         {
-            UpdateLabel();
+            UpdateLabel().Forget();
         }
     }
 
-    private void UpdateLabel()
+    private async UniTask UpdateLabel()
     {
         if (Text_Label == null || _viewModel == null)
         {
@@ -81,10 +82,12 @@ public class DemolishToggleView : ViewBase
         if (_viewModel.IsDemolishMode == true)
         {
             Text_Label.text = "철거 중";
+            Button_Toggle.image.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Select");
         }
         else
         {
             Text_Label.text = "철거";
+            Button_Toggle.image.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Unselect");
         }
     }
 }
