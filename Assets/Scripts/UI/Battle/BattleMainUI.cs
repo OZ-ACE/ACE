@@ -10,6 +10,20 @@ public class BattleMainUI : UIBase
     [SerializeField] private ScrollRect ScrollRect_BattleLog;
     [SerializeField] private Transform Transform_LogContent;
 
+    [Header("에너지 게이지")]
+    [SerializeField] private Image[] Image_EnergySlotList;
+
+    private const float DimmedEnergyAlpha = 0.2f;
+
+    [Header("액션 버튼")]
+    [SerializeField] private Button Button_Reinforce;
+    [SerializeField] private Button Button_HealUnit;
+    [SerializeField] private Button Button_ChangeUnit;
+
+    private const int ReinforceEnergyCost = 1; //temp
+    private const int ChangeUnitEnergyCost = 2; //temp
+    private const int HealUnitEnergyCost = 2; //temp
+
     private BattleViewModel _viewModel;
 
     private void Start()
@@ -21,6 +35,9 @@ public class BattleMainUI : UIBase
     private void BindViewModel(BattleViewModel viewModel)
     {
         _viewModel.PropertyChanged += OnPropertyChanged_View;
+        Button_Reinforce.onClick.AddListener(OnClickReinforce);
+        Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
+        Button_HealUnit.onClick.AddListener(OnClickHealUnit);
     }
 
     private void OnDestroy()
@@ -28,6 +45,9 @@ public class BattleMainUI : UIBase
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnPropertyChanged_View;
+            Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
+            Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
+            Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
         }
     }
 
@@ -85,5 +105,56 @@ public class BattleMainUI : UIBase
     {
         _dummyLogCount++;
         AddDummyLog($"테스트 로그 {_dummyLogCount}번째 줄입니다. 이것은 텍스트 길이가 길어서 슬롯 안에서 두 줄 이상으로 줄바꿈되는지 확인하기 위한 테스트 로그입니다.");
+    }
+
+    //남은 에너지 수만큼 원래 색, 소모된 에너지는 흐리게 표시
+    public void SetEnergyGauge(int currentEnergy)
+    {
+        for (int i =0; i < Image_EnergySlotList.Length; i++)
+        {
+            Color color = Image_EnergySlotList[i].color;
+            color.a = i < currentEnergy ? 1f : DimmedEnergyAlpha;
+            Image_EnergySlotList[i].color = color;
+        }
+    }
+
+    // 테스터용 - 실제 에너지 연동 전까지 확인용, 이후 삭제 예정
+    private int _testEnergyCount = 5;
+
+    [ContextMenu("에너지 1 소모 테스트")]
+    private void Test_ConsumeEnergy()
+    {
+        _testEnergyCount = Mathf.Max(0, _testEnergyCount - 1);
+        SetEnergyGauge(_testEnergyCount);
+    }
+
+    [ContextMenu("에너지 초기화 테스트")]
+    private void Test_ResetEnergy()
+    {
+        _testEnergyCount = 5;
+        SetEnergyGauge(_testEnergyCount);
+    }
+
+    private void OnClickReinforce()
+    {
+        ExecuteInterventionAction(BattleActionResult.Reinforce, ReinforceEnergyCost, "지원하기 실행 (테스트)");
+    }
+
+    private void OnClickHealUnit()
+    {
+        ExecuteInterventionAction(BattleActionResult.HealUnit, HealUnitEnergyCost, "영웅 회복 실행 (테스트)");
+    }
+
+    private void OnClickChangeUnit()
+    {
+        ExecuteInterventionAction(BattleActionResult.ChangeUnit, ChangeUnitEnergyCost, "영웅 교체 실행 (테스트)");
+    }
+
+    // 테스트용 - 실제 대상 선택/판정 로직은 액션 큐 연동 시 M3에서 구현
+    private void ExecuteInterventionAction(BattleActionResult result, int energyCost, string logMessage)
+    {
+        _testEnergyCount = Mathf.Max(0, _testEnergyCount - energyCost);
+        SetEnergyGauge(_testEnergyCount);
+        AddDummyLog(logMessage);
     }
 }
