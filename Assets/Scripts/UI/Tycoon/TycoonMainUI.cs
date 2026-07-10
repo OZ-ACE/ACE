@@ -55,6 +55,8 @@ public class TycoonMainUI : UIBase
     [SerializeField] TextMeshProUGUI Text_Day;
     [SerializeField] TextMeshProUGUI Text_Gold;
 
+    public Action OnCloseSetting;
+
     private void Awake()
     {
         Button_Quest.onClick.AddListener(OnClickQuest);
@@ -62,7 +64,15 @@ public class TycoonMainUI : UIBase
         Button_Pick.onClick.AddListener(OnClickPick);
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
+        Button_Setting.onClick.AddListener(OnClickSetting);
         Button_Home.onClick.AddListener(OnClickHome);
+
+        OnCloseSetting += OnClickQuest;
+    }
+
+    private void OnDestroy()
+    {
+        OnCloseSetting -= OnClickQuest;
     }
 
     private void OnEnable()
@@ -95,8 +105,25 @@ public class TycoonMainUI : UIBase
         ChangePanel(TycoonPanelType.Construct);
     }
 
+    private void OnClickSetting()
+    {
+        UIManager.Inst.OpenSettingPopup();
+        ChangePanel(TycoonPanelType.None);
+        UpdateButton(TycoonPanelType.Setting).Forget();
+    }
+
     private void ChangePanel(TycoonPanelType type)
     {
+        if (type == TycoonPanelType.None)
+        {
+            foreach (PanelStruct panel in PanelList)
+            {
+                panel.PanelObject.SetActive(false);
+            }
+
+            return;
+        }
+
         foreach (PanelStruct panel in PanelList)
         {
             panel.PanelObject.SetActive(panel.Type == type);

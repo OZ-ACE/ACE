@@ -137,6 +137,11 @@ public class SettingPopup : UIBase
         ApplyFullScreen(originalFull);
         ApplyBrightness(originalBright);
 
+        if (UIManager.Inst.IsOpened(UIType.TycoonMainUI) is TycoonMainUI tycoon)
+        {
+            tycoon.OnCloseSetting?.Invoke();
+        }
+
         UIManager.Inst.CloseSettingPopup();
     }
 
