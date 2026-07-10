@@ -17,6 +17,14 @@ public class BuildGridView : ViewBase
     [SerializeField] private Color _ghostInvalidColor = new Color(1f, 0f, 0f, 0.5f); // 배치 불가(빨강)
     [SerializeField] private Color _placedColor = new Color(0.3f, 0.5f, 1f, 0.8f);   // 배치된 방(파랑)
 
+    [Header("방 프리팹 캐시")]
+    private Dictionary<string, GameObject> _roomPrefabCache = new Dictionary<string, GameObject>();
+
+
+
+
+
+
 
     private BuildGridViewModel _viewModel;
     private Camera _mainCamera;
@@ -65,11 +73,7 @@ public class BuildGridView : ViewBase
 
 
 
-    private void Start()
-    {
-        BuildGridViewModel viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
-        Bind(viewModel);
-    }
+
 
 
 
@@ -392,24 +396,30 @@ public class BuildGridView : ViewBase
             return;
         }
 
-        Vector2Int size = room.GetSize();
+        GameObject prefab = LoadRoomPrefab(room);
+        if (prefab == null)
+        {
+            return;
+        }
+
+        Vector3 worldPos = GetRoomCenterPosition(placed.Origin, room.GetSize());
+
+        GameObject roomObj = Instantiate(prefab, worldPos, Quaternion.identity, this.transform);
+        roomObj.name = $"Room_{placed.RoomId}_{placed.Origin}";
+
+        _placedRoomObjects[placed.Origin] = roomObj;
+    }
+
+    ///방의 중앙 월드 좌표
+    private Vector3 GetRoomCenterPosition(GridCoord origin, Vector2Int size)
+    {
         GridSystem grid = _viewModel.GridSystem;
-        Vector3 originWorld = grid.GetWorldPosition(placed.Origin);
+        Vector3 originWorld = grid.GetWorldPosition(origin);
+
         float offsetX = (size.x - 1) * 0.5f * grid.CellWidth;
         float offsetY = (size.y - 1) * 0.5f * grid.CellHeight;
 
-        GameObject roomObj = Instantiate(Prefab_Cell, this.transform);
-        roomObj.name = $"Room_{placed.RoomId}_{placed.Origin}";
-        roomObj.transform.position = new Vector3(originWorld.x + offsetX, originWorld.y + offsetY, 0f);
-        roomObj.transform.localScale = new Vector3(size.x, size.y, 1f);
-
-        SpriteRenderer renderer = roomObj.GetComponent<SpriteRenderer>();
-        if (renderer != null)
-        {
-            renderer.color = _placedColor;
-        }
-
-        _placedRoomObjects[placed.Origin] = roomObj;
+        return new Vector3(originWorld.x + offsetX, originWorld.y + offsetY, 0f);
     }
 
     // 방 철거
@@ -576,6 +586,33 @@ public class BuildGridView : ViewBase
         coord = _viewModel.GridSystem.GetCoord(mouseWorld);
         return true;
     }
+
+
+
+
+    /// RoomData.PrefabPath로 방 프리팹을 로드 </summary>
+    private GameObject LoadRoomPrefab(RoomData room)
+    {
+        if (_roomPrefabCache.TryGetValue(room.ID, out GameObject cached))
+        {
+            return cached;
+        }
+
+        GameObject prefab = Resources.Load<GameObject>(room.PrefabPath);
+        if (prefab == null)
+        {
+            Debug.LogWarning($"[BuildGridView] 방 프리팹 없음: {room.PrefabPath}");
+            return null;
+        }
+
+        _roomPrefabCache[room.ID] = prefab;
+        return prefab;
+    }
+
+
+
+
+
 
 
 }
