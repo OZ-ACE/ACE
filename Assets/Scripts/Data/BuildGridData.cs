@@ -23,4 +23,7 @@ public class BuildGridData
 {
     public List<PlacedRoomData> PlacedRooms = new List<PlacedRoomData>();
     public List<CellStateData> ChangedCells = new List<CellStateData>();
+    public int UnlockedMinFloor;  
 }
+
+

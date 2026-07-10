@@ -50,7 +50,6 @@ public class InventoryViewModel : ViewModelBase
         OnPropertyChanged(nameof(InventoryItems));
     }
 
-
     public void AddItem(string itemID, int count)
     {
         if (count <= 0)
@@ -75,6 +74,33 @@ public class InventoryViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(InventoryItems));
     }
+    public bool TryRemoveItem(string itemID, int count)
+    {
+        for (int i = 0; i < InventoryItems.Count; i++)
+        {
+            if (InventoryItems[i].ItemID == itemID)
+            {
+                if (InventoryItems[i].ItemCount < count)
+                {
+                    return false;   
+                }
+
+                InventoryItems[i].ItemCount -= count;
+                if (InventoryItems[i].ItemCount <= 0)
+                {
+                    InventoryItems.RemoveAt(i);
+                }
+
+                OnPropertyChanged(nameof(InventoryItems));
+                return true;
+            }
+        }
+        return false;   
+    }
+
+
+
+
     public int GetItemCount(string itemID)
     {
         foreach (ItemModel item in InventoryItems)
