@@ -93,7 +93,7 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-        Text_SelectItem.text = GameDataManager.Inst.GetData<SupportItem>(currentSelectID).itemName;
+        Text_SelectItem.text = GameDataManager.Inst.GetData<SupportItem>(currentSelectID).ItemName;
         Text_SelectDescription.text = GameDataManager.Inst.GetData<SupportItem>(currentSelectID).Description;
     }
 

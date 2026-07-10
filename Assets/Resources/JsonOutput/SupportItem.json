@@ -1,22 +1,22 @@
 [
   {
     "ID": "item_01",
-    "itemName": "돋보기안경",
-    "itemNameEn": "Glasses",
-    "targetPenaltyId": "penalty_01",
-    "targetPenaltyName": "녹내장",
-    "energyCost": 1,
-    "stockCount": 2,
+    "ItemName": "돋보기안경",
+    "ItemNameEn": "Glasses",
+    "TargetPenaltyId": "penalty_01",
+    "TargetPenaltyName": "녹내장",
+    "EnergyCost": 1,
+    "StockCount": 2,
     "Description": "이탈리아 장인의 손길로 만든 돋보기.\n침침한 눈을 번쩍 뜨이도록 해준다.\n효과는 나쁘지 않지만 렌즈가 두꺼워 살짝 무거운 편이다.\n\n녹내장 질환을 잠시 없앨 수 있다."
   },
   {
     "ID": "item_02",
-    "itemName": "파스",
-    "itemNameEn": "Patch",
-    "targetPenaltyId": "penalty_02",
-    "targetPenaltyName": "관절염",
-    "energyCost": 2,
-    "stockCount": 2,
+    "ItemName": "파스",
+    "ItemNameEn": "Patch",
+    "TargetPenaltyId": "penalty_02",
+    "TargetPenaltyName": "관절염",
+    "EnergyCost": 2,
+    "StockCount": 2,
     "Description": "아주아주 효과가 좋은 파스.\n전날 어떤 운동을 하더라도 근육통을 싹 없애준다.\n어린이의 손에 닿지 않게 주의하세요."
   }
 ]
