@@ -18,6 +18,7 @@ public class Dialogue : GameDataBase
     public string BGM;
     public string SFX;
 }
+
 //영웅 전투 스탯 데이터
 [Serializable]
 public class HeroBattleData : GameDataBase

@@ -85,6 +85,7 @@ public class SaveManager : SingletonBase<SaveManager>
         newPlayer.MemoryFragment = 0;
 
         newPlayer.Inventory = SetDefaultItem();
+        //newPlayer.HeroStats = 
 
         CurrentPlayerModel = newPlayer;
         return newPlayer;
@@ -107,6 +108,25 @@ public class SaveManager : SingletonBase<SaveManager>
 
         return items;
     }
+
+    //private List<HeroStat> SetDefaultHero()
+    //{
+    //    List<HeroStat> hero = new List<HeroStat>();
+
+    //    for (int i = 1; i <= 3; i++)
+    //    {
+    //        HeroStat heroModel = new HeroStat
+    //        {
+    //            HeroID = GameDataManager.Inst.GetDataList<HeroBasic>
+    //            Affection = 0,
+    //            Satisfaction = 0
+    //        };
+
+    //        hero.Add(heroModel);
+    //    }
+
+    //    return hero;
+    //}
 
     public void SetCurrentSlotIndex(int slotIndex)
     {
