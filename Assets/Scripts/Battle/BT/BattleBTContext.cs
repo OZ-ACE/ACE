@@ -28,6 +28,11 @@ public class BattleBTContext : MonoBehaviour
         get { return _createdBattleAction; }
     }
 
+    public bool HasCreatedBattleAction()
+    {
+        return _createdBattleAction != null;
+    }
+
     public void SetBattleContext(
         BattleUnitModel unit,
         List<BattleUnitModel> heroList,
