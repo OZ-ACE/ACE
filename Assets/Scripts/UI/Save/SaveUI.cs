@@ -18,15 +18,19 @@ public class SaveUI : UIBase
     {
         Button_Close.onClick.AddListener(OnClickClose);
 
-        _saveVM = new SaveViewModel();
-        BindViewModel(_saveVM);
+        _saveVM = SaveManager.Inst.SaveVM;
+        _saveVM.InvokeOnceOnInit();
     }
 
-    public void BindViewModel(SaveViewModel saveVM)
+    private void OnEnable()
     {
-        _saveVM = saveVM;
-        _saveVM.PropertyChanged += OnSavePropertyChanged;
+        BindViewModel();
+        RefreshSlotViews().Forget();
+    }
 
+    public void BindViewModel()
+    {
+        _saveVM.PropertyChanged += OnSavePropertyChanged;
         _saveVM.RefreshActiveSlots();
     }
 
@@ -69,7 +73,7 @@ public class SaveUI : UIBase
             {
                 int slotIndex = _saveVM.ActiveSlotIndex[i];
                 _saveSlots[i].gameObject.SetActive(true);
-                _saveSlots[i].BindSlot(_saveVM, slotIndex);
+                _saveSlots[i].BindSlot(slotIndex);
             }
             else
             {

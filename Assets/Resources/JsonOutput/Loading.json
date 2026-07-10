@@ -1,191 +1,34 @@
 [
   {
-    "ID": "Opening_01",
-    "NextID": "Opening_02",
-    "Speaker": "인사팀장",
-    "Content": "축하하네. 우리 H.A.V.E.N.(Heroes Aftercare & Vitality Extension Network) 재단의 신입 요양보조사로 합격한 것을.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
+    "ID": "Loading_1",
+    "Content": "H.A.V.E.N은 Heroes Aftercare & Vitality Extension Network의 약자입니다."
   },
   {
-    "ID": "Opening_02",
-    "NextID": "Opening_03",
-    "Speaker": "인사팀장",
-    "Content": "자네가 돌볼 분들은 평범한 어르신들이 아니라네. 한때 세계를 구했던 ‘전설의 초인들’이지.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
+    "ID": "Loading_2",
+    "Content": "H.B Project는 Heroes Best Project의 약자입니다."
   },
   {
-    "ID": "Opening_03",
-    "NextID": "Opening_04",
-    "Speaker": "{PlayerName}",
-    "Content": "외계 침공을 막아내던 그 히어로분들이요?!",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
+    "ID": "Loading_3",
+    "Content": "0000은 전성기에 굉장히 잘 나갔습니다."
   },
   {
-    "ID": "Opening_04",
-    "NextID": "Opening_05",
-    "Speaker": "{PlayerName}",
-    "Content": "그런데 왜 그런 대단한 영웅들이 이런 시골 요양원에 계신 거죠?",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
+    "ID": "Loading_4",
+    "Content": "요양원의 지하 4층에 무엇이 있는지 아무도 모릅니다."
   },
   {
-    "ID": "Opening_05",
-    "NextID": "Opening_06",
-    "Speaker": "인사팀장",
-    "Content": "나이 앞에는 장사 없지 않나. 치매, 관절염, 골다공증...",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
+    "ID": "Loading_5",
+    "Content": "어쩌구 저쩌구 일해라 절해라 이래라 저래라 전투 관련 어쩔저쩔"
   },
   {
-    "ID": "Opening_06",
-    "NextID": "Opening_07",
-    "Speaker": "인사팀장",
-    "Content": "정부도 감당 못 하는 영웅들의 노환을 우리 재단이 안식처가 되어 돌보는 걸세.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
+    "ID": "Loading_6",
+    "Content": "돋보기는 녹내장 질환을 잠깐이나마 없애주어 선호도가 아주 높습니다."
   },
   {
-    "ID": "Opening_07",
-    "NextID": "Opening_08",
-    "Speaker": "인사팀장",
-    "Content": "은퇴 사생활 보호를 위해 대외적으로는 철저히 비밀에 부쳐진 요양원이라네.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
+    "ID": "Loading_7",
+    "Content": "H.A.V.E.N은 Heroes Ability Valuation & Extraction Network의 약자입니다."
   },
   {
-    "ID": "Opening_08",
-    "NextID": "Opening_09",
-    "Speaker": "{PlayerName}",
-    "Content": "정말 숭고한 복지 사업이네요! 제가 어르신들을 위해 정확히 어떤 일을 하면 될까요?",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_09",
-    "NextID": "Opening_10",
-    "Speaker": "인사팀장",
-    "Content": "자네의 임무는 단순해. 우리가 전폭적인 예산과 자재를 쥐여줄 테니, 어르신들의 특성에 맞춘 안락한 방을 만들고 시설을 키우게.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_10",
-    "NextID": "Opening_11",
-    "Speaker": "인사팀장",
-    "Content": "더 많은 어르신을 모실수록 재단은 기뻐할 걸세.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_11",
-    "NextID": "Opening_12",
-    "Speaker": "인사팀장",
-    "Content": "말단 직원이 왜 건설까지 해야 하나' 싶겠지만, 다 어르신들의 사생활을 완벽히 격리하고 보호하기 위한 우리 재단의 방침이니 유념하고.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_12",
-    "NextID": "Opening_13",
-    "Speaker": "{PlayerName}",
-    "Content": "방을 더 지어서 더 많은 어르신을 모신다...",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_13",
-    "NextID": "Opening_14",
-    "Speaker": "{PlayerName}",
-    "Content": "좋은 요양원을 짓는 일이라면 벽돌이라도 기쁘게 나르겠습니다!",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_14",
-    "NextID": "Opening_15",
-    "Speaker": "인사팀장",
-    "Content": "하하, 아주 좋아. 그리고 가장 중요한 업무가 있네.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_15",
-    "NextID": "Opening_16",
-    "Speaker": "인사팀장",
-    "Content": "어르신들의 뇌세포 자극과 치매 예방을 위해 가상현실 VR 전투 프로그램인 'H.B. 프로젝트'를 정기적으로 가동해야 하네.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_16",
-    "NextID": "Opening_17",
-    "Speaker": "{PlayerName}",
-    "Content": "H.B. 프로젝트요?",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_17",
-    "NextID": "Opening_18",
-    "Speaker": "인사팀장",
-    "Content": "음, 대외적으로는 Heroes Best Project의 약자라네.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_18",
-    "NextID": "Opening_19",
-    "Speaker": "인사팀장",
-    "Content": "어르신들이 가상현실 속에서 전성기 시절의 스트레스를 풀 수 있도록, 자네는 뒤에서 파스나 무릎 보호대 같은 물품만 잘 서포트해 드리면 되네.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_19",
-    "NextID": "Opening_20",
-    "Speaker": "인사팀장",
-    "Content": "아주 안전하고 유익한 복지 프로그램이지.",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_20",
-    "NextID": "Opening_21",
-    "Speaker": "{PlayerName}",
-    "Content": "어르신들의 잊혀진 기억을 되찾아드리는 VR 프로그램이라니, 정말 감동적입니다!",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
-  },
-  {
-    "ID": "Opening_21",
-    "NextID": "0",
-    "Speaker": "{PlayerName}",
-    "Content": "최선을 다해 케어하겠습니다!",
-    "Background": null,
-    "BGM": null,
-    "SFX": null
+    "ID": "Loading_8",
+    "Content": "타이쿤을 설치하는 데에는 무려 엄청나게 많은 돈이 들어갑니다. 어절씨구"
   }
 ]

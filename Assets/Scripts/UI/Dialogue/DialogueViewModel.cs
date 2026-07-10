@@ -146,7 +146,15 @@ public class DialogueViewModel : ViewModelBase
         else
         {
             IsSpeakerActive = true;
-            Speaker = data.Speaker;
+
+            if (data.Speaker == "{PlayerName}")
+            {
+                Speaker = SaveManager.Inst.CurrentPlayerModel.PlayerName;
+            }
+            else
+            {
+                Speaker = data.Speaker;
+            }
         }
 
         Background = data.Background;
@@ -163,6 +171,8 @@ public class DialogueViewModel : ViewModelBase
 
         if (nextID == "0")
         {
+            UIManager.Inst.OpenLoadingUI();
+            UIManager.Inst.OpenTycoonMainUI();
             UIManager.Inst.CloseDialogueUI();
             return;
         }
