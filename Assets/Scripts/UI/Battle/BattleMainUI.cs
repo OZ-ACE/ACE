@@ -84,6 +84,6 @@ public class BattleMainUI : UIBase
     private void Test_AddDummyLog()
     {
         _dummyLogCount++;
-        AddDummyLog($"테스트 로그 {_dummyLogCount}번째 줄입니다.");
+        AddDummyLog($"테스트 로그 {_dummyLogCount}번째 줄입니다. 이것은 텍스트 길이가 길어서 슬롯 안에서 두 줄 이상으로 줄바꿈되는지 확인하기 위한 테스트 로그입니다.");
     }
 }
