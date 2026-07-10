@@ -20,7 +20,8 @@ public enum UIType
     SaveUI,
     LoadingUI,
     DialogueUI,
-    TycoonMainUI
+    TycoonMainUI,
+    BattleMainUI
 }
 
 public static class UIExtension
@@ -109,5 +110,15 @@ public static class UIExtension
     public static void CloseTycoonMainUI(this UIManager uIManager)
     {
         uIManager.CloseUI(UIType.TycoonMainUI);
+    }
+
+    public static void OpenBattleMainUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.Main, UIType.BattleMainUI);
+    }
+
+    public static void CloseBattleMainUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.BattleMainUI);
     }
 }

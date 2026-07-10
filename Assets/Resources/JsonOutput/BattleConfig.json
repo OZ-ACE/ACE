@@ -1,0 +1,11 @@
+[
+  {
+    "ID": "default",
+    "BaseRewardAmount": 100,
+    "DoubleBonusPercent": 200,
+    "HalfBonusPercent": 150,
+    "DoubleBonusRoundThreshold": 2,
+    "HalfBonusRoundThreshold": 3,
+    "ParticipateCountPerLevel": 5
+  }
+]
