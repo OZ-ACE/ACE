@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -85,6 +84,7 @@ public class SaveManager : SingletonBase<SaveManager>
         newPlayer.MemoryFragment = 0;
 
         newPlayer.Inventory = SetDefaultItem();
+        newPlayer.HeroStats = SetDefaultHero();
 
         CurrentPlayerModel = newPlayer;
         return newPlayer;
@@ -106,6 +106,27 @@ public class SaveManager : SingletonBase<SaveManager>
         }
 
         return items;
+    }
+
+    private List<HeroStat> SetDefaultHero()
+    {
+        List<HeroStat> hero = new List<HeroStat>();
+
+        List<HeroData> data = GameDataManager.Inst.GetDataList<HeroData>();
+
+        for (int i = 1; i <= 3; i++)
+        {
+            HeroStat heroModel = new HeroStat
+            {
+                HeroID = data[i].ID,
+                Affection = 0,
+                Satisfaction = 0
+            };
+
+            hero.Add(heroModel);
+        }
+
+        return hero;
     }
 
     public void SetCurrentSlotIndex(int slotIndex)
