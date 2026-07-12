@@ -87,4 +87,5 @@ public class BattleActionSlot : MonoBehaviour
 
         Debug.LogWarning($"[BattleActionSlot] 매칭되는 ActionType 비주얼 없음: {actionType}");
     }
+
 }

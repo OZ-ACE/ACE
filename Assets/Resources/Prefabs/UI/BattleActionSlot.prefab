@@ -161,6 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7342054392928559070}
   - component: {fileID: 2013812589496846676}
+  - component: {fileID: 3656189647105500925}
   - component: {fileID: 6712844875567840785}
   m_Layer: 0
   m_Name: BattleActionSlot
@@ -198,6 +199,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8864071958962703555}
   m_CullTransparentMesh: 1
+--- !u!114 &3656189647105500925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8864071958962703555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da8db7a39d72ed48a59ddcddb3fd009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleActionSlot
+  Image_UnitPortrait: {fileID: 3699949251209013862}
+  ActionTypeFrame: {fileID: 9166518958695470166}
+  Image_ActionType: {fileID: 3596932228433294080}
+  _actionTypeVisualList:
+  - Type: 1
+    Icon: {fileID: 21300000, guid: 9119661b5123f914fa301b6339fac5fd, type: 3}
+    FrameSprite: {fileID: 21300000, guid: 22d95e771f22a234c98641f2bd9c7f38, type: 3}
+  - Type: 2
+    Icon: {fileID: 21300000, guid: c8768f72709d81c459819a6e0db4986e, type: 3}
+    FrameSprite: {fileID: 21300000, guid: f836864692761eb4da49f4262dafbc18, type: 3}
+  - Type: 3
+    Icon: {fileID: 21300000, guid: ebff3cb85af6fb143bda17fb88ac780b, type: 3}
+    FrameSprite: {fileID: 21300000, guid: cea6c49a5a2f510409820604d770a485, type: 3}
+  - Type: 4
+    Icon: {fileID: 21300000, guid: 9c810950f1b4a6943a9e9e0262525245, type: 3}
+    FrameSprite: {fileID: 21300000, guid: dd2b8ffb76e184045833d7bb8652a226, type: 3}
 --- !u!114 &6712844875567840785
 MonoBehaviour:
   m_ObjectHideFlags: 0
