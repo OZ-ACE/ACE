@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
 using System.ComponentModel;
 using TMPro;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine.UI;
 
 public class HeroSlot : MonoBehaviour
 {
+    [SerializeField] private Image Image_Background;
+    [SerializeField] private Button Button_Slot;
     [SerializeField] private Image Image_Portrait;
     [SerializeField] private TextMeshProUGUI Text_HeroName;
     [SerializeField] private TextMeshProUGUI Text_Description;
@@ -18,6 +21,8 @@ public class HeroSlot : MonoBehaviour
     [SerializeField] private Image Image_Affection;
     [SerializeField] private Image Image_Satisfaction;
 
+    public Action<HeroViewModel> OnSlotClick;
+
     private HeroViewModel _heroVM;
     private string _heroID;
 
@@ -28,7 +33,13 @@ public class HeroSlot : MonoBehaviour
 
         _heroID = _heroVM.HeroID;
 
+        Button_Slot.onClick.AddListener(OnClickSlot);
         _heroVM.InvokeOnceOnInit();
+    }
+
+    private void OnClickSlot()
+    {
+        OnSlotClick?.Invoke(_heroVM);
     }
 
     private void OnDestroy()
@@ -70,11 +81,27 @@ public class HeroSlot : MonoBehaviour
                 Text_Satisfaction.text = $"{_heroVM.Satisfaction}";
                 Image_Satisfaction.fillAmount = _heroVM.Satisfaction;
                 break;
+
+            case nameof(_heroVM.IsSelect):
+                SetSlotBackground(_heroVM.IsSelect).Forget();
+                break;
         }
     }
 
     private async UniTask SetPortrait(string name)
     {
         Image_Portrait.sprite = await ResourceManager.Inst.LoadSprite($"Image/Portrait/{name}");
+    }
+
+    private async UniTask SetSlotBackground(bool isSelect)
+    {
+        if (isSelect)
+        {
+            Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/Slot/Select");
+        }
+        else
+        {
+            Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/Slot/Unselect");
+        }
     }
 }

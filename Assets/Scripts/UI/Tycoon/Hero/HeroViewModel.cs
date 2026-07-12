@@ -50,6 +50,20 @@ public class HeroViewModel : ViewModelBase
         }
     }
 
+    private bool _isSelect;
+    public bool IsSelect
+    {
+        get => _isSelect;
+        set
+        {
+            if (_isSelect != value)
+            {
+                _isSelect = value;
+                OnPropertyChanged(nameof(IsSelect));
+            }
+        }
+    }
+
     public void Init(HeroModel model)
     {
         _model = model;
@@ -63,6 +77,8 @@ public class HeroViewModel : ViewModelBase
         
         _affection = _model.Affection;
         _satisfaction = _model.Satisfaction;
+
+        _isSelect = false;
     }
 
     public void InvokeOnceOnInit()
@@ -74,6 +90,7 @@ public class HeroViewModel : ViewModelBase
         OnPropertyChanged(nameof(Skill));
         OnPropertyChanged(nameof(Satisfaction));
         OnPropertyChanged(nameof(Affection));
+        OnPropertyChanged(nameof(IsSelect));
     }
 
     public void AddAffection(int amount)

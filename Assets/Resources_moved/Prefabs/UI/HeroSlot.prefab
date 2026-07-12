@@ -633,13 +633,13 @@ RectTransform:
   m_Children:
   - {fileID: 4582527820094004264}
   - {fileID: 1562732642974036792}
-  - {fileID: 6881545786125076099}
   - {fileID: 5752073328387476555}
   - {fileID: 3110539446384799537}
   - {fileID: 5112007038240684501}
   - {fileID: 7100752171924372616}
   - {fileID: 6993919888138063925}
   - {fileID: 3879298313286858112}
+  - {fileID: 6881545786125076099}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -659,6 +659,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f09c551d37426fe4bb81448a289a4898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeroSlot
+  Image_Background: {fileID: 5425942708557003384}
+  Button_Slot: {fileID: 9074445025116067147}
   Image_Portrait: {fileID: 7271316896717249139}
   Text_HeroName: {fileID: 9000580287566874243}
   Text_Description: {fileID: 2177615717693269924}

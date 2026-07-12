@@ -5,29 +5,29 @@ using UnityEngine;
 public class HeroUI : UIBase
 {
     [SerializeField] private Transform Transform_Content;
+    [SerializeField] private HeroHotBar HeroHotBar;
 
     private List<HeroSlot> _activeSlots = new List<HeroSlot>();
+    private HeroViewModel _currentVM;
 
     private void OnEnable()
     {
         RefreshHeroList().Forget();
     }
 
+    private void OnDisable()
+    {
+        HeroHotBar.gameObject.SetActive(false);
+
+        _currentVM.IsSelect = false;
+        _currentVM = null;
+    }
+
     private async UniTask RefreshHeroList()
     {
-        for (int i = 0; i < _activeSlots.Count; i++)
-        {
-            if (_activeSlots[i] != null)
-            {
-                Destroy(_activeSlots[i]);
-            }
-        }
-
-        _activeSlots.Clear();
-
         var playerModel = SaveManager.Inst.CurrentPlayerModel;
 
-        for (int i = 0; i < playerModel.HeroStats.Count; i++)
+        for (int i = _activeSlots.Count; i <= playerModel.HeroStats.Count; i++)
         {
             string currentHeroID = playerModel.HeroStats[i].HeroID;
 
@@ -41,7 +41,21 @@ public class HeroUI : UIBase
             HeroSlot heroSlot = prefab.GetComponent<HeroSlot>();
 
             heroSlot.InitSlot(viewModel);
+            heroSlot.OnSlotClick = SelectHeroSlot;
             _activeSlots.Add(heroSlot);
         }
+    }
+
+    private void SelectHeroSlot(HeroViewModel heroVM)
+    {
+        if (_currentVM != null && _currentVM != heroVM)
+        {
+            _currentVM.IsSelect = false;
+        }
+
+        _currentVM = heroVM;
+        _currentVM.IsSelect = true;
+
+        HeroHotBar.OpenHotBar(heroVM);
     }
 }
