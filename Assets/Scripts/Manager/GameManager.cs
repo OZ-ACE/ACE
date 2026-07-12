@@ -7,6 +7,8 @@ public class GameManager : SingletonBase<GameManager>
 {
     public string CurrentDialogueID { get; private set; } = "Opening_01";
     public GameServiceContainer Services { get; private set; }
+
+    // 인벤토리 뷰모델 (상점·인벤토리 UI가 공유)
     public InventoryViewModel InventoryViewModel { get; private set; }
 
     public Action<float> OnChangeBrightness;

@@ -1,0 +1,9 @@
+[
+  {
+    "ID": "episodeCondition_test_01",
+    "EpisodeId": "episode_test_01",
+    "ConditionType": "Day",
+    "TargetId": null,
+    "RequiredValue": 3
+  }
+]

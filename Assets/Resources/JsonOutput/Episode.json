@@ -1,0 +1,10 @@
+[
+  {
+    "ID": "episode_test_01",
+    "EpisodeName": "테스트 에피소드",
+    "EpisodeDescription": "3일차에 발생하는 테스트 에피소드",
+    "DialogueId": "Opening_01",
+    "IsRepeatable": false,
+    "MaxTriggerCount": 1
+  }
+]

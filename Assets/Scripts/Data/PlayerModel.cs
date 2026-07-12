@@ -19,6 +19,7 @@ public class PlayerModel
     public List<ShopStockData> ShopStocks = new List<ShopStockData>();
     public List<HeroProgressModel> HeroProgressList = new List<HeroProgressModel>();
     public List<HeroStat> HeroStats = new List<HeroStat>();
+    public List<EpisodeProgressModel> EpisodeProgressList = new List<EpisodeProgressModel>();
 }
 
 [Serializable]
