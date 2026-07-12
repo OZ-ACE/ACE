@@ -7,7 +7,7 @@ public class ConstructPanelView : ViewBase
 
     private void OnEnable()
     {
-        _viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
+        _viewModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
         Debug.Log("[ConstructPanelView] 건설모드 진입");
         _viewModel.EnterBuildMode();
     }

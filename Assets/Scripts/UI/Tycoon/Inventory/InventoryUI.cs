@@ -57,10 +57,10 @@ public class InventoryUI : MonoBehaviour
     /// <summary> 상점 뷰모델 확보 (없으면 생성) </summary>
     private ShopViewModel GetShopViewModel()
     {
-        ShopViewModel vm = GameManager.Inst.ShopService.GetShopViewModel();
+        ShopViewModel vm = GameManager.Inst.Services.ShopService.GetShopViewModel();
         if (vm == null)
         {
-            vm = GameManager.Inst.ShopService.CreateShopViewModel(GameManager.Inst.InventoryViewModel);
+            vm = GameManager.Inst.Services.ShopService.CreateShopViewModel(GameManager.Inst.InventoryViewModel);
             vm.InitShop();
         }
         return vm;

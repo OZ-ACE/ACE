@@ -38,11 +38,11 @@ public class ShopView : ViewBase
     {
         if (_viewModel == null)
         {
-            ShopViewModel vm = GameManager.Inst.ShopService.GetShopViewModel();
+            ShopViewModel vm = GameManager.Inst.Services.ShopService.GetShopViewModel();
             if (vm == null)
             {
                 InventoryViewModel inventoryVM = GetInventoryViewModel();
-                vm = GameManager.Inst.ShopService.CreateShopViewModel(inventoryVM);
+                vm = GameManager.Inst.Services.ShopService.CreateShopViewModel(inventoryVM);
                 vm.InitShop();
             }
             Bind(vm);

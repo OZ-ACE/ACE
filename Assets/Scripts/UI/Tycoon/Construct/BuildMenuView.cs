@@ -30,7 +30,7 @@ public class BuildMenuView : ViewBase
 
     private void OnEnable()
     {
-        Bind(GameManager.Inst.BuildService.GetBuildGridViewModel());
+        Bind(GameManager.Inst.Services.BuildService.GetBuildGridViewModel());
     }
 
     private void CreateRoomButtons()
