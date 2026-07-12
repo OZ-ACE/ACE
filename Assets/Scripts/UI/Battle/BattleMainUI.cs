@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,9 @@ using UnityEngine.UI;
 // 전투 메인 UI 전체를 관리하는 스크립트 (배틀 로그 표시도 담당)
 public class BattleMainUI : UIBase
 {
+    [Header("액션 큐")]
+    [SerializeField] private Transform Transform_ActionQueueContent;
+
     [Header("배틀 로그")]
     [SerializeField] private ScrollRect ScrollRect_BattleLog;
     [SerializeField] private Transform Transform_LogContent;
@@ -35,9 +39,10 @@ public class BattleMainUI : UIBase
     private void BindViewModel(BattleViewModel viewModel)
     {
         _viewModel.PropertyChanged += OnPropertyChanged_View;
+
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
-        Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
+        Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
     }
 
     private void OnDestroy()
@@ -45,9 +50,10 @@ public class BattleMainUI : UIBase
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnPropertyChanged_View;
+
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
-            Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
+            Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
         }
     }
 
@@ -61,7 +67,64 @@ public class BattleMainUI : UIBase
         }
     }
 
-    // 이미 그려진 슬롯 개수 이후로 늘어난 로그만 추가 생성
+    // 액션 큐 슬롯을 전부 지우고 넘겨받은 목록으로 새로 채운다
+    public void RefreshActionQueue(List<BattleActionModel> actionList)
+    {
+        ClearActionQueueSlots();
+
+        foreach (BattleActionModel action in actionList)
+        {
+            CreateActionQueueSlot(action);
+        }
+    }
+
+    private void ClearActionQueueSlots()
+    {
+        for (int i = Transform_ActionQueueContent.childCount - 1; i >= 0; i--)
+        {
+            Destroy(Transform_ActionQueueContent.GetChild(i).gameObject);
+        }
+    }
+
+    private void CreateActionQueueSlot(BattleActionModel action)
+    {
+        GameObject loadedObj = (GameObject)Resources.Load("Prefabs/UI/BattleActionSlot");
+        GameObject slotObj = Instantiate(loadedObj, Transform_ActionQueueContent);
+
+        BattleActionSlot slot = slotObj.GetComponent<BattleActionSlot>();
+
+        if (slot != null)
+        {
+            slot.SetSlotData(action.Unit, action.ActionType);
+        }
+    }
+
+    // 테스터용 - 액션 큐 동적 생성 메커니즘 검증용, 실제 연동 후 삭제
+    [ContextMenu("액션 큐 테스트 - 더미 3개 생성")]
+    private void Test_RefreshActionQueue()
+    {
+        List<BattleActionModel> dummyList = new List<BattleActionModel>();
+
+        dummyList.Add(CreateDummyAction("hero_01", ActionType.Attack));
+        dummyList.Add(CreateDummyAction("hero_02", ActionType.Support));
+        dummyList.Add(CreateDummyAction("hero_03", ActionType.Wait));
+
+        RefreshActionQueue(dummyList);
+    }
+
+    private BattleActionModel CreateDummyAction(string heroId, ActionType actionType)
+    {
+        BattleUnitModel unit = new BattleUnitModel();
+        unit.ID = heroId;
+
+        BattleActionModel action = new BattleActionModel();
+        action.Unit = unit;
+        action.ActionType = actionType;
+
+        return action;
+    }
+
+    // 이미 그려진 배틀로그 슬롯 개수 이후로 늘어난 로그만 추가 생성
     private void AppendNewLogSlots()
     {
         int alreadyDrawnCount = Transform_LogContent.childCount;
