@@ -1,88 +1,47 @@
 ﻿using Cysharp.Threading.Tasks;
-using System.ComponentModel;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HeroUI : UIBase
 {
-    [SerializeField] private Image Image_Portrait;
-    [SerializeField] private TextMeshProUGUI Text_HeroName;
-    [SerializeField] private TextMeshProUGUI Text_Description;
-    [SerializeField] private TextMeshProUGUI Text_DiseaseName;
-    [SerializeField] private TextMeshProUGUI Text_SkillName;
-    [SerializeField] private TextMeshProUGUI Text_Age;
+    [SerializeField] private Transform Transform_Content;
 
-    [SerializeField] private TextMeshProUGUI Text_Affection;
-    [SerializeField] private TextMeshProUGUI Text_Satisfaction;
-    [SerializeField] private Image Image_Affection;
-    [SerializeField] private Image Image_Satisfaction;
-
-    private HeroViewModel _heroVM;
+    private List<HeroSlot> _activeSlots = new List<HeroSlot>();
 
     private void OnEnable()
     {
-        if (_heroVM == null)
+        RefreshHeroList().Forget();
+    }
+
+    private async UniTask RefreshHeroList()
+    {
+        for (int i = 0; i < _activeSlots.Count; i++)
         {
-            HeroModel heroModel = new HeroModel();
-
-            _heroVM = new HeroViewModel();
-            _heroVM.Init(heroModel);
-
-            BindViewModel();
+            if (_activeSlots[i] != null)
+            {
+                Destroy(_activeSlots[i]);
+            }
         }
-    }
 
-    private void BindViewModel()
-    {
-        _heroVM.PropertyChanged += OnPropertyChanged_View;
-        _heroVM.InvokeOnceOnInit();
-    }
+        _activeSlots.Clear();
 
-    private void OnDestroy()
-    {
-        _heroVM.PropertyChanged -= OnPropertyChanged_View;
-    }
+        var playerModel = SaveManager.Inst.CurrentPlayerModel;
 
-    private void OnPropertyChanged_View(object sender, PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
+        for (int i = 0; i < playerModel.HeroStats.Count; i++)
         {
-            case nameof(_heroVM.HeroName):
-                Text_HeroName.text = _heroVM.HeroName;
-                SetPortrait(_heroVM.HeroName).Forget();
-                break;
+            string currentHeroID = playerModel.HeroStats[i].HeroID;
 
-            case nameof(_heroVM.Description):
-                Text_Description.text = _heroVM.Description;
-                break;
+            HeroModel model = new HeroModel();
+            model.LoadHeroData(currentHeroID);
 
-            case nameof(_heroVM.Disease):
-                Text_DiseaseName.text = $"질환 : {_heroVM.DiseaseName}";
-                break;
+            HeroViewModel viewModel = new HeroViewModel();
+            viewModel.Init(model);
 
-            case nameof(_heroVM.Age):
-                Text_Age.text = $"연령 : {_heroVM.Age}";
-                break;
+            GameObject prefab = await ResourceManager.Inst.InstantiateAsync("Prefabs/UI/HeroSlot", Transform_Content);
+            HeroSlot heroSlot = prefab.GetComponent<HeroSlot>();
 
-            case nameof(_heroVM.Skill):
-                Text_SkillName.text = $"능력 : {_heroVM.Skill}";
-                break;
-
-            case nameof(_heroVM.Affection):
-                Text_Affection.text = _heroVM.Affection;
-                Image_Affection.fillAmount = _heroVM.Affection;
-                break;
-
-            case nameof(_heroVM.Satisfaction):
-                Text_Satisfaction.text = _heroVM.Satisfaction;
-                Image_Satisfaction.fillAmount = _heroVM.Satisfaction;
-                break;
+            heroSlot.InitSlot(viewModel);
+            _activeSlots.Add(heroSlot);
         }
-    }
-
-    private async UniTask SetPortrait(string name)
-    {
-        Image_Portrait.sprite = await ResourceManager.Inst.LoadSprite($"Image/Portrait/{name}");
     }
 }

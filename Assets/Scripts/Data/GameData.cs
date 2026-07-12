@@ -29,6 +29,7 @@ public class HeroData : GameDataBase
     public string MainSkillId;
     public int CandidateWeight;
     public string ProfileImage;
+    public string PenaltyID;
 }
 
 //영웅 전투 스탯 데이터

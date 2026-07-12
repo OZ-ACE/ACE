@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -100,7 +99,7 @@ public class SaveManager : SingletonBase<SaveManager>
             ItemModel itemModel = new ItemModel
             {
                 ItemID = item.ID,
-                ItemCount = item.stockCount
+                ItemCount = item.StockCount
             };
 
             items.Add(itemModel);

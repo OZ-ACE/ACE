@@ -4,6 +4,9 @@ public class HeroViewModel : ViewModelBase
 {
     private HeroModel _model;
 
+    private string _heroID;
+    public string HeroID => _heroID;
+
     private string _heroName;
     public string HeroName => _heroName;
 
@@ -51,7 +54,8 @@ public class HeroViewModel : ViewModelBase
     {
         _model = model;
 
-        _heroName = _model.HeroName;
+        _heroID = _model.HeroID;
+        _heroName = _model.Name;
         _description = _model.Description;
         _diseaseName = _model.DiseaseName;
         _age = _model.Age;

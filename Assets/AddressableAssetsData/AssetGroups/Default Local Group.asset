@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 23850c18bd752de4e9d0bcbd8c737d67
   m_SerializeEntries:
+  - m_GUID: 1f041b45a0dc0c8479913678657945cd
+    m_Address: Prefabs/UI/HeroSlot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 441d3d17b6bda2045a0d939db9733e36
     m_Address: Image/Button/Select
     m_ReadOnly: 0
