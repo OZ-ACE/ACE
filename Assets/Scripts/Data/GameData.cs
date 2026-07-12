@@ -140,6 +140,7 @@ public class Penalty : GameDataBase
     public string PenaltyName;
     public string PenaltyNameEn;
     public string TriggerSkillId;
+    public string TriggerSkillName;
     public int TriggerCount;
     public string EffectType;
     public int EffectValue;
