@@ -30,9 +30,7 @@ MonoBehaviour:
     m_Value1: 11926465917432491880
   m_Variables:
   - rid: 7742168450826502449
-  - rid: 7742168541890084934
-  - rid: 7742168541890084942
-  m_VersionTimestamp: 639195367802307661
+  m_VersionTimestamp: 639192152553128747
   m_CommandBuffer:
     m_Commands: []
   m_RuntimeBlackboardAsset: {fileID: 1818152465981496651}
@@ -49,26 +47,6 @@ MonoBehaviour:
         IsExposed: 1
         m_IsShared: 0
         m_Value: {fileID: 0}
-    - rid: 7742168541890084934
-      type: {class: 'TypedVariableModel`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 9310243882714417813
-          m_Value1: 104764170475324342
-        Name: BattleContext
-        IsExposed: 1
-        m_IsShared: 0
-        m_Value: {fileID: 0}
-    - rid: 7742168541890084942
-      type: {class: 'TypedVariableModel`1[[System.String, mscorlib]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 15889581652279200638
-          m_Value1: 15232002496928906346
-        Name: SkillId
-        IsExposed: 1
-        m_IsShared: 0
-        m_Value: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +64,7 @@ MonoBehaviour:
   m_Nodes:
   - rid: 7742168450826502450
   - rid: 7742168450826502458
-  m_VersionTimestamp: 639195433099802690
+  m_VersionTimestamp: 639195474247670029
   m_SerializedVersion: 3
   m_DebugInfo: {fileID: -8953308081699078647}
   m_RuntimeGraph: {fileID: 5059855043438149418}
@@ -141,6 +119,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 7016226917463097530
       type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
@@ -151,7 +131,7 @@ MonoBehaviour:
         LocalValue:
           rid: 7016226917463097531
         LinkedVariable:
-          rid: 7742168541890084952
+          rid: -2
     - rid: 7016226917463097531
       type: {class: 'BlackboardVariable`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -177,7 +157,7 @@ MonoBehaviour:
           m_Value0: 3335272451348827663
           m_Value1: 11549843281177505721
         m_FieldValues: []
-        Repeat: 0
+        Repeat: 1
         AllowMultipleRepeatsPerTick: 0
     - rid: 7742168450826502451
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
@@ -187,12 +167,11 @@ MonoBehaviour:
         m_IsFloating: 0
         m_NodeModel:
           rid: 7742168450826502450
-        m_Connections:
-        - rid: 7742168450826502459
+        m_Connections: []
     - rid: 7742168450826502458
       type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
-        Position: {x: -0.9000134, y: 97.699974}
+        Position: {x: -47.30001, y: 117.7}
         ID:
           m_Value0: 8454771863101656025
           m_Value1: 3094859327998775164
@@ -217,8 +196,7 @@ MonoBehaviour:
         m_IsFloating: 0
         m_NodeModel:
           rid: 7742168450826502458
-        m_Connections:
-        - rid: 7742168450826502451
+        m_Connections: []
     - rid: 7742168450826502460
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -238,7 +216,7 @@ MonoBehaviour:
         LocalValue:
           rid: 7742168450826502467
         LinkedVariable:
-          rid: 7742168541890084957
+          rid: -2
     - rid: 7742168450826502467
       type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -246,26 +224,6 @@ MonoBehaviour:
           m_Value0: 0
           m_Value1: 0
         Name: 
-        m_Value: 
-    - rid: 7742168541890084952
-      type: {class: 'TypedVariableModel`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 9310243882714417813
-          m_Value1: 104764170475324342
-        Name: BattleContext
-        IsExposed: 1
-        m_IsShared: 0
-        m_Value: {fileID: 0}
-    - rid: 7742168541890084957
-      type: {class: 'TypedVariableModel`1[[System.String, mscorlib]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 15889581652279200638
-          m_Value1: 15232002496928906346
-        Name: SkillId
-        IsExposed: 1
-        m_IsShared: 0
         m_Value: 
 --- !u!114 &1818152465981496651
 MonoBehaviour:
@@ -279,15 +237,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c02bb70996b49eba31d0c206e28da24, type: 3}
   m_Name: HeroBehaviorGraph Blackboard
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.RuntimeBlackboardAsset
-  VersionTimestamp: 639195367802307661
+  VersionTimestamp: 639192152553128747
   AssetID:
-    m_Value0: 7229994632639293480
-    m_Value1: 11926465917432491880
+    m_Value0: 0
+    m_Value1: 0
   m_Blackboard:
     m_Variables:
     - rid: 7742168450826502452
-    - rid: 7742168541890084935
-    - rid: 7742168541890084943
   m_SharedBlackboardVariableGuids: []
   references:
     version: 2
@@ -300,22 +256,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 0}
-    - rid: 7742168541890084935
-      type: {class: 'BlackboardVariable`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 9310243882714417813
-          m_Value1: 104764170475324342
-        Name: BattleContext
-        m_Value: {fileID: 0}
-    - rid: 7742168541890084943
-      type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 15889581652279200638
-          m_Value1: 15232002496928906346
-        Name: SkillId
-        m_Value: 
 --- !u!114 &5059855043438149418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,8 +288,8 @@ MonoBehaviour:
           rid: 7742168450826502454
         BlackboardGroupReferences: []
         Root:
-          rid: 7742168541890084970
-        m_VersionTimestamp: 639195433099802690
+          rid: 7742168450826502473
+        m_VersionTimestamp: 639195474247670029
     - rid: 7742168450826502454
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -360,10 +300,8 @@ MonoBehaviour:
       type: {class: Blackboard, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         m_Variables:
-        - rid: 7742168541890084959
-        - rid: 7742168541890084960
-        - rid: 7742168541890084961
-    - rid: 7742168541890084959
+        - rid: 7742168450826502457
+    - rid: 7742168450826502457
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -371,23 +309,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 0}
-    - rid: 7742168541890084960
-      type: {class: 'BlackboardVariable`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 9310243882714417813
-          m_Value1: 104764170475324342
-        Name: BattleContext
-        m_Value: {fileID: 0}
-    - rid: 7742168541890084961
-      type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 15889581652279200638
-          m_Value1: 15232002496928906346
-        Name: SkillId
-        m_Value: 
-    - rid: 7742168541890084970
+    - rid: 7742168450826502473
       type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -398,20 +320,6 @@ MonoBehaviour:
         m_Parent:
           rid: -2
         m_Child:
-          rid: 7742168541890084971
-        Repeat: 0
+          rid: -2
+        Repeat: 1
         AllowMultipleRepeatsPerTick: 0
-    - rid: 7742168541890084971
-      type: {class: CreateBattleActionNode, ns: , asm: Assembly-CSharp}
-      data:
-        ID:
-          m_Value0: 8454771863101656025
-          m_Value1: 3094859327998775164
-        Graph:
-          rid: 7742168450826502453
-        m_Parent:
-          rid: 7742168541890084970
-        Context:
-          rid: 7742168541890084960
-        SkillId:
-          rid: 7742168541890084961
