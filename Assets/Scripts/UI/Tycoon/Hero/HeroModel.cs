@@ -5,7 +5,7 @@ public class HeroModel
     public string HeroID;
     public string Name;
     public string Description;
-    public List<string> DiseaseName;
+    public List<string> DiseaseName = new List<string>();
     public string Age;
     public string Skill;
 
