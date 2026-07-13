@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleBTContext : MonoBehaviour
@@ -7,6 +8,8 @@ public class BattleBTContext : MonoBehaviour
     private List<BattleUnitModel> _heroList;
     private List<BattleUnitModel> _enemyList;
     private BattleActionModel _createdBattleAction;
+
+    public event Action<BattleActionModel> BattleActionCreated;
 
     public BattleUnitModel Unit
     {
@@ -54,6 +57,7 @@ public class BattleBTContext : MonoBehaviour
     public void SetCreatedBattleAction(BattleActionModel battleAction)
     {
         _createdBattleAction = battleAction;
+        BattleActionCreated?.Invoke(battleAction);
     }
 
     public void ClearCreatedBattleAction()
