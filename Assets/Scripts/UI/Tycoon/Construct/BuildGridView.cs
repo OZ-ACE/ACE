@@ -383,6 +383,10 @@ public class BuildGridView : ViewBase
         {
             Debug.Log($"[BuildGridView] 철거할 방 없음 @ {coord}");
         }
+        else
+        {
+            NavMeshManager.Inst.BuildNavMesh();
+        }
     }
 
 
@@ -408,9 +412,11 @@ public class BuildGridView : ViewBase
         roomObj.name = $"Room_{placed.RoomId}_{placed.Origin}";
 
         _placedRoomObjects[placed.Origin] = roomObj;
+
+        NavMeshManager.Inst.BuildNavMesh();
     }
 
-    ///방의 중앙 월드 좌표
+    // 방의 중앙 월드 좌표
     private Vector3 GetRoomCenterPosition(GridCoord origin, Vector2Int size)
     {
         GridSystem grid = _viewModel.GridSystem;
@@ -429,6 +435,8 @@ public class BuildGridView : ViewBase
         {
             Destroy(roomObj);
             _placedRoomObjects.Remove(removed.Origin);
+
+            NavMeshManager.Inst.BuildNavMesh();
         }
     }
 
@@ -451,6 +459,7 @@ public class BuildGridView : ViewBase
             OnPlaceRoom(rooms[i]);
         }
 
+        NavMeshManager.Inst.BuildNavMesh();
         Debug.Log($"[BuildGridView] 방 {rooms.Count}개 재생성");
     }
 
