@@ -45,6 +45,7 @@ public class BattleBTIntegrationTest : MonoBehaviour
         enemyUnit.CurrentHp = 100;
         enemyUnit.Speed = 5;
         enemyUnit.AttackPower = 9;
+        enemyUnit.SkillIdList.Add("invalidSkillId");
         enemyUnit.SkillIdList.Add(EnemySkillId);
 
         List<BattleUnitModel> heroList = new List<BattleUnitModel>();

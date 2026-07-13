@@ -10,6 +10,14 @@ public class BattleBTExecutor : MonoBehaviour
 
     public event Action<BattleActionModel> BattleActionCreated;
 
+    private void Awake()
+    {
+        if (BehaviorGraphAgent != null)
+        {
+            BehaviorGraphAgent.enabled = false;
+        }
+    }
+
     private void OnEnable()
     {
         if (BattleBTContext != null)
@@ -65,6 +73,7 @@ public class BattleBTExecutor : MonoBehaviour
             return false;
         }
 
+        BehaviorGraphAgent.enabled = true;
         BehaviorGraphAgent.Restart();
 
         return true;
@@ -95,5 +104,10 @@ public class BattleBTExecutor : MonoBehaviour
     private void OnBattleActionCreated(BattleActionModel battleAction)
     {
         BattleActionCreated?.Invoke(battleAction);
+
+        if (BehaviorGraphAgent != null)
+        {
+            BehaviorGraphAgent.enabled = false;
+        }
     }
 }

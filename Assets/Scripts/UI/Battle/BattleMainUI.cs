@@ -29,6 +29,9 @@ public class BattleMainUI : UIBase
     private const int HealUnitEnergyCost = 2; //temp
 
     private string _selectedTargetUnitId;
+    private BattleActionResult? _pendingActionResult;
+    private int _pendingEnergyCost;
+    private string _pendingLogMessage;
 
     private BattleViewModel _viewModel;
 
@@ -64,7 +67,28 @@ public class BattleMainUI : UIBase
     private void OnUnitClicked_Spawner(string unitId)
     {
         _selectedTargetUnitId = unitId;
-        _viewModel.AddBattleLog($"{unitId} 선택됨");
+
+        if (_pendingActionResult.HasValue)
+        {
+            ApplyInterventionAction(unitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage);
+            return;
+        }
+
+        string heroName = GetHeroDisplayName(unitId);
+        _viewModel.AddBattleLog($"{heroName} 유닛이 선택되었습니다.");
+    }
+
+    //유닛 ID로 표시용 영웅 이름을 가져온다. 데이터가 없으면 ID를 그대로 반환
+    private string GetHeroDisplayName(string unitId)
+    {
+        HeroData heroData = GameDataManager.Inst.GetData<HeroData>(unitId);
+
+        if (heroData == null)
+        {
+            return unitId;
+        }
+
+        return heroData.HeroName;
     }
 
     private void OnDestroy()
@@ -188,40 +212,53 @@ public class BattleMainUI : UIBase
 
     private void OnClickReinforce()
     {
-        ExecuteInterventionAction(BattleActionResult.Reinforce, ReinforceEnergyCost, "지원하기 실행");
+        RequestInterventionAction(BattleActionResult.Reinforce, ReinforceEnergyCost, "지원하기 실행");
     }
 
     private void OnClickHealUnit()
     {
-        ExecuteInterventionAction(BattleActionResult.HealUnit, HealUnitEnergyCost, "영웅 회복 실행");
+        RequestInterventionAction(BattleActionResult.HealUnit, HealUnitEnergyCost, "영웅 회복 실행");
     }
 
     private void OnClickChangeUnit()
     {
-        ExecuteInterventionAction(BattleActionResult.ChangeUnit, ChangeUnitEnergyCost, "영웅 교체 실행");
+        RequestInterventionAction(BattleActionResult.ChangeUnit, ChangeUnitEnergyCost, "영웅 교체 실행");
     }
 
-    //선택된 대상에게 개입 액션을 실제로 적용한다. 대상 미선택 또는 에너지 부족 시 실패 처리
-    private void ExecuteInterventionAction(BattleActionResult result, int energyCost, string logMessage)
+    //개입 버튼을 눌렀을 때 대상이 이미 선택돼 있으면 바로 적용하고, 없으면 다음 유닛 클릭 때 적용하도록 대기시킨다
+    private void RequestInterventionAction(BattleActionResult result, int energyCost, string logMessage)
     {
         if (string.IsNullOrEmpty(_selectedTargetUnitId))
         {
-            _viewModel.AddBattleLog("대상을 먼저 선택해주세요");
+            _pendingActionResult = result;
+            _pendingEnergyCost = energyCost;
+            _pendingLogMessage = logMessage;
+
+            _viewModel.AddBattleLog("대상을 선택하세요");
             return;
         }
 
-        bool isSuccess = BattleManager.Inst.SetActionResult(_selectedTargetUnitId, result, energyCost);
+        ApplyInterventionAction(_selectedTargetUnitId, result, energyCost, logMessage);
+    }
+
+    //실제 대상에게 개입 액션을 적용한다
+    private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage)
+    {
+        bool isSuccess = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost);
 
         if (!isSuccess)
         {
-            _viewModel.AddBattleLog("실행 실패 (에너지 부족 또는 대상 없음)");
+            _viewModel.AddBattleLog("실행 실패 (에너지 부족)");
             return;
         }
 
         SetEnergyGauge(BattleManager.Inst.GetRemainingEnergy());
-        _viewModel.AddBattleLog($"{_selectedTargetUnitId} 대상 - {logMessage}");
+
+        string heroName = GetHeroDisplayName(targetUnitId);
+        _viewModel.AddBattleLog($"{heroName} 대상 - {logMessage}");
 
         _selectedTargetUnitId = null;
+        _pendingActionResult = null;
     }
 
     [ContextMenu("실제 액션 큐 빌드 테스트 (스폰된 유닛 기준)")]

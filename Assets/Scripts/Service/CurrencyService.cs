@@ -76,4 +76,41 @@ public class CurrencyService : ICurrencyService
             OnChangeCurrency.Invoke();
         }
     }
+
+    //이하 기억의파편
+    public int CurrentMemoryFragment
+    {
+        get
+        {
+            PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+            if (player == null)
+            {
+                return 0;
+            }
+
+            return player.MemoryFragment;
+        }
+    }
+
+    public void AddMemoryFragment(int amount)
+    {
+        if (amount < 0)
+        {
+            Debug.LogWarning($"[CurrencyService] 음수 추가 시도: {amount}");
+            return;
+        }
+
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+        if (player == null)
+        {
+            return;
+        }
+
+        player.MemoryFragment += amount;
+
+        NotifyChange();
+        Debug.Log($"[CurrencyService] 기억의파편 {amount} 획득 → 잔액 {player.MemoryFragment}");
+    }
 }
