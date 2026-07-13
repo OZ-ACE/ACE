@@ -153,7 +153,7 @@ public class BuildGridViewModel : ViewModelBase
             return PlacementResult.WrongCellType;
         }
 
-        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem);
+        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem, room.IsAnyCellType());
         if (result != PlacementResult.Success)
         {
             return result;
@@ -255,7 +255,7 @@ public class BuildGridViewModel : ViewModelBase
         Vector2Int size = roomData.GetSize();
         CellType requiredType = roomData.GetRequiredCellType();
 
-        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, size, requiredType, _gridSystem);
+        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, size, requiredType, _gridSystem, roomData.IsAnyCellType());
         if (result != PlacementResult.Success)
         {
             return result;
@@ -373,7 +373,7 @@ public class BuildGridViewModel : ViewModelBase
         Vector2Int size = roomData.GetSize();
         CellType requiredType = roomData.GetRequiredCellType();
 
-        PlacementResult result = _buildGridModel.CheckPlaceable(newOrigin, size, requiredType, _gridSystem);
+        PlacementResult result = _buildGridModel.CheckPlaceable(newOrigin, size, requiredType, _gridSystem, roomData.IsAnyCellType());
         if (result != PlacementResult.Success)
         {
             return false;   
@@ -410,7 +410,7 @@ public class BuildGridViewModel : ViewModelBase
         {
             return PlacementResult.WrongCellType;
         }
-        return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem);
+        return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem, roomData.IsAnyCellType());
     }
 
 
