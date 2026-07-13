@@ -25,15 +25,15 @@ public class UnlockFloorView : ViewBase
             Button_Unlock.onClick.AddListener(OnClickUnlock);
         }
 
-        GameManager.Inst.CurrencyService.OnChangeCurrency -= UpdateLabel;
-        GameManager.Inst.CurrencyService.OnChangeCurrency += UpdateLabel;
+        GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= UpdateLabel;
+        GameManager.Inst.Services.CurrencyService.OnChangeCurrency += UpdateLabel;
 
         UpdateLabel();
     }
 
     private void OnEnable()
     {
-        BuildGridViewModel viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
+        BuildGridViewModel viewModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
         Bind(viewModel);
     }
 
@@ -47,7 +47,7 @@ public class UnlockFloorView : ViewBase
 
         if (GameManager.Inst != null)
         {
-            GameManager.Inst.CurrencyService.OnChangeCurrency -= UpdateLabel;
+            GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= UpdateLabel;
         }
     }
 

@@ -84,7 +84,7 @@ public class TycoonMainUI : UIBase
 
     private void OnEnable()
     {
-        GameManager.Inst.CurrencyService.OnChangeCurrency += SetGoldText;
+        GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetGoldText;
         SetGoldText();
         ChangePanel(TycoonPanelType.Quest);
     }
@@ -93,7 +93,7 @@ public class TycoonMainUI : UIBase
     {
         if (GameManager.Inst != null)
         {
-            GameManager.Inst.CurrencyService.OnChangeCurrency -= SetGoldText;
+            GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetGoldText;
         }
     }
 
@@ -193,7 +193,7 @@ public class TycoonMainUI : UIBase
             return;
         }
 
-        int gold = GameManager.Inst.CurrencyService.CurrentGold;
+        int gold = GameManager.Inst.Services.CurrencyService.CurrentGold;
         Debug.Log($"[TycoonMainUI] SetGoldText 호출됨. Gold = {gold}");
         Text_Gold.text = $"{gold}";
     }

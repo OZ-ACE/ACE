@@ -36,7 +36,7 @@ public class MoveToggleView : ViewBase
 
     private void OnEnable()
     {
-        BuildGridViewModel viewModel = GameManager.Inst.BuildService.GetBuildGridViewModel();
+        BuildGridViewModel viewModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
         Bind(viewModel);
     }
 

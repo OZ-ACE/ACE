@@ -38,7 +38,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
             return;
         }
 
-        _buildGridView.Bind(GameManager.Inst.BuildService.GetBuildGridViewModel());
+        _buildGridView.Bind(GameManager.Inst.Services.BuildService.GetBuildGridViewModel());
         Debug.Log("[ObjectManager] 건설 격자 생성 완료");
     }
 }
