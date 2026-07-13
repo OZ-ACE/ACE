@@ -6,6 +6,7 @@ using UnityEngine;
 public class BattleViewModel : ViewModelBase
 {
     public List<string> BattleLogs = new List<string>();
+    public List<BattleActionModel> ActionQueue = new List<BattleActionModel>();
 
     public List<BattleUnitModel> GetBattleTurnOrder(List<string> heroIds, List<string> enemyIds)
     {
@@ -56,5 +57,13 @@ public class BattleViewModel : ViewModelBase
         BattleLogs.Add(message);
 
         OnPropertyChanged(nameof(BattleLogs));
+    }
+
+    //BattleManager의 실제 액션 큐 상태를 가져와 갱신한다. 큐가 변경되는 시점(라운드 시작, 액션 소비 등)마다 호출되어야 함
+    public void RefreshActionQueue()
+    {
+        ActionQueue = BattleManager.Inst.GetActionQueueSnapshot();
+
+        OnPropertyChanged(nameof(ActionQueue));
     }
 }
