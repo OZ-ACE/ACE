@@ -6,6 +6,7 @@ public class BattleBTIntegrationTest : MonoBehaviour
     [SerializeField] private BattleBTExecutor BattleBTExecutor;
 
     private const string EnemySkillId = "enemySkill_01_01";
+    private const string HeroSkillId = "heroSkill_01_01";
 
     private int _createdActionEventCount;
 
@@ -69,6 +70,53 @@ public class BattleBTIntegrationTest : MonoBehaviour
         if (isExecuted == false)
         {
             Debug.LogWarning("[BattleBTIntegrationTest] BT 실행 요청에 실패했습니다.");
+        }
+    }
+
+    [ContextMenu("영웅 BT 액션 큐 연동 테스트")]
+    private void TestHeroBattleAction()
+    {
+        _createdActionEventCount = 0;
+
+        BattleUnitModel heroUnit = new BattleUnitModel();
+        heroUnit.ID = "hero_01";
+        heroUnit.IsHero = true;
+        heroUnit.MaxHp = 100;
+        heroUnit.CurrentHp = 100;
+        heroUnit.Speed = 10;
+        heroUnit.AttackPower = 10;
+        heroUnit.SkillIdList.Add("invalidSkillId");
+        heroUnit.SkillIdList.Add(HeroSkillId);
+
+        BattleUnitModel enemyUnit = new BattleUnitModel();
+        enemyUnit.ID = "enemy_01";
+        enemyUnit.IsHero = false;
+        enemyUnit.MaxHp = 100;
+        enemyUnit.CurrentHp = 100;
+        enemyUnit.Speed = 5;
+        enemyUnit.AttackPower = 9;
+
+        List<BattleUnitModel> heroList = new List<BattleUnitModel>();
+        heroList.Add(heroUnit);
+
+        List<BattleUnitModel> enemyList = new List<BattleUnitModel>();
+        enemyList.Add(enemyUnit);
+
+        List<BattleUnitModel> turnOrder = new List<BattleUnitModel>();
+        turnOrder.Add(heroUnit);
+        turnOrder.Add(enemyUnit);
+
+        BattleManager.Inst.BuildActionQueue(turnOrder);
+
+        bool isExecuted = BattleBTExecutor.ExecuteBattleAction(
+            heroUnit,
+            heroList,
+            enemyList,
+            HeroSkillId);
+
+        if (isExecuted == false)
+        {
+            Debug.LogWarning("[BattleBTIntegrationTest] 영웅 BT 실행 요청에 실패했습니다.");
         }
     }
 

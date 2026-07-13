@@ -252,6 +252,7 @@ GameObject:
   - component: {fileID: 946635374}
   - component: {fileID: 946635372}
   - component: {fileID: 946635373}
+  - component: {fileID: 946635376}
   m_Layer: 0
   m_Name: HeroBTExecutor
   m_TagString: Untagged
@@ -288,6 +289,7 @@ MonoBehaviour:
   m_Graph: {fileID: 5059855043438149418, guid: 282872eecf19566468ef5d12905183a5, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 7742168541890084967
+  - rid: 7742168541890085152
   m_OriginalGraph: {fileID: 5059855043438149418, guid: 282872eecf19566468ef5d12905183a5, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -302,6 +304,14 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 946635371}
+    - rid: 7742168541890085152
+      type: {class: 'BlackboardVariable`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 11998967675553956411
+          m_Value1: 12372677611844688579
+        Name: BattleContext
+        m_Value: {fileID: 946635374}
 --- !u!114 &946635374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,6 +339,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &946635376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946635371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce25a583a7893804db232cc7be2e9592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleBTIntegrationTest
+  BattleBTExecutor: {fileID: 946635372}
 --- !u!1 &1045694540
 GameObject:
   m_ObjectHideFlags: 0
