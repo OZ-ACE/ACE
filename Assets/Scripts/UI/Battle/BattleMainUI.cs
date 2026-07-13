@@ -64,6 +64,9 @@ public class BattleMainUI : UIBase
             case nameof(_viewModel.BattleLogs):
                 AppendNewLogSlots();
                 break;
+            case nameof(_viewModel.ActionQueue):
+                RefreshActionQueue(_viewModel.ActionQueue);
+                break;
         }
     }
 
@@ -97,31 +100,6 @@ public class BattleMainUI : UIBase
         {
             slot.SetSlotData(action.Unit, action.ActionType);
         }
-    }
-
-    // 테스터용 - 액션 큐 동적 생성 메커니즘 검증용, 실제 연동 후 삭제
-    [ContextMenu("액션 큐 테스트 - 더미 3개 생성")]
-    private void Test_RefreshActionQueue()
-    {
-        List<BattleActionModel> dummyList = new List<BattleActionModel>();
-
-        dummyList.Add(CreateDummyAction("hero_01", ActionType.Attack));
-        dummyList.Add(CreateDummyAction("hero_02", ActionType.Support));
-        dummyList.Add(CreateDummyAction("hero_03", ActionType.Wait));
-
-        RefreshActionQueue(dummyList);
-    }
-
-    private BattleActionModel CreateDummyAction(string heroId, ActionType actionType)
-    {
-        BattleUnitModel unit = new BattleUnitModel();
-        unit.ID = heroId;
-
-        BattleActionModel action = new BattleActionModel();
-        action.Unit = unit;
-        action.ActionType = actionType;
-
-        return action;
     }
 
     // 이미 그려진 배틀로그 슬롯 개수 이후로 늘어난 로그만 추가 생성

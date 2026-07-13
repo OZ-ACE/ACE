@@ -81,6 +81,12 @@ public class BattleManager : SingletonBase<BattleManager>
         return _actionQueue.Dequeue();
     }
 
+    //현재 액션 큐 상태를 List로 복사해 반환한다. Dequeue와 달리 원본 큐는 그대로 유지되며 UI 갱신 등 조회 목적으로만 사용한다
+    public List<BattleActionModel> GetActionQueueSnapshot()
+    {
+        return new List<BattleActionModel>(_actionQueue);
+    }
+
     //전체 유닛 리스트를 받아 승패를 판정한다. 적이 하나도 안 남으면 승리, 영웅이 하나도 안 남으면 패배
     public BattleResult CheckBattleResult(List<BattleUnitModel> allUnits)
     {
