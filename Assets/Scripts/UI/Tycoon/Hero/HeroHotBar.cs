@@ -19,7 +19,10 @@ public class HeroHotBar : MonoBehaviour
 
     private void OnDestroy()
     {
-        _targetVM.PropertyChanged -= OnPropertyChanged_View;
+        if (_targetVM != null)
+        {
+            _targetVM.PropertyChanged -= OnPropertyChanged_View;
+        }
     }
 
     public void OpenHotBar(HeroViewModel heroVM)

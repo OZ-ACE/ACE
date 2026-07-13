@@ -19,8 +19,11 @@ public class HeroUI : UIBase
     {
         HeroHotBar.gameObject.SetActive(false);
 
-        _currentVM.IsSelect = false;
-        _currentVM = null;
+        if (_currentVM != null)
+        {
+            _currentVM.IsSelect = false;
+            _currentVM = null;
+        }
     }
 
     private async UniTask RefreshHeroList()
