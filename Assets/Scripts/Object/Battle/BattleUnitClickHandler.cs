@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-// 전투 씬에 배치된 유닛을 클릭하면 유닛 ID를 알려주는 컴포넌트 (테스트용 스폰 전용
+// 전투 씬에 배치된 유닛의 클릭/호버 데이터를 들고 있는 컴포넌트 (테스트용 스폰 전용)
 public class BattleUnitClickHandler : MonoBehaviour
 {
     private const float DefaultColliderRadius = 0.5f;
@@ -9,13 +9,20 @@ public class BattleUnitClickHandler : MonoBehaviour
     private const float DefaultColliderCenterY = 1f;
     private const int CapsuleDirectionY = 1; // 캡슐 콜라이더 방향축 - 0:X, 1:Y, 2:Z, 캐릭터가 세로로 서있으므로 Y
 
+    private static readonly Color HighlightColor = Color.white;
+
     public string UnitId { get; set; }
 
     public event Action<string> OnUnitClicked;
 
+    private Renderer[] _rendererList;
+    private Color[] _originalColorList;
+    private bool _isHighlighted;
+
     private void Awake()
     {
         AttachColliderIfMissing();
+        CacheRenderers();
     }
 
     private void AttachColliderIfMissing()
@@ -34,12 +41,34 @@ public class BattleUnitClickHandler : MonoBehaviour
         capsuleCollider.direction = CapsuleDirectionY;
     }
 
-    private void OnMouseDown()
+    //자식에 있는 렌더러들의 원본 색상을 미리 캐싱해둔다. 호버할 때마다 매번 조회하지 않기 위함
+    private void CacheRenderers()
     {
-        NotifyUnitClicked();
+        _rendererList = GetComponentsInChildren<Renderer>();
+        _originalColorList = new Color[_rendererList.Length];
+
+        for (int i = 0; i < _rendererList.Length; i++)
+        {
+            _originalColorList[i] = _rendererList[i].material.color;
+        }
     }
 
-    private void NotifyUnitClicked()
+    public void SetHighlight(bool isHighlighted)
+    {
+        if (_isHighlighted == isHighlighted)
+        {
+            return;
+        }
+
+        _isHighlighted = isHighlighted;
+
+        for (int i = 0; i < _rendererList.Length; i++)
+        {
+            _rendererList[i].material.color = isHighlighted ? HighlightColor : _originalColorList[i];
+        }
+    }
+
+    public void NotifyClicked()
     {
         if (string.IsNullOrEmpty(UnitId))
         {
