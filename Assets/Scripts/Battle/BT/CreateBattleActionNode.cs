@@ -9,18 +9,13 @@ using Status = Unity.Behavior.Node.Status;
 [Serializable, GeneratePropertyBag]
 [NodeDescription(
     name: "Create Battle Action",
-    story: "[Context] creates [ActionType] [SkillType] action with [SkillId], [TargetType], [TargetSelectType], [TargetCount]",
+    story: "[Context] creates battle action with [SkillId]",
     category: "Battle",
     id: "Battle_CreateBattleActionNode")]
 public partial class CreateBattleActionNode : Action
 {
     [SerializeReference] public BlackboardVariable<BattleBTContext> Context;
     [SerializeReference] public BlackboardVariable<string> SkillId;
-    [SerializeReference] public BlackboardVariable<ActionType> ActionType;
-    [SerializeReference] public BlackboardVariable<SkillType> SkillType;
-    [SerializeReference] public BlackboardVariable<TargetType> TargetType;
-    [SerializeReference] public BlackboardVariable<TargetSelectType> TargetSelectType;
-    [SerializeReference] public BlackboardVariable<int> TargetCount;
 
     protected override Status OnStart()
     {
@@ -61,16 +56,73 @@ public partial class CreateBattleActionNode : Action
             return Status.Failure;
         }
 
+        string actionTypeText;
+        string skillTypeText;
+        string targetTypeText;
+        string targetSelectTypeText;
+        int targetCount;
+
+        if (skillData is HeroSkill heroSkill)
+        {
+            actionTypeText = heroSkill.ActionType;
+            skillTypeText = heroSkill.SkillType;
+            targetTypeText = heroSkill.TargetType;
+            targetSelectTypeText = heroSkill.TargetSelectType;
+            targetCount = heroSkill.TargetCount;
+        }
+        else if (skillData is EnemySkill enemySkill)
+        {
+            actionTypeText = enemySkill.ActionType;
+            skillTypeText = enemySkill.SkillType;
+            targetTypeText = enemySkill.TargetType;
+            targetSelectTypeText = enemySkill.TargetSelectType;
+            targetCount = enemySkill.TargetCount;
+        }
+        else
+        {
+            Debug.LogWarning($"[CreateBattleActionNode] 지원하지 않는 스킬 데이터 형식입니다. SkillId: {SkillId.Value}");
+
+            return Status.Failure;
+        }
+
+        if (Enum.TryParse(actionTypeText, out ActionType actionType) == false)
+        {
+            Debug.LogWarning($"[CreateBattleActionNode] ActionType 변환에 실패했습니다. Value: {actionTypeText}");
+
+            return Status.Failure;
+        }
+
+        if (Enum.TryParse(skillTypeText, out SkillType skillType) == false)
+        {
+            Debug.LogWarning($"[CreateBattleActionNode] SkillType 변환에 실패했습니다. Value: {skillTypeText}");
+
+            return Status.Failure;
+        }
+
+        if (Enum.TryParse(targetTypeText, out TargetType targetType) == false)
+        {
+            Debug.LogWarning($"[CreateBattleActionNode] TargetType 변환에 실패했습니다. Value: {targetTypeText}");
+
+            return Status.Failure;
+        }
+
+        if (Enum.TryParse(targetSelectTypeText, out TargetSelectType targetSelectType) == false)
+        {
+            Debug.LogWarning($"[CreateBattleActionNode] TargetSelectType 변환에 실패했습니다. Value: {targetSelectTypeText}");
+
+            return Status.Failure;
+        }
+
         BattleActionModel battleAction;
 
         bool isCreated = BattleActionFactory.TryCreateSkillAction(
             context.Unit,
             SkillId.Value,
-            ActionType.Value,
-            SkillType.Value,
-            TargetType.Value,
-            TargetSelectType.Value,
-            TargetCount.Value,
+            actionType,
+            skillType,
+            targetType,
+            targetSelectType,
+            targetCount,
             context.HeroList,
             context.EnemyList,
             out battleAction);

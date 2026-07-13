@@ -32,7 +32,7 @@ MonoBehaviour:
   - rid: 7742168474201882704
   - rid: 7742168474201882731
   - rid: 7742168474201882739
-  m_VersionTimestamp: 639192789492861823
+  m_VersionTimestamp: 639195367824152167
   m_CommandBuffer:
     m_Commands: []
   m_RuntimeBlackboardAsset: {fileID: -1798017929348799977}
@@ -118,16 +118,6 @@ MonoBehaviour:
           rid: 2605759223060234309
         SkillId:
           rid: 2605759223060234310
-        ActionType:
-          rid: 2605759223060234311
-        SkillType:
-          rid: 2605759223060234312
-        TargetType:
-          rid: 2605759223060234313
-        TargetSelectType:
-          rid: 2605759223060234314
-        TargetCount:
-          rid: 2605759223060234315
     - rid: 2605759223060234308
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -152,46 +142,6 @@ MonoBehaviour:
           m_Value1: 13241129552532214972
         Name: SkillId
         m_Value: 
-    - rid: 2605759223060234311
-      type: {class: 'BlackboardVariable`1[[ActionType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
-    - rid: 2605759223060234312
-      type: {class: 'BlackboardVariable`1[[SkillType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
-    - rid: 2605759223060234313
-      type: {class: 'BlackboardVariable`1[[TargetType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
-    - rid: 2605759223060234314
-      type: {class: 'BlackboardVariable`1[[TargetSelectType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
-    - rid: 2605759223060234315
-      type: {class: 'BlackboardVariable`1[[System.Int32, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
     - rid: 7742168474201882705
       type: {class: BehaviorGraphModule, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -204,7 +154,7 @@ MonoBehaviour:
         BlackboardGroupReferences: []
         Root:
           rid: 2605759223060234306
-        m_VersionTimestamp: 639192836499300614
+        m_VersionTimestamp: 639195366895465000
     - rid: 7742168474201882706
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -284,7 +234,7 @@ MonoBehaviour:
   m_Nodes:
   - rid: 7742168474201882711
   - rid: 7742168474201882713
-  m_VersionTimestamp: 639192836499300614
+  m_VersionTimestamp: 639195366895465000
   m_SerializedVersion: 3
   m_DebugInfo: {fileID: -6909903788765710973}
   m_RuntimeGraph: {fileID: -5063954616835489409}
@@ -307,8 +257,7 @@ MonoBehaviour:
     NamedChildren: []
     IsPlaceholder: 0
   - Name: Create Battle Action
-    Story: '[Context] creates [ActionType] [SkillType] action with [SkillId], [TargetType],
-      [TargetSelectType], [TargetCount]'
+    Story: '[Context] creates battle action with [SkillId]'
     RuntimeTypeString: CreateBattleActionNode, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     RuntimeTypeID:
@@ -325,31 +274,6 @@ MonoBehaviour:
         m_SerializableType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
       Tooltip: 
-    - Name: ActionType
-      Type:
-        m_SerializableType: ActionType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-      Tooltip: 
-    - Name: SkillType
-      Type:
-        m_SerializableType: SkillType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-      Tooltip: 
-    - Name: TargetType
-      Type:
-        m_SerializableType: TargetType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-      Tooltip: 
-    - Name: TargetSelectType
-      Type:
-        m_SerializableType: TargetSelectType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-          PublicKeyToken=null
-      Tooltip: 
-    - Name: TargetCount
-      Type:
-        m_SerializableType: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      Tooltip: 
     NamedChildren: []
     IsPlaceholder: 0
   m_Blackboards: []
@@ -361,20 +285,10 @@ MonoBehaviour:
   m_GraphMissingManagedRef: 0
   m_HasMissingTypeInManagedRef: 0
   m_EnumDependencyCache:
-    Entries:
-    - EnumTypeId: ActionType, Assembly-CSharp
-      SignatureHash: 9d9302fa5b35157d481b499498b63c99
-    - EnumTypeId: SkillType, Assembly-CSharp
-      SignatureHash: b8aaf8a066990c894e20ec65f2e002c4
-    - EnumTypeId: TargetSelectType, Assembly-CSharp
-      SignatureHash: 40a3d15eae90ffce15936088f76cfa20
-    - EnumTypeId: TargetType, Assembly-CSharp
-      SignatureHash: 0d35b126eeb48289ee00526b860d2875
+    Entries: []
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 7742168474201882711
       type: {class: StartNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
@@ -424,11 +338,6 @@ MonoBehaviour:
         m_FieldValues:
         - rid: 7742168474201882716
         - rid: 7742168474201882717
-        - rid: 7742168474201882718
-        - rid: 7742168474201882719
-        - rid: 7742168474201882720
-        - rid: 7742168474201882721
-        - rid: 7742168474201882722
     - rid: 7742168474201882714
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -470,61 +379,6 @@ MonoBehaviour:
           rid: 7742168474201882724
         LinkedVariable:
           rid: 7742168474201882754
-    - rid: 7742168474201882718
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: ActionType
-        Type:
-          m_SerializableType: ActionType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
-        LocalValue:
-          rid: 7742168474201882725
-        LinkedVariable:
-          rid: -2
-    - rid: 7742168474201882719
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: SkillType
-        Type:
-          m_SerializableType: SkillType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
-        LocalValue:
-          rid: 7742168474201882726
-        LinkedVariable:
-          rid: -2
-    - rid: 7742168474201882720
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: TargetType
-        Type:
-          m_SerializableType: TargetType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
-        LocalValue:
-          rid: 7742168474201882727
-        LinkedVariable:
-          rid: -2
-    - rid: 7742168474201882721
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: TargetSelectType
-        Type:
-          m_SerializableType: TargetSelectType, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-        LocalValue:
-          rid: 7742168474201882728
-        LinkedVariable:
-          rid: -2
-    - rid: 7742168474201882722
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: TargetCount
-        Type:
-          m_SerializableType: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        LocalValue:
-          rid: 7742168474201882729
-        LinkedVariable:
-          rid: -2
     - rid: 7742168474201882723
       type: {class: 'BlackboardVariable`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -541,46 +395,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 
-    - rid: 7742168474201882725
-      type: {class: 'BlackboardVariable`1[[ActionType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
-    - rid: 7742168474201882726
-      type: {class: 'BlackboardVariable`1[[SkillType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
-    - rid: 7742168474201882727
-      type: {class: 'BlackboardVariable`1[[TargetType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
-    - rid: 7742168474201882728
-      type: {class: 'BlackboardVariable`1[[TargetSelectType, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
-    - rid: 7742168474201882729
-      type: {class: 'BlackboardVariable`1[[System.Int32, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: 0
     - rid: 7742168474201882749
       type: {class: 'TypedVariableModel`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
