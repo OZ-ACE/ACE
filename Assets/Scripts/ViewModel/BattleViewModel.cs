@@ -88,6 +88,7 @@ public class BattleViewModel : ViewModelBase
             }
 
             BattleManager.Inst.SetUnitAction(createdAction);
+            AddBattleLog(BuildUnitActionLogMessage(createdAction));
         }
 
         RefreshActionQueue();
@@ -146,5 +147,16 @@ public class BattleViewModel : ViewModelBase
         ActionQueue = BattleManager.Inst.GetActionQueueSnapshot();
 
         OnPropertyChanged(nameof(ActionQueue));
+    }
+
+    //유닛의 행동 결과를 배틀 로그 문구로 변환한다
+    private string BuildUnitActionLogMessage(BattleActionModel action)
+    {
+        if (action.ActionType == ActionType.Wait)
+        {
+            return $"{action.Unit.ID} - 대기";
+        }
+
+        return $"{action.Unit.ID} - {action.ActionType} 실행";
     }
 }

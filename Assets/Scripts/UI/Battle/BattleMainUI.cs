@@ -64,7 +64,22 @@ public class BattleMainUI : UIBase
     private void OnUnitClicked_Spawner(string unitId)
     {
         _selectedTargetUnitId = unitId;
-        _viewModel.AddBattleLog($"{unitId} 선택됨");
+
+        string heroName = GetHeroDisplayName(unitId);
+        _viewModel.AddBattleLog($"{heroName} 유닛이 선택되었습니다");
+    }
+
+    //유닛 ID로 표시용 영웅 이름을 가져온다. 데이터가 없으면 ID를 그대로 반환
+    private string GetHeroDisplayName(string unitId)
+    {
+        HeroData heroData = GameDataManager.Inst.GetData<HeroData>(unitId);
+
+        if (heroData == null)
+        {
+            return unitId;
+        }
+
+        return heroData.HeroName;
     }
 
     private void OnDestroy()
@@ -206,7 +221,7 @@ public class BattleMainUI : UIBase
     {
         if (string.IsNullOrEmpty(_selectedTargetUnitId))
         {
-            _viewModel.AddBattleLog("대상을 먼저 선택해주세요");
+            _viewModel.AddBattleLog("액션을 실행할 대상을 먼저 선택해주세요.");
             return;
         }
 
@@ -214,7 +229,7 @@ public class BattleMainUI : UIBase
 
         if (!isSuccess)
         {
-            _viewModel.AddBattleLog("실행 실패 (에너지 부족 또는 대상 없음)");
+            _viewModel.AddBattleLog("실행에 실패했습니다. (에너지 부족 또는 대상 없음)");
             return;
         }
 
