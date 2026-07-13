@@ -90,34 +90,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2605759223060234306
-      type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        ID:
-          m_Value0: 896510908470125326
-          m_Value1: 7277538419502855326
-        Graph:
-          rid: 7742168474201882705
-        m_Parent:
-          rid: -2
-        m_Child:
-          rid: 2605759223060234307
-        Repeat: 1
-        AllowMultipleRepeatsPerTick: 0
-    - rid: 2605759223060234307
-      type: {class: CreateBattleActionNode, ns: , asm: Assembly-CSharp}
-      data:
-        ID:
-          m_Value0: 9014607974880303255
-          m_Value1: 17645161245173503168
-        Graph:
-          rid: 7742168474201882705
-        m_Parent:
-          rid: 2605759223060234306
-        Context:
-          rid: 2605759223060234309
-        SkillId:
-          rid: 2605759223060234310
     - rid: 2605759223060234308
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -153,8 +125,8 @@ MonoBehaviour:
           rid: 7742168474201882706
         BlackboardGroupReferences: []
         Root:
-          rid: 2605759223060234306
-        m_VersionTimestamp: 639195366895465000
+          rid: 7742168541890084978
+        m_VersionTimestamp: 639195443582974963
     - rid: 7742168474201882706
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -168,6 +140,34 @@ MonoBehaviour:
         - rid: 2605759223060234308
         - rid: 2605759223060234309
         - rid: 2605759223060234310
+    - rid: 7742168541890084978
+      type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        ID:
+          m_Value0: 896510908470125326
+          m_Value1: 7277538419502855326
+        Graph:
+          rid: 7742168474201882705
+        m_Parent:
+          rid: -2
+        m_Child:
+          rid: 7742168541890084979
+        Repeat: 0
+        AllowMultipleRepeatsPerTick: 0
+    - rid: 7742168541890084979
+      type: {class: CreateBattleActionNode, ns: , asm: Assembly-CSharp}
+      data:
+        ID:
+          m_Value0: 9014607974880303255
+          m_Value1: 17645161245173503168
+        Graph:
+          rid: 7742168474201882705
+        m_Parent:
+          rid: 7742168541890084978
+        Context:
+          rid: 2605759223060234309
+        SkillId:
+          rid: 2605759223060234310
 --- !u!114 &-1798017929348799977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,10 +180,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c02bb70996b49eba31d0c206e28da24, type: 3}
   m_Name: EnemyBehaviorGraph Blackboard
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.RuntimeBlackboardAsset
-  VersionTimestamp: 639192789492861823
+  VersionTimestamp: 639195367824152167
   AssetID:
-    m_Value0: 0
-    m_Value1: 0
+    m_Value0: 12980552404133452362
+    m_Value1: 15917855139536882395
   m_Blackboard:
     m_Variables:
     - rid: 7742168474201882710
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Nodes:
   - rid: 7742168474201882711
   - rid: 7742168474201882713
-  m_VersionTimestamp: 639195366895465000
+  m_VersionTimestamp: 639195443582974963
   m_SerializedVersion: 3
   m_DebugInfo: {fileID: -6909903788765710973}
   m_RuntimeGraph: {fileID: -5063954616835489409}
@@ -306,7 +306,7 @@ MonoBehaviour:
           m_Value0: 3335272451348827663
           m_Value1: 11549843281177505721
         m_FieldValues: []
-        Repeat: 1
+        Repeat: 0
         AllowMultipleRepeatsPerTick: 0
     - rid: 7742168474201882712
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
