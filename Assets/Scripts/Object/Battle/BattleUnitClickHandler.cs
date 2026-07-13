@@ -10,6 +10,7 @@ public class BattleUnitClickHandler : MonoBehaviour
     private const int CapsuleDirectionY = 1; // 캡슐 콜라이더 방향축 - 0:X, 1:Y, 2:Z, 캐릭터가 세로로 서있으므로 Y
 
     private static readonly Color HighlightColor = Color.white;
+    private const string BaseColorPropertyName = "_BaseColor";
 
     public string UnitId { get; set; }
 
@@ -49,7 +50,7 @@ public class BattleUnitClickHandler : MonoBehaviour
 
         for (int i = 0; i < _rendererList.Length; i++)
         {
-            _originalColorList[i] = _rendererList[i].material.color;
+            _originalColorList[i] = _rendererList[i].material.GetColor(BaseColorPropertyName);
         }
     }
 
@@ -64,7 +65,8 @@ public class BattleUnitClickHandler : MonoBehaviour
 
         for (int i = 0; i < _rendererList.Length; i++)
         {
-            _rendererList[i].material.color = isHighlighted ? HighlightColor : _originalColorList[i];
+            Color targetColor = isHighlighted ? HighlightColor : _originalColorList[i];
+            _rendererList[i].material.SetColor(BaseColorPropertyName, targetColor);
         }
     }
 
