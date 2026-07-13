@@ -1,10 +1,17 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 //전투 라운드의 액션 큐를 생성하고 전체 진행을 관리하는 매니저
 public class BattleManager : SingletonBase<BattleManager>
 {
     private const int MaxEnergyGauge = 5; //플레이어 개입 턴의 에너지 게이지 총량, 전투 전체 통틀어 처음1회만 채워짐, 라운드별 리셋 안됨
     private const string BattleConfigId = "default"; //BattleConfig 테이블의 유일한 row ID
+
+    [SerializeField] private BattleBTExecutor Executor_Hero;
+    [SerializeField] private BattleBTExecutor Executor_Enemy;
+
+    public BattleBTExecutor HeroExecutor { get { return Executor_Hero; } }
+    public BattleBTExecutor EnemyExecutor { get { return Executor_Enemy; } }
 
     private Queue<BattleActionModel> _actionQueue = new Queue<BattleActionModel>();
     private int _energyGauge;
@@ -32,6 +39,41 @@ public class BattleManager : SingletonBase<BattleManager>
         playerAction.IsPlayerAction = true;
 
         _actionQueue.Enqueue(playerAction);
+    }
+
+    //BT가 생성한 행동을 액션 큐의 해당 유닛 행동에 반영
+    public bool SetUnitAction(BattleActionModel createdAction)
+    {
+        if (createdAction == null || createdAction.Unit == null)
+        {
+            return false;
+        }
+
+        foreach (BattleActionModel queuedAction in _actionQueue)
+        {
+            if (queuedAction.IsPlayerAction)
+            {
+                continue;
+            }
+
+            if (queuedAction.Unit == null || queuedAction.Unit.ID != createdAction.Unit.ID)
+            {
+                continue;
+            }
+
+            queuedAction.SkillId = createdAction.SkillId;
+            queuedAction.ActionType = createdAction.ActionType;
+            queuedAction.SkillType = createdAction.SkillType;
+            queuedAction.TargetType = createdAction.TargetType;
+            queuedAction.TargetSelectType = createdAction.TargetSelectType;
+            queuedAction.TargetCount = createdAction.TargetCount;
+            queuedAction.Target = createdAction.Target;
+            queuedAction.TargetList = createdAction.TargetList;
+
+            return true;
+        }
+
+        return false;
     }
 
     //큐 안에서 targetUnitId를 가진 행동을 찾아 결과를 확정한다. 에너지 부족 시 선택 자체가 불가능하도록 UI에서 막을 예정이라, 여기서의 false 반환은 그 상황이 뚫렸을 때를 대비한 방어 코드이다
