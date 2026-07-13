@@ -31,6 +31,7 @@ public class BuildGridViewModel : ViewModelBase
     public bool IsHoldingRoom { get { return _pickedRoom != null; } }
     public int UnlockedMinFloor { get { return _buildGridModel.UnlockedMinFloor; } }
 
+    // 현재 배치된 방 전체 (뷰가 초기 렌더링할 때 사용)
     public List<PlacedRoomData> GetPlacedRooms()
     {
         return _buildGridModel.GetAllRooms();
@@ -44,7 +45,7 @@ public class BuildGridViewModel : ViewModelBase
 
     // 계단 설정
     private const string STAIR_ROOM_ID = "Room_Stairs";
-    private const int STAIR_MIN_COLUMN = 9;   // 계단이 차지하는 시작 열
+    private const int STAIR_MIN_COLUMN = 10;   // 계단이 차지하는 시작 열
 
 
     //뷰가 바인딩
@@ -143,6 +144,14 @@ public class BuildGridViewModel : ViewModelBase
         {
             return PlacementResult.WrongCellType;
         }
+
+        if (IsFloorAllowed(room, originCoord) == false)
+        {
+            return PlacementResult.WrongCellType;
+        }
+
+
+
 
         PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem, room.IsAnyCellType());
         if (result != PlacementResult.Success)
@@ -245,6 +254,11 @@ public class BuildGridViewModel : ViewModelBase
 
         Vector2Int size = roomData.GetSize();
         CellType requiredType = roomData.GetRequiredCellType();
+
+        if (IsFloorAllowed(roomData, originCoord) == false)
+        {
+            return PlacementResult.WrongCellType;
+        }
 
         PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, size, requiredType, _gridSystem, roomData.IsAnyCellType());
         if (result != PlacementResult.Success)
@@ -380,6 +394,11 @@ public class BuildGridViewModel : ViewModelBase
         Vector2Int size = roomData.GetSize();
         CellType requiredType = roomData.GetRequiredCellType();
 
+        if (IsFloorAllowed(roomData, newOrigin) == false)
+        {
+            return false;
+        }
+
         PlacementResult result = _buildGridModel.CheckPlaceable(newOrigin, size, requiredType, _gridSystem, roomData.IsAnyCellType());
         if (result != PlacementResult.Success)
         {
@@ -417,9 +436,12 @@ public class BuildGridViewModel : ViewModelBase
         {
             return PlacementResult.WrongCellType;
         }
+        if (IsFloorAllowed(roomData, newOrigin) == false)
+        {
+            return PlacementResult.WrongCellType;
+        }
         return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem, roomData.IsAnyCellType());
     }
-
 
     //집고 있던 방 환불
     private void RestorePickedRoom()
@@ -450,6 +472,15 @@ public class BuildGridViewModel : ViewModelBase
         SaveGrid();   
     }
 
+    //방의 층 제한 판정
+    private bool IsFloorAllowed(RoomData room, GridCoord origin)
+    {
+        if (room.HasFloorRestriction() == false)
+        {
+            return true;
+        }
+        return origin.Floor == room.RequiredFloor;
+    }
 
 
 
@@ -489,6 +520,10 @@ public class BuildGridViewModel : ViewModelBase
         Debug.Log($"[BuildGridViewModel] 층 해금: 이제 {_buildGridModel.UnlockedMinFloor}층까지 열림 (-{cost}G)");
         return true;
     }
+
+
+
+
 
 
     //층 해금 비용
@@ -531,7 +566,6 @@ public class BuildGridViewModel : ViewModelBase
             PlaceStairAt(floor);
         }
     }
-
     private void PlaceStairAt(int floor)
     {
         RoomData stairData = GameDataManager.Inst.GetData<RoomData>(STAIR_ROOM_ID);
@@ -568,6 +602,27 @@ public class BuildGridViewModel : ViewModelBase
     {
         return roomId == STAIR_ROOM_ID;
     }
+
+
+    //현재 슬롯의 그리드를 다시 불러온다 (슬롯 변경 시)
+    public void ReloadGrid()
+    {
+        LoadGrid();
+        EnsureStairs();
+
+        if (OnReloadGrid != null)
+        {
+            OnReloadGrid.Invoke();
+        }
+    }
+
+
+    public event Action OnReloadGrid;
+
+
+
+
+
 
     //그리드 상태 저장
     public void SaveGrid()

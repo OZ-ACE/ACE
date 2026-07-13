@@ -52,6 +52,7 @@ public class BuildGridView : ViewBase
             _viewModel.OnPlaceRoom -= OnPlaceRoom;
             _viewModel.OnRemoveRoom -= OnRemoveRoom;
             _viewModel.OnUnlockFloor -= OnUnlockFloor;
+            _viewModel.OnReloadGrid -= RefreshAllRooms;
         }
 
         _viewModel = viewModel;
@@ -59,6 +60,7 @@ public class BuildGridView : ViewBase
         _viewModel.OnPlaceRoom += OnPlaceRoom;
         _viewModel.OnRemoveRoom += OnRemoveRoom;
         _viewModel.OnUnlockFloor += OnUnlockFloor;
+        _viewModel.OnReloadGrid += RefreshAllRooms;
 
 
         RefreshAllRooms();
@@ -85,6 +87,7 @@ public class BuildGridView : ViewBase
             _viewModel.OnPlaceRoom -= OnPlaceRoom;
             _viewModel.OnRemoveRoom -= OnRemoveRoom;
             _viewModel.OnUnlockFloor -= OnUnlockFloor;
+            _viewModel.OnReloadGrid -= RefreshAllRooms;
 
         }
     }
@@ -454,6 +457,18 @@ public class BuildGridView : ViewBase
 
         _placedRoomObjects.Clear();
 
+
+        foreach (KeyValuePair<GridCoord, SpriteRenderer> pair in _cellRenderers)
+        {
+            if (pair.Value != null)
+            {
+                Destroy(pair.Value.gameObject);
+            }
+        }
+        _cellRenderers.Clear();
+        _isOverlayCreated = false;
+
+        // 방 다시 그리기
         List<PlacedRoomData> rooms = _viewModel.GetPlacedRooms();
         for (int i = 0; i < rooms.Count; i++)
         {

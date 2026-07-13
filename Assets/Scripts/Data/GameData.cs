@@ -98,6 +98,7 @@ public class RoomData : GameDataBase
     public int SizeH;
     public int BuildCost;
     public string RequiredCellType;
+    public int RequiredFloor;       
     public string EffectType;
     public string EffectDescription;
     public string PrefabPath;

@@ -13,11 +13,11 @@ public class BuildService
     private const int MIN_FLOOR = -10;
     private const int MAX_FLOOR = 1;
     private const int MIN_COLUMN = 0;
-    private const int MAX_COLUMN = 19;
+    private const int MAX_COLUMN = 20;
 
     private const int INITIAL_MIN_FLOOR = -3;
 
-    private static readonly Vector2 GRID_ORIGIN = new Vector2(-9.5f, 4f);
+    private static readonly Vector2 GRID_ORIGIN = new Vector2(-10, 4f);
 
     private readonly ICurrencyService _currencyService;
 
@@ -28,6 +28,7 @@ public class BuildService
         _currencyService = currencyService;
         InitBuildSystem();
     }
+
 
     //  그리드·모델·뷰모델 조립 후 저장 데이터 복원
     private void InitBuildSystem()
