@@ -185,7 +185,7 @@ MonoBehaviour:
           m_Value0: 8123145217991461409
           m_Value1: 13241129552532214972
         Name: SkillId
-        m_Value: enemySkill_01_01
+        m_Value: 
 --- !u!114 &575405193
 MonoBehaviour:
   m_ObjectHideFlags: 0
