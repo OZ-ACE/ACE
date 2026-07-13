@@ -34,6 +34,41 @@ public class BattleManager : SingletonBase<BattleManager>
         _actionQueue.Enqueue(playerAction);
     }
 
+    //BT가 생성한 행동을 액션 큐의 해당 유닛 행동에 반영
+    public bool SetUnitAction(BattleActionModel createdAction)
+    {
+        if (createdAction == null || createdAction.Unit == null)
+        {
+            return false;
+        }
+
+        foreach (BattleActionModel queuedAction in _actionQueue)
+        {
+            if (queuedAction.IsPlayerAction)
+            {
+                continue;
+            }
+
+            if (queuedAction.Unit == null || queuedAction.Unit.ID != createdAction.Unit.ID)
+            {
+                continue;
+            }
+
+            queuedAction.SkillId = createdAction.SkillId;
+            queuedAction.ActionType = createdAction.ActionType;
+            queuedAction.SkillType = createdAction.SkillType;
+            queuedAction.TargetType = createdAction.TargetType;
+            queuedAction.TargetSelectType = createdAction.TargetSelectType;
+            queuedAction.TargetCount = createdAction.TargetCount;
+            queuedAction.Target = createdAction.Target;
+            queuedAction.TargetList = createdAction.TargetList;
+
+            return true;
+        }
+
+        return false;
+    }
+
     //큐 안에서 targetUnitId를 가진 행동을 찾아 결과를 확정한다. 에너지 부족 시 선택 자체가 불가능하도록 UI에서 막을 예정이라, 여기서의 false 반환은 그 상황이 뚫렸을 때를 대비한 방어 코드이다
     public bool SetActionResult(string targetUnitId, BattleActionResult result, int energyCost)
     {
