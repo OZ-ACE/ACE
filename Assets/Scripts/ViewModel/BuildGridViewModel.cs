@@ -608,6 +608,20 @@ public class BuildGridViewModel : ViewModelBase
     }
 
 
+    //현재 슬롯의 그리드를 다시 불러온다 (슬롯 변경 시)
+    public void ReloadGrid()
+    {
+        LoadGrid();
+        EnsureStairs();
+
+        if (OnReloadGrid != null)
+        {
+            OnReloadGrid.Invoke();
+        }
+    }
+
+
+    public event Action OnReloadGrid;
 
 
 
