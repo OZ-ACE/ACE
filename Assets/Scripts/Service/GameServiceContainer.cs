@@ -27,8 +27,13 @@
         SettlementService = new SettlementService(CurrencyService, DayService);
     }
 
+    public void InitializeAfterLoad()
+    {
+        EpisodeService.Initialize();
+    }
+
     public void Release()
     {
-        //EpisodeService?.Release();
+        EpisodeService?.Release();
     }
 }

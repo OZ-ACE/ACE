@@ -21,6 +21,8 @@ public class GameManager : SingletonBase<GameManager>
         Services.Initialize();
 
         InventoryViewModel = new InventoryViewModel();
+
+        BindSaveEvents();
     }
 
     private void Start()
@@ -48,5 +50,28 @@ public class GameManager : SingletonBase<GameManager>
 
         bool isFull = PlayerPrefs.GetInt("FullScreen", 1) == 1;
         Screen.fullScreen = isFull;
+    }
+
+    private void BindSaveEvents()
+    {
+        if (SaveManager.Inst == null)
+        {
+            Debug.LogWarning("GameManager - SaveManager 를 찾을 수 없음.");
+            return;
+        }
+
+        SaveManager.Inst.OnCompleteLoad += HandleCompleteLoad;
+    }
+
+    private void HandleCompleteLoad()
+    {
+        if (Services == null)
+        {
+            return;
+        }
+
+        Services.InitializeAfterLoad();
+
+        Debug.Log("GameManager - 세이브 로드 후 서비스 초기화 완료");
     }
 }

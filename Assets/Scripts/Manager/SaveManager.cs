@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class SaveManager : SingletonBase<SaveManager>
     public SaveViewModel SaveVM {  get; private set; } = new SaveViewModel();
     public int CurrentSlotIndex { get; private set; } = 0;
     public SortedSet<int> SlotIndex { get; private set; } = new SortedSet<int>();
+
+    public event Action OnCompleteLoad;
 
     protected override void Awake()
     {
@@ -46,17 +49,21 @@ public class SaveManager : SingletonBase<SaveManager>
         {
             string json = File.ReadAllText(path);
             PlayerModel data = JsonUtility.FromJson<PlayerModel>(json);
+
             CurrentPlayerModel = data;
 
-            return data;
-        }
-        else
-        {
-            PlayerModel data = GetDefaultData();
-            RequestSaveData(data);
+            OnCompleteLoad?.Invoke();
 
             return data;
         }
+
+        PlayerModel defaultData = GetDefaultData();
+
+        RequestSaveData(defaultData);
+
+        OnCompleteLoad?.Invoke();
+
+        return defaultData;
     }
 
     public bool RequestDeleteData(int slotIndex)
