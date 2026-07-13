@@ -18,6 +18,19 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _minY = -4f;
     [SerializeField] private float _maxY = 4f;
 
+    [Header("줌")]
+    [SerializeField] private float _zoomSpeed = 2f;
+    [SerializeField] private float _minZoom = 3f;
+    [SerializeField] private float _maxZoom = 12f;
+
+    private Camera _camera;
+
+
+    private void Awake()
+    {
+        _camera = GetComponent<Camera>();
+    }
+
     private void Update()
     {
         if (Keyboard.current == null)
@@ -48,11 +61,19 @@ public class CameraController : MonoBehaviour
             y += 1f;
         }
 
+        if (Keyboard.current !=null)
+        {
+            float scroll = Mouse.current.scroll.ReadValue().y;
+            if (scroll != 0f)
+            {
+                ZoomCamera(scroll);
+            }
+        }
+
         if (x == 0f && y == 0f)
         {
             return;
         }
-
         MoveCamera(x, y);
     }
 
@@ -66,4 +87,22 @@ public class CameraController : MonoBehaviour
 
         transform.position = next;
     }
+
+    private void ZoomCamera(float scroll)
+    {
+        if (_camera == null || _camera.orthographic == false)
+        {
+            return ;
+        }
+
+        float size = _camera.orthographicSize;
+        size -= Mathf.Sign(scroll) * _zoomSpeed;
+        _camera.orthographicSize = Mathf.Clamp(size, _minZoom, _maxZoom);
+
+    }
+    
+
+
+
+
 }

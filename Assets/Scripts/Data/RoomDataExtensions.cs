@@ -3,8 +3,13 @@
 
 // RoomData의 필드를 해석
 
+
 public static class RoomDataExtensions
 {
+    // 층 제한 없음
+    private const int NO_FLOOR_RESTRICTION = -999;
+
+
     // W/H를 Vector2Int로
     public static Vector2Int GetSize(this RoomData room)
     {
@@ -26,4 +31,12 @@ public static class RoomDataExtensions
     {
         return room.RequiredCellType == "Any";
     }
+
+    // 층 제한이 있는가
+    public static bool HasFloorRestriction(this RoomData room)
+    {
+        return room.RequiredFloor != NO_FLOOR_RESTRICTION;
+    }
+
+
 }

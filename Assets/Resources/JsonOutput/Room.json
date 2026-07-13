@@ -7,6 +7,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "Sunlight",
     "EffectDescription": "사무실 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Office"
@@ -19,6 +20,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Sky",
+    "RequiredFloor": 0,
     "EffectType": "Sunlight",
     "EffectDescription": "정원 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Garden"
@@ -31,6 +33,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "UsingRestroom",
     "EffectDescription": "화장실 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Bathroom"
@@ -43,6 +46,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "UsingCounselingRoom",
     "EffectDescription": "상담실 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_CounselingRoom"
@@ -55,6 +59,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "UsingConsultationRoom",
     "EffectDescription": "진료실 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_ConsultationRoom"
@@ -67,6 +72,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "UsingKitchen",
     "EffectDescription": "주방 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Kitchen"
@@ -79,6 +85,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "UsingDiningRoom",
     "EffectDescription": "식당 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_DiningRoom"
@@ -91,6 +98,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "UsingGymnasium",
     "EffectDescription": "체육관 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Gymnasium"
@@ -103,6 +111,7 @@
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "UsingLounge",
     "EffectDescription": "휴게실 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Lounge"
@@ -111,10 +120,11 @@
     "ID": "Room_Stairs",
     "Name": "계단",
     "Description": "계단",
-    "SizeW": 2,
+    "SizeW": 1,
     "SizeH": 1,
     "BuildCost": 0,
     "RequiredCellType": "Any",
+    "RequiredFloor": -999,
     "EffectType": "UsingStairs",
     "EffectDescription": "계단 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Stairs"
@@ -127,6 +137,7 @@
     "SizeH": 1,
     "BuildCost": 100,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실1 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_0001"
@@ -139,6 +150,7 @@
     "SizeH": 1,
     "BuildCost": 100,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실2 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_0002"
@@ -151,6 +163,7 @@
     "SizeH": 1,
     "BuildCost": 100,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실3 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_0003"
@@ -163,6 +176,7 @@
     "SizeH": 1,
     "BuildCost": 100,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실4 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_0004"
@@ -175,6 +189,7 @@
     "SizeH": 1,
     "BuildCost": 100,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실5 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_0005"
@@ -187,6 +202,7 @@
     "SizeH": 1,
     "BuildCost": 100,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실6 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_0006"
@@ -199,6 +215,7 @@
     "SizeH": 1,
     "BuildCost": 100,
     "RequiredCellType": "Earth",
+    "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실7 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_0007"
