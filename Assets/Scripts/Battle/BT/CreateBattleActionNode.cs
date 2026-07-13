@@ -31,6 +31,36 @@ public partial class CreateBattleActionNode : Action
 
         BattleBTContext context = Context.Value;
 
+        if (SkillId == null || string.IsNullOrEmpty(SkillId.Value))
+        {
+            Debug.LogWarning("[CreateBattleActionNode] SkillId가 비어 있습니다.");
+            return Status.Failure;
+        }
+
+        if (context.Unit == null)
+        {
+            Debug.LogWarning("[CreateBattleActionNode] 전투 유닛 정보가 없습니다.");
+            return Status.Failure;
+        }
+
+        GameDataBase skillData;
+
+        if (context.Unit.IsHero)
+        {
+            skillData = GameDataManager.Inst.GetData<HeroSkill>(SkillId.Value);
+        }
+        else
+        {
+            skillData = GameDataManager.Inst.GetData<EnemySkill>(SkillId.Value);
+        }
+
+        if (skillData == null)
+        {
+            Debug.LogWarning($"[CreateBattleActionNode] 스킬 데이터를 찾을 수 없습니다. SkillId: {SkillId.Value}");
+
+            return Status.Failure;
+        }
+
         BattleActionModel battleAction;
 
         bool isCreated = BattleActionFactory.TryCreateSkillAction(
