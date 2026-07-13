@@ -2988,7 +2988,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &275574450022399460
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3030,7 +3030,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.34901962}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4930,6 +4930,7 @@ MonoBehaviour:
   Button_Reinforce: {fileID: 7713300627932599515}
   Button_HealUnit: {fileID: 5477157991608673616}
   Button_ChangeUnit: {fileID: 8247527180954921007}
+  Spawner_BattleUnit: {fileID: 0}
 --- !u!114 &7508893211830350805
 MonoBehaviour:
   m_ObjectHideFlags: 0
