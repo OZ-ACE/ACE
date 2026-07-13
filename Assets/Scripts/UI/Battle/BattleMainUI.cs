@@ -28,12 +28,18 @@ public class BattleMainUI : UIBase
     private const int ChangeUnitEnergyCost = 2; //temp
     private const int HealUnitEnergyCost = 2; //temp
 
+    private string _selectedTargetUnitId;
+
     private BattleViewModel _viewModel;
 
     private void Start()
     {
         _viewModel = new BattleViewModel();
         BindViewModel(_viewModel);
+        BindBattleUnitSpawner();
+
+        BattleManager.Inst.ResetBattleState();
+        SetEnergyGauge(BattleManager.Inst.GetRemainingEnergy());
     }
 
     private void BindViewModel(BattleViewModel viewModel)
@@ -45,6 +51,22 @@ public class BattleMainUI : UIBase
         Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
     }
 
+    private void BindBattleUnitSpawner()
+    {
+        if (BattleUnitTestSpawner.Inst == null)
+        {
+            return;
+        }
+
+        BattleUnitTestSpawner.Inst.OnUnitClicked += OnUnitClicked_Spawner;
+    }
+
+    private void OnUnitClicked_Spawner(string unitId)
+    {
+        _selectedTargetUnitId = unitId;
+        _viewModel.AddBattleLog($"{unitId} 선택됨");
+    }
+
     private void OnDestroy()
     {
         if (_viewModel != null)
@@ -54,6 +76,11 @@ public class BattleMainUI : UIBase
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
             Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
+        }
+
+        if (BattleUnitTestSpawner.Inst != null)
+        {
+            BattleUnitTestSpawner.Inst.OnUnitClicked -= OnUnitClicked_Spawner;
         }
     }
 
@@ -159,43 +186,58 @@ public class BattleMainUI : UIBase
         }
     }
 
-    // 테스터용 - 실제 에너지 연동 전까지 확인용, 이후 삭제 예정
-    private int _testEnergyCount = 5;
-
-    [ContextMenu("에너지 1 소모 테스트")]
-    private void Test_ConsumeEnergy()
-    {
-        _testEnergyCount = Mathf.Max(0, _testEnergyCount - 1);
-        SetEnergyGauge(_testEnergyCount);
-    }
-
-    [ContextMenu("에너지 초기화 테스트")]
-    private void Test_ResetEnergy()
-    {
-        _testEnergyCount = 5;
-        SetEnergyGauge(_testEnergyCount);
-    }
-
     private void OnClickReinforce()
     {
-        ExecuteInterventionAction(BattleActionResult.Reinforce, ReinforceEnergyCost, "지원하기 실행 (테스트)");
+        ExecuteInterventionAction(BattleActionResult.Reinforce, ReinforceEnergyCost, "지원하기 실행");
     }
 
     private void OnClickHealUnit()
     {
-        ExecuteInterventionAction(BattleActionResult.HealUnit, HealUnitEnergyCost, "영웅 회복 실행 (테스트)");
+        ExecuteInterventionAction(BattleActionResult.HealUnit, HealUnitEnergyCost, "영웅 회복 실행");
     }
 
     private void OnClickChangeUnit()
     {
-        ExecuteInterventionAction(BattleActionResult.ChangeUnit, ChangeUnitEnergyCost, "영웅 교체 실행 (테스트)");
+        ExecuteInterventionAction(BattleActionResult.ChangeUnit, ChangeUnitEnergyCost, "영웅 교체 실행");
     }
 
-    // 테스트용 - 실제 대상 선택/판정 로직은 액션 큐 연동 시 M3에서 구현
+    //선택된 대상에게 개입 액션을 실제로 적용한다. 대상 미선택 또는 에너지 부족 시 실패 처리
     private void ExecuteInterventionAction(BattleActionResult result, int energyCost, string logMessage)
     {
-        _testEnergyCount = Mathf.Max(0, _testEnergyCount - energyCost);
-        SetEnergyGauge(_testEnergyCount);
-        AddDummyLog(logMessage);
+        if (string.IsNullOrEmpty(_selectedTargetUnitId))
+        {
+            _viewModel.AddBattleLog("대상을 먼저 선택해주세요");
+            return;
+        }
+
+        bool isSuccess = BattleManager.Inst.SetActionResult(_selectedTargetUnitId, result, energyCost);
+
+        if (!isSuccess)
+        {
+            _viewModel.AddBattleLog("실행 실패 (에너지 부족 또는 대상 없음)");
+            return;
+        }
+
+        SetEnergyGauge(BattleManager.Inst.GetRemainingEnergy());
+        _viewModel.AddBattleLog($"{_selectedTargetUnitId} 대상 - {logMessage}");
+
+        _selectedTargetUnitId = null;
+    }
+
+    [ContextMenu("실제 액션 큐 빌드 테스트 (스폰된 유닛 기준)")]
+    private void Test_BuildActionQueue()
+    {
+        if (BattleUnitTestSpawner.Inst == null)
+        {
+            Debug.LogWarning("[BattleMainUI] BattleUnitTestSpawner 인스턴스 없음");
+            return;
+        }
+
+        List<string> heroIds = BattleUnitTestSpawner.Inst.GetHeroIdList();
+        List<string> enemyIds = new List<string>();
+
+        List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(heroIds, enemyIds);
+        BattleManager.Inst.BuildActionQueue(turnOrder);
+        _viewModel.RefreshActionQueue();
     }
 }
