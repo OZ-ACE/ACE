@@ -61,7 +61,7 @@ public class HeroSlot : MonoBehaviour
                 break;
 
             case nameof(_heroVM.DiseaseName):
-                Text_DiseaseName.text = $"질환 : {_heroVM.DiseaseName}";
+                Text_DiseaseName.text = string.Join(", ", _heroVM.DiseaseName);
                 break;
 
             case nameof(_heroVM.Age):

@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class HeroViewModel : ViewModelBase
 {
@@ -13,8 +14,8 @@ public class HeroViewModel : ViewModelBase
     private string _description;
     public string Description => _description;
 
-    private string _diseaseName;
-    public string DiseaseName => _diseaseName;
+    private List<string> _diseaseName;
+    public List<string> DiseaseName => _diseaseName;
 
     private string _age;
     public string Age => _age;
