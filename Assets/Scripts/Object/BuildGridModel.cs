@@ -11,7 +11,7 @@ public class BuildGridModel
     private GridBounds _bounds;
     private int _unlockedMinFloor;
 
-    /// <summary> 현재 배치된 방 전체 </summary>
+    //현재 배치된 방 전체
     public List<PlacedRoomData> GetAllRooms()
     {
         List<PlacedRoomData> result = new List<PlacedRoomData>();
@@ -162,7 +162,7 @@ public class BuildGridModel
     {
         return CheckPlaceable(originCoord, size, requiredCellType, grid) == PlacementResult.Success;
     }
-    public PlacementResult CheckPlaceable(GridCoord originCoord, Vector2Int size, CellType requiredCellType, GridSystem grid)
+    public PlacementResult CheckPlaceable(GridCoord originCoord, Vector2Int size, CellType requiredCellType, GridSystem grid, bool isAnyCellType = false)
     {
         List<GridCoord> coords = grid.GetOccupiedCoords(originCoord, size);
 
@@ -186,8 +186,8 @@ public class BuildGridModel
                 return PlacementResult.Occupied;
             }
 
-            //셀 타입 검사
-            if (GetCellType(coord) != requiredCellType)
+            //셀 타입 검사(Any면 건너뜀)
+            if (isAnyCellType == false && GetCellType(coord) != requiredCellType)
             {
                 return PlacementResult.WrongCellType;
             }
