@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EpisodeService
 {
-    public event Action<EpisodeData> OnTriggerEpisode;
+    public event Action<EpisodeData> OnUnlockEpisode;
 
     private readonly EpisodeConditionRegistry _conditionRegistry;
     private readonly Dictionary<string, List<EpisodeConditionData>> _conditionDict = new Dictionary<string, List<EpisodeConditionData>>();
@@ -23,13 +23,13 @@ public class EpisodeService
 
     public void Release()
     {
-        OnTriggerEpisode = null;
+        OnUnlockEpisode = null;
 
         _conditionDict.Clear();
         _progressDict.Clear();
     }
 
-    public bool TryTriggerEpisode(string episodeDataId)
+    public bool TryUnlockEpisode(string episodeDataId)
     {
         if (string.IsNullOrEmpty(episodeDataId) == true)
         {
@@ -42,13 +42,13 @@ public class EpisodeService
 
         if (episodeData == null || playerModel == null)
         {
-            Debug.LogWarning($"EpisodeService - 에피소드 or 플레이어 데이터를 찾을 수 없음. EpisodeId : {episodeDataId}");
+            Debug.LogWarning($"EpisodeService - 에피소드 또는 플레이어 데이터를 찾을 수 없음. EpisodeId : {episodeDataId}");
             return false;
         }
 
         EpisodeProgressModel progressModel = GetOrCreateProgressModel(episodeDataId, playerModel);
 
-        if (CanTriggerEpisode(episodeData, progressModel) == false)
+        if (CanUnlockEpisode(progressModel) == false)
         {
             return false;
         }
@@ -58,12 +58,98 @@ public class EpisodeService
             return false;
         }
 
-        UpdateEpisodeProgress(episodeData, progressModel);
-
-        OnTriggerEpisode?.Invoke(episodeData);
-
-        Debug.Log($"EpisodeService - 에피소드 발생 : {episodeData.EpisodeName}");
+        UnlockEpisode(episodeData, progressModel);
         return true;
+    }
+
+    public void CheckAllEpisodes()
+    {
+        List<EpisodeData> episodeDatas = GameDataManager.Inst.GetDataList<EpisodeData>();
+
+        if (episodeDatas == null || episodeDatas.Count == 0)
+        {
+            Debug.LogWarning("EpisodeService - 검사할 에피소드 데이터가 없음.");
+            return;
+        }
+
+        for (int i = 0; i < episodeDatas.Count; i++)
+        {
+            EpisodeData episodeData = episodeDatas[i];
+
+            if (episodeData == null)
+            {
+                continue;
+            }
+
+            TryUnlockEpisode(episodeData.ID);
+        }
+    }
+
+    public List<EpisodeData> GetUnlockedArchiveEpisodes()
+    {
+        List<EpisodeData> unlockedEpisodes = new List<EpisodeData>();
+
+        foreach (KeyValuePair<string, EpisodeProgressModel> pair in _progressDict)
+        {
+            EpisodeProgressModel progressModel = pair.Value;
+
+            if (progressModel == null)
+            {
+                continue;
+            }
+
+            bool isUnlocked = progressModel.State == EpisodeProgressState.Unlocked ||
+                progressModel.State == EpisodeProgressState.Viewed ||
+                progressModel.State == EpisodeProgressState.Completed;
+
+            if (isUnlocked == false)
+            {
+                continue;
+            }
+
+            EpisodeData episodeData = GameDataManager.Inst.GetData<EpisodeData>(progressModel.EpisodeDataId);
+
+            if (episodeData == null || episodeData.IsArchiveVisible == false)
+            {
+                continue;
+            }
+
+            unlockedEpisodes.Add(episodeData);
+        }
+
+        return unlockedEpisodes;
+    }
+
+    public EpisodeProgressModel GetEpisodeProgress(string episodeDataId)
+    {
+        if (string.IsNullOrEmpty(episodeDataId) == true)
+        {
+            return null;
+        }
+
+        if (_progressDict.TryGetValue(episodeDataId, out EpisodeProgressModel progressModel) == true)
+        {
+            return progressModel;
+        }
+
+        return null;
+    }
+
+    public void MarkEpisodeAsViewed(string episodeDataId)
+    {
+        EpisodeProgressModel progressModel = GetEpisodeProgress(episodeDataId);
+
+        if (progressModel == null)
+        {
+            return;
+        }
+
+        if (progressModel.State == EpisodeProgressState.Unlocked)
+        {
+            progressModel.State = EpisodeProgressState.Viewed;
+        }
+
+        progressModel.IsNew = false;
     }
 
     private bool AreAllConditionsSatisfied(string episodeDataId, PlayerModel playerModel)
@@ -119,7 +205,13 @@ public class EpisodeService
             return progressModel;
         }
 
-        EpisodeProgressModel newProgressModel = new EpisodeProgressModel{EpisodeDataId = episodeDataId, TriggerCount = 0, IsCompleted = false};
+        EpisodeProgressModel newProgressModel = new EpisodeProgressModel
+        {
+            EpisodeDataId = episodeDataId,
+            State = EpisodeProgressState.Locked,
+            TriggerCount = 0,
+            IsNew = false
+        };
 
         playerModel.EpisodeProgressList.Add(newProgressModel);
         _progressDict.Add(episodeDataId, newProgressModel);
@@ -158,55 +250,29 @@ public class EpisodeService
         }
     }
 
-    private bool CanTriggerEpisode(EpisodeData episodeData, EpisodeProgressModel progressModel)
+    private bool CanUnlockEpisode(EpisodeProgressModel progressModel)
     {
-        if (episodeData == null || progressModel == null)
+        if (progressModel == null)
         {
             return false;
         }
 
-        if (progressModel.IsCompleted == true)
-        {
-            return false;
-        }
-
-        if (episodeData.IsRepeatable == false &&
-            progressModel.TriggerCount > 0)
-        {
-            return false;
-        }
-
-        bool hasTriggerLimit = episodeData.MaxTriggerCount > 0;
-
-        if (hasTriggerLimit == true && progressModel.TriggerCount >= episodeData.MaxTriggerCount)
-        {
-            return false;
-        }
-
-        return true;
+        return progressModel.State == EpisodeProgressState.Locked;
     }
 
-    private void UpdateEpisodeProgress(EpisodeData episodeData, EpisodeProgressModel progressModel)
+    private void UnlockEpisode(EpisodeData episodeData, EpisodeProgressModel progressModel)
     {
         if (episodeData == null || progressModel == null)
         {
             return;
         }
 
-        progressModel.TriggerCount++;
+        progressModel.State = EpisodeProgressState.Unlocked;
+        progressModel.IsNew = episodeData.IsArchiveVisible;
 
-        if (episodeData.IsRepeatable == false)
-        {
-            progressModel.IsCompleted = true;
-            return;
-        }
+        OnUnlockEpisode?.Invoke(episodeData);
 
-        bool hasTriggerLimit = episodeData.MaxTriggerCount > 0;
-
-        if (hasTriggerLimit == true && progressModel.TriggerCount >= episodeData.MaxTriggerCount)
-        {
-            progressModel.IsCompleted = true;
-        }
+        Debug.Log($"EpisodeService - 에피소드 해금 : {episodeData.EpisodeName}");
     }
 
     private void CacheEpisodeProgress()

@@ -4,7 +4,32 @@
     "EpisodeName": "테스트 에피소드",
     "EpisodeDescription": "3일차에 발생하는 테스트 에피소드",
     "DialogueId": "Opening_01",
+    "Category": "Character",
+    "PlaybackType": "Archive",
+    "IsArchiveVisible": true,
     "IsRepeatable": false,
     "MaxTriggerCount": 1
+  },
+  {
+    "ID": "episode_test_02",
+    "EpisodeName": "테스트 에피소드",
+    "EpisodeDescription": "4일차에 발생하는 테스트 에피소드",
+    "DialogueId": "Opening_02",
+    "Category": "Main",
+    "PlaybackType": "Auto",
+    "IsArchiveVisible": true,
+    "IsRepeatable": false,
+    "MaxTriggerCount": 1
+  },
+  {
+    "ID": "episode_test_03",
+    "EpisodeName": "테스트 에피소드",
+    "EpisodeDescription": "5일차에 발생하는 테스트 에피소드",
+    "DialogueId": "Opening_03",
+    "Category": "Daily",
+    "PlaybackType": "Auto",
+    "IsArchiveVisible": false,
+    "IsRepeatable": true,
+    "MaxTriggerCount": 3
   }
 ]
