@@ -9,7 +9,7 @@ public class PlacedRoomData
     public GridCoord Origin; // 방의 좌하단 기준 좌표 (어디에)
 }
 
-//기본값과 다른 칸의 상태만 저장 (예: 파낸 칸)
+//기본값과 다른 칸의 상태만 저장
 [Serializable]
 public class CellStateData
 {

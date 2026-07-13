@@ -1,10 +1,17 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 //전투 라운드의 액션 큐를 생성하고 전체 진행을 관리하는 매니저
 public class BattleManager : SingletonBase<BattleManager>
 {
     private const int MaxEnergyGauge = 5; //플레이어 개입 턴의 에너지 게이지 총량, 전투 전체 통틀어 처음1회만 채워짐, 라운드별 리셋 안됨
     private const string BattleConfigId = "default"; //BattleConfig 테이블의 유일한 row ID
+
+    [SerializeField] private BattleBTExecutor Executor_Hero;
+    [SerializeField] private BattleBTExecutor Executor_Enemy;
+
+    public BattleBTExecutor HeroExecutor { get { return Executor_Hero; } }
+    public BattleBTExecutor EnemyExecutor { get { return Executor_Enemy; } }
 
     private Queue<BattleActionModel> _actionQueue = new Queue<BattleActionModel>();
     private int _energyGauge;
