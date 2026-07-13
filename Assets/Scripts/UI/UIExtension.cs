@@ -26,7 +26,8 @@ public enum UIType
     BattleMainUI,
     OfficeUI,
     ShopUI,
-    SettlementUI
+    SettlementUI,
+    UIEpisodeArchive
 }
 
 public static class UIExtension
@@ -38,7 +39,6 @@ public static class UIExtension
         path = $"Prefabs/UI/{root}/{type}";
         return path;
     }
-
 
     // 이 밑에다가 UI별로 Open 및 Close 함수 작성해주세요.
     public static void InitStartUI(this UIManager uiManager)
@@ -189,4 +189,26 @@ public static class UIExtension
 
 
 
+
+    public static void OpenEpisodeArchive(this UIManager uiManager)
+    {
+        UIBase uiBase = uiManager.OpenUI(UIRootType.Content, UIType.UIEpisodeArchive);
+
+        if (uiBase == null)
+        {
+            Debug.LogWarning("UIEpisodeArchive 생성 실패");
+            return;
+        }
+
+        if (uiBase is UIEpisodeArchive episodeArchive)
+        {
+            EpisodeArchiveViewModel viewModel = new EpisodeArchiveViewModel(GameManager.Inst.Services.EpisodeService);
+            episodeArchive.Bind(viewModel);
+        }
+    }
+
+    public static void CloseEpisodeArchive(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.UIEpisodeArchive);
+    }
 }
