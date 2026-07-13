@@ -599,7 +599,7 @@ public class BuildGridView : ViewBase
 
 
 
-    /// RoomData.PrefabPath로 방 프리팹을 로드 </summary>
+    // RoomData.PrefabPath로 방 프리팹을 로드
     private GameObject LoadRoomPrefab(RoomData room)
     {
         if (_roomPrefabCache.TryGetValue(room.ID, out GameObject cached))

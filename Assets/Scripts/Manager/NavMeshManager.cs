@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class NavMeshManager : SingletonBase<NavMeshManager>
 {
-    [SerializeField] private NavMeshSurface _navMeshSurface;
+    [SerializeField] private NavMeshSurface NavMeshSurface;
 
     public void BuildNavMesh()
     {
-        _navMeshSurface.BuildNavMesh();
+        NavMeshSurface.BuildNavMesh();
     }
 }

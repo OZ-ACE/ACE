@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 [Serializable]
 public class PlayerModel

@@ -27,8 +27,6 @@ public class BuildGridModel
         return result;
     }
 
-
-
     public GridBounds Bounds { get { return _bounds; } }
     public int UnlockedMinFloor { get { return _unlockedMinFloor; } }
 
@@ -218,9 +216,6 @@ public class BuildGridModel
         return room;
     }
 
-
-
-
     //지하층 해금(한층씩)
     public bool TryUnlockNextFloor()
     {
@@ -239,6 +234,4 @@ public class BuildGridModel
     {
         return floor >= _unlockedMinFloor;
     }
-
-
 }
