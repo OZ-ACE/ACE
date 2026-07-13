@@ -451,6 +451,7 @@ public class BuildGridView : ViewBase
                 Destroy(pair.Value);
             }
         }
+
         _placedRoomObjects.Clear();
 
         List<PlacedRoomData> rooms = _viewModel.GetPlacedRooms();

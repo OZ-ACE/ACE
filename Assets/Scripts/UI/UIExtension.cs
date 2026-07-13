@@ -109,6 +109,7 @@ public static class UIExtension
     public static void OpenTycoonMainUI(this UIManager uIManager)
     {
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
+        ObjectManager.Inst.CreateBuildGridView();
         ObjectManager.Inst.SpawnHero("hero_01").Forget();
     }
 

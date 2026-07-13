@@ -19,15 +19,18 @@ public class HeroUI : UIBase
     {
         HeroHotBar.gameObject.SetActive(false);
 
-        _currentVM.IsSelect = false;
-        _currentVM = null;
+        if (_currentVM != null)
+        {
+            _currentVM.IsSelect = false;
+            _currentVM = null;
+        }
     }
 
     private async UniTask RefreshHeroList()
     {
         var playerModel = SaveManager.Inst.CurrentPlayerModel;
 
-        for (int i = _activeSlots.Count; i <= playerModel.HeroStats.Count; i++)
+        for (int i = _activeSlots.Count; i < playerModel.HeroStats.Count; i++)
         {
             string currentHeroID = playerModel.HeroStats[i].HeroID;
 

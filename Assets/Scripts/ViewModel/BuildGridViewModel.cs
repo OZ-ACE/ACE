@@ -569,13 +569,6 @@ public class BuildGridViewModel : ViewModelBase
         return roomId == STAIR_ROOM_ID;
     }
 
-
-
-
-
-
-
-
     //그리드 상태 저장
     public void SaveGrid()
     {
@@ -603,7 +596,5 @@ public class BuildGridViewModel : ViewModelBase
         _buildGridModel.LoadFromSaveData(player.BuildGridData, _gridSystem);
 
         Debug.Log($"[BuildGridViewModel] 그리드 복원: 방 {player.BuildGridData.PlacedRooms.Count}개");
-
     }
-
 }

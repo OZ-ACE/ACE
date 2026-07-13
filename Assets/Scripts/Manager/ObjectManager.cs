@@ -13,10 +13,10 @@ public class ObjectManager : SingletonBase<ObjectManager>
 
     private void Start()
     {
-        CreateBuildGridView();
+        //CreateBuildGridView();
     }
 
-    private void CreateBuildGridView()
+    public void CreateBuildGridView()
     {
         if (Prefab_BuildGridView == null)
         {

@@ -40,6 +40,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6dd0074f4a9502f459dbf344bee96634
+    m_Address: Prefabs/Character/Hero/Hero_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 70e23b9b2669f11428d7abe3757907cc
     m_Address: Image/Button/Unselect
     m_ReadOnly: 0
@@ -62,6 +67,21 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b661c9b4e85ac5d46bc2ac5e60aa9525
     m_Address: Image/Item
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cff7fec997672ae46b4d6d5e639e0630
+    m_Address: Prefabs/Character/Hero/Hero_04
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9ed00b03569c1c4cafa60f1ab2490d7
+    m_Address: Prefabs/Character/Hero/hero_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f51d60bab3aada645a3178cba2551a5a
+    m_Address: Prefabs/Character/Hero/Hero_07
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
