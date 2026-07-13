@@ -86,6 +86,7 @@ public class TycoonMainUI : UIBase
     {
         GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetGoldText;
         SetGoldText();
+        SetDayText();
         ChangePanel(TycoonPanelType.Quest);
     }
 
@@ -182,19 +183,18 @@ public class TycoonMainUI : UIBase
 
     private void SetDayText()
     {
-
+        int day = SaveManager.Inst.CurrentPlayerModel.Day;
+        Text_Day.text = $"Day {day}";
     }
 
     private void SetGoldText()
     {
         if (Text_Gold == null)
         {
-            Debug.LogError("[TycoonMainUI] Text_Gold 인스펙터 할당 안 됨!");
             return;
         }
 
         int gold = GameManager.Inst.Services.CurrencyService.CurrentGold;
-        Debug.Log($"[TycoonMainUI] SetGoldText 호출됨. Gold = {gold}");
         Text_Gold.text = $"{gold}";
     }
 
