@@ -56,16 +56,6 @@ public class HeroMovingAgent : MonoBehaviour
 
             SetDestination(targetPos);
 
-            while (!IsArrived())
-            {
-                if (HeroAgent.hasPath && HeroAgent.velocity.sqrMagnitude > 0.01f)
-                {
-                    SetDirection(HeroAgent.velocity.x);
-                }
-
-                await UniTask.Delay(TimeSpan.FromSeconds(0.15f), cancellationToken: _movingToken.Token);
-            }
-
             await UniTask.WaitUntil(IsArrived, cancellationToken: _movingToken.Token);
             
             float randomDelay = Random.Range(MinDelay, MaxDelay);
@@ -79,27 +69,6 @@ public class HeroMovingAgent : MonoBehaviour
         {
             HeroAgent.SetDestination(targetPos);
         }
-    }
-
-    private void SetDirection(float dir)
-    {
-        if (Mathf.Abs(dir) < 0.01f)
-        {
-            return;
-        }
-
-        Vector3 scale = transform.localScale;
-
-        if (dir > 0f)
-        {
-            scale.x = Math.Abs(scale.x);
-        }
-        else if (dir < 0f)
-        {
-            scale.x = -Math.Abs(scale.x);
-        }
-
-        transform.localScale = scale;
     }
 
     private Vector3 GetRoomCenterPosition(GridCoord origin, Vector2 size)
