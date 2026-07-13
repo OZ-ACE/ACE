@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 건설 시스템 조립·보관 담당. GameManager가 생성해 들고 있는다.
-/// </summary>
+
+// 건설 시스템 조립·보관 담당. GameManager가 생성해 들고 있는다.
+
 public class BuildService
 {
     // ===== 그리드 설정 =====
@@ -29,7 +29,7 @@ public class BuildService
         InitBuildSystem();
     }
 
-    /// <summary> 그리드·모델·뷰모델 조립 후 저장 데이터 복원 </summary>
+    //  그리드·모델·뷰모델 조립 후 저장 데이터 복원
     private void InitBuildSystem()
     {
         GridSystem gridSystem = new GridSystem(CELL_WIDTH, CELL_HEIGHT, GRID_ORIGIN);
@@ -47,7 +47,7 @@ public class BuildService
         Debug.Log("[BuildService] 건설 시스템 조립 완료");
     }
 
-    /// <summary> 건설 가능한 방 ID 전체 (Room 테이블 기준) </summary>
+    // 건설 가능한 방 ID 전체 (Room 테이블 기준)
     private List<string> GetAllRoomIds()
     {
         List<string> roomIds = new List<string>();
@@ -66,7 +66,7 @@ public class BuildService
         return roomIds;
     }
 
-    /// <summary> 조립된 뷰모델 반환 </summary>
+    // 조립된 뷰모델 반환 
     public BuildGridViewModel GetBuildGridViewModel()
     {
         return _buildGridViewModel;
