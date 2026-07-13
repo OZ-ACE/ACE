@@ -42,6 +42,7 @@ public class BuildService
         _buildGridViewModel.InitGrid(bounds, INITIAL_MIN_FLOOR);
         _buildGridViewModel.SetBuildableRooms(GetAllRoomIds());
         _buildGridViewModel.LoadGrid();
+        _buildGridViewModel.EnsureStairs();
 
         Debug.Log("[BuildService] 건설 시스템 조립 완료");
     }
