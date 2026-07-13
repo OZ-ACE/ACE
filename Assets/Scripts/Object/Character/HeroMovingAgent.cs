@@ -15,16 +15,16 @@ public class HeroMovingAgent : MonoBehaviour
     private GridSystem _gridSystem;
     private CancellationTokenSource _movingToken;
 
+    private void OnEnable()
+    {
+        _gridSystem = GameManager.Inst.Services.BuildService.GetBuildGridViewModel().GridSystem;
+
+        StartMoving().Forget();
+    }
+
     private void OnDisable()
     {
         CancelMoving();
-    }
-
-    private void InitGrid(GridSystem grid)
-    {
-        _gridSystem = grid;
-
-        StartMoving().Forget();
     }
 
     private async UniTask StartMoving()
@@ -41,6 +41,12 @@ public class HeroMovingAgent : MonoBehaviour
 
         while (!_movingToken.Token.IsCancellationRequested)
         {
+            if (placedRooms.Count == 0)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(MinDelay), cancellationToken: _movingToken.Token);
+                continue;
+            }
+
             int randomIndex = Random.Range(0, placedRooms.Count);
             PlacedRoomData targetRoom = placedRooms[randomIndex];
 

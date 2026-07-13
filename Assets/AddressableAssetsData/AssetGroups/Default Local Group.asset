@@ -35,6 +35,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e9a0762e23645a4e8ed8d611945ea04
+    m_Address: Prefabs/Character/Hero/hero_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 70e23b9b2669f11428d7abe3757907cc
     m_Address: Image/Button/Unselect
     m_ReadOnly: 0

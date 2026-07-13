@@ -9,7 +9,6 @@ public class GameManager : SingletonBase<GameManager>
     public GameServiceContainer Services { get; private set; }
     public InventoryViewModel InventoryViewModel { get; private set; }
 
-
     public Action<float> OnChangeBrightness;
 
     protected override void Awake()

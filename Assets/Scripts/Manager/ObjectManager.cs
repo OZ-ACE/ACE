@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 
 public class ObjectManager : SingletonBase<ObjectManager>
@@ -40,5 +41,11 @@ public class ObjectManager : SingletonBase<ObjectManager>
 
         _buildGridView.Bind(GameManager.Inst.Services.BuildService.GetBuildGridViewModel());
         Debug.Log("[ObjectManager] 건설 격자 생성 완료");
+    }
+
+    // 테스트용 임시 메서드
+    public async UniTask SpawnHero(string heroID)
+    {
+        GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroID}");
     }
 }

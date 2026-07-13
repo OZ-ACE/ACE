@@ -2,8 +2,6 @@
 using UnityEngine;
 using System;
 
-
-
 //Model 역할 + ViewModel 역할
 public class BuildGridViewModel : ViewModelBase
 {
@@ -30,7 +28,6 @@ public class BuildGridViewModel : ViewModelBase
     public bool IsHoldingRoom { get { return _pickedRoom != null; } }
     public int UnlockedMinFloor { get { return _buildGridModel.UnlockedMinFloor; } }
 
-    /// <summary> 현재 배치된 방 전체 (뷰가 초기 렌더링할 때 사용) </summary>
     public List<PlacedRoomData> GetPlacedRooms()
     {
         return _buildGridModel.GetAllRooms();
@@ -42,13 +39,11 @@ public class BuildGridViewModel : ViewModelBase
     // 층 해금 비용 (깊이 1당)
     private const int UNLOCK_COST_PER_FLOOR = 500;
 
-
     //뷰가 바인딩
     private bool _isBuildMode;
     private bool _isDemolishMode;
     private bool _isMoveMode;
     private string _selectedRoomId;
-
 
     public bool IsBuildMode
     {
@@ -62,6 +57,7 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
+
     public bool IsDemolishMode
     {
         get => _isDemolishMode;
@@ -74,6 +70,7 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
+
     public bool IsMoveMode
     {
         get => _isMoveMode;
@@ -86,6 +83,7 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
+
     public string SelectedRoomId
     {
         get => _selectedRoomId;
@@ -98,20 +96,6 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public BuildGridViewModel(GridSystem gridSystem, BuildGridModel buildGridModel, ICurrencyService currencyService)
     {
@@ -126,7 +110,6 @@ public class BuildGridViewModel : ViewModelBase
         _buildGridModel.InitCellTypes(bounds);
         _buildGridModel.InitUnlock(initialMinFloor);   
     }
-
 
     //뷰가 바인딩 직후 1회 호출
     public void InvokeOnceOnInit()
