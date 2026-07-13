@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 
 public class HeroModel
 {
     public string HeroID;
     public string Name;
     public string Description;
-    public string DiseaseName;
+    public List<string> DiseaseName;
     public string Age;
     public string Skill;
 
@@ -21,7 +21,12 @@ public class HeroModel
         HeroID = heroID;
         Name = heroData.HeroName;
         Description = heroData.Remarks;
-        DiseaseName = GameDataManager.Inst.GetData<Penalty>(heroData.PenaltyID).PenaltyName;
+
+        foreach (string penaltyID in heroData.PenaltyID)
+        {
+            DiseaseName.Add(GameDataManager.Inst.GetData<Penalty>(penaltyID).PenaltyName);
+        }
+
         Age = heroData.Age;
         Skill = GameDataManager.Inst.GetData<HeroSkill>(heroData.MainSkillId).SkillName;
 

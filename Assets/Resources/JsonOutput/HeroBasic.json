@@ -8,7 +8,11 @@
     "MainSkillId": "heroSkill_01_01",
     "CandidateWeight": 100,
     "ProfileImage": null,
-    "PenaltyID": "penalty_01"
+    "PenaltyID": [
+      "penalty_01",
+      "penalty_02",
+      "penalty_03"
+    ]
   },
   {
     "ID": "hero_02",
@@ -19,7 +23,11 @@
     "MainSkillId": "heroSkill_02_01",
     "CandidateWeight": 100,
     "ProfileImage": null,
-    "PenaltyID": "penalty_02"
+    "PenaltyID": [
+      "penalty_02",
+      "penalty_03",
+      "penalty_04"
+    ]
   },
   {
     "ID": "hero_03",
@@ -30,7 +38,9 @@
     "MainSkillId": "heroSkill_03_01",
     "CandidateWeight": 100,
     "ProfileImage": null,
-    "PenaltyID": "penalty_03"
+    "PenaltyID": [
+      "penalty_03"
+    ]
   },
   {
     "ID": "hero_04",
@@ -41,7 +51,9 @@
     "MainSkillId": "heroSkill_04_01",
     "CandidateWeight": 100,
     "ProfileImage": null,
-    "PenaltyID": "penalty_04"
+    "PenaltyID": [
+      "penalty_04"
+    ]
   },
   {
     "ID": "hero_05",
@@ -52,7 +64,9 @@
     "MainSkillId": "heroSkill_05_01",
     "CandidateWeight": 100,
     "ProfileImage": null,
-    "PenaltyID": "penalty_05"
+    "PenaltyID": [
+      "penalty_05"
+    ]
   },
   {
     "ID": "hero_06",
@@ -63,7 +77,9 @@
     "MainSkillId": "heroSkill_06_01",
     "CandidateWeight": 100,
     "ProfileImage": null,
-    "PenaltyID": "penalty_06"
+    "PenaltyID": [
+      "penalty_06"
+    ]
   },
   {
     "ID": "hero_07",
@@ -74,6 +90,8 @@
     "MainSkillId": "heroSkill_07_01",
     "CandidateWeight": 100,
     "ProfileImage": null,
-    "PenaltyID": "penalty_07"
+    "PenaltyID": [
+      "penalty_07"
+    ]
   }
 ]
