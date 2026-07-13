@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor;
+using System.Net.NetworkInformation;
+using Newtonsoft.Json.Bson;
 
 
 
@@ -41,6 +44,10 @@ public class BuildGridViewModel : ViewModelBase
 
     // 층 해금 비용 (깊이 1당)
     private const int UNLOCK_COST_PER_FLOOR = 500;
+
+    // 계단 설정
+    private const string STAIR_ROOM_ID = "Room_Stairs";
+    private const int STAIR_MIN_COLUMN = 9;   // 계단이 차지하는 시작 열
 
 
     //뷰가 바인딩
@@ -102,17 +109,6 @@ public class BuildGridViewModel : ViewModelBase
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     public BuildGridViewModel(GridSystem gridSystem, BuildGridModel buildGridModel, ICurrencyService currencyService)
     {
         _gridSystem = gridSystem;
@@ -153,7 +149,7 @@ public class BuildGridViewModel : ViewModelBase
             return PlacementResult.WrongCellType;
         }
 
-        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem);
+        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem, room.IsAnyCellType());
         if (result != PlacementResult.Success)
         {
             return result;
@@ -255,7 +251,7 @@ public class BuildGridViewModel : ViewModelBase
         Vector2Int size = roomData.GetSize();
         CellType requiredType = roomData.GetRequiredCellType();
 
-        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, size, requiredType, _gridSystem);
+        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, size, requiredType, _gridSystem, roomData.IsAnyCellType());
         if (result != PlacementResult.Success)
         {
             return result;
@@ -293,6 +289,14 @@ public class BuildGridViewModel : ViewModelBase
     //철거 실행 명령
     public bool TryDemolishRoom(GridCoord coord)
     {
+        PlacedRoomData target = _buildGridModel.GetRoomAt(coord);
+        if (target != null && IsStair(target.RoomId) == true)
+        {
+            Debug.Log("[BuildGridViewModel] 계단 철거 불가");
+            return false;
+        }
+
+
         PlacedRoomData removed = _buildGridModel.RemoveRoomAt(coord, _gridSystem);
         if (removed == null)
         {
@@ -338,6 +342,14 @@ public class BuildGridViewModel : ViewModelBase
             return false;   
         }
 
+        PlacedRoomData target = _buildGridModel.GetRoomAt(coord);
+        if (target != null && IsStair(target.RoomId) == true)
+        {
+            Debug.Log("[BuildGridViewModel] 계단은 이동할 수 없음");
+            return false;
+        }
+
+
         PlacedRoomData room = _buildGridModel.RemoveRoomAt(coord, _gridSystem);
         if (room == null)
         {
@@ -373,7 +385,7 @@ public class BuildGridViewModel : ViewModelBase
         Vector2Int size = roomData.GetSize();
         CellType requiredType = roomData.GetRequiredCellType();
 
-        PlacementResult result = _buildGridModel.CheckPlaceable(newOrigin, size, requiredType, _gridSystem);
+        PlacementResult result = _buildGridModel.CheckPlaceable(newOrigin, size, requiredType, _gridSystem, roomData.IsAnyCellType());
         if (result != PlacementResult.Success)
         {
             return false;   
@@ -410,7 +422,7 @@ public class BuildGridViewModel : ViewModelBase
         {
             return PlacementResult.WrongCellType;
         }
-        return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem);
+        return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem, roomData.IsAnyCellType());
     }
 
 
@@ -471,6 +483,8 @@ public class BuildGridViewModel : ViewModelBase
 
         _currencyService.TrySpend(cost);
 
+        PlaceStairAt(_buildGridModel.UnlockedMinFloor);
+
         if (OnUnlockFloor != null)
         {
             OnUnlockFloor.Invoke(_buildGridModel.UnlockedMinFloor);
@@ -506,6 +520,61 @@ public class BuildGridViewModel : ViewModelBase
         }
         return _currencyService.IsAffordable(GetNextUnlockCost());
     }
+
+
+
+
+
+    //계단 자동 설치
+    public void EnsureStairs()
+    {
+        GridBounds bounds = _buildGridModel.Bounds;
+        int unlockedMin = _buildGridModel.UnlockedMinFloor;
+
+        for (int floor = unlockedMin; floor <= bounds.MaxFloor; floor++)
+        {
+            PlaceStairAt(floor);
+        }
+    }
+
+    private void PlaceStairAt(int floor)
+    {
+        RoomData stairData = GameDataManager.Inst.GetData<RoomData>(STAIR_ROOM_ID);
+        if (stairData == null)
+        {
+            Debug.LogWarning($"[BuildGridViewModel] 계단 데이터 없음 : {STAIR_ROOM_ID}");
+            return;
+        }
+
+        GridCoord origin = new GridCoord(floor, STAIR_MIN_COLUMN);
+
+        if (_buildGridModel.GetRoomAt(origin) != null )
+        {
+            return;
+        }
+
+        PlacedRoomData stair = new PlacedRoomData();
+        stair.RoomId = STAIR_ROOM_ID;
+        stair.Origin = origin;
+
+        List<GridCoord> coords = _gridSystem.GetOccupiedCoords(origin, stairData.GetSize());
+        _buildGridModel.AddRoom(stair, coords);
+
+        if (OnPlaceRoom != null)
+        {
+            OnPlaceRoom.Invoke(stair);
+        }
+    }
+
+
+
+    //계단 철거이동 금지
+    private bool IsStair(string roomId)
+    {
+        return roomId == STAIR_ROOM_ID;
+    }
+
+
 
 
 
