@@ -132,6 +132,7 @@ public class SaveManager : SingletonBase<SaveManager>
     public void SetCurrentSlotIndex(int slotIndex)
     {
         CurrentSlotIndex = slotIndex;
+        CurrentPlayerModel = RequestLoadData(slotIndex);
     }
 
     public void SetPlayerName(string name)
