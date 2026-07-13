@@ -17,6 +17,8 @@ public class BuildService
 
     private const int INITIAL_MIN_FLOOR = -3;
 
+    private const string STAIR_ROOM_ID = "Room_Stairs";
+
     private static readonly Vector2 GRID_ORIGIN = new Vector2(-10, 4f);
 
     private readonly ICurrencyService _currencyService;
@@ -62,6 +64,10 @@ public class BuildService
 
         for (int i = 0; i < roomList.Count; i++)
         {
+            if (roomList[i].ID == STAIR_ROOM_ID)
+            {
+                continue;
+            }
             roomIds.Add(roomList[i].ID);
         }
         return roomIds;
