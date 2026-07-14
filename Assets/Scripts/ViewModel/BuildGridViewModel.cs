@@ -53,8 +53,6 @@ public class BuildGridViewModel : ViewModelBase
     private bool _isMoveMode;
     private string _selectedRoomId;
 
-    public event Action OnReloadGrid;
-
     public bool IsBuildMode
     {
         get => _isBuildMode;
