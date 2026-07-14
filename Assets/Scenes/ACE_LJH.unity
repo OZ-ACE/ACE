@@ -266,6 +266,10 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 5907261905108152095, guid: 7c691629d11923a47beab944aa443942, type: 3}
+      propertyPath: 'NavMeshSurface.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6249295694830723532, guid: 7c691629d11923a47beab944aa443942, type: 3}
       propertyPath: Loop
       value: 1
@@ -280,6 +284,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8095821082068329123, guid: 7c691629d11923a47beab944aa443942, type: 3}
+    - {fileID: 1498323677841822296, guid: 7c691629d11923a47beab944aa443942, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

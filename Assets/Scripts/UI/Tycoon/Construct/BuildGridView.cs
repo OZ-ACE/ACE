@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System.ComponentModel;
 using UnityEngine.EventSystems;
+using Cysharp.Threading.Tasks;
 
 
 public class BuildGridView : ViewBase
@@ -20,12 +21,6 @@ public class BuildGridView : ViewBase
     [Header("방 프리팹 캐시")]
     private Dictionary<string, GameObject> _roomPrefabCache = new Dictionary<string, GameObject>();
 
-
-
-
-
-
-
     private BuildGridViewModel _viewModel;
     private Camera _mainCamera;
 
@@ -34,22 +29,18 @@ public class BuildGridView : ViewBase
     private Dictionary<GridCoord, GameObject> _placedRoomObjects = new Dictionary<GridCoord, GameObject>();
     private bool _isOverlayCreated;
 
-
     private GridCoord _lastHoverCoord;
     private bool _hasHover;
 
-
     private GameObject _ghostObject;
     private SpriteRenderer _ghostRenderer;
-
-
 
     public void Bind(BuildGridViewModel viewModel)
     {
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
-            _viewModel.OnPlaceRoom -= OnPlaceRoom;
+            _viewModel.OnPlaceRoom -= BindOnPlaceRoom;
             _viewModel.OnRemoveRoom -= OnRemoveRoom;
             _viewModel.OnUnlockFloor -= OnUnlockFloor;
             _viewModel.OnReloadGrid -= RefreshAllRooms;
@@ -57,7 +48,7 @@ public class BuildGridView : ViewBase
 
         _viewModel = viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
-        _viewModel.OnPlaceRoom += OnPlaceRoom;
+        _viewModel.OnPlaceRoom += BindOnPlaceRoom;
         _viewModel.OnRemoveRoom += OnRemoveRoom;
         _viewModel.OnUnlockFloor += OnUnlockFloor;
         _viewModel.OnReloadGrid += RefreshAllRooms;
@@ -67,24 +58,22 @@ public class BuildGridView : ViewBase
         _viewModel.InvokeOnceOnInit();
     }
 
+    private void BindOnPlaceRoom(PlacedRoomData data)
+    {
+        OnPlaceRoom(data).Forget();
+    }
+
     private void Awake()
     {
         _mainCamera = Camera.main;
     }
-
-
-
-
-
-
-
 
     private void OnDestroy()
     {
         if (_viewModel != null )
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
-            _viewModel.OnPlaceRoom -= OnPlaceRoom;
+            _viewModel.OnPlaceRoom -= BindOnPlaceRoom;
             _viewModel.OnRemoveRoom -= OnRemoveRoom;
             _viewModel.OnUnlockFloor -= OnUnlockFloor;
             _viewModel.OnReloadGrid -= RefreshAllRooms;
@@ -395,7 +384,7 @@ public class BuildGridView : ViewBase
 
 
     // 방 건설
-    private void OnPlaceRoom(PlacedRoomData placed)
+    private async UniTask OnPlaceRoom(PlacedRoomData placed)
     {
         RoomData room = GameDataManager.Inst.GetData<RoomData>(placed.RoomId);
         if (room == null)
@@ -403,7 +392,7 @@ public class BuildGridView : ViewBase
             return;
         }
 
-        GameObject prefab = LoadRoomPrefab(room);
+        GameObject prefab = await LoadRoomPrefab(room);
         if (prefab == null)
         {
             return;
@@ -472,7 +461,7 @@ public class BuildGridView : ViewBase
         List<PlacedRoomData> rooms = _viewModel.GetPlacedRooms();
         for (int i = 0; i < rooms.Count; i++)
         {
-            OnPlaceRoom(rooms[i]);
+            OnPlaceRoom(rooms[i]).Forget();
         }
 
         NavMeshManager.Inst.BuildNavMesh();
@@ -590,11 +579,6 @@ public class BuildGridView : ViewBase
         return true;
     }
 
-
-
-
-
-
     // 공통: 마우스 셀 좌표
     private bool TryGetMouseCoord(out GridCoord coord)
     {
@@ -612,18 +596,15 @@ public class BuildGridView : ViewBase
         return true;
     }
 
-
-
-
     // RoomData.PrefabPath로 방 프리팹을 로드
-    private GameObject LoadRoomPrefab(RoomData room)
+    private async UniTask<GameObject> LoadRoomPrefab(RoomData room)
     {
         if (_roomPrefabCache.TryGetValue(room.ID, out GameObject cached))
         {
             return cached;
         }
 
-        GameObject prefab = Resources.Load<GameObject>(room.PrefabPath);
+        GameObject prefab = await ResourceManager.Inst.InstantiateAsync(room.PrefabPath);
         if (prefab == null)
         {
             Debug.LogWarning($"[BuildGridView] 방 프리팹 없음: {room.PrefabPath}");
@@ -633,11 +614,4 @@ public class BuildGridView : ViewBase
         _roomPrefabCache[room.ID] = prefab;
         return prefab;
     }
-
-
-
-
-
-
-
 }
