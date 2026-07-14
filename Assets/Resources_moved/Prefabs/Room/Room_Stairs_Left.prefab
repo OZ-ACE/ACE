@@ -26,7 +26,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -0.07, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.07, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1138285421312417568}
@@ -299,15 +299,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 835736694737400398, guid: 155cd5e8971382e418938516b2e62c89, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.43
+      value: 6.18
       objectReference: {fileID: 0}
     - target: {fileID: 835736694737400398, guid: 155cd5e8971382e418938516b2e62c89, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.7
+      value: -5.09
       objectReference: {fileID: 0}
     - target: {fileID: 835736694737400398, guid: 155cd5e8971382e418938516b2e62c89, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.7
+      value: -2.22
       objectReference: {fileID: 0}
     - target: {fileID: 835736694737400398, guid: 155cd5e8971382e418938516b2e62c89, type: 3}
       propertyPath: m_LocalRotation.w
@@ -319,7 +319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 835736694737400398, guid: 155cd5e8971382e418938516b2e62c89, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7071068
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 835736694737400398, guid: 155cd5e8971382e418938516b2e62c89, type: 3}
       propertyPath: m_LocalRotation.z
@@ -331,7 +331,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 835736694737400398, guid: 155cd5e8971382e418938516b2e62c89, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 835736694737400398, guid: 155cd5e8971382e418938516b2e62c89, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -368,7 +368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 0
-  m_StartPoint: {x: 0.00000013732414, y: 1.0895575, z: -0.017941613}
+  m_StartPoint: {x: 0.00000011420651, y: 1.0398428, z: 0.027633624}
   m_EndPoint: {x: 0.00000007778881, y: -0.034644037, z: 0.9826398}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
@@ -447,6 +447,10 @@ PrefabInstance:
     - target: {fileID: 1313313051825460820, guid: 192b01c3049395c40a8e929485091a0b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1563710311529034146, guid: 192b01c3049395c40a8e929485091a0b, type: 3}
+      propertyPath: m_Center.y
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 1833532326382963950, guid: 192b01c3049395c40a8e929485091a0b, type: 3}
       propertyPath: m_Name
