@@ -12,6 +12,7 @@ public class PlayerModel
     public int Gold;
     public int MemoryFragment;
     public int TodayMemoryFragment; //오늘 하루 동안 전투로 획득한 기억의파편 누적량, 마감 정산 시 리셋
+    public bool IsBattleDoneToday;
 
     public BuildGridData BuildGridData = new BuildGridData();
     public List<ItemModel> Inventory = new List<ItemModel>();
