@@ -43,7 +43,7 @@ public class DialogueUI : UIBase
 
         if (_dialogueVM == null)
         {
-            _dialogueVM = new DialogueViewModel();
+            _dialogueVM = new DialogueViewModel(GameManager.Inst.Services.DialogueService);
             BindViewModel(_dialogueVM);
         }
 

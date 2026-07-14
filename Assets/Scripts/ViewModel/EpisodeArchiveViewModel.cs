@@ -64,4 +64,14 @@ public class EpisodeArchiveViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(SelectedEpisode));
     }
+
+    public string RequestPlaySelectedEpisode()
+    {
+        if (SelectedEpisode == null)
+        {
+            return string.Empty;
+        }
+
+        return _episodeService.RequestPlayEpisode(SelectedEpisode.EpisodeDataId, EpisodePlayMode.Replay);
+    }
 }

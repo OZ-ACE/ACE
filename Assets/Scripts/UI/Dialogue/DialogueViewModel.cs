@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DialogueViewModel : ViewModelBase
 {
-    private readonly DialogueService _dialogueService = new DialogueService();
+    private readonly DialogueService _dialogueService;
 
     private string _speaker;
     private string _content;
@@ -14,6 +14,11 @@ public class DialogueViewModel : ViewModelBase
     private bool _isSpeakerActive = false;
     private bool _isNextArrow = false;
     private string _currentDialogueID;
+
+    public DialogueViewModel(DialogueService dialogueService)
+    {
+        _dialogueService = dialogueService;
+    }
 
     public string Speaker
     {
@@ -167,17 +172,20 @@ public class DialogueViewModel : ViewModelBase
 
     public void RequestNext()
     {
-        string nextID = _dialogueService.GetNextDialogueID(GameManager.Inst.CurrentDialogueID);
+        string nextId = _dialogueService.GetNextDialogueID(GameManager.Inst.CurrentDialogueID);
 
-        if (nextID == "0")
+        if (nextId == "0" || string.IsNullOrEmpty(nextId))
         {
             UIManager.Inst.OpenLoadingUI();
             UIManager.Inst.OpenTycoonMainUI();
             UIManager.Inst.CloseDialogueUI();
+
+            _dialogueService.CompleteDialogue();
+
             return;
         }
 
-        GameManager.Inst.SetDialogueID(nextID);
-        UpdateState(nextID);
+        GameManager.Inst.SetDialogueID(nextId);
+        UpdateState(nextId);
     }
 }

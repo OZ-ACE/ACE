@@ -20,13 +20,18 @@ public class UIManager : SingletonBase<UIManager>
 
     public UIBase OpenUI(UIRootType root, UIType type, bool isActive = true)
     {
-        var openedUI = GetCreatedUI(root, type);
+        UIBase openedUI = GetCreatedUI(root, type);
 
-        bool isSetActive = (isActive == true);
+        if (openedUI == null)
+        {
+            Debug.LogWarning($"UIManager - UI 열 수 없음. Root : {root}, Type : {type}");
+
+            return null;
+        }
 
         if (_openedUI.Contains(type) == false)
         {
-            openedUI.gameObject.SetActive(isSetActive);
+            openedUI.gameObject.SetActive(isActive);
             _openedUI.Add(type);
         }
 
@@ -75,19 +80,40 @@ public class UIManager : SingletonBase<UIManager>
 
     private void CreateUI(UIRootType root, UIType type)
     {
-        if (_createdUI.ContainsKey(type) == false)
+        if (_createdUI.ContainsKey(type) == true)
         {
-            var path = this.GetUIPath(root, type);
-            GameObject loadedObj = (GameObject)Resources.Load(path);
-            Transform transform = GetRootTransform(root);
-            GameObject gobj = Instantiate(loadedObj, transform);
-
-            if (gobj != null)
-            {
-                var uiBase = gobj.GetComponent<UIBase>();
-                _createdUI.Add(type, uiBase);
-            }
+            return;
         }
+
+        string path = this.GetUIPath(root, type);
+        GameObject loadedObject = Resources.Load<GameObject>(path);
+
+        if (loadedObject == null)
+        {
+            Debug.LogError($"UIManager - UI 프리팹을 찾을 수 없음. Path : Resources/{path}");
+            return;
+        }
+
+        Transform rootTransform = GetRootTransform(root);
+
+        if (rootTransform == null)
+        {
+            Debug.LogError($"UIManager - UI 루트를 찾을 수 없음. Root : {root}");
+            return;
+        }
+
+        GameObject createdObject = Instantiate(loadedObject, rootTransform);
+
+        UIBase uiBase = createdObject.GetComponent<UIBase>();
+
+        if (uiBase == null)
+        {
+            Debug.LogError($"UIManager - 프리팹 루트에 UIBase 상속 컴포넌트가 없음. Type : {type}");
+            Destroy(createdObject);
+            return;
+        }
+
+        _createdUI.Add(type, uiBase);
     }
 
     public UIBase GetOpenedUI(UIRootType root, UIType type)
@@ -102,7 +128,12 @@ public class UIManager : SingletonBase<UIManager>
             CreateUI(root, type);
         }
 
-        return _createdUI[type];
+        if (_createdUI.TryGetValue(type, out UIBase uiBase) == true)
+        {
+            return uiBase;
+        }
+
+        return null;
     }
 
     public UIBase IsOpened(UIType type)

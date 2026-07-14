@@ -150,9 +150,24 @@ public class UIEpisodeArchive : UIBase
             return;
         }
 
-        Debug.Log($"UIEpisodeArchive - 재생 요청 : {_viewModel.SelectedEpisode.EpisodeName}");
+        string dialogueId = _viewModel.RequestPlaySelectedEpisode();
 
-        // TODO: 다음 단계에서 DialogueUI와 연결
+        if (string.IsNullOrEmpty(dialogueId))
+        {
+            return;
+        }
+
+        string episodeDataId = _viewModel.SelectedEpisode.EpisodeDataId;
+
+        DialoguePlayContext playContext = new DialoguePlayContext(DialoguePlaySource.Episode, episodeDataId, EpisodePlayMode.Replay);
+
+        GameManager.Inst.Services.DialogueService.BeginDialogue(playContext);
+        GameManager.Inst.SetDialogueID(dialogueId);
+
+        UIManager.Inst.CloseEpisodeArchive();
+        UIManager.Inst.OpenDialogueUI();
+
+        Debug.Log($"UIEpisodeArchive - 에피소드 재생 요청 : {dialogueId}");
     }
 
     private void OnClickClose()

@@ -5,6 +5,7 @@ using UnityEngine;
 public class EpisodeService
 {
     public event Action<EpisodeData> OnUnlockEpisode;
+    public event Action<EpisodeData> OnRequestPlayEpisode;
 
     private readonly EpisodeConditionRegistry _conditionRegistry;
     private readonly Dictionary<string, List<EpisodeConditionData>> _conditionDict = new Dictionary<string, List<EpisodeConditionData>>();
@@ -24,6 +25,7 @@ public class EpisodeService
     public void Release()
     {
         OnUnlockEpisode = null;
+        OnRequestPlayEpisode = null;
 
         _conditionDict.Clear();
         _progressDict.Clear();
@@ -135,6 +137,36 @@ public class EpisodeService
         return null;
     }
 
+    public bool CompleteEpisode(string episodeDataId)
+    {
+        if (string.IsNullOrEmpty(episodeDataId))
+        {
+            return false;
+        }
+
+        EpisodeProgressModel progressModel = GetEpisodeProgress(episodeDataId);
+
+        if (progressModel == null)
+        {
+            Debug.LogWarning($"EpisodeService - 진행 데이터를 찾을 수 없음. EpisodeId : {episodeDataId}");
+            return false;
+        }
+
+        if (progressModel.State == EpisodeProgressState.Locked)
+        {
+            Debug.LogWarning($"EpisodeService - 잠긴 에피소드는 완료할 수 없음. EpisodeId : {episodeDataId}");
+            return false;
+        }
+
+        progressModel.TriggerCount++;
+        progressModel.State = EpisodeProgressState.Completed;
+        progressModel.IsNew = false;
+
+        Debug.Log( $"EpisodeService - 에피소드 완료 : {episodeDataId}");
+
+        return true;
+    }
+
     public void MarkEpisodeAsViewed(string episodeDataId)
     {
         EpisodeProgressModel progressModel = GetEpisodeProgress(episodeDataId);
@@ -235,7 +267,7 @@ public class EpisodeService
         {
             EpisodeConditionData conditionData = conditionDatas[i];
 
-            if (conditionData == null || string.IsNullOrEmpty(conditionData.EpisodeId) == true)
+            if (conditionData == null || string.IsNullOrEmpty(conditionData.EpisodeId))
             {
                 continue;
             }
@@ -249,6 +281,7 @@ public class EpisodeService
             conditions.Add(conditionData);
         }
     }
+
 
     private bool CanUnlockEpisode(EpisodeProgressModel progressModel)
     {
@@ -273,6 +306,11 @@ public class EpisodeService
         OnUnlockEpisode?.Invoke(episodeData);
 
         Debug.Log($"EpisodeService - 에피소드 해금 : {episodeData.EpisodeName}");
+
+        if (episodeData.GetPlaybackType() == EpisodePlaybackType.Auto)
+        {
+            OnRequestPlayEpisode?.Invoke(episodeData);
+        }
     }
 
     private void CacheEpisodeProgress()
@@ -309,5 +347,67 @@ public class EpisodeService
 
             _progressDict.Add(progressModel.EpisodeDataId, progressModel);
         }
+    }
+
+    public string RequestPlayEpisode(string episodeDataId, EpisodePlayMode playMode)
+    {
+        if (string.IsNullOrEmpty(episodeDataId))
+        {
+            return string.Empty;
+        }
+
+        EpisodeProgressModel progressModel = GetEpisodeProgress(episodeDataId);
+
+        if (progressModel == null)
+        {
+            Debug.LogWarning($"EpisodeService - 에피소드 진행 데이터 찾을 수 없음. EpisodeId : {episodeDataId}");
+            return string.Empty;
+        }
+
+        if (progressModel.State == EpisodeProgressState.Locked)
+        {
+            Debug.LogWarning($"EpisodeService - 잠긴 에피소드. 재생할 수 없음. EpisodeId : {episodeDataId}");
+            return string.Empty;
+        }
+
+        EpisodeData episodeData = GameDataManager.Inst.GetData<EpisodeData>(episodeDataId);
+
+        if (episodeData == null)
+        {
+            Debug.LogWarning($"EpisodeService - 에피소드 데이터 찾을 수 없음. EpisodeId : {episodeDataId}");
+
+            return string.Empty;
+        }
+
+        if (string.IsNullOrEmpty(episodeData.DialogueId))
+        {
+            Debug.LogWarning($"EpisodeService - 연결된 다이얼로그 없음. EpisodeId : {episodeDataId}");
+            return string.Empty;
+        }
+
+        if (playMode == EpisodePlayMode.Normal)
+        {
+            if (episodeData.IsRepeatable == false && progressModel.TriggerCount > 0)
+            {
+                Debug.LogWarning($"EpisodeService - 반복 불가능한 에피소드. EpisodeId : {episodeDataId}");
+                return string.Empty;
+            }
+
+            if (episodeData.MaxTriggerCount > 0 && progressModel.TriggerCount >= episodeData.MaxTriggerCount)
+            {
+                Debug.LogWarning($"EpisodeService - 최대 발생 횟수에 도달. EpisodeId : {episodeDataId}");
+                return string.Empty;
+            }
+        }
+
+        Dialogue dialogueData = GameDataManager.Inst.GetData<Dialogue>(episodeData.DialogueId);
+
+        if (dialogueData == null)
+        {
+            Debug.LogWarning($"EpisodeService - 다이얼로그 데이터 찾을 수 없음. DialogueId : {episodeData.DialogueId}");
+            return string.Empty;
+        }
+
+        return episodeData.DialogueId;
     }
 }

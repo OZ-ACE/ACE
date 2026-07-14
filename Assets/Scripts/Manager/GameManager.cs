@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -10,6 +11,9 @@ public class GameManager : SingletonBase<GameManager>
 
     // 인벤토리 뷰모델 (상점·인벤토리 UI가 공유)
     public InventoryViewModel InventoryViewModel { get; private set; }
+
+    private readonly Queue<string> _episodePlayQueue = new Queue<string>();
+    private bool _isPlayingEpisode;
 
     public Action<float> OnChangeBrightness;
 
@@ -23,11 +27,49 @@ public class GameManager : SingletonBase<GameManager>
         InventoryViewModel = new InventoryViewModel();
 
         BindSaveEvents();
+        BindDialogueEvents();
+        BindEpisodeEvents();
     }
 
     private void Start()
     {
+        InitializeLoadedServices();
+        ApplySetting().Forget();
         ApplySetting();
+    }
+
+    // 이미 로드된 플레이어 데이터 기준으로 게임 서비스 초기화
+    private void InitializeLoadedServices()
+    {
+        if (SaveManager.Inst == null || SaveManager.Inst.CurrentPlayerModel == null || Services == null)
+        {
+            return;
+        }
+
+        Services.InitializeAfterLoad();
+    }
+
+    private void OnDestroy()
+    {
+        if (SaveManager.Inst != null)
+        {
+            SaveManager.Inst.OnCompleteLoad -= HandleCompleteLoad;
+        }
+
+        if (Services != null && Services.DialogueService != null)
+        {
+            Services.DialogueService.OnCompleteDialogue -= HandleCompleteDialogue;
+        }
+
+        if (Services != null && Services.EpisodeService != null)
+        {
+            Services.EpisodeService.OnRequestPlayEpisode -= HandleRequestPlayEpisode;
+        }
+
+        _episodePlayQueue.Clear();
+        _isPlayingEpisode = false;
+
+        Services?.Release();
     }
 
     public void SetDialogueID(string dialogueID)
@@ -63,6 +105,26 @@ public class GameManager : SingletonBase<GameManager>
         SaveManager.Inst.OnCompleteLoad += HandleCompleteLoad;
     }
 
+    private void BindDialogueEvents()
+    {
+        if (Services == null || Services.DialogueService == null)
+        {
+            return;
+        }
+
+        Services.DialogueService.OnCompleteDialogue += HandleCompleteDialogue;
+    }
+
+    private void BindEpisodeEvents()
+    {
+        if (Services == null || Services.EpisodeService == null)
+        {
+            return;
+        }
+
+        Services.EpisodeService.OnRequestPlayEpisode += HandleRequestPlayEpisode;
+    }
+
     private void HandleCompleteLoad()
     {
         if (Services == null)
@@ -71,7 +133,91 @@ public class GameManager : SingletonBase<GameManager>
         }
 
         Services.InitializeAfterLoad();
+    }
 
-        Debug.Log("GameManager - 세이브 로드 후 서비스 초기화 완료");
+    private void HandleCompleteDialogue(DialoguePlayContext playContext)
+    {
+        if (playContext == null)
+        {
+            return;
+        }
+
+        switch (playContext.Source)
+        {
+            case DialoguePlaySource.Episode:
+                HandleCompleteEpisodeDialogue(playContext);
+                break;
+        }
+    }
+    private void HandleCompleteEpisodeDialogue(DialoguePlayContext playContext)
+    {
+        if (playContext.EpisodePlayMode == EpisodePlayMode.Normal)
+        {
+            Services.EpisodeService.CompleteEpisode(playContext.SourceDataId);
+            _isPlayingEpisode = false;
+
+            TryPlayNextEpisode();
+        }
+    }
+
+    private void HandleRequestPlayEpisode(EpisodeData episodeData)
+    {
+        if (episodeData == null)
+        {
+            return;
+        }
+
+        EnqueueEpisode(episodeData.ID);
+        TryPlayNextEpisode();
+    }
+
+
+    private void EnqueueEpisode(string episodeDataId)
+    {
+        if (string.IsNullOrEmpty(episodeDataId))
+        {
+            return;
+        }
+
+        if (_episodePlayQueue.Contains(episodeDataId))
+        {
+            return;
+        }
+
+        _episodePlayQueue.Enqueue(episodeDataId);
+    }
+
+    private void TryPlayNextEpisode()
+    {
+        if (_isPlayingEpisode)
+        {
+            return;
+        }
+
+        while (_episodePlayQueue.Count > 0)
+        {
+            string episodeDataId = _episodePlayQueue.Dequeue();
+            string dialogueId = Services.EpisodeService.RequestPlayEpisode(episodeDataId, EpisodePlayMode.Normal);
+
+            if (string.IsNullOrEmpty(dialogueId))
+            {
+                continue;
+            }
+
+            DialoguePlayContext playContext = new DialoguePlayContext(DialoguePlaySource.Episode, episodeDataId, EpisodePlayMode.Normal);
+
+            Services.DialogueService.BeginDialogue(playContext);
+
+            _isPlayingEpisode = true;
+
+            SetDialogueID(dialogueId);
+
+            UIManager.Inst.CloseEpisodeArchive();
+            UIManager.Inst.OpenDialogueUI();
+
+            Debug.Log($"GameManager - 자동 에피소드 재생 시작 : {episodeDataId}");
+
+            return;
+        }
     }
 }
