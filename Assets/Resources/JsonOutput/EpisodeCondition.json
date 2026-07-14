@@ -12,5 +12,12 @@
     "ConditionType": "Day",
     "TargetId": null,
     "RequiredValue": 3
+  },
+  {
+    "ID": "episodeCondition_affinity_01",
+    "EpisodeId": "episode_affinity_01",
+    "ConditionType": "Affinity",
+    "TargetId": "hero_02",
+    "RequiredValue": 1
   }
 ]

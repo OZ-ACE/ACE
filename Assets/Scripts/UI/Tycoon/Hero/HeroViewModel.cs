@@ -100,6 +100,8 @@ public class HeroViewModel : ViewModelBase
 
         _model.Affection = Affection;
         _model.SaveHeroProgress();
+
+        GameManager.Inst.CheckEpisodes();
     }
 
     public void AddSatisfaction(int amount)

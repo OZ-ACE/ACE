@@ -94,6 +94,18 @@ public class GameManager : SingletonBase<GameManager>
         Screen.fullScreen = isFull;
     }
 
+    // 현재 게임 상태를 기준으로 해금 가능한 에피소드 검사. 아래처럼 호출.
+    // GameManager.Inst.CheckEpisodes();
+    public void CheckEpisodes()
+    {
+        if (Services == null || Services.EpisodeService == null)
+        {
+            return;
+        }
+
+        Services.EpisodeService.CheckAllEpisodes();
+    }
+
     private void BindSaveEvents()
     {
         if (SaveManager.Inst == null)

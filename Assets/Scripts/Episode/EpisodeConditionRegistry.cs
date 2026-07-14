@@ -7,6 +7,7 @@ public class EpisodeConditionRegistry
     public EpisodeConditionRegistry()
     {
         RegisterEvaluator(new DayConditionEvaluator());
+        RegisterEvaluator(new AffinityConditionEvaluator());
     }
 
     public void RegisterEvaluator(IEpisodeConditionEvaluator evaluator)

@@ -1,7 +1,7 @@
-﻿[
+[
   {
     "ID": "episode_test_01",
-    "EpisodeName": "테스트 에피소드1",
+    "EpisodeName": "테스트 에피소드",
     "EpisodeDescription": "3일차에 발생하는 테스트 에피소드",
     "DialogueId": "Opening_01",
     "Category": "Character",
@@ -12,11 +12,22 @@
   },
   {
     "ID": "episode_test_02",
-    "EpisodeName": "테스트 에피소드2",
-    "EpisodeDescription": "3일차에 발생하는 테스트 에피소드",
+    "EpisodeName": "테스트 에피소드",
+    "EpisodeDescription": "4일차에 발생하는 테스트 에피소드",
     "DialogueId": "Opening_01",
     "Category": "Character",
     "PlaybackType": "Auto",
+    "IsArchiveVisible": true,
+    "IsRepeatable": false,
+    "MaxTriggerCount": 1
+  },
+  {
+    "ID": "episode_affinity_01",
+    "EpisodeName": "호감도 테스트 에피소드",
+    "EpisodeDescription": "hero_01의 호감도 30 달성 시 해금",
+    "DialogueId": "Opening_01",
+    "Category": "Character",
+    "PlaybackType": "Archive",
     "IsArchiveVisible": true,
     "IsRepeatable": false,
     "MaxTriggerCount": 1
