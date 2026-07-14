@@ -244,11 +244,17 @@ public class BattleMainUI : UIBase
     //실제 대상에게 개입 액션을 적용한다
     private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage)
     {
-        bool isSuccess = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost);
+        ActionApplyResult applyResult = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost);
 
-        if (!isSuccess)
+        if (applyResult == ActionApplyResult.InsufficientEnergy)
         {
-            _viewModel.AddBattleLog("실행 실패 (에너지 부족)");
+            _viewModel.AddBattleLog("실행 실패: 에너지가 부족합니다.");
+            return;
+        }
+
+        if (applyResult == ActionApplyResult.TargetNotFound)
+        {
+            _viewModel.AddBattleLog("실행 실패: 대상이 액션 큐에 없습니다.");
             return;
         }
 

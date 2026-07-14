@@ -50,12 +50,12 @@ public class BattleManager : SingletonBase<BattleManager>
         _actionQueue.Enqueue(playerAction);
     }
 
-    //큐 안에서 targetUnitId를 가진 행동을 찾아 결과를 확정한다. 에너지 부족 시 선택 자체가 불가능하도록 UI에서 막을 예정이라, 여기서의 false 반환은 그 상황이 뚫렸을 때를 대비한 방어 코드이다
-    public bool SetActionResult(string targetUnitId, BattleActionResult result, int energyCost)
+    //큐 안에서 targetUnitId를 가진 행동을 찾아 결과를 확정한다. 에너지 부족과 대상 없음을 구분해서 반환한다
+    public ActionApplyResult SetActionResult(string targetUnitId, BattleActionResult result, int energyCost)
     {
         if (_energyGauge < energyCost)
         {
-            return false;
+            return ActionApplyResult.InsufficientEnergy;
         }
 
         foreach (BattleActionModel action in _actionQueue)
@@ -65,11 +65,11 @@ public class BattleManager : SingletonBase<BattleManager>
                 action.Result = result;
                 _energyGauge -= energyCost;
 
-                return true;
+                return ActionApplyResult.Success;
             }
         }
 
-        return false;
+        return ActionApplyResult.TargetNotFound;
     }
 
     public int GetRemainingEnergy()
@@ -240,6 +240,13 @@ public class BattleManager : SingletonBase<BattleManager>
         }
 
         return penalty.TriggerSkillId == skillId;
+    }
+
+    //지원 아이템 적용 성공 시 호출, 대상 유닛의 활성 페널티를 완전히 제거한다 >> 일단 이렇게 구현해뒀습니다..
+    public void RemovePenalty(BattleUnitModel unit)
+    {
+        unit.ActivePenaltyId = null;
+        unit.PenaltyRemainingRounds = 0;
     }
 
     //라운드 시작 시 각 유닛의 페널티 지속 라운드를 감소시키고, 0이 되면 해제한다

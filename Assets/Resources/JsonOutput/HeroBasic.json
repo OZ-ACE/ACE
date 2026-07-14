@@ -39,7 +39,9 @@
     "CandidateWeight": 100,
     "ProfileImage": null,
     "PenaltyID": [
-      "penalty_03"
+      "penalty_02",
+      "penalty_03",
+      "penalty_04"
     ]
   },
   {
