@@ -82,7 +82,10 @@ public class TycoonMainUI : UIBase
     private void OnEnable()
     {
         GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetGoldText;
+        GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetMemory;
+        GameManager.Inst.Services.DayService.OnChangeDay += OnChangeDay;
         SetGoldText();
+        SetMemory();
         SetDayText();
         ChangePanel(TycoonPanelType.Quest);
     }
@@ -92,8 +95,16 @@ public class TycoonMainUI : UIBase
         if (GameManager.Inst != null)
         {
             GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetGoldText;
+            GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetMemory;
+            GameManager.Inst.Services.DayService.OnChangeDay -= OnChangeDay;
         }
     }
+
+    private void OnChangeDay(int day)
+    {
+        SetDayText();
+    }
+
 
     private void OnClickQuest()
     {
@@ -192,6 +203,12 @@ public class TycoonMainUI : UIBase
 
     private void SetMemory()
     {
+        if (Text_Memory == null)
+        {
+            return;
+        }
 
+        int memory = GameManager.Inst.Services.CurrencyService.CurrentMemoryFragment;
+        Text_Memory.text = $"{memory}";
     }
 }
