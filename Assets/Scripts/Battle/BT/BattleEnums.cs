@@ -36,3 +36,11 @@ public enum TargetSelectType
     LowestHpFriendly,
     Self
 }
+
+//SetActionResult 처리 결과 - 실패 사유를 구분 용도
+public enum ActionApplyResult
+{
+    Success = 0,
+    InsufficientEnergy,
+    TargetNotFound
+}
