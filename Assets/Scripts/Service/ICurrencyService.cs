@@ -13,4 +13,6 @@ public interface ICurrencyService
 
     int CurrentMemoryFragment { get; }
     void AddMemoryFragment(int amount);
+    int CurrentTodayMemoryFragment { get; }
+    void ResetTodayMemoryFragment();
 }
