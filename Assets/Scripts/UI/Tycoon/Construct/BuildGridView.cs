@@ -51,7 +51,8 @@ public class BuildGridView : ViewBase
         _viewModel.OnUnlockFloor += OnUnlockFloor;
         _viewModel.OnReloadGrid += RefreshAllRooms;
 
-
+        _viewModel.LoadGrid();
+        _viewModel.EnsureStairs();
         RefreshAllRooms();
         _viewModel.InvokeOnceOnInit();
     }
@@ -445,7 +446,6 @@ public class BuildGridView : ViewBase
         }
 
         _placedRoomObjects.Clear();
-
 
         foreach (KeyValuePair<GridCoord, SpriteRenderer> pair in _cellRenderers)
         {

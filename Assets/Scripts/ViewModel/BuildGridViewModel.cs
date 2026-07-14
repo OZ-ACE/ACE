@@ -629,6 +629,7 @@ public class BuildGridViewModel : ViewModelBase
     public void LoadGrid()
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+        Debug.Log(player.PlayerName);
 
         if (player == null || player.BuildGridData == null)
         {

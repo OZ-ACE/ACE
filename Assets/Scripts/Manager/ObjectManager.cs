@@ -8,6 +8,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
     [SerializeField] private GameObject Prefab_BuildGridView;
 
     private BuildGridView _buildGridView;
+    private GameObject _hero;
 
     public BuildGridView BuildGridView { get { return _buildGridView; } }
 
@@ -43,9 +44,19 @@ public class ObjectManager : SingletonBase<ObjectManager>
         Debug.Log("[ObjectManager] 건설 격자 생성 완료");
     }
 
+
+    ////////////////////////////////////////
+
     // 테스트용 임시 메서드
     public async UniTask SpawnHero(string heroID)
     {
         GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroID}");
+        _hero = prefab;
+    }
+
+    public void DestroyHeroAndMap()
+    {
+        Destroy(_hero);
+        Destroy(_buildGridView.gameObject);
     }
 }
