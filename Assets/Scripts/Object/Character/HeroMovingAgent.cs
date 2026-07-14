@@ -36,28 +36,32 @@ public class HeroMovingAgent : MonoBehaviour
 
         _movingToken = new CancellationTokenSource();
 
-        BuildGridData gridData = SaveManager.Inst.CurrentPlayerModel.BuildGridData;
-        List<PlacedRoomData> placedRooms = gridData.PlacedRooms;
-
         while (!_movingToken.Token.IsCancellationRequested)
         {
-            if (placedRooms.Count == 0)
+            var currentRooms = GameManager.Inst.Services.BuildService.GetBuildGridViewModel().GetPlacedRooms();
+
+            if (currentRooms.Count == 0)
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(MinDelay), cancellationToken: _movingToken.Token);
+                await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _movingToken.Token);
                 continue;
             }
 
-            int randomIndex = Random.Range(0, placedRooms.Count);
-            PlacedRoomData targetRoom = placedRooms[randomIndex];
-
+            int randomIndex = Random.Range(0, currentRooms.Count);
+            PlacedRoomData targetRoom = currentRooms[randomIndex];
             RoomData room = GameDataManager.Inst.GetData<RoomData>(targetRoom.RoomId);
+
+            if (room == null)
+            {
+                await UniTask.DelayFrame(1, cancellationToken: _movingToken.Token);
+                continue;
+            }
 
             Vector3 targetPos = GetRoomCenterPosition(targetRoom.Origin, room.GetSize());
 
             SetDestination(targetPos);
 
             await UniTask.WaitUntil(IsArrived, cancellationToken: _movingToken.Token);
-            
+
             float randomDelay = Random.Range(MinDelay, MaxDelay);
             await UniTask.Delay(TimeSpan.FromSeconds(randomDelay), cancellationToken: _movingToken.Token);
         }
