@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 439503d8de463e240b9afa5beb4c5791
+    m_Address: Prefabs/Room/Room_Stairs_Left
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 441d3d17b6bda2045a0d939db9733e36
     m_Address: Image/Button/Select
     m_ReadOnly: 0
@@ -55,6 +60,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 84be1d6b0445fe34480fd929910ccb8c
+    m_Address: Prefabs/Room/Room_Stairs_Right
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95bb9b1c840d31d42a11c5600046dddf
+    m_Address: Prefabs/Room/Room_Bathroom
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c13e3eb015e43e4f8bdd7e5ab4b5ae0
+    m_Address: Prefabs/Room/Room_Garden
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a2e0dc92988daea4da87c346f2f3cb33
     m_Address: Prefabs/UI/InventorySlot
     m_ReadOnly: 0
@@ -75,8 +95,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dcdf1f10d7c99944189439d75ecf82fe
+    m_Address: Prefabs/Room/Room_Office
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e9ed00b03569c1c4cafa60f1ab2490d7
     m_Address: Prefabs/Character/Hero/hero_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed687abd584b41548b3916b29aff3e4b
+    m_Address: Prefabs/Room/Room_0001
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

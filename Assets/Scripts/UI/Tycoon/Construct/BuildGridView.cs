@@ -5,7 +5,6 @@ using System.ComponentModel;
 using UnityEngine.EventSystems;
 using Cysharp.Threading.Tasks;
 
-
 public class BuildGridView : ViewBase
 {
     [Header("셀 프리팹 (반투명 사각형)")]
@@ -23,7 +22,6 @@ public class BuildGridView : ViewBase
 
     private BuildGridViewModel _viewModel;
     private Camera _mainCamera;
-
 
     private Dictionary<GridCoord, SpriteRenderer> _cellRenderers = new Dictionary<GridCoord, SpriteRenderer>();
     private Dictionary<GridCoord, GameObject> _placedRoomObjects = new Dictionary<GridCoord, GameObject>();
@@ -93,7 +91,6 @@ public class BuildGridView : ViewBase
         }
     }
 
-
     private void ApplyBuildMode (bool isBuildMode)
     {
         Debug.Log($"[BuildGridView] ApplyBuildMode({isBuildMode}), 오버레이생성됨={_isOverlayCreated}");
@@ -124,9 +121,6 @@ public class BuildGridView : ViewBase
         PrepareGhost(room);
     }
 
-
-
-
     //격자 범위만큼 셀 프리팹을 깔아 오버레이 생성
     private void CreateGridOverlay()
     {
@@ -144,6 +138,7 @@ public class BuildGridView : ViewBase
         _isOverlayCreated = true;
         Debug.Log($"[BuildGridView] 셀 오버레이 {_cellRenderers.Count}개 생성 (열린 최저층: {unlockedMin})");
     }
+
     private void CreateCell(GridCoord coord)
     {
         if (_cellRenderers.ContainsKey(coord) == true)
@@ -177,9 +172,6 @@ public class BuildGridView : ViewBase
 
         Debug.Log($"[BuildGridView] {newUnlockedMin}층 셀 추가 생성");
     }
-
-
-
     private void SetOverlayActive(bool isActive)
     {
         foreach (var pair  in _cellRenderers)
@@ -187,7 +179,6 @@ public class BuildGridView : ViewBase
             pair.Value.gameObject.SetActive(isActive);
         }
     }
-
 
     private void Update()
     {
@@ -215,7 +206,6 @@ public class BuildGridView : ViewBase
         }
     }
 
-
     //마우스가 올라간 칸을 하이라이트
     private void UpdateHover()
     {
@@ -239,7 +229,6 @@ public class BuildGridView : ViewBase
             _hasHover = true;
         }
     }
-
 
     // 하이라이트를 원래 색으로 되돌림
     private void ClearHover()
@@ -298,6 +287,7 @@ public class BuildGridView : ViewBase
             _ghostRenderer.color = (result == PlacementResult.Success) ? _ghostValidColor : _ghostInvalidColor;
         }
     }
+
     private void HideGhost()
     {
         if (_ghostObject != null)
@@ -305,8 +295,6 @@ public class BuildGridView : ViewBase
             _ghostObject.SetActive(false);
         }
     }
-
-
 
     // 클릭 배치
     private void UpdateClick()
@@ -381,8 +369,6 @@ public class BuildGridView : ViewBase
         }
     }
 
-
-
     // 방 건설
     private async UniTask OnPlaceRoom(PlacedRoomData placed)
     {
@@ -392,11 +378,23 @@ public class BuildGridView : ViewBase
             return;
         }
 
-        GameObject prefab = await LoadRoomPrefab(room);
-        if (prefab == null)
+        int currentFloor = Mathf.Abs(placed.Origin.Floor);
+        string finalPrefabPath = room.PrefabPath;
+
+        if (room.ID.Contains("Stair") || room.PrefabPath.Contains("Stair"))
         {
-            return;
+            if (currentFloor % 2 == 0)
+            {
+                finalPrefabPath = $"{room.PrefabPath}_Left";
+            }
+            else
+            {
+                finalPrefabPath = $"{room.PrefabPath}_Right";
+            }
         }
+
+        GameObject prefab = await LoadRoomPrefab(room.ID, finalPrefabPath);
+        if (prefab == null) return;
 
         Vector3 worldPos = GetRoomCenterPosition(placed.Origin, room.GetSize());
 
@@ -433,7 +431,6 @@ public class BuildGridView : ViewBase
     }
 
     // 방 생성
-
     private void RefreshAllRooms()
     {
         foreach (KeyValuePair<GridCoord, GameObject> pair in _placedRoomObjects)
@@ -454,6 +451,7 @@ public class BuildGridView : ViewBase
                 Destroy(pair.Value.gameObject);
             }
         }
+
         _cellRenderers.Clear();
         _isOverlayCreated = false;
 
@@ -467,8 +465,6 @@ public class BuildGridView : ViewBase
         NavMeshManager.Inst.BuildNavMesh();
         Debug.Log($"[BuildGridView] 방 {rooms.Count}개 재생성");
     }
-
-
 
     // 방 이동
     private void UpdateMove()
@@ -597,21 +593,24 @@ public class BuildGridView : ViewBase
     }
 
     // RoomData.PrefabPath로 방 프리팹을 로드
-    private async UniTask<GameObject> LoadRoomPrefab(RoomData room)
+    private async UniTask<GameObject> LoadRoomPrefab(string roomId, string prefabPath)
     {
-        if (_roomPrefabCache.TryGetValue(room.ID, out GameObject cached))
+        string cacheKey = $"{roomId}_{prefabPath}";
+
+        if (_roomPrefabCache.TryGetValue(cacheKey, out GameObject cached))
         {
             return cached;
         }
 
-        GameObject prefab = await ResourceManager.Inst.InstantiateAsync(room.PrefabPath);
+        GameObject prefab = await ResourceManager.Inst.LoadAsset<GameObject>(prefabPath);
+
         if (prefab == null)
         {
-            Debug.LogWarning($"[BuildGridView] 방 프리팹 없음: {room.PrefabPath}");
+            Debug.LogWarning($"[BuildGridView] 방 프리팹 없음: {prefabPath}");
             return null;
         }
 
-        _roomPrefabCache[room.ID] = prefab;
+        _roomPrefabCache[cacheKey] = prefab;
         return prefab;
     }
 }
