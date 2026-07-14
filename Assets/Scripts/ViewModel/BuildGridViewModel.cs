@@ -14,9 +14,19 @@ public class BuildGridViewModel : ViewModelBase
     private readonly BuildGridModel _buildGridModel;
     private readonly ICurrencyService _currencyService;
 
+
+
+
     public event Action<PlacedRoomData> OnPlaceRoom;
     public event Action<PlacedRoomData> OnRemoveRoom;
     public event Action<int> OnUnlockFloor;
+    public event Action OnReloadGrid;
+    public event Action OnClickOffice;
+
+
+
+
+
     public GridBounds Bounds { get { return _buildGridModel.Bounds; } }
 
     private List<string> _buildableRoomIds = new List<string>();
@@ -49,6 +59,8 @@ public class BuildGridViewModel : ViewModelBase
     private const string STAIR_ROOM_ID = "Room_Stairs";
     private const int STAIR_MIN_COLUMN = 10;   // 계단이 차지하는 시작 열
 
+    // 사무실 방 ID
+    private const string OFFICE_ROOM_ID = "Room_Office";
 
     //뷰가 바인딩
     private bool _isBuildMode;
@@ -105,6 +117,8 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
+
+
 
 
 
@@ -608,6 +622,38 @@ public class BuildGridViewModel : ViewModelBase
     }
 
 
+
+    // 평소(비건설) 상태에서 그리드를 클릭했을 때 처리
+    public void HandleNormalClick(GridCoord coord)
+    {
+        PlacedRoomData room = _buildGridModel.GetRoomAt(coord);
+        if (room == null)
+        {
+            return;
+        }
+
+        if (room.RoomId == OFFICE_ROOM_ID)
+        {
+            if (OnClickOffice != null)
+            {
+                OnClickOffice.Invoke();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //현재 슬롯의 그리드를 다시 불러온다 (슬롯 변경 시)
     public void ReloadGrid()
     {
@@ -621,7 +667,6 @@ public class BuildGridViewModel : ViewModelBase
     }
 
 
-    public event Action OnReloadGrid;
 
 
 
