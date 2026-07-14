@@ -68,7 +68,7 @@ public class CurrencyService : ICurrencyService
     }
 
 
-    /// <summary> 잔액 변동 알림 </summary>
+    // 잔액 변동 알림
     private void NotifyChange()
     {
         if (OnChangeCurrency != null)
