@@ -3,6 +3,7 @@ using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 // 전투 메인 UI 전체를 관리하는 스크립트 (배틀 로그 표시도 담당)
 public class BattleMainUI : UIBase
@@ -34,6 +35,10 @@ public class BattleMainUI : UIBase
     private string _pendingLogMessage;
 
     private BattleViewModel _viewModel;
+
+    //테스트용 적 ID 목록
+    [Header("BT 라운드 테스트")]
+    [SerializeField] private List<string> _testEnemyIdList = new List<string>();
 
     private void Start()
     {
@@ -267,9 +272,32 @@ public class BattleMainUI : UIBase
         _pendingActionResult = null;
     }
 
-    [ContextMenu("실제 액션 큐 빌드 테스트 (스폰된 유닛 기준)")]
-    private void Test_BuildActionQueue()
+    //[ContextMenu("실제 액션 큐 빌드 테스트 (스폰된 유닛 기준)")]
+    //private void Test_BuildActionQueue()
+    //{
+    //    if (BattleUnitTestSpawner.Inst == null)
+    //    {
+    //        Debug.LogWarning("[BattleMainUI] BattleUnitTestSpawner 인스턴스 없음");
+    //        return;
+    //    }
+
+    //    List<string> heroIds = BattleUnitTestSpawner.Inst.GetHeroIdList();
+    //    List<string> enemyIds = new List<string>();
+
+    //    List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(heroIds, enemyIds);
+    //    BattleManager.Inst.BuildActionQueue(turnOrder);
+    //    _viewModel.RefreshActionQueue();
+    //}
+
+    [ContextMenu("BT 라운드 액션 큐 통합 테스트")]
+    private async void Test_RunRoundActionQueue()
     {
+        if (_viewModel == null)
+        {
+            Debug.LogWarning("[BattleMainUI] BattleViewModel이 생성되지 않았습니다.");
+            return;
+        }
+
         if (BattleUnitTestSpawner.Inst == null)
         {
             Debug.LogWarning("[BattleMainUI] BattleUnitTestSpawner 인스턴스 없음");
@@ -277,10 +305,35 @@ public class BattleMainUI : UIBase
         }
 
         List<string> heroIds = BattleUnitTestSpawner.Inst.GetHeroIdList();
-        List<string> enemyIds = new List<string>();
+        List<string> enemyIds = new List<string>(_testEnemyIdList);
 
         List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(heroIds, enemyIds);
-        BattleManager.Inst.BuildActionQueue(turnOrder);
-        _viewModel.RefreshActionQueue();
+
+        if (turnOrder == null || turnOrder.Count <= 0)
+        {
+            Debug.LogWarning("[BattleMainUI] 전투에 참여할 유닛이 없습니다.");
+            return;
+        }
+
+        List<BattleUnitModel> heroList = new List<BattleUnitModel>();
+        List<BattleUnitModel> enemyList = new List<BattleUnitModel>();
+
+        foreach (BattleUnitModel unit in turnOrder)
+        {
+            if (unit.IsHero)
+            {
+                heroList.Add(unit);
+            }
+            else
+            {
+                enemyList.Add(unit);
+            }
+        }
+
+        await _viewModel.RunRoundAsync(
+            turnOrder,
+            heroList,
+            enemyList,
+            this.GetCancellationTokenOnDestroy());
     }
 }

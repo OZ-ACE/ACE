@@ -28,6 +28,18 @@ public class BattleViewModel : ViewModelBase
             unit.IsHero = true;
             unit.Speed = data.Speed;
             unit.AttackPower = data.AttackPower;
+            unit.MaxHp = data.MaxHp;
+            unit.CurrentHp = data.MaxHp;
+
+            foreach (HeroSkill heroSkill in GameDataManager.Inst.GetDataList<HeroSkill>())
+            {
+                if (heroSkill.HeroId != unit.ID)
+                {
+                    continue;
+                }
+
+                unit.SkillIdList.Add(heroSkill.ID);
+            }
 
             participats.Add(unit);
         }
@@ -46,6 +58,18 @@ public class BattleViewModel : ViewModelBase
             unit.IsHero = false;
             unit.Speed = data.Speed;
             unit.AttackPower = data.AttackPower;
+            unit.MaxHp = data.MaxHp;
+            unit.CurrentHp = data.MaxHp;
+
+            foreach (EnemySkill enemySkill in GameDataManager.Inst.GetDataList<EnemySkill>())
+            {
+                if (enemySkill.EnemyId != unit.ID)
+                {
+                    continue;
+                }
+
+                unit.SkillIdList.Add(enemySkill.ID);
+            }
 
             participats.Add(unit);
         }
