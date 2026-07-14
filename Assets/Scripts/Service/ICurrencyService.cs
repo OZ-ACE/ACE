@@ -10,9 +10,9 @@ public interface ICurrencyService
     bool IsAffordable(int amount);
     bool TrySpend(int amount);
     void AddGold(int amount);
-
     int CurrentMemoryFragment { get; }
     void AddMemoryFragment(int amount);
     int CurrentTodayMemoryFragment { get; }
     void ResetTodayMemoryFragment();
+    bool TryExchangeFragmentToGold(int fragmentAmount);
 }

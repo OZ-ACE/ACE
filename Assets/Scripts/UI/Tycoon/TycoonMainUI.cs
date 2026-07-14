@@ -40,7 +40,6 @@ public class TycoonMainUI : UIBase
     [SerializeField] Button Button_Pick;
     [SerializeField] Button Button_Hero;
     [SerializeField] Button Button_Construct;
-    [SerializeField] Button Button_Market;
     [SerializeField] Button Button_Battle;
     [SerializeField] Button Button_Setting;
     [SerializeField] Button Button_Home;
@@ -52,7 +51,6 @@ public class TycoonMainUI : UIBase
     //[SerializeField] GameObject Panel_Pick;
     [SerializeField] GameObject Panel_Hero;
     [SerializeField] GameObject Panel_Construct;
-    [SerializeField] GameObject Panel_Market;
     [SerializeField] List<PanelStruct> PanelList;
 
     [Header("텍스트")]
@@ -69,7 +67,6 @@ public class TycoonMainUI : UIBase
         Button_Pick.onClick.AddListener(OnClickPick);
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
-        Button_Market.onClick.AddListener(OnClickMarket);
         Button_Battle.onClick.AddListener(OnClickBattle);
         Button_Setting.onClick.AddListener(OnClickSetting);
         Button_Home.onClick.AddListener(OnClickHome);
@@ -85,7 +82,10 @@ public class TycoonMainUI : UIBase
     private void OnEnable()
     {
         GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetGoldText;
+        GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetMemory;
+        GameManager.Inst.Services.DayService.OnChangeDay += OnChangeDay;
         SetGoldText();
+        SetMemory();
         SetDayText();
         ChangePanel(TycoonPanelType.Quest);
     }
@@ -95,8 +95,16 @@ public class TycoonMainUI : UIBase
         if (GameManager.Inst != null)
         {
             GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetGoldText;
+            GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetMemory;
+            GameManager.Inst.Services.DayService.OnChangeDay -= OnChangeDay;
         }
     }
+
+    private void OnChangeDay(int day)
+    {
+        SetDayText();
+    }
+
 
     private void OnClickQuest()
     {
@@ -128,11 +136,6 @@ public class TycoonMainUI : UIBase
         UIManager.Inst.OpenSettingPopup();
         ChangePanel(TycoonPanelType.None);
         UpdateButton(TycoonPanelType.Setting).Forget();
-    }
-
-    private void OnClickMarket()  
-    {
-        ChangePanel(TycoonPanelType.Market);
     }
 
     private void OnClickBattle()
@@ -200,6 +203,12 @@ public class TycoonMainUI : UIBase
 
     private void SetMemory()
     {
+        if (Text_Memory == null)
+        {
+            return;
+        }
 
+        int memory = GameManager.Inst.Services.CurrencyService.CurrentMemoryFragment;
+        Text_Memory.text = $"{memory}";
     }
 }
