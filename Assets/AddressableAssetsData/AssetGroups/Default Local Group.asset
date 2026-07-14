@@ -46,7 +46,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6dd0074f4a9502f459dbf344bee96634
-    m_Address: Prefabs/Character/Hero/Hero_03
+    m_Address: Prefabs/Character/Hero/hero_03
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cff7fec997672ae46b4d6d5e639e0630
-    m_Address: Prefabs/Character/Hero/Hero_04
+    m_Address: Prefabs/Character/Hero/hero_04
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -111,7 +111,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f51d60bab3aada645a3178cba2551a5a
-    m_Address: Prefabs/Character/Hero/Hero_07
+    m_Address: Prefabs/Character/Hero/hero_07
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
