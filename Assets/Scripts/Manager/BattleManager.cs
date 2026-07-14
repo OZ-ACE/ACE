@@ -17,63 +17,37 @@ public class BattleManager : SingletonBase<BattleManager>
     private int _energyGauge;
     private int _currentRound;
 
-    //턴 순서 리스트를 받아와 각 유닛을 큐에 넣고, 마지막에 플레이어 개입 액션을 추가한다
+    //라운드 증가, 페널티 지속시간 갱신, 이전 액션 큐 초기화
     public void BuildActionQueue(List<BattleUnitModel> turnOrder)
     {
         _currentRound++;
         UpdatePenaltyDuration(turnOrder);
 
         _actionQueue.Clear();
-
-        foreach (BattleUnitModel unit in turnOrder)
-        {
-            BattleActionModel unitAction = new BattleActionModel();
-            unitAction.Unit = unit;
-            unitAction.IsPlayerAction = false;
-
-            _actionQueue.Enqueue(unitAction);
-        }
-
-        BattleActionModel playerAction = new BattleActionModel();
-        playerAction.Unit = null;
-        playerAction.IsPlayerAction = true;
-
-        _actionQueue.Enqueue(playerAction);
     }
 
-    //BT가 생성한 행동을 액션 큐의 해당 유닛 행동에 반영
-    public bool SetUnitAction(BattleActionModel createdAction)
+    //BT가 생성한 완성된 유닛 행동을 액션 큐에 추가
+    public bool EnqueueUnitAction(BattleActionModel createdAction)
     {
         if (createdAction == null || createdAction.Unit == null)
         {
             return false;
         }
 
-        foreach (BattleActionModel queuedAction in _actionQueue)
-        {
-            if (queuedAction.IsPlayerAction)
-            {
-                continue;
-            }
+        createdAction.IsPlayerAction = false;
+        _actionQueue.Enqueue(createdAction);
 
-            if (queuedAction.Unit == null || queuedAction.Unit.ID != createdAction.Unit.ID)
-            {
-                continue;
-            }
+        return true;
+    }
 
-            queuedAction.SkillId = createdAction.SkillId;
-            queuedAction.ActionType = createdAction.ActionType;
-            queuedAction.SkillType = createdAction.SkillType;
-            queuedAction.TargetType = createdAction.TargetType;
-            queuedAction.TargetSelectType = createdAction.TargetSelectType;
-            queuedAction.TargetCount = createdAction.TargetCount;
-            queuedAction.Target = createdAction.Target;
-            queuedAction.TargetList = createdAction.TargetList;
+    //모든 유닛 행동 생성 후 플레이어 개입 행동을 액션 큐 마지막에 추가
+    public void EnqueuePlayerAction()
+    {
+        BattleActionModel playerAction = new BattleActionModel();
+        playerAction.Unit = null;
+        playerAction.IsPlayerAction = true;
 
-            return true;
-        }
-
-        return false;
+        _actionQueue.Enqueue(playerAction);
     }
 
     //큐 안에서 targetUnitId를 가진 행동을 찾아 결과를 확정한다. 에너지 부족 시 선택 자체가 불가능하도록 UI에서 막을 예정이라, 여기서의 false 반환은 그 상황이 뚫렸을 때를 대비한 방어 코드이다

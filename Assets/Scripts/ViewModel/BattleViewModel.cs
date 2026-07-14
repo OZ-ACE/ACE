@@ -87,10 +87,17 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
-            BattleManager.Inst.SetUnitAction(createdAction);
+            bool isEnqueued = BattleManager.Inst.EnqueueUnitAction(createdAction);
+
+            if (isEnqueued == false)
+            {
+                continue;
+            }
+
             AddBattleLog(BuildUnitActionLogMessage(createdAction));
         }
 
+        BattleManager.Inst.EnqueuePlayerAction();
         RefreshActionQueue();
     }
 
@@ -111,8 +118,7 @@ public class BattleViewModel : ViewModelBase
 
         executor.BattleActionCreated += OnActionCreated;
 
-        string firstSkillId = GetFirstSkillId(unit);
-        bool isExecuted = executor.ExecuteBattleAction(unit, heroList, enemyList, firstSkillId);
+        bool isExecuted = executor.ExecuteBattleAction(unit, heroList, enemyList);
 
         if (isExecuted == false)
         {
@@ -128,17 +134,6 @@ public class BattleViewModel : ViewModelBase
         {
             executor.BattleActionCreated -= OnActionCreated;
         }
-    }
-
-    //유닛이 가진 스킬 목록 중 첫 번째를 가져온다. 민건님 BT 쪽 로직과 동일한 선택 기준
-    private string GetFirstSkillId(BattleUnitModel unit)
-    {
-        if (unit.SkillIdList == null || unit.SkillIdList.Count == 0)
-        {
-            return string.Empty;
-        }
-
-        return unit.SkillIdList[0];
     }
 
     //BattleManager의 실제 액션 큐 상태를 가져와 갱신한다. 큐가 변경되는 시점(라운드 시작, 액션 소비 등)마다 호출되어야 함
