@@ -75,7 +75,6 @@ public class BuildGridView : ViewBase
             _viewModel.OnRemoveRoom -= OnRemoveRoom;
             _viewModel.OnUnlockFloor -= OnUnlockFloor;
             _viewModel.OnReloadGrid -= RefreshAllRooms;
-
         }
     }
 
@@ -359,13 +358,10 @@ public class BuildGridView : ViewBase
         }
 
         bool success = _viewModel.TryDemolishRoom(coord);
+
         if (success == false)
         {
             Debug.Log($"[BuildGridView] 철거할 방 없음 @ {coord}");
-        }
-        else
-        {
-            NavMeshManager.Inst.BuildNavMesh();
         }
     }
 
@@ -394,7 +390,11 @@ public class BuildGridView : ViewBase
         }
 
         GameObject prefab = await LoadRoomPrefab(room.ID, finalPrefabPath);
-        if (prefab == null) return;
+
+        if (prefab == null)
+        {
+            return;
+        }
 
         Vector3 worldPos = GetRoomCenterPosition(placed.Origin, room.GetSize());
 
@@ -403,7 +403,7 @@ public class BuildGridView : ViewBase
 
         _placedRoomObjects[placed.Origin] = roomObj;
 
-        NavMeshManager.Inst.BuildNavMesh();
+        NavMeshManager.Inst.UpdateNavMesh();
     }
 
     // 방의 중앙 월드 좌표
@@ -423,10 +423,13 @@ public class BuildGridView : ViewBase
     {
         if (_placedRoomObjects.TryGetValue(removed.Origin, out var roomObj))
         {
+            RoomData room = GameDataManager.Inst.GetData<RoomData>(removed.RoomId);
+
+            roomObj.gameObject.SetActive(false);
             Destroy(roomObj);
             _placedRoomObjects.Remove(removed.Origin);
 
-            NavMeshManager.Inst.BuildNavMesh();
+            NavMeshManager.Inst.UpdateNavMesh();
         }
     }
 

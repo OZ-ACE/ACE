@@ -69,8 +69,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeroMovingAgent
   HeroAgent: {fileID: 7873357647044564272}
-  MinDelay: 3
-  MaxDelay: 7
+  MinDelay: 1
+  MaxDelay: 3
 --- !u!1001 &6399410843386543541
 PrefabInstance:
   m_ObjectHideFlags: 0

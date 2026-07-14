@@ -400,8 +400,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 0
-  m_StartPoint: {x: 0.00000005492656, y: 1.0378505, z: 0.04085732}
-  m_EndPoint: {x: 0.000000012447032, y: 0, z: 0.93451315}
+  m_StartPoint: {x: 0.00000013732414, y: 1.0895575, z: -0.017941613}
+  m_EndPoint: {x: 0.00000007778881, y: -0.034644037, z: 0.9826398}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -442,7 +442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1313313051825460820, guid: 192b01c3049395c40a8e929485091a0b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.75
+      value: 8.4
       objectReference: {fileID: 0}
     - target: {fileID: 1313313051825460820, guid: 192b01c3049395c40a8e929485091a0b, type: 3}
       propertyPath: m_LocalPosition.y
