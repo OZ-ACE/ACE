@@ -64,8 +64,7 @@ public class BattleBTIntegrationTest : MonoBehaviour
         bool isExecuted = BattleBTExecutor.ExecuteBattleAction(
             enemyUnit,
             heroList,
-            enemyList,
-            EnemySkillId);
+            enemyList);
 
         if (isExecuted == false)
         {
@@ -111,8 +110,7 @@ public class BattleBTIntegrationTest : MonoBehaviour
         bool isExecuted = BattleBTExecutor.ExecuteBattleAction(
             heroUnit,
             heroList,
-            enemyList,
-            HeroSkillId);
+            enemyList);
 
         if (isExecuted == false)
         {
@@ -124,7 +122,7 @@ public class BattleBTIntegrationTest : MonoBehaviour
     {
         _createdActionEventCount++;
 
-        bool isApplied = BattleManager.Inst.SetUnitAction(battleAction);
+        bool isApplied = BattleManager.Inst.EnqueueUnitAction(battleAction);
 
         Debug.Log(
             $"[BattleBTIntegrationTest] 이벤트 횟수: {_createdActionEventCount}, " +

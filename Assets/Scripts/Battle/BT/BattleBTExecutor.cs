@@ -50,13 +50,11 @@ public class BattleBTExecutor : MonoBehaviour
     public bool ExecuteBattleAction(
         BattleUnitModel unit,
         List<BattleUnitModel> heroList,
-        List<BattleUnitModel> enemyList,
-        string skillId)
+        List<BattleUnitModel> enemyList)
     {
         if (BattleBTContext == null ||
             BehaviorGraphAgent == null ||
-            unit == null ||
-            string.IsNullOrEmpty(skillId))
+            unit == null)
         {
             return false;
         }
@@ -66,9 +64,9 @@ public class BattleBTExecutor : MonoBehaviour
 
         bool isContextSet = BehaviorGraphAgent.SetVariableValue("BattleContext", BattleBTContext);
 
-        bool isSkillIdSet = BehaviorGraphAgent.SetVariableValue("SkillId", skillId);
+        bool isSkillIdReset = BehaviorGraphAgent.SetVariableValue("SkillId", string.Empty);
 
-        if (isContextSet == false || isSkillIdSet == false)
+        if (isContextSet == false || isSkillIdReset == false)
         {
             return false;
         }

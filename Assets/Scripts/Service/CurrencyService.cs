@@ -109,8 +109,39 @@ public class CurrencyService : ICurrencyService
         }
 
         player.MemoryFragment += amount;
+        player.TodayMemoryFragment += amount;
 
         NotifyChange();
-        Debug.Log($"[CurrencyService] 기억의파편 {amount} 획득 → 잔액 {player.MemoryFragment}");
+        Debug.Log($"[CurrencyService] 기억의파편 {amount} 획득 → 잔액 {player.MemoryFragment}, 오늘치 {player.TodayMemoryFragment}");
+    }
+
+    public int CurrentTodayMemoryFragment
+    {
+        get
+        {
+            PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+            if (player == null)
+            {
+                return 0;
+            }
+
+            return player.TodayMemoryFragment;
+        }
+    }
+
+    //마감 정산 처리 시 성광님 쪽에서 호출, 오늘치 누적량을 0으로 초기화
+    public void ResetTodayMemoryFragment()
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+        if (player == null)
+        {
+            return;
+        }
+
+        player.TodayMemoryFragment = 0;
+
+        NotifyChange();
     }
 }
