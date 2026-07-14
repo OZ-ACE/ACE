@@ -40,7 +40,6 @@ public class TycoonMainUI : UIBase
     [SerializeField] Button Button_Pick;
     [SerializeField] Button Button_Hero;
     [SerializeField] Button Button_Construct;
-    [SerializeField] Button Button_Market;
     [SerializeField] Button Button_Battle;
     [SerializeField] Button Button_Setting;
     [SerializeField] Button Button_Home;
@@ -52,7 +51,6 @@ public class TycoonMainUI : UIBase
     //[SerializeField] GameObject Panel_Pick;
     [SerializeField] GameObject Panel_Hero;
     [SerializeField] GameObject Panel_Construct;
-    [SerializeField] GameObject Panel_Market;
     [SerializeField] List<PanelStruct> PanelList;
 
     [Header("텍스트")]
@@ -69,7 +67,6 @@ public class TycoonMainUI : UIBase
         Button_Pick.onClick.AddListener(OnClickPick);
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
-        Button_Market.onClick.AddListener(OnClickMarket);
         Button_Battle.onClick.AddListener(OnClickBattle);
         Button_Setting.onClick.AddListener(OnClickSetting);
         Button_Home.onClick.AddListener(OnClickHome);
@@ -128,11 +125,6 @@ public class TycoonMainUI : UIBase
         UIManager.Inst.OpenSettingPopup();
         ChangePanel(TycoonPanelType.None);
         UpdateButton(TycoonPanelType.Setting).Forget();
-    }
-
-    private void OnClickMarket()  
-    {
-        ChangePanel(TycoonPanelType.Market);
     }
 
     private void OnClickBattle()
