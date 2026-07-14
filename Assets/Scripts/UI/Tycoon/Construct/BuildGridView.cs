@@ -182,9 +182,14 @@ public class BuildGridView : ViewBase
 
     private void Update()
     {
-
-        if (_viewModel == null ||  _viewModel.IsBuildMode == false)
+        if (_viewModel == null)
         {
+            return;
+        }
+
+        if (_viewModel.IsBuildMode == false)
+        {
+            HandleNormalClick();
             return;
         }
 
@@ -195,7 +200,7 @@ public class BuildGridView : ViewBase
             HideGhost();
             UpdateDemolishClick();
         }
-        else if (_viewModel.IsMoveMode == true) 
+        else if (_viewModel.IsMoveMode == true)
         {
             UpdateMove();
         }
@@ -577,6 +582,35 @@ public class BuildGridView : ViewBase
         }
         return true;
     }
+
+
+    //평소 상태에서 방을 클릭하면 뷰모델에 전달
+    private void HandleNormalClick()
+    {
+        if (Mouse.current == null)
+        {
+            return;
+        }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame == false)
+        {
+            return;
+        }
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject() == true)
+        {
+            return;
+        }
+
+        if (TryGetMouseCoord(out GridCoord coord) == false)
+        {
+            return;
+        }
+
+        _viewModel.HandleNormalClick(coord);
+    }
+
+
 
     // 공통: 마우스 셀 좌표
     private bool TryGetMouseCoord(out GridCoord coord)

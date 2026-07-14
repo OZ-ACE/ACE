@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class ShopView : ViewBase
@@ -13,6 +14,9 @@ public class ShopView : ViewBase
 
     [Header("Gold 표시")]
     [SerializeField] private TextMeshProUGUI Text_Gold;
+
+    [Header("닫기")]
+    [SerializeField] private Button Button_Close;
 
     private ShopViewModel _viewModel;
     private List<ShopSlot> _activeSlots = new List<ShopSlot>();
@@ -38,6 +42,9 @@ public class ShopView : ViewBase
     {
         if (_viewModel == null)
         {
+            Button_Close.onClick.RemoveListener(OnClickClose);
+            Button_Close.onClick.AddListener(OnClickClose);
+
             ShopViewModel vm = GameManager.Inst.Services.ShopService.GetShopViewModel();
             if (vm == null)
             {
@@ -53,7 +60,7 @@ public class ShopView : ViewBase
         }
     }
 
-    /// <summary> 공유 인벤토리 뷰모델 확보 (없으면 초기화) </summary>
+    //공유 인벤토리 뷰모델 확보 (없으면 초기화) 
     private InventoryViewModel GetInventoryViewModel()
     {
         InventoryViewModel inventoryVM = GameManager.Inst.InventoryViewModel;
@@ -74,6 +81,11 @@ public class ShopView : ViewBase
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.OnPurchaseItem -= OnPurchaseItem;
         }
+    }
+
+    private void OnClickClose()
+    {
+        UIManager.Inst.CloseShopUI();
     }
 
     private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -119,7 +131,7 @@ public class ShopView : ViewBase
     {
         foreach (ShopSlot slot in _activeSlots)
         {
-            if (slot != null)   // ★ 파괴된 오브젝트 건너뛰기
+            if (slot != null)   
             {
                 Destroy(slot.gameObject);
             }
@@ -128,13 +140,13 @@ public class ShopView : ViewBase
     }
 
 
-    /// <summary> 구매 발생 시 모든 슬롯 갱신 (재고·버튼 상태) </summary>
+    // 구매 발생 시 모든 슬롯 갱신 (재고·버튼 상태) 
     private void OnPurchaseItem(string itemID)
     {
         RefreshAllSlots();
     }
 
-    /// <summary> 모든 슬롯의 재고·버튼 상태 갱신 </summary>
+    //  모든 슬롯의 재고·버튼 상태 갱신
     private void RefreshAllSlots()
     {
         foreach (ShopSlot slot in _activeSlots)

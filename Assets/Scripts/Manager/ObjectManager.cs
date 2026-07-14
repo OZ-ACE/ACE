@@ -40,9 +40,21 @@ public class ObjectManager : SingletonBase<ObjectManager>
             return;
         }
 
-        _buildGridView.Bind(GameManager.Inst.Services.BuildService.GetBuildGridViewModel());
+        BuildGridViewModel viewModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
+
+        viewModel.OnClickOffice -= OnClickOffice;
+        viewModel.OnClickOffice += OnClickOffice;
+
+        _buildGridView.Bind(viewModel);
         Debug.Log("[ObjectManager] 건설 격자 생성 완료");
     }
+
+    private void OnClickOffice()
+    {
+        UIManager.Inst.OpenOfficeUI();
+    }
+
+
 
 
     ////////////////////////////////////////
