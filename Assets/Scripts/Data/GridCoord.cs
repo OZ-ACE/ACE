@@ -3,7 +3,6 @@
 [Serializable]
 public struct GridCoord : IEquatable<GridCoord>
 {
-
     //좌표(Floor = 층, Column = 열)
     //Floor : 양수=지상, 0=1층(표면), 음수=지하
     public int Floor;
@@ -14,7 +13,6 @@ public struct GridCoord : IEquatable<GridCoord>
         Floor = floor;
         Column = column;
     }
-
 
     //동일 좌표인지 비교
     public bool Equals(GridCoord other)
@@ -34,7 +32,6 @@ public struct GridCoord : IEquatable<GridCoord>
         return (Floor * 397) ^ Column;
     }
 
-
     // == 를 쓸때 int나 string 같은 건 미리 정의되어 있지만 GridCoord는 없어서 정의해주는 것으로
     // 추후 (a.Equals(b)) 형태가 아닌 a == b 로 쓰고 싶어서 추가함
     public static bool operator ==(GridCoord a, GridCoord b)
@@ -51,6 +48,4 @@ public struct GridCoord : IEquatable<GridCoord>
     {
         return $"(F:{Floor}, C:{Column}";
     }
-
-
 }

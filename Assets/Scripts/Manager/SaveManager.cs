@@ -86,6 +86,8 @@ public class SaveManager : SingletonBase<SaveManager>
         newPlayer.Inventory = SetDefaultItem();
         newPlayer.HeroStats = SetDefaultHero();
 
+        newPlayer.BuildGridData = new BuildGridData();
+
         CurrentPlayerModel = newPlayer;
         return newPlayer;
     }
@@ -132,12 +134,6 @@ public class SaveManager : SingletonBase<SaveManager>
     public void SetCurrentSlotIndex(int slotIndex)
     {
         CurrentSlotIndex = slotIndex;
-        CurrentPlayerModel = RequestLoadData(slotIndex);
-    }
-
-    public void SetPlayerName(string name)
-    {
-        CurrentPlayerModel.PlayerName = name;
     }
 
     public bool HasSaveFile(int slotIndex)

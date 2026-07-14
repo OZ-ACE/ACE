@@ -8,8 +8,6 @@ public class GridSystem
     public float CellHeight { get; private set; }
     public Vector2 Origin { get; private set; } //원점
 
-
-
     //그리드 시스템
     public GridSystem(float cellWidth, float cellHeight, Vector2 origin)
     {
@@ -24,6 +22,7 @@ public class GridSystem
     {
         float x = Origin.x + coord.Column * CellWidth;
         float y = Origin.y + coord.Floor * CellHeight;
+
         return new Vector3(x, y, 0f);
     }
 
@@ -32,6 +31,7 @@ public class GridSystem
     {
         int column = Mathf.RoundToInt((world.x - Origin.x)/CellWidth);
         int floor = Mathf.RoundToInt((world.y - Origin.y) / CellHeight);
+
         return new GridCoord(floor, column);
     }
 
@@ -39,6 +39,7 @@ public class GridSystem
     public List<GridCoord> GetOccupiedCoords(GridCoord originCoord, Vector2Int size)
     {
         var result = new List<GridCoord>();
+
         for (int c = 0; c < size.x; c++)
         {
 
@@ -47,9 +48,7 @@ public class GridSystem
                 result.Add(new GridCoord(originCoord.Floor + f, originCoord.Column + c));
             }
         }
+
         return result;
     }
 }
-
-
-
