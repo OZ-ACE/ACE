@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public class ObjectManager : SingletonBase<ObjectManager>
@@ -8,16 +7,15 @@ public class ObjectManager : SingletonBase<ObjectManager>
     [SerializeField] private GameObject Prefab_BuildGridView;
 
     private BuildGridView _buildGridView;
-    private GameObject _hero;
 
     public BuildGridView BuildGridView { get { return _buildGridView; } }
 
     private void Start()
     {
-        //CreateBuildGridView();
+        CreateBuildGridView();
     }
 
-    public void CreateBuildGridView()
+    private void CreateBuildGridView()
     {
         if (Prefab_BuildGridView == null)
         {
@@ -55,20 +53,4 @@ public class ObjectManager : SingletonBase<ObjectManager>
     }
 
 
-
-
-    ////////////////////////////////////////
-
-    // 테스트용 임시 메서드
-    public async UniTask SpawnHero(string heroID)
-    {
-        GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroID}");
-        _hero = prefab;
-    }
-
-    public void DestroyHeroAndMap()
-    {
-        Destroy(_hero);
-        Destroy(_buildGridView.gameObject);
-    }
 }

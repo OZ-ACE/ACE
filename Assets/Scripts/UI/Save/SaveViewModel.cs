@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
-using UnityEngine;
 
 public class SaveViewModel : ViewModelBase
 {
@@ -70,7 +68,6 @@ public class SaveViewModel : ViewModelBase
     public void RequestConfirmSlot(int slotIndex)
     {
         SaveManager.Inst.SetCurrentSlotIndex(slotIndex);
-        SaveManager.Inst.RequestLoadData(slotIndex);
         GameManager.Inst.Services.BuildService.GetBuildGridViewModel().ReloadGrid();
     }
 }
