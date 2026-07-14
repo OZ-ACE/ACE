@@ -25,4 +25,17 @@ public class DayServiceTester : MonoBehaviour
         DayService day = GameManager.Inst.Services.DayService;
         Debug.Log($"[Tester] Day {day.CurrentDay}, 전투완료: {day.IsBattleDoneToday}");
     }
+
+    [ContextMenu("파편 100 추가")]
+    private void AddFragment()
+    {
+        GameManager.Inst.Services.CurrencyService.AddMemoryFragment(100);
+    }
+
+    [ContextMenu("파편 30 → Gold 교환")]
+    private void ExchangeFragment()
+    {
+        bool ok = GameManager.Inst.Services.CurrencyService.TryExchangeFragmentToGold(30);
+        Debug.Log($"[Tester] 교환: {(ok ? "성공" : "실패")}");
+    }
 }
