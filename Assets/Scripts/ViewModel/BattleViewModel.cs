@@ -152,7 +152,11 @@ public class BattleViewModel : ViewModelBase
 
         try
         {
-            return await completionSource.Task.AttachExternalCancellation(token);
+            BattleActionModel createdAction = await completionSource.Task.AttachExternalCancellation(token);
+
+            await UniTask.Yield(PlayerLoopTiming.Update, token);
+
+            return createdAction;
         }
         finally
         {

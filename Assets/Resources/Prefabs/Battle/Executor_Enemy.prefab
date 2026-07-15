@@ -73,18 +73,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: 0}
+  m_Graph: {fileID: -5063954616835489409, guid: 4a9ab73ca32f24b4dbca38bae994e7dc, type: 2}
   m_BlackboardVariableOverridesList:
-  - rid: 7742168541890084967
-  - rid: 7742168541890084968
-  - rid: 7742168541890084969
+  - rid: 7742168586824450122
+  - rid: 7742168586824450123
   m_OriginalGraph: {fileID: -5063954616835489409, guid: 4a9ab73ca32f24b4dbca38bae994e7dc, type: 2}
-  m_IsInitialised: 1
-  m_IsStarted: 1
+  m_IsInitialised: 0
+  m_IsStarted: 0
   references:
     version: 2
     RefIds:
-    - rid: 7742168541890084967
+    - rid: 7742168586824450122
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -92,7 +91,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 6855461485131353058}
-    - rid: 7742168541890084968
+    - rid: 7742168586824450123
       type: {class: 'BlackboardVariable`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -100,14 +99,6 @@ MonoBehaviour:
           m_Value1: 7863247389164939690
         Name: BattleContext
         m_Value: {fileID: 3035205806434977379}
-    - rid: 7742168541890084969
-      type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 8123145217991461409
-          m_Value1: 13241129552532214972
-        Name: SkillId
-        m_Value: 
 --- !u!114 &7049210813975201706
 MonoBehaviour:
   m_ObjectHideFlags: 0

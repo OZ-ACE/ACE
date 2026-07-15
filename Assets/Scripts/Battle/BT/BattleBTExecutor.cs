@@ -10,13 +10,7 @@ public class BattleBTExecutor : MonoBehaviour
 
     public event Action<BattleActionModel> BattleActionCreated;
 
-    private void Awake()
-    {
-        if (BehaviorGraphAgent != null)
-        {
-            BehaviorGraphAgent.enabled = false;
-        }
-    }
+    private bool _hasStarted;
 
     private void OnEnable()
     {
@@ -64,17 +58,22 @@ public class BattleBTExecutor : MonoBehaviour
 
         bool isContextSet = BehaviorGraphAgent.SetVariableValue("BattleContext", BattleBTContext);
 
-        bool isSkillIdReset = BehaviorGraphAgent.SetVariableValue("SkillId", string.Empty);
-
-        if (isContextSet == false || isSkillIdReset == false)
+        if (isContextSet == false)
         {
             return false;
         }
 
-        BehaviorGraphAgent.enabled = true;
-        BehaviorGraphAgent.Restart();
+        if (_hasStarted == false)
+        {
+            BehaviorGraphAgent.Start();
+            _hasStarted = true;
+        }
+        else
+        {
+            BehaviorGraphAgent.Restart();
+        }
 
-        return true;
+            return true;
     }
 
     public bool TryGetCreatedBattleAction(out BattleActionModel battleAction)
@@ -102,10 +101,5 @@ public class BattleBTExecutor : MonoBehaviour
     private void OnBattleActionCreated(BattleActionModel battleAction)
     {
         BattleActionCreated?.Invoke(battleAction);
-
-        if (BehaviorGraphAgent != null)
-        {
-            BehaviorGraphAgent.enabled = false;
-        }
     }
 }

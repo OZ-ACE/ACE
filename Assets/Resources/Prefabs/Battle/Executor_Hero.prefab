@@ -73,17 +73,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: 0}
+  m_Graph: {fileID: 5059855043438149418, guid: 282872eecf19566468ef5d12905183a5, type: 2}
   m_BlackboardVariableOverridesList:
-  - rid: 7742168541890084967
-  - rid: 7742168541890085152
+  - rid: 7742168586824450124
+  - rid: 7742168586824450125
   m_OriginalGraph: {fileID: 5059855043438149418, guid: 282872eecf19566468ef5d12905183a5, type: 2}
-  m_IsInitialised: 1
-  m_IsStarted: 1
+  m_IsInitialised: 0
+  m_IsStarted: 0
   references:
     version: 2
     RefIds:
-    - rid: 7742168541890084967
+    - rid: 7742168586824450124
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -91,7 +91,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 8712819951427567428}
-    - rid: 7742168541890085152
+    - rid: 7742168586824450125
       type: {class: 'BlackboardVariable`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
