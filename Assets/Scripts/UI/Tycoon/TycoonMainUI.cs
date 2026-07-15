@@ -180,8 +180,6 @@ public class TycoonMainUI : UIBase
 
     private void OnClickHome()
     {
-        ObjectManager.Inst.DestroyHeroAndMap();         // 테스트
-
         UIManager.Inst.OpenTitleUI();
         UIManager.Inst.CloseTycoonMainUI();
     }
