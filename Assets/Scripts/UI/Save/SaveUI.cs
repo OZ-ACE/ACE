@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
-using UnityEngine.Pool;
 using UnityEngine.UI;
 
 public class SaveUI : UIBase
 {
     [SerializeField] private Button Button_Close;
-    [SerializeField] private GameObject Prefab_Slot;
+    [SerializeField] private SaveSlot Prefab_Slot;
     [SerializeField] private Transform Transform_SlotParent;
     [SerializeField] private GameObject Text_InfoText;
 
     private SaveViewModel _saveVM;
 
-    private IObjectPool<SaveSlot> _slotPool;
+    private ObjectPooling<SaveSlot> _slotPool;
     private List<SaveSlot> _saveSlots = new List<SaveSlot>();
 
     private void Awake()
@@ -23,7 +22,7 @@ public class SaveUI : UIBase
         _saveVM = SaveManager.Inst.SaveVM;
         _saveVM.InvokeOnceOnInit();
 
-        _slotPool = new ObjectPool<SaveSlot>(CreateSlotInstance, GetSlot, ReleaseSlot, DestroySlot, true, 5, 20);
+        _slotPool = new ObjectPooling<SaveSlot>(Prefab_Slot, Transform_SlotParent, 5, 20);
     }
 
     private void OnEnable()
@@ -54,27 +53,6 @@ public class SaveUI : UIBase
                 RefreshSlotViews();
                 break;
         }
-    }
-
-    private SaveSlot CreateSlotInstance()
-    {
-        GameObject prefab = Instantiate(Prefab_Slot, Transform_SlotParent);
-        return prefab.GetComponent<SaveSlot>();
-    }
-
-    private void GetSlot(SaveSlot slot)
-    {
-        slot.gameObject.SetActive(true);
-    }
-
-    private void ReleaseSlot(SaveSlot slot)
-    {
-        slot.gameObject.SetActive(false);
-    }
-
-    private void DestroySlot(SaveSlot slot)
-    {
-        Destroy(slot.gameObject);
     }
 
     private void RefreshSlotViews()

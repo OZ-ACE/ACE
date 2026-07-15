@@ -266,6 +266,10 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 5114975155138864792, guid: 7c691629d11923a47beab944aa443942, type: 3}
+      propertyPath: Prefab_OfficeRoot
+      value: 
+      objectReference: {fileID: 1778206683947138291, guid: 3ce407f782de42b45be9fee5bc198a53, type: 3}
     - target: {fileID: 5907261905108152095, guid: 7c691629d11923a47beab944aa443942, type: 3}
       propertyPath: 'NavMeshSurface.Array.data[0]'
       value: 

@@ -1,22 +1,20 @@
-﻿using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class HeroUI : UIBase
 {
-    [SerializeField] private GameObject Prefab_Slot;
+    [SerializeField] private HeroSlot Prefab_Slot;
     [SerializeField] private Transform Transform_Content;
     [SerializeField] private HeroHotBar HeroHotBar;
 
     private List<HeroSlot> _activeSlots = new List<HeroSlot>();
     private HeroViewModel _currentVM;
 
-    private IObjectPool<HeroSlot> _slotPool;
+    private ObjectPooling<HeroSlot> _slotPool;
 
     private void Awake()
     {
-        _slotPool = new ObjectPool<HeroSlot>(CreateSlotInstance, GetSlot, ReleaseSlot, DestroySlot, true, 3, 10);
+        _slotPool = new ObjectPooling<HeroSlot>(Prefab_Slot, Transform_Content, 3, 10);
     }
 
     private void OnEnable()
@@ -33,27 +31,6 @@ public class HeroUI : UIBase
             _currentVM.IsSelect = false;
             _currentVM = null;
         }
-    }
-
-    private HeroSlot CreateSlotInstance()
-    {
-        GameObject prefab = Instantiate(Prefab_Slot, Transform_Content);
-        return prefab.GetComponent<HeroSlot>();
-    }
-
-    private void GetSlot(HeroSlot slot)
-    {
-        slot.gameObject.SetActive(true);
-    }
-
-    private void ReleaseSlot(HeroSlot slot)
-    {
-        slot.gameObject.SetActive(false);
-    }
-
-    private void DestroySlot(HeroSlot slot)
-    {
-        Destroy(slot.gameObject);
     }
 
     private void RefreshHeroList()

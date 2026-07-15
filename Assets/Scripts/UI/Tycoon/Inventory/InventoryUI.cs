@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Pool;
 using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
@@ -12,7 +11,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Text_SelectDescription;
 
     [SerializeField] private Transform Transform_SlotParent;
-    [SerializeField] private GameObject Prefab_InventorySlot;
+    [SerializeField] private InventorySlot Prefab_InventorySlot;
 
     [Header("판매")]
     [SerializeField] private Button Button_Sell;
@@ -21,12 +20,12 @@ public class InventoryUI : MonoBehaviour
     private ShopViewModel _shopVM;
     private InventoryViewModel _inventoryVM;
 
-    private IObjectPool<InventorySlot> _slotPool;
+    private ObjectPooling<InventorySlot> _slotPool;
     private List<InventorySlot> _activeSlots = new List<InventorySlot>();
 
     private void Awake()
     {
-        _slotPool = new ObjectPool<InventorySlot>(CreateSlotInstance, GetSlot, ReleaseSlot, DestroySlot, true, 12, 30);
+        _slotPool = new ObjectPooling<InventorySlot>(Prefab_InventorySlot, Transform_SlotParent, 12, 30);
     }
 
     private void OnEnable()
@@ -108,27 +107,6 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    private InventorySlot CreateSlotInstance()
-    {
-        GameObject slot = Instantiate(Prefab_InventorySlot, Transform_SlotParent);
-        return slot.GetComponent<InventorySlot>();
-    }
-
-    private void GetSlot(InventorySlot slot)
-    {
-        slot.gameObject.SetActive(true);
-    }
-
-    private void ReleaseSlot(InventorySlot slot)
-    {
-        slot.gameObject.SetActive(false);
-    }
-
-    private void DestroySlot(InventorySlot slot)
-    {
-        Destroy(slot.gameObject);
-    }
-
     private void SetInventoryList()
     {
         foreach (InventorySlot slot in _activeSlots)
@@ -180,7 +158,6 @@ public class InventoryUI : MonoBehaviour
             slot.SetBackground(false);
         }
     }
-
 
     //판매 버튼 클릭
     private void OnClickSell()
