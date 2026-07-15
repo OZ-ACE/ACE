@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 // 전투 메인 UI 전체를 관리하는 스크립트 (배틀 로그 표시도 담당)
 public class BattleMainUI : UIBase
@@ -40,6 +41,12 @@ public class BattleMainUI : UIBase
     [Header("BT 라운드 테스트")]
     [SerializeField] private List<string> _testEnemyIdList = new List<string>();
 
+    [Header("전투 시작")]
+    [SerializeField] private Button Button_StartBattle;
+    private bool _isBattleRunning;
+
+    private const int MaxRoundSafetyLimit = 15; //혹시 모를 무한루프 방지용 라운드 상한
+
     private void Start()
     {
         _viewModel = new BattleViewModel();
@@ -57,6 +64,7 @@ public class BattleMainUI : UIBase
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
         Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
+        Button_StartBattle.onClick.AddListener(OnClickStartBattle);
     }
 
     private void BindBattleUnitSpawner()
@@ -105,6 +113,7 @@ public class BattleMainUI : UIBase
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
             Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
+            Button_StartBattle.onClick.RemoveListener(OnClickStartBattle);
         }
 
         if (BattleUnitTestSpawner.Inst != null)
@@ -335,5 +344,87 @@ public class BattleMainUI : UIBase
             heroList,
             enemyList,
             this.GetCancellationTokenOnDestroy());
+    }
+
+    //전투 시작 버튼 - 스폰된 히어로와 테스트 적 목록으로 자동 진행 루프를 시작한다
+    private void OnClickStartBattle()
+    {
+        if (_isBattleRunning)
+        {
+            Debug.LogWarning("[BattleMainUI] 이미 전투가 진행 중입니다.");
+            return;
+        }
+
+        if (BattleUnitTestSpawner.Inst == null)
+        {
+            Debug.LogWarning("[BattleMainUI] BattleUnitTestSpawner 인스턴스 없음");
+            return;
+        }
+
+        List<string> heroIds = BattleUnitTestSpawner.Inst.GetHeroIdList();
+        List<string> enemyIds = new List<string>(_testEnemyIdList);
+
+        List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(heroIds, enemyIds);
+
+        if (turnOrder == null || turnOrder.Count <= 0)
+        {
+            Debug.LogWarning("[BattleMainUI] 전투에 참여할 유닛이 없습니다.");
+            return;
+        }
+
+        List<BattleUnitModel> heroList = new List<BattleUnitModel>();
+        List<BattleUnitModel> enemyList = new List<BattleUnitModel>();
+
+        foreach (BattleUnitModel unit in turnOrder)
+        {
+            if (unit.IsHero)
+            {
+                heroList.Add(unit);
+            }
+            else
+            {
+                enemyList.Add(unit);
+            }
+        }
+
+        _isBattleRunning = true;
+        RunBattleLoopAsync(turnOrder, heroList, enemyList, this.GetCancellationTokenOnDestroy()).Forget();
+    }
+
+    //라운드를 자동 반복 진행하다가 승패가 나면 보상 지급 후 종료한다
+    private async UniTaskVoid RunBattleLoopAsync(
+        List<BattleUnitModel> turnOrder,
+        List<BattleUnitModel> heroList,
+        List<BattleUnitModel> enemyList,
+        CancellationToken token)
+    {
+        try
+        {
+            BattleManager.Inst.ResetBattleState();
+
+            while (token.IsCancellationRequested == false)
+            {
+                await _viewModel.RunRoundAsync(turnOrder, heroList, enemyList, token);
+
+                BattleResult result = BattleManager.Inst.CheckBattleResult(turnOrder);
+
+                if (result != BattleResult.Ongoing)
+                {
+                    _viewModel.ApplyBattleReward(result, BattleManager.Inst.GetCurrentRound());
+                    _viewModel.AddBattleLog(result == BattleResult.Victory ? "전투 승리!" : "전투 패배...");
+                    return;
+                }
+
+                if (BattleManager.Inst.GetCurrentRound() >= MaxRoundSafetyLimit)
+                {
+                    _viewModel.AddBattleLog("전투 라운드 상한 도달, 강제 종료합니다.");
+                    return;
+                }
+            }
+        }
+        finally
+        {
+            _isBattleRunning = false;
+        }
     }
 }

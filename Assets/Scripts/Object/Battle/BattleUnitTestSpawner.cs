@@ -26,6 +26,11 @@ public class BattleUnitTestSpawner : SingletonBase<BattleUnitTestSpawner>
 
     public event Action<string> OnUnitClicked;
 
+    private void Start()
+    {
+        Test_SpawnHeroes();
+    }
+
     [ContextMenu("영웅 테스트 스폰")]
     private void Test_SpawnHeroes()
     {

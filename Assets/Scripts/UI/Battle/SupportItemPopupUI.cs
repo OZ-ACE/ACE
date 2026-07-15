@@ -125,6 +125,12 @@ public class SupportItemPopupUI : UIBase
         _activeSlotList.Clear();
     }
 
+    //데모 빌드용 임시 - 지원하기 버튼 실연동되면 이 Start() 통째로 삭제
+    private void Start()
+    {
+        Test_OpenWithDummyData();
+    }
+
     //독립 테스트용 - 실제 필터링 로직 연결 전까지 더미 데이터로 팝업 확인, 이후 삭제 예정
     [ContextMenu("팝업 테스트 오픈 (더미 데이터)")]
     private void Test_OpenWithDummyData()
