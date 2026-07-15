@@ -30,7 +30,7 @@ public class HeroUI : UIBase
     {
         var playerModel = SaveManager.Inst.CurrentPlayerModel;
 
-        for (int i = _activeSlots.Count; i < playerModel.HeroStats.Count; i++)
+        for (int i = _activeSlots.Count; i <= playerModel.HeroStats.Count; i++)
         {
             string currentHeroID = playerModel.HeroStats[i].HeroID;
 
