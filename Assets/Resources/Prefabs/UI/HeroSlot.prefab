@@ -747,8 +747,8 @@ MonoBehaviour:
   Text_Satisfaction: {fileID: 456146606228401464}
   Image_Affection: {fileID: 8923680130388673690}
   Image_Satisfaction: {fileID: 6191771600910737168}
-  Sprite_Select: {fileID: -1908546221, guid: 3ee689c0e532d7745b1f39bf417fd032, type: 3}
-  Sprite_Unselect: {fileID: 92283438, guid: 00a1e5d912a594241b75594f90cd39cd, type: 3}
+  Sprite_Select: {fileID: -1908546221, guid: bc78fb4e678b2ac4e91a5aa4c5a89c87, type: 3}
+  Sprite_Unselect: {fileID: 92283438, guid: 2a8e58c48f5314248948069af340dd6f, type: 3}
 --- !u!1 &3476443298369320628
 GameObject:
   m_ObjectHideFlags: 0

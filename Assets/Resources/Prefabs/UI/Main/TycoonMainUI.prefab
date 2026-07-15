@@ -6630,8 +6630,8 @@ MonoBehaviour:
   Text_Day: {fileID: 8518081571487978185}
   Text_Gold: {fileID: 457173599379241217}
   Text_Memory: {fileID: 6139886496297560485}
-  Sprite_Select: {fileID: -1327821776, guid: 94ad98ea8d8f5b342997f34564c057e5, type: 3}
-  Sprite_Unselect: {fileID: 102820231, guid: 3ece350cc84e348409a8912255f7acd1, type: 3}
+  Sprite_Select: {fileID: -1327821776, guid: 3965c42e7356a0346b9344c32c7f1f99, type: 3}
+  Sprite_Unselect: {fileID: 102820231, guid: 8a47cb1cbaf86f14e8e9c43666cb735a, type: 3}
 --- !u!1 &8806214983761165976
 GameObject:
   m_ObjectHideFlags: 0
