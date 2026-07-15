@@ -1,18 +1,27 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class HeroUI : UIBase
 {
+    [SerializeField] private GameObject Prefab_Slot;
     [SerializeField] private Transform Transform_Content;
     [SerializeField] private HeroHotBar HeroHotBar;
 
     private List<HeroSlot> _activeSlots = new List<HeroSlot>();
     private HeroViewModel _currentVM;
 
+    private IObjectPool<HeroSlot> _slotPool;
+
+    private void Awake()
+    {
+        _slotPool = new ObjectPool<HeroSlot>(CreateSlotInstance, GetSlot, ReleaseSlot, DestroySlot, true, 3, 10);
+    }
+
     private void OnEnable()
     {
-        RefreshHeroList().Forget();
+        RefreshHeroList();
     }
 
     private void OnDisable()
@@ -26,26 +35,53 @@ public class HeroUI : UIBase
         }
     }
 
-    private async UniTask RefreshHeroList()
+    private HeroSlot CreateSlotInstance()
     {
-        var playerModel = SaveManager.Inst.CurrentPlayerModel;
+        GameObject prefab = Instantiate(Prefab_Slot, Transform_Content);
+        return prefab.GetComponent<HeroSlot>();
+    }
 
-        for (int i = _activeSlots.Count; i < playerModel.HeroStats.Count; i++)
+    private void GetSlot(HeroSlot slot)
+    {
+        slot.gameObject.SetActive(true);
+    }
+
+    private void ReleaseSlot(HeroSlot slot)
+    {
+        slot.gameObject.SetActive(false);
+    }
+
+    private void DestroySlot(HeroSlot slot)
+    {
+        Destroy(slot.gameObject);
+    }
+
+    private void RefreshHeroList()
+    {
+        foreach (HeroSlot slot in _activeSlots)
         {
-            string currentHeroID = playerModel.HeroStats[i].HeroID;
+            _slotPool.Release(slot);
+        }
 
-            HeroModel model = new HeroModel();
-            model.LoadHeroData(currentHeroID);
+        _activeSlots.Clear();
 
-            HeroViewModel viewModel = new HeroViewModel();
-            viewModel.Init(model);
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
 
-            GameObject prefab = await ResourceManager.Inst.InstantiateAsync("Prefabs/UI/HeroSlot", Transform_Content);
-            HeroSlot heroSlot = prefab.GetComponent<HeroSlot>();
+        foreach (var hero in playerModel.HeroStats)
+        {
+            string currentHero = hero.HeroID;
 
-            heroSlot.InitSlot(viewModel);
-            heroSlot.OnSlotClick = SelectHeroSlot;
+            HeroModel heroModel = new HeroModel();
+            heroModel.LoadHeroData(currentHero);
+
+            HeroViewModel heroVM = new HeroViewModel();
+            heroVM.Init(heroModel);
+
+            HeroSlot heroSlot = _slotPool.Get();
             _activeSlots.Add(heroSlot);
+
+            heroSlot.InitSlot(heroVM);
+            heroSlot.OnSlotClick = SelectHeroSlot;
         }
     }
 
