@@ -29,6 +29,19 @@ public class DayService
 
 
     // 메서드
+
+    // 다음날로 넘길 수 있는가
+    public bool IsAdvanceable()
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+        if (player == null)
+        {
+            return false;
+        }
+        return player.IsBattleDoneToday;
+    }
+
+    // 오늘 전투 완료 표시
     public void MarkBattleDone()
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
@@ -43,6 +56,7 @@ public class DayService
         Debug.Log("[DayService] 오늘 전투 완료 표시");
     }
 
+    // 다음날로 넘기기 시도
     public bool TryAdvanceDay()
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;

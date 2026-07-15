@@ -28,12 +28,13 @@ public class OfficeUI : UIBase
 
     private void OnClickNextDay()
     {
-        bool success = GameManager.Inst.Services.DayService.TryAdvanceDay();
-        if (success == false)
+        if (GameManager.Inst.Services.DayService.IsAdvanceable() == false)
         {
+            Debug.Log("[OfficeUI] 오늘 전투를 마쳐야 다음날로 넘어갈 수 있음");
             return;
         }
-        // TODO: 마감 정산 UI 표시
+
+        UIManager.Inst.OpenSettlementUI();
     }
 
     private void OnClickShop()
