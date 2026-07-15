@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor;
+using System.Net.NetworkInformation;
+using Newtonsoft.Json.Bson;
+
+
 
 //Model 역할 + ViewModel 역할
 public class BuildGridViewModel : ViewModelBase
@@ -26,6 +31,10 @@ public class BuildGridViewModel : ViewModelBase
 
     private List<string> _buildableRoomIds = new List<string>();
     public List<string> BuildableRoomIds { get { return _buildableRoomIds; } }
+    public void SetBuildableRooms(List<string> roomIds)
+    {
+        _buildableRoomIds = roomIds;
+    }
     public GridSystem GridSystem { get { return _gridSystem; } }
     public BuildGridModel BuildGridModel { get { return _buildGridModel; } }
 
@@ -33,6 +42,12 @@ public class BuildGridViewModel : ViewModelBase
     public PlacedRoomData PickedRoom { get { return _pickedRoom; } }
     public bool IsHoldingRoom { get { return _pickedRoom != null; } }
     public int UnlockedMinFloor { get { return _buildGridModel.UnlockedMinFloor; } }
+
+    // 현재 배치된 방 전체 (뷰가 초기 렌더링할 때 사용)
+    public List<PlacedRoomData> GetPlacedRooms()
+    {
+        return _buildGridModel.GetAllRooms();
+    }
 
     // 철거 환불 비율 (건설비의 50%)
     private const float REFUND_RATIO = 0.5f;
@@ -53,6 +68,7 @@ public class BuildGridViewModel : ViewModelBase
     private bool _isMoveMode;
     private string _selectedRoomId;
 
+
     public bool IsBuildMode
     {
         get => _isBuildMode;
@@ -65,7 +81,6 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
-
     public bool IsDemolishMode
     {
         get => _isDemolishMode;
@@ -78,7 +93,6 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
-
     public bool IsMoveMode
     {
         get => _isMoveMode;
@@ -91,7 +105,6 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
-
     public string SelectedRoomId
     {
         get => _selectedRoomId;
@@ -104,6 +117,11 @@ public class BuildGridViewModel : ViewModelBase
             }
         }
     }
+
+
+
+
+
 
     public BuildGridViewModel(GridSystem gridSystem, BuildGridModel buildGridModel, ICurrencyService currencyService)
     {
@@ -119,6 +137,7 @@ public class BuildGridViewModel : ViewModelBase
         _buildGridModel.InitUnlock(initialMinFloor);   
     }
 
+
     //뷰가 바인딩 직후 1회 호출
     public void InvokeOnceOnInit()
     {
@@ -126,16 +145,6 @@ public class BuildGridViewModel : ViewModelBase
         OnPropertyChanged(nameof(SelectedRoomId));
     }
 
-    public void SetBuildableRooms(List<string> roomIds)
-    {
-        _buildableRoomIds = roomIds;
-    }
-
-    // 현재 배치된 방 전체 (뷰가 초기 렌더링할 때 사용)
-    public List<PlacedRoomData> GetPlacedRooms()
-    {
-        return _buildGridModel.GetAllRooms();
-    }
 
     //방 크기·타입 조회 헬퍼
     public RoomData GetSelectedRoomData()
@@ -144,14 +153,11 @@ public class BuildGridViewModel : ViewModelBase
         {
             return null;
         }
-
         return GameDataManager.Inst.GetData<RoomData>(SelectedRoomId);
     }
-
     public PlacementResult CheckSelectedRoomPlaceable(GridCoord originCoord)
     {
         RoomData room = GetSelectedRoomData();
-
         if (room == null)
         {
             return PlacementResult.WrongCellType;
@@ -162,8 +168,10 @@ public class BuildGridViewModel : ViewModelBase
             return PlacementResult.WrongCellType;
         }
 
-        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem, room.IsAnyCellType());
 
+
+
+        PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, room.GetSize(), room.GetRequiredCellType(), _gridSystem, room.IsAnyCellType());
         if (result != PlacementResult.Success)
         {
             return result;
@@ -177,6 +185,8 @@ public class BuildGridViewModel : ViewModelBase
 
         return PlacementResult.Success;
     }
+
+
 
     //건설모드 토글
     public void ToggleBuildMode()
@@ -225,6 +235,9 @@ public class BuildGridViewModel : ViewModelBase
         }
     }
 
+
+
+
     //건설모드 진입
     public void EnterBuildMode()
     {
@@ -251,7 +264,6 @@ public class BuildGridViewModel : ViewModelBase
     public PlacementResult TryPlaceRoom(string roomId, GridCoord originCoord)
     {
         RoomData roomData = GameDataManager.Inst.GetData<RoomData>(roomId);
-
         if (roomData == null)
         {
             Debug.LogWarning($"[BuildGridViewModel] 유효하지 않은 방 데이터: {roomId}");
@@ -267,7 +279,6 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         PlacementResult result = _buildGridModel.CheckPlaceable(originCoord, size, requiredType, _gridSystem, roomData.IsAnyCellType());
-
         if (result != PlacementResult.Success)
         {
             return result;
@@ -300,11 +311,12 @@ public class BuildGridViewModel : ViewModelBase
         return PlacementResult.Success;
     }
 
+
+
     //철거 실행 명령
     public bool TryDemolishRoom(GridCoord coord)
     {
         PlacedRoomData target = _buildGridModel.GetRoomAt(coord);
-
         if (target != null && IsStair(target.RoomId) == true)
         {
             Debug.Log("[BuildGridViewModel] 계단 철거 불가");
@@ -313,14 +325,12 @@ public class BuildGridViewModel : ViewModelBase
 
 
         PlacedRoomData removed = _buildGridModel.RemoveRoomAt(coord, _gridSystem);
-
         if (removed == null)
         {
             return false;
         }
 
         int refund = GetRefundAmount(removed.RoomId);
-
         if (refund > 0)
         {
             _currencyService.AddGold(refund);
@@ -340,14 +350,16 @@ public class BuildGridViewModel : ViewModelBase
     public int GetRefundAmount(string roomId)
     {
         RoomData roomData = GameDataManager.Inst.GetData<RoomData>(roomId);
-
         if (roomData == null)
         {
             return 0;
         }
-
         return Mathf.FloorToInt(roomData.BuildCost * REFUND_RATIO);
     }
+
+
+
+
 
     //방 집기
     public bool TryPickRoom(GridCoord coord)
@@ -358,15 +370,14 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         PlacedRoomData target = _buildGridModel.GetRoomAt(coord);
-
         if (target != null && IsStair(target.RoomId) == true)
         {
             Debug.Log("[BuildGridViewModel] 계단은 이동할 수 없음");
             return false;
         }
 
-        PlacedRoomData room = _buildGridModel.RemoveRoomAt(coord, _gridSystem);
 
+        PlacedRoomData room = _buildGridModel.RemoveRoomAt(coord, _gridSystem);
         if (room == null)
         {
             return false;   
@@ -393,7 +404,6 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         RoomData roomData = GameDataManager.Inst.GetData<RoomData>(_pickedRoom.RoomId);
-
         if (roomData == null)
         {
             return false;
@@ -408,7 +418,6 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         PlacementResult result = _buildGridModel.CheckPlaceable(newOrigin, size, requiredType, _gridSystem, roomData.IsAnyCellType());
-
         if (result != PlacementResult.Success)
         {
             return false;   
@@ -440,19 +449,15 @@ public class BuildGridViewModel : ViewModelBase
         {
             return PlacementResult.WrongCellType;
         }
-
         RoomData roomData = GameDataManager.Inst.GetData<RoomData>(_pickedRoom.RoomId);
-
         if (roomData == null)
         {
             return PlacementResult.WrongCellType;
         }
-
         if (IsFloorAllowed(roomData, newOrigin) == false)
         {
             return PlacementResult.WrongCellType;
         }
-
         return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem, roomData.IsAnyCellType());
     }
 
@@ -465,7 +470,6 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         RoomData roomData = GameDataManager.Inst.GetData<RoomData>(_pickedRoom.RoomId);
-
         if (roomData == null)
         {
             _pickedRoom = null;
@@ -496,6 +500,9 @@ public class BuildGridViewModel : ViewModelBase
         return origin.Floor == room.RequiredFloor;
     }
 
+
+
+
     //최저 층 노출 + 해금 명령
     public bool TryUnlockNextFloor()
     {
@@ -506,7 +513,6 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         int cost = GetNextUnlockCost();
-
         if (_currencyService.IsAffordable(cost) == false)
         {
             Debug.Log($"[BuildGridViewModel] 해금 비용 부족 (필요 {cost}G)");
@@ -514,7 +520,6 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         bool success = _buildGridModel.TryUnlockNextFloor();
-
         if (success == false)
         {
             return false;  
@@ -534,6 +539,11 @@ public class BuildGridViewModel : ViewModelBase
         return true;
     }
 
+
+
+
+
+
     //층 해금 비용
     public int GetNextUnlockCost()
     {
@@ -550,16 +560,18 @@ public class BuildGridViewModel : ViewModelBase
     {
         return _buildGridModel.UnlockedMinFloor - 1 >= _buildGridModel.Bounds.MinFloor;
     }
-
     public bool IsUnlockable()
     {
         if (IsFloorRemaining() == false)
         {
             return false;
         }
-
         return _currencyService.IsAffordable(GetNextUnlockCost());
     }
+
+
+
+
 
     //계단 자동 설치
     public void EnsureStairs()
@@ -572,11 +584,9 @@ public class BuildGridViewModel : ViewModelBase
             PlaceStairAt(floor);
         }
     }
-
     private void PlaceStairAt(int floor)
     {
         RoomData stairData = GameDataManager.Inst.GetData<RoomData>(STAIR_ROOM_ID);
-
         if (stairData == null)
         {
             Debug.LogWarning($"[BuildGridViewModel] 계단 데이터 없음 : {STAIR_ROOM_ID}");
@@ -602,6 +612,8 @@ public class BuildGridViewModel : ViewModelBase
             OnPlaceRoom.Invoke(stair);
         }
     }
+
+
 
     //계단 철거이동 금지
     private bool IsStair(string roomId)
@@ -654,11 +666,17 @@ public class BuildGridViewModel : ViewModelBase
         }
     }
 
+
+
+
+
+
+
+
     //그리드 상태 저장
     public void SaveGrid()
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-
         if (player == null)
         {
             Debug.LogWarning("[BuildGridViewModel] CurrentPlayerModel 없음 - 저장 스킵");
@@ -673,8 +691,6 @@ public class BuildGridViewModel : ViewModelBase
     public void LoadGrid()
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-        Debug.Log(player.PlayerName);
-
         if (player == null || player.BuildGridData == null)
         {
             Debug.Log("[BuildGridViewModel] 저장된 그리드 없음");
@@ -684,5 +700,7 @@ public class BuildGridViewModel : ViewModelBase
         _buildGridModel.LoadFromSaveData(player.BuildGridData, _gridSystem);
 
         Debug.Log($"[BuildGridViewModel] 그리드 복원: 방 {player.BuildGridData.PlacedRooms.Count}개");
+
     }
+
 }

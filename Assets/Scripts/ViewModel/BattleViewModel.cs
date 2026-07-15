@@ -118,7 +118,9 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
+            ApplyActionDamage(createdAction);
             AddBattleLog(BuildUnitActionLogMessage(createdAction));
+
         }
 
         BattleManager.Inst.EnqueuePlayerAction();
@@ -133,16 +135,21 @@ public class BattleViewModel : ViewModelBase
         List<BattleUnitModel> enemyList,
         CancellationToken token)
     {
+        Debug.Log($"[BattleViewModel] {unit.ID} 행동 요청 시작");
+
         UniTaskCompletionSource<BattleActionModel> completionSource = new UniTaskCompletionSource<BattleActionModel>();
 
         void OnActionCreated(BattleActionModel action)
         {
+            Debug.Log($"[BattleViewModel] {unit.ID} 행동 생성 완료");
             completionSource.TrySetResult(action);
         }
 
         executor.BattleActionCreated += OnActionCreated;
 
         bool isExecuted = executor.ExecuteBattleAction(unit, heroList, enemyList);
+
+        Debug.Log($"[BattleViewModel] {unit.ID} ExecuteBattleAction 반환값: {isExecuted}");
 
         if (isExecuted == false)
         {
@@ -196,4 +203,65 @@ public class BattleViewModel : ViewModelBase
 
         return $"{action.Unit.ID} - {action.ActionType} 실행";
     }
+
+    //액션 결과를 대상(들)의 HP에 실제로 반영한다. 공격 타입 스킬에만 적용
+    private void ApplyActionDamage(BattleActionModel action)
+    {
+        if (action.ActionType != ActionType.Attack)
+        {
+            return;
+        }
+
+        int power = GetSkillPower(action.Unit, action.SkillId);
+
+        if (action.TargetType == TargetType.Single)
+        {
+            ApplyDamageToUnit(action.Target, power);
+            return;
+        }
+
+        if (action.TargetType == TargetType.Multi)
+        {
+            foreach (BattleUnitModel target in action.TargetList)
+            {
+                ApplyDamageToUnit(target, power);
+            }
+        }
+    }
+
+    private void ApplyDamageToUnit(BattleUnitModel target, int power)
+    {
+        if (target == null)
+        {
+            return;
+        }
+
+        target.CurrentHp -= power;
+
+        if (target.CurrentHp < 0)
+        {
+            target.CurrentHp = 0;
+        }
+
+        Debug.Log($"[BattleViewModel] {target.ID} 피격, 데미지 {power}, 남은 HP {target.CurrentHp}");
+    }
+
+    //유닛 진영에 맞는 스킬 데이터에서 Power 값을 가져온다
+    private int GetSkillPower(BattleUnitModel unit, string skillId)
+    {
+        if (unit == null || string.IsNullOrEmpty(skillId))
+        {
+            return 0;
+        }
+
+        if (unit.IsHero)
+        {
+            HeroSkill heroSkill = GameDataManager.Inst.GetData<HeroSkill>(skillId);
+            return heroSkill != null ? heroSkill.Power : 0;
+        }
+
+        EnemySkill enemySkill = GameDataManager.Inst.GetData<EnemySkill>(skillId);
+        return enemySkill != null ? enemySkill.Power : 0;
+    }
 }
+

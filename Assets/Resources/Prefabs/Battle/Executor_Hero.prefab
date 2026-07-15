@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 295947901505816660}
   - component: {fileID: 8132677270348800693}
   - component: {fileID: 2563926099126099325}
+  - component: {fileID: 7535018661148739873}
   m_Layer: 0
   m_Name: Executor_Hero
   m_TagString: Untagged
@@ -74,15 +75,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
   m_Graph: {fileID: 5059855043438149418, guid: 282872eecf19566468ef5d12905183a5, type: 2}
   m_BlackboardVariableOverridesList:
-  - rid: 7742168586824450124
-  - rid: 7742168586824450125
+  - rid: 7742168541890084967
+  - rid: 7742168541890085152
   m_OriginalGraph: {fileID: 5059855043438149418, guid: 282872eecf19566468ef5d12905183a5, type: 2}
-  m_IsInitialised: 0
-  m_IsStarted: 0
+  m_IsInitialised: 1
+  m_IsStarted: 1
   references:
     version: 2
     RefIds:
-    - rid: 7742168586824450124
+    - rid: 7742168541890084967
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -90,7 +91,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 8712819951427567428}
-    - rid: 7742168586824450125
+    - rid: 7742168541890085152
       type: {class: 'BlackboardVariable`1[[BattleBTContext, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -98,3 +99,16 @@ MonoBehaviour:
           m_Value1: 12372677611844688579
         Name: BattleContext
         m_Value: {fileID: 295947901505816660}
+--- !u!114 &7535018661148739873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712819951427567428}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce25a583a7893804db232cc7be2e9592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleBTIntegrationTest
+  BattleBTExecutor: {fileID: 8132677270348800693}
