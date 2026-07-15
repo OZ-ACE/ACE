@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum UIRootType
@@ -111,6 +112,8 @@ public static class UIExtension
     public static void OpenTycoonMainUI(this UIManager uIManager)
     {
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
+        ObjectManager.Inst.CreateBuildGridView();
+        ObjectManager.Inst.SpawnHero("hero_03").Forget();
     }
 
     public static void CloseTycoonMainUI(this UIManager uIManager)
