@@ -54,6 +54,7 @@ public class InventoryUI : MonoBehaviour
         UpdateSellButton();
     }
 
+    /// <summary> 상점 뷰모델 확보 (없으면 생성) </summary>
     private ShopViewModel GetShopViewModel()
     {
         ShopViewModel vm = GameManager.Inst.Services.ShopService.GetShopViewModel();
