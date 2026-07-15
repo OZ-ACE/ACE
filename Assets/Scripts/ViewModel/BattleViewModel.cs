@@ -10,6 +10,10 @@ public class BattleViewModel : ViewModelBase
     public List<string> BattleLogs = new List<string>();
     public List<BattleActionModel> ActionQueue = new List<BattleActionModel>();
 
+    private UniTaskCompletionSource _interventionCompletionSource;
+
+    private const int HealUnitAmount = 20; //temp, 데이터 테이블에 회복량 필드 아직 없음
+
     public List<BattleUnitModel> GetBattleTurnOrder(List<string> heroIds, List<string> enemyIds)
     {
         List<BattleUnitModel> participats = new List<BattleUnitModel>();
@@ -118,13 +122,31 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
-            ApplyActionDamage(createdAction);
             AddBattleLog(BuildUnitActionLogMessage(createdAction));
-
         }
 
         BattleManager.Inst.EnqueuePlayerAction();
         RefreshActionQueue();
+
+        await WaitForInterventionEndAsync(token);
+
+        ResolveActionQueue();
+        RefreshActionQueue();
+    }
+
+
+    //개입 턴 종료 버튼이 눌렸을 때 View에서 호출한다
+    public void NotifyInterventionEnded()
+    {
+        _interventionCompletionSource?.TrySetResult();
+    }
+
+    //라운드 진행 중 플레이어의 개입 턴 종료 버튼 클릭을 기다린다
+    private async UniTask WaitForInterventionEndAsync(CancellationToken token)
+    {
+        _interventionCompletionSource = new UniTaskCompletionSource();
+
+        await _interventionCompletionSource.Task.AttachExternalCancellation(token);
     }
 
     //한 유닛의 BT 실행을 요청하고, BattleActionCreated 이벤트가 울릴 때까지 기다린다
@@ -196,12 +218,65 @@ public class BattleViewModel : ViewModelBase
     //유닛의 행동 결과를 배틀 로그 문구로 변환한다
     private string BuildUnitActionLogMessage(BattleActionModel action)
     {
+        string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+
         if (action.ActionType == ActionType.Wait)
         {
-            return $"{action.Unit.ID} - 대기";
+            return $"{unitName} - 대기 예정";
         }
 
-        return $"{action.Unit.ID} - {action.ActionType} 실행";
+        return $"{unitName} - {action.ActionType} 예정";
+    }
+
+    //개입 턴이 끝난 뒤 큐를 순서대로 꺼내며 실제 효과를 적용한다
+    private void ResolveActionQueue()
+    {
+        while (BattleManager.Inst.HasNextAction())
+        {
+            BattleActionModel action = BattleManager.Inst.GetNextAction();
+
+            if (action.IsPlayerAction)
+            {
+                continue;
+            }
+
+            ResolveAction(action);
+        }
+    }
+
+    //액션 하나를 개입 결과에 따라 처리한다
+    private void ResolveAction(BattleActionModel action)
+    {
+        string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+
+        if (action.Result == BattleActionResult.HealUnit)
+        {
+            ApplyHealUnit(action.Unit);
+            AddBattleLog($"{unitName} - 회복 완료 (현재 HP {action.Unit.CurrentHp}/{action.Unit.MaxHp})");
+            return;
+        }
+
+        if (action.Result == BattleActionResult.Reinforce || action.Result == BattleActionResult.ChangeUnit)
+        {
+            AddBattleLog($"{unitName} - {action.Result} 처리 (아직 미구현)");
+            return;
+        }
+
+        ApplyActionDamage(action);
+        AddBattleLog(BuildActionResolvedLogMessage(action));
+    }
+
+    //액션이 실제로 처리된 결과를 배틀 로그 문구로 변환한다
+    private string BuildActionResolvedLogMessage(BattleActionModel action)
+    {
+        string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+
+        if (action.ActionType == ActionType.Wait)
+        {
+            return $"{unitName} - 대기";
+        }
+
+        return $"{unitName} - {action.ActionType} 실행";
     }
 
     //액션 결과를 대상(들)의 HP에 실제로 반영한다. 공격 타입 스킬에만 적용
@@ -244,6 +319,17 @@ public class BattleViewModel : ViewModelBase
         }
 
         Debug.Log($"[BattleViewModel] {target.ID} 피격, 데미지 {power}, 남은 HP {target.CurrentHp}");
+    }
+
+    //대상 유닛의 HP를 회복시킨다. MaxHp를 넘지 않도록 제한
+    private void ApplyHealUnit(BattleUnitModel unit)
+    {
+        unit.CurrentHp += HealUnitAmount;
+
+        if (unit.CurrentHp > unit.MaxHp)
+        {
+            unit.CurrentHp = unit.MaxHp;
+        }
     }
 
     //유닛 진영에 맞는 스킬 데이터에서 Power 값을 가져온다
