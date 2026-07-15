@@ -13,20 +13,10 @@ MonoBehaviour:
   m_Name: Default Local Group
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Default Local Group
-  m_GUID: 23850c18bd752de4e9d0bcbd8c737d67
+  m_GUID: ae83674994d4898489e3bec1c12bb5d8
   m_SerializeEntries:
-  - m_GUID: 1f041b45a0dc0c8479913678657945cd
-    m_Address: Prefabs/UI/HeroSlot
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 25033fc7e61b33045ae90bfd779174b7
-    m_Address: Image/Slot/Unselect
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 441d3d17b6bda2045a0d939db9733e36
-    m_Address: Image/Button/Select
+    m_Address: UI/Button/Select
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -36,38 +26,13 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 70e23b9b2669f11428d7abe3757907cc
-    m_Address: Image/Button/Unselect
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 749ac22f8f4c2974e8bb3024181eef74
-    m_Address: Image/Slot/Select
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a2e0dc92988daea4da87c346f2f3cb33
-    m_Address: Prefabs/UI/InventorySlot
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b07262cf55756be47b2c4c8615544ecb
-    m_Address: Image/UI/Selected
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b661c9b4e85ac5d46bc2ac5e60aa9525
-    m_Address: Image/Item
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fba5ff936ccb1b84aa468d6f618deb99
-    m_Address: Image/UI/Unselected
+    m_Address: UI/Button/Unselect
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
-  m_Settings: {fileID: 11400000, guid: f41632a1bcf00474bbbaad14ab01183a, type: 2}
+  m_Settings: {fileID: 11400000, guid: f4feabcb91e86534cbd0c504c61cb5ea, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 11e87d06e0cb35644b11ee3aac1a087a, type: 2}
-    - {fileID: 11400000, guid: 70adcf1c231dbb84385da4066bc16350, type: 2}
+    - {fileID: 11400000, guid: c6b67ad358cd8a54faa94b2688d4145d, type: 2}
+    - {fileID: 11400000, guid: 72a80780b036bfd40ad0f567ac49c81a, type: 2}
