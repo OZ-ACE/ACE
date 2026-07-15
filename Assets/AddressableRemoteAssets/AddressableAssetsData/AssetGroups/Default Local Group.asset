@@ -20,28 +20,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 25033fc7e61b33045ae90bfd779174b7
-    m_Address: Image/Slot/Unselect
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 441d3d17b6bda2045a0d939db9733e36
-    m_Address: Image/Button/Select
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 56e2ddc4f5da593479a3b8323d685403
     m_Address: Audio/AudioMixer
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 70e23b9b2669f11428d7abe3757907cc
-    m_Address: Image/Button/Unselect
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 749ac22f8f4c2974e8bb3024181eef74
-    m_Address: Image/Slot/Select
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -50,18 +30,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b07262cf55756be47b2c4c8615544ecb
-    m_Address: Image/UI/Selected
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b661c9b4e85ac5d46bc2ac5e60aa9525
     m_Address: Image/Item
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fba5ff936ccb1b84aa468d6f618deb99
-    m_Address: Image/UI/Unselected
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
