@@ -1336,6 +1336,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DemolishToggleView
   Button_Toggle: {fileID: 7975158849082852335}
+  Sprite_Select: {fileID: -1327821776, guid: 3965c42e7356a0346b9344c32c7f1f99, type: 3}
+  Sprite_Unselect: {fileID: 102820231, guid: 8a47cb1cbaf86f14e8e9c43666cb735a, type: 3}
   Text_Label: {fileID: 5405153467770504596}
 --- !u!1 &1927173764245307870
 GameObject:
@@ -5131,6 +5133,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveToggleView
   Button_Toggle: {fileID: 2044955471024121624}
+  Sprite_Select: {fileID: -1327821776, guid: 3965c42e7356a0346b9344c32c7f1f99, type: 3}
+  Sprite_Unselect: {fileID: 102820231, guid: 8a47cb1cbaf86f14e8e9c43666cb735a, type: 3}
   Text_Label: {fileID: 2905140903458309491}
 --- !u!1 &6898307739523504416
 GameObject:
