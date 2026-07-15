@@ -24,7 +24,8 @@ public enum UIType
     UIAdmissionPopup,
     BattleMainUI,
     OfficeUI,
-    ShopUI
+    ShopUI,
+    SettlementUI
 }
 
 public static class UIExtension
@@ -168,6 +169,17 @@ public static class UIExtension
     {
         uiManager.CloseUI(UIType.ShopUI);
     }
+
+    public static void OpenSettlementUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.Popup, UIType.SettlementUI);
+    }
+    public static void CloseSettlementUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.SettlementUI);
+    }
+
+
 
 
 
