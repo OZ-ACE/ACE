@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 295947901505816660}
   - component: {fileID: 8132677270348800693}
   - component: {fileID: 2563926099126099325}
-  - component: {fileID: 7535018661148739873}
   m_Layer: 0
   m_Name: Executor_Hero
   m_TagString: Untagged
@@ -68,7 +67,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8712819951427567428}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
@@ -99,16 +98,3 @@ MonoBehaviour:
           m_Value1: 12372677611844688579
         Name: BattleContext
         m_Value: {fileID: 295947901505816660}
---- !u!114 &7535018661148739873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8712819951427567428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce25a583a7893804db232cc7be2e9592, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BattleBTIntegrationTest
-  BattleBTExecutor: {fileID: 8132677270348800693}
