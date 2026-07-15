@@ -118,9 +118,7 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
-            ApplyActionDamage(createdAction);
             AddBattleLog(BuildUnitActionLogMessage(createdAction));
-
         }
 
         BattleManager.Inst.EnqueuePlayerAction();
@@ -198,10 +196,10 @@ public class BattleViewModel : ViewModelBase
     {
         if (action.ActionType == ActionType.Wait)
         {
-            return $"{action.Unit.ID} - 대기";
+            return $"{action.Unit.ID} - 대기 예정";
         }
 
-        return $"{action.Unit.ID} - {action.ActionType} 실행";
+        return $"{action.Unit.ID} - {action.ActionType} 예정";
     }
 
     //액션 결과를 대상(들)의 HP에 실제로 반영한다. 공격 타입 스킬에만 적용
