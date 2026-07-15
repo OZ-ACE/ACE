@@ -10,6 +10,8 @@ public class BattleViewModel : ViewModelBase
     public List<string> BattleLogs = new List<string>();
     public List<BattleActionModel> ActionQueue = new List<BattleActionModel>();
 
+    private UniTaskCompletionSource _interventionCompletionSource;
+
     public List<BattleUnitModel> GetBattleTurnOrder(List<string> heroIds, List<string> enemyIds)
     {
         List<BattleUnitModel> participats = new List<BattleUnitModel>();
@@ -123,6 +125,23 @@ public class BattleViewModel : ViewModelBase
 
         BattleManager.Inst.EnqueuePlayerAction();
         RefreshActionQueue();
+
+        await WaitForInterventionEndAsync(token);
+    }
+
+
+    //개입 턴 종료 버튼이 눌렸을 때 View에서 호출한다
+    public void NotifyInterventionEnded()
+    {
+        _interventionCompletionSource?.TrySetResult();
+    }
+
+    //라운드 진행 중 플레이어의 개입 턴 종료 버튼 클릭을 기다린다
+    private async UniTask WaitForInterventionEndAsync(CancellationToken token)
+    {
+        _interventionCompletionSource = new UniTaskCompletionSource();
+
+        await _interventionCompletionSource.Task.AttachExternalCancellation(token);
     }
 
     //한 유닛의 BT 실행을 요청하고, BattleActionCreated 이벤트가 울릴 때까지 기다린다
