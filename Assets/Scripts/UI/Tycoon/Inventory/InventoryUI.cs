@@ -177,7 +177,7 @@ public class InventoryUI : MonoBehaviour
     {
         foreach (InventorySlot slot in _activeSlots)
         {
-            slot.LoadBackground(false).Forget();
+            slot.SetBackground(false);
         }
     }
 

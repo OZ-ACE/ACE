@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,9 @@ public class InventorySlot : MonoBehaviour
     [SerializeField] private Image Image_Icon;
     [SerializeField] private TextMeshProUGUI Text_Count;
     [SerializeField] private Button Button_Select;
+
+    [SerializeField] private Sprite Sprite_Unselect;
+    [SerializeField] private Sprite Sprite_Select;
 
     private string _itemID;
     private InventoryViewModel _inventoryVM;
@@ -38,13 +42,13 @@ public class InventorySlot : MonoBehaviour
     {
         bool isSelected = (_inventoryVM.SelectedItemID == _itemID);
 
-        LoadBackground(isSelected).Forget();
+        SetBackground(isSelected);
     }
 
-    public async UniTask LoadBackground(bool isSelected)
+    public void SetBackground(bool isSelected)
     {
-        string path = isSelected ? "Image/UI/Unselected" : "Image/UI/Selected";
+        Sprite sprite = isSelected ? Sprite_Select : Sprite_Unselect;
 
-        Image_Background.sprite = await ResourceManager.Inst.LoadSprite(path);
+        Image_Background.sprite = sprite;
     }
 }

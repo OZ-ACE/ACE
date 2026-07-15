@@ -343,6 +343,8 @@ MonoBehaviour:
   Image_Icon: {fileID: 1221382769308079591}
   Text_Count: {fileID: 1120413336813042307}
   Button_Select: {fileID: 1964135751411003631}
+  Sprite_Unselect: {fileID: -1080797082, guid: 8aa9d8dd66c9a8e428f28ab60dd44a4d, type: 3}
+  Sprite_Select: {fileID: -1055914263, guid: 77bdd38c626cba846ba2a90c81674f96, type: 3}
 --- !u!1 &8280337222923238319
 GameObject:
   m_ObjectHideFlags: 0
