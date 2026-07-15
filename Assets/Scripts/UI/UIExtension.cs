@@ -44,7 +44,7 @@ public static class UIExtension
     {
         uiManager.OpenUI(UIRootType.Front, UIType.OverlayScreen);
         uiManager.OpenTitleUI();
-
+        //uiManager.OpenBattleMainUI();
         AdmissionManager.Inst.Initialize();
     }
 
