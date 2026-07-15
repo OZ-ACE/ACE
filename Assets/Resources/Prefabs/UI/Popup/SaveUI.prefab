@@ -476,6 +476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveUI
   Button_Close: {fileID: 2338180146189350778}
+  Prefab_Slot: {fileID: 7374648556580955704, guid: 216365fd4664fe345ac9b91056ef6b6f, type: 3}
   Transform_SlotParent: {fileID: 8777971710895486430}
   Text_InfoText: {fileID: 3694364846067473668}
 --- !u!1 &7162561369644048230

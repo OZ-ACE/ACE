@@ -1,17 +1,19 @@
-﻿using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 public class SaveUI : UIBase
 {
     [SerializeField] private Button Button_Close;
+    [SerializeField] private GameObject Prefab_Slot;
     [SerializeField] private Transform Transform_SlotParent;
     [SerializeField] private GameObject Text_InfoText;
 
     private SaveViewModel _saveVM;
 
+    private IObjectPool<SaveSlot> _slotPool;
     private List<SaveSlot> _saveSlots = new List<SaveSlot>();
 
     private void Awake()
@@ -20,12 +22,14 @@ public class SaveUI : UIBase
 
         _saveVM = SaveManager.Inst.SaveVM;
         _saveVM.InvokeOnceOnInit();
+
+        _slotPool = new ObjectPool<SaveSlot>(CreateSlotInstance, GetSlot, ReleaseSlot, DestroySlot, true, 5, 20);
     }
 
     private void OnEnable()
     {
         BindViewModel();
-        RefreshSlotViews().Forget();
+        RefreshSlotViews();
     }
 
     public void BindViewModel()
@@ -47,38 +51,50 @@ public class SaveUI : UIBase
         switch (e.PropertyName)
         {
             case nameof(SaveViewModel.ActiveSlotIndex):
-                RefreshSlotViews().Forget();
+                RefreshSlotViews();
                 break;
         }
     }
 
-    private async UniTask RefreshSlotViews()
+    private SaveSlot CreateSlotInstance()
+    {
+        GameObject prefab = Instantiate(Prefab_Slot, Transform_SlotParent);
+        return prefab.GetComponent<SaveSlot>();
+    }
+
+    private void GetSlot(SaveSlot slot)
+    {
+        slot.gameObject.SetActive(true);
+    }
+
+    private void ReleaseSlot(SaveSlot slot)
+    {
+        slot.gameObject.SetActive(false);
+    }
+
+    private void DestroySlot(SaveSlot slot)
+    {
+        Destroy(slot.gameObject);
+    }
+
+    private void RefreshSlotViews()
     {
         int requiredSlot = _saveVM.ActiveSlotIndex.Count;
 
-        if (_saveSlots.Count < requiredSlot)
+        foreach (SaveSlot slot in _saveSlots)
         {
-            int createCount = requiredSlot - _saveSlots.Count;
-
-            for (int i = 0; i < createCount; i++)
-            {
-                GameObject prefab = await ResourceManager.Inst.InstantiateAsync("Prefabs/UI/SaveSlot", Transform_SlotParent);
-                _saveSlots.Add(prefab.GetComponent<SaveSlot>());
-            }
+            _slotPool.Release(slot);
         }
 
-        for (int i = 0; i < _saveSlots.Count; i++)
+        _saveSlots.Clear();
+
+        for (int i = 0; i < requiredSlot; i++)
         {
-            if (i < requiredSlot)
-            {
-                int slotIndex = _saveVM.ActiveSlotIndex[i];
-                _saveSlots[i].gameObject.SetActive(true);
-                _saveSlots[i].BindSlot(slotIndex);
-            }
-            else
-            {
-                _saveSlots[i].gameObject.SetActive(false);
-            }
+            SaveSlot slot = _slotPool.Get();
+            _saveSlots.Add(slot);
+
+            int slotIndex = _saveVM.ActiveSlotIndex[i];
+            slot.BindSlot(slotIndex);
         }
 
         UpdateInfoText();
