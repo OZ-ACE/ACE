@@ -89,21 +89,8 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        string heroName = GetHeroDisplayName(unitId);
-        _viewModel.AddBattleLog($"{heroName} 유닛이 선택되었습니다.");
-    }
-
-    //유닛 ID로 표시용 영웅 이름을 가져온다. 데이터가 없으면 ID를 그대로 반환
-    private string GetHeroDisplayName(string unitId)
-    {
-        HeroData heroData = GameDataManager.Inst.GetData<HeroData>(unitId);
-
-        if (heroData == null)
-        {
-            return unitId;
-        }
-
-        return heroData.HeroName;
+        string unitName = GameUtil.GetUnitDisplayName(unitId);
+        _viewModel.AddBattleLog($"{unitName} 유닛이 선택되었습니다.");
     }
 
     private void OnDestroy()
@@ -257,7 +244,7 @@ public class BattleMainUI : UIBase
             _pendingEnergyCost = energyCost;
             _pendingLogMessage = logMessage;
 
-            _viewModel.AddBattleLog("대상을 선택하세요");
+            _viewModel.AddBattleLog("대상을 선택하세요.");
             return;
         }
 
@@ -283,8 +270,8 @@ public class BattleMainUI : UIBase
 
         SetEnergyGauge(BattleManager.Inst.GetRemainingEnergy());
 
-        string heroName = GetHeroDisplayName(targetUnitId);
-        _viewModel.AddBattleLog($"{heroName} 대상 - {logMessage}");
+        string unitName = GameUtil.GetUnitDisplayName(targetUnitId);
+        _viewModel.AddBattleLog($"{unitName} 대상 - {logMessage}");
 
         _selectedTargetUnitId = null;
         _pendingActionResult = null;

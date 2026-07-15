@@ -127,6 +127,9 @@ public class BattleViewModel : ViewModelBase
         RefreshActionQueue();
 
         await WaitForInterventionEndAsync(token);
+
+        ResolveActionQueue();
+        RefreshActionQueue();
     }
 
 
@@ -213,12 +216,64 @@ public class BattleViewModel : ViewModelBase
     //유닛의 행동 결과를 배틀 로그 문구로 변환한다
     private string BuildUnitActionLogMessage(BattleActionModel action)
     {
+        string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+
         if (action.ActionType == ActionType.Wait)
         {
-            return $"{action.Unit.ID} - 대기 예정";
+            return $"{unitName} - 대기 예정";
         }
 
-        return $"{action.Unit.ID} - {action.ActionType} 예정";
+        return $"{unitName} - {action.ActionType} 예정";
+    }
+
+    //개입 턴이 끝난 뒤 큐를 순서대로 꺼내며 실제 효과를 적용한다
+    private void ResolveActionQueue()
+    {
+        while (BattleManager.Inst.HasNextAction())
+        {
+            BattleActionModel action = BattleManager.Inst.GetNextAction();
+
+            if (action.IsPlayerAction)
+            {
+                continue;
+            }
+
+            ResolveAction(action);
+        }
+    }
+
+    //액션 하나를 개입 결과에 따라 처리한다
+    private void ResolveAction(BattleActionModel action)
+    {
+        string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+
+        if (action.Result == BattleActionResult.HealUnit)
+        {
+            AddBattleLog($"{unitName} - 회복 처리 (Phase 4에서 실제 구현 예정)");
+            return;
+        }
+
+        if (action.Result == BattleActionResult.Reinforce || action.Result == BattleActionResult.ChangeUnit)
+        {
+            AddBattleLog($"{unitName} - {action.Result} 처리 (아직 미구현)");
+            return;
+        }
+
+        ApplyActionDamage(action);
+        AddBattleLog(BuildActionResolvedLogMessage(action));
+    }
+
+    //액션이 실제로 처리된 결과를 배틀 로그 문구로 변환한다
+    private string BuildActionResolvedLogMessage(BattleActionModel action)
+    {
+        string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+
+        if (action.ActionType == ActionType.Wait)
+        {
+            return $"{unitName} - 대기";
+        }
+
+        return $"{unitName} - {action.ActionType} 실행";
     }
 
     //액션 결과를 대상(들)의 HP에 실제로 반영한다. 공격 타입 스킬에만 적용
