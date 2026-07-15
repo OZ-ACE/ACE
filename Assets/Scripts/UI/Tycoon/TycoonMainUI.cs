@@ -10,10 +10,8 @@ public enum TycoonPanelType
     None,
     Quest,
     Inventory,
-    Pick,
     Hero,
     Construct,
-    Market,
     Setting,
     Home
 }
@@ -37,7 +35,6 @@ public class TycoonMainUI : UIBase
     [Header("버튼")]
     [SerializeField] Button Button_Quest;
     [SerializeField] Button Button_Inventory;
-    [SerializeField] Button Button_Pick;
     [SerializeField] Button Button_Hero;
     [SerializeField] Button Button_Construct;
     [SerializeField] Button Button_Battle;
@@ -48,7 +45,6 @@ public class TycoonMainUI : UIBase
     [Header("패널")]
     [SerializeField] GameObject Panel_Quest;
     [SerializeField] GameObject Panel_Inventory;
-    //[SerializeField] GameObject Panel_Pick;
     [SerializeField] GameObject Panel_Hero;
     [SerializeField] GameObject Panel_Construct;
     [SerializeField] List<PanelStruct> PanelList;
@@ -58,13 +54,16 @@ public class TycoonMainUI : UIBase
     [SerializeField] TextMeshProUGUI Text_Gold;
     [SerializeField] TextMeshProUGUI Text_Memory;
 
+    [Header("이미지")]
+    [SerializeField] private Sprite Sprite_Select;
+    [SerializeField] private Sprite Sprite_Unselect;
+
     public Action OnCloseSetting;
 
     private void Awake()
     {
         Button_Quest.onClick.AddListener(OnClickQuest);
         Button_Inventory.onClick.AddListener(OnClickInventory);
-        Button_Pick.onClick.AddListener(OnClickPick);
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
         Button_Battle.onClick.AddListener(OnClickBattle);
@@ -105,7 +104,6 @@ public class TycoonMainUI : UIBase
         SetDayText();
     }
 
-
     private void OnClickQuest()
     {
         ChangePanel(TycoonPanelType.Quest);
@@ -114,11 +112,6 @@ public class TycoonMainUI : UIBase
     private void OnClickInventory()
     {
         ChangePanel(TycoonPanelType.Inventory);
-    }
-
-    private void OnClickPick()
-    {
-        UIManager.Inst.OpenAdmissionPopup();
     }
 
     private void OnClickHero()
@@ -135,7 +128,7 @@ public class TycoonMainUI : UIBase
     {
         UIManager.Inst.OpenSettingPopup();
         ChangePanel(TycoonPanelType.None);
-        UpdateButton(TycoonPanelType.Setting).Forget();
+        UpdateButton(TycoonPanelType.Setting);
     }
 
     private void OnClickBattle()
@@ -160,20 +153,20 @@ public class TycoonMainUI : UIBase
             panel.PanelObject.SetActive(panel.Type == type);
         }
 
-        UpdateButton(type).Forget();
+        UpdateButton(type);
     }
 
-    private async UniTask UpdateButton(TycoonPanelType type)
+    private void UpdateButton(TycoonPanelType type)
     {
         foreach (ButtonStruct button in ButtonList)
         {
             if (button.Type == type)
             {
-                button.BackgroundImage.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Select");
+                button.BackgroundImage.sprite = Sprite_Select;
             }
             else
             {
-                button.BackgroundImage.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Unselect");
+                button.BackgroundImage.sprite = Sprite_Unselect;
             }
         }
     }

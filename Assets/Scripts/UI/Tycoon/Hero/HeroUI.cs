@@ -1,18 +1,25 @@
-﻿using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class HeroUI : UIBase
 {
+    [SerializeField] private HeroSlot Prefab_Slot;
     [SerializeField] private Transform Transform_Content;
     [SerializeField] private HeroHotBar HeroHotBar;
 
     private List<HeroSlot> _activeSlots = new List<HeroSlot>();
     private HeroViewModel _currentVM;
 
+    private ObjectPooling<HeroSlot> _slotPool;
+
+    private void Awake()
+    {
+        _slotPool = new ObjectPooling<HeroSlot>(Prefab_Slot, Transform_Content, 3, 10);
+    }
+
     private void OnEnable()
     {
-        RefreshHeroList().Forget();
+        RefreshHeroList();
     }
 
     private void OnDisable()
@@ -26,26 +33,32 @@ public class HeroUI : UIBase
         }
     }
 
-    private async UniTask RefreshHeroList()
+    private void RefreshHeroList()
     {
-        var playerModel = SaveManager.Inst.CurrentPlayerModel;
-
-        for (int i = _activeSlots.Count; i < playerModel.HeroStats.Count; i++)
+        foreach (HeroSlot slot in _activeSlots)
         {
-            string currentHeroID = playerModel.HeroStats[i].HeroID;
+            _slotPool.Release(slot);
+        }
 
-            HeroModel model = new HeroModel();
-            model.LoadHeroData(currentHeroID);
+        _activeSlots.Clear();
 
-            HeroViewModel viewModel = new HeroViewModel();
-            viewModel.Init(model);
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
 
-            GameObject prefab = await ResourceManager.Inst.InstantiateAsync("Prefabs/UI/HeroSlot", Transform_Content);
-            HeroSlot heroSlot = prefab.GetComponent<HeroSlot>();
+        foreach (var hero in playerModel.HeroStats)
+        {
+            string currentHero = hero.HeroID;
 
-            heroSlot.InitSlot(viewModel);
-            heroSlot.OnSlotClick = SelectHeroSlot;
+            HeroModel heroModel = new HeroModel();
+            heroModel.LoadHeroData(currentHero);
+
+            HeroViewModel heroVM = new HeroViewModel();
+            heroVM.Init(heroModel);
+
+            HeroSlot heroSlot = _slotPool.Get();
             _activeSlots.Add(heroSlot);
+
+            heroSlot.InitSlot(heroVM);
+            heroSlot.OnSlotClick = SelectHeroSlot;
         }
     }
 

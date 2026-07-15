@@ -92,6 +92,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
         _officeRoot.SetActive(false);
         Debug.Log("[ObjectManager] 3D 사무실 생성 완료");
     }
+
     //3D 사무실 진입. 메인 카메라·그리드 입력 차단 
     public void EnterOffice()
     {

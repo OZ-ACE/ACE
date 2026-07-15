@@ -21,6 +21,9 @@ public class HeroSlot : MonoBehaviour
     [SerializeField] private Image Image_Affection;
     [SerializeField] private Image Image_Satisfaction;
 
+    [SerializeField] private Sprite Sprite_Select;
+    [SerializeField] private Sprite Sprite_Unselect;
+
     public Action<HeroViewModel> OnSlotClick;
 
     private HeroViewModel _heroVM;
@@ -83,7 +86,7 @@ public class HeroSlot : MonoBehaviour
                 break;
 
             case nameof(_heroVM.IsSelect):
-                SetSlotBackground(_heroVM.IsSelect).Forget();
+                SetSlotBackground(_heroVM.IsSelect);
                 break;
         }
     }
@@ -93,15 +96,15 @@ public class HeroSlot : MonoBehaviour
         Image_Portrait.sprite = await ResourceManager.Inst.LoadSprite($"Image/Portrait/{name}");
     }
 
-    private async UniTask SetSlotBackground(bool isSelect)
+    private void SetSlotBackground(bool isSelect)
     {
         if (isSelect)
         {
-            Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/Slot/Select");
+            Image_Background.sprite = Sprite_Select;
         }
         else
         {
-            Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/Slot/Unselect");
+            Image_Background.sprite = Sprite_Unselect;
         }
     }
 }

@@ -12,6 +12,8 @@ public class DemolishToggleView : ViewBase
 {
     [Header("토글 버튼")]
     [SerializeField] private Button Button_Toggle;
+    [SerializeField] private Sprite Sprite_Select;
+    [SerializeField] private Sprite Sprite_Unselect;
 
     [Header("버튼 라벨")]
     [SerializeField] private TextMeshProUGUI Text_Label;
@@ -34,7 +36,7 @@ public class DemolishToggleView : ViewBase
             Button_Toggle.onClick.AddListener(OnClickToggle);
         }
 
-        UpdateLabel().Forget();
+        UpdateLabel();
     }
 
     private void OnEnable()
@@ -68,11 +70,11 @@ public class DemolishToggleView : ViewBase
         if (e.PropertyName == nameof(BuildGridViewModel.IsDemolishMode)
             || e.PropertyName == nameof(BuildGridViewModel.IsBuildMode))
         {
-            UpdateLabel().Forget();
+            UpdateLabel();
         }
     }
 
-    private async UniTask UpdateLabel()
+    private void UpdateLabel()
     {
         if (Text_Label == null || _viewModel == null)
         {
@@ -82,12 +84,12 @@ public class DemolishToggleView : ViewBase
         if (_viewModel.IsDemolishMode == true)
         {
             Text_Label.text = "철거 중";
-            Button_Toggle.image.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Select");
+            Button_Toggle.image.sprite = Sprite_Select;
         }
         else
         {
             Text_Label.text = "철거";
-            Button_Toggle.image.sprite = await ResourceManager.Inst.LoadSprite("Image/Button/Unselect");
+            Button_Toggle.image.sprite = Sprite_Unselect;
         }
     }
 }
