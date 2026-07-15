@@ -92,6 +92,7 @@ public class SaveManager : SingletonBase<SaveManager>
 
         newPlayer.Inventory = SetDefaultItem();
         newPlayer.HeroStats = SetDefaultHero();
+        newPlayer.AdmittedHeroList = SetDefaultAdmittedHeroes(newPlayer.HeroStats, newPlayer.Day);
 
         newPlayer.BuildGridData = new BuildGridData();
 
@@ -141,6 +142,32 @@ public class SaveManager : SingletonBase<SaveManager>
     public void SetCurrentSlotIndex(int slotIndex)
     {
         CurrentSlotIndex = slotIndex;
+    }
+
+    private List<AdmittedHeroModel> SetDefaultAdmittedHeroes(List<HeroStat> heroStats, int admittedDay)
+    {
+        List<AdmittedHeroModel> admittedHeroes = new List<AdmittedHeroModel>();
+
+        if (heroStats == null)
+        {
+            return admittedHeroes;
+        }
+
+        for (int i = 0; i < heroStats.Count; i++)
+        {
+            HeroStat heroStat = heroStats[i];
+
+            if (heroStat == null || string.IsNullOrEmpty(heroStat.HeroID))
+            {
+                continue;
+            }
+
+            AdmittedHeroModel admittedHero = new AdmittedHeroModel{HeroId = heroStat.HeroID, AdmittedDay = admittedDay};
+
+            admittedHeroes.Add(admittedHero);
+        }
+
+        return admittedHeroes;
     }
 
     public bool HasSaveFile(int slotIndex)

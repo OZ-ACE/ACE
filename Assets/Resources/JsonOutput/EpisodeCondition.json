@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "ID": "episodeCondition_test_01",
     "EpisodeId": "episode_test_01",
@@ -23,8 +23,15 @@
   {
     "ID": "episodeCondition_room_01",
     "EpisodeId": "episode_room_01",
-    "ConditionType": "RoomExists",
+    "ConditionType": "RoomPlaced",
     "TargetId": "Room_Office",
+    "RequiredValue": 0
+  },
+  {
+    "ID": "episodeCondition_admitted_01",
+    "EpisodeId": "episode_admitted_01",
+    "ConditionType": "HeroAdmitted",
+    "TargetId": "hero_02",
     "RequiredValue": 0
   }
 ]

@@ -42,5 +42,16 @@
     "IsArchiveVisible": true,
     "IsRepeatable": false,
     "MaxTriggerCount": 1
+  },
+  {
+    "ID": "episode_admitted_01",
+    "EpisodeName": "입소 테스트 에피소드",
+    "EpisodeDescription": "특정 영웅이 입소해 있으면 해금되는 테스트 에피소드",
+    "DialogueId": "Opening_01",
+    "Category": "Character",
+    "PlaybackType": "Archive",
+    "IsArchiveVisible": true,
+    "IsRepeatable": false,
+    "MaxTriggerCount": 1
   }
 ]
