@@ -54,9 +54,6 @@ public class ObjectManager : SingletonBase<ObjectManager>
         UIManager.Inst.OpenOfficeUI();
     }
 
-
-
-
     ////////////////////////////////////////
 
     // 테스트용 임시 메서드

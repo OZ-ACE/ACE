@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
@@ -11,19 +12,22 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Text_SelectDescription;
 
     [SerializeField] private Transform Transform_SlotParent;
-    [SerializeField] private GameObject InventorySlot;
+    [SerializeField] private GameObject Prefab_InventorySlot;
 
     [Header("판매")]
     [SerializeField] private Button Button_Sell;
     [SerializeField] private TextMeshProUGUI Text_SellPrice;
 
-
-
-
-
     private ShopViewModel _shopVM;
     private InventoryViewModel _inventoryVM;
+
+    private IObjectPool<InventorySlot> _slotPool;
     private List<InventorySlot> _activeSlots = new List<InventorySlot>();
+
+    private void Awake()
+    {
+        _slotPool = new ObjectPool<InventorySlot>(CreateSlotInstance, GetSlot, ReleaseSlot, DestroySlot, true, 12, 30);
+    }
 
     private void OnEnable()
     {
@@ -31,10 +35,12 @@ public class InventoryUI : MonoBehaviour
         {
             _activeSlots = new List<InventorySlot>();
             _inventoryVM = GameManager.Inst.InventoryViewModel;
+
             if (_inventoryVM.InventoryItems == null)
             {
                 _inventoryVM.Init(SaveManager.Inst.CurrentPlayerModel.Inventory);
             }
+
             BindViewModel(_inventoryVM);
         }
         else
@@ -54,7 +60,6 @@ public class InventoryUI : MonoBehaviour
         UpdateSellButton();
     }
 
-    /// <summary> 상점 뷰모델 확보 (없으면 생성) </summary>
     private ShopViewModel GetShopViewModel()
     {
         ShopViewModel vm = GameManager.Inst.Services.ShopService.GetShopViewModel();
@@ -92,7 +97,7 @@ public class InventoryUI : MonoBehaviour
         switch (e.PropertyName)
         {
             case nameof(_inventoryVM.InventoryItems):
-                SetInventoryList().Forget();
+                SetInventoryList();
                 UpdateSellButton();          
                 break;
             case nameof(_inventoryVM.SelectedItemID):
@@ -103,11 +108,35 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    private async UniTask SetInventoryList()
+    private InventorySlot CreateSlotInstance()
+    {
+        GameObject slot = Instantiate(Prefab_InventorySlot, Transform_SlotParent);
+        return slot.GetComponent<InventorySlot>();
+    }
+
+    private void GetSlot(InventorySlot slot)
+    {
+        slot.gameObject.SetActive(true);
+    }
+
+    private void ReleaseSlot(InventorySlot slot)
+    {
+        slot.gameObject.SetActive(false);
+    }
+
+    private void DestroySlot(InventorySlot slot)
+    {
+        Destroy(slot.gameObject);
+    }
+
+    private void SetInventoryList()
     {
         foreach (InventorySlot slot in _activeSlots)
         {
-            Destroy(slot.gameObject);
+            if (slot != null)
+            {
+                _slotPool.Release(slot);
+            }
         }
 
         _activeSlots.Clear();
@@ -116,8 +145,7 @@ public class InventoryUI : MonoBehaviour
 
         foreach (ItemModel item in items)
         {
-            GameObject prefab = await ResourceManager.Inst.InstantiateAsync("Prefabs/UI/InventorySlot", Transform_SlotParent);
-            InventorySlot inventorySlot = prefab.GetComponent<InventorySlot>();
+            InventorySlot inventorySlot = _slotPool.Get();
             _activeSlots.Add(inventorySlot);
 
             inventorySlot.SetSlotData(item.ItemID, item.ItemCount, _inventoryVM).Forget();
@@ -179,7 +207,6 @@ public class InventoryUI : MonoBehaviour
         UpdateSellButton();
     }
 
-    /// <summary> 선택된 아이템에 따라 판매가 표시 + 버튼 활성화 </summary>
     private void UpdateSellButton()
     {
         string itemID = _inventoryVM.SelectedItemID;
@@ -195,9 +222,4 @@ public class InventoryUI : MonoBehaviour
         Text_SellPrice.text = $"판매가 {sellPrice} G";
         Button_Sell.interactable = _shopVM.IsSellable(itemID);
     }
-
-
-
-
-
 }

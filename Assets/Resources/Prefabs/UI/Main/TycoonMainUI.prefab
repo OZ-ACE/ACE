@@ -4737,7 +4737,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4851638800253394150
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4776,7 +4776,7 @@ MonoBehaviour:
   Text_SelectItem: {fileID: 9199049406831430838}
   Text_SelectDescription: {fileID: 6005119175605536139}
   Transform_SlotParent: {fileID: 5240260438018880545}
-  InventorySlot: {fileID: 1162043542343114146, guid: a2e0dc92988daea4da87c346f2f3cb33, type: 3}
+  Prefab_InventorySlot: {fileID: 1162043542343114146, guid: a2e0dc92988daea4da87c346f2f3cb33, type: 3}
   Button_Sell: {fileID: 4135376247696706668}
   Text_SellPrice: {fileID: 5867281431543378145}
 --- !u!1 &5997621176557877826
