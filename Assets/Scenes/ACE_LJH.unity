@@ -262,14 +262,6 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
-    - target: {fileID: 4239936590247033912, guid: 7c691629d11923a47beab944aa443942, type: 3}
-      propertyPath: m_NavMeshData
-      value: 
-      objectReference: {fileID: 23800000, guid: e5dc59b8c387f3d42af8d3f7f2189c46, type: 2}
-    - target: {fileID: 4239936590247033912, guid: 7c691629d11923a47beab944aa443942, type: 3}
-      propertyPath: m_LayerMask.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 4992104607907062368, guid: 7c691629d11923a47beab944aa443942, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
