@@ -12,6 +12,8 @@ public class BattleViewModel : ViewModelBase
 
     private UniTaskCompletionSource _interventionCompletionSource;
 
+    private const int HealUnitAmount = 20; //temp, 데이터 테이블에 회복량 필드 아직 없음
+
     public List<BattleUnitModel> GetBattleTurnOrder(List<string> heroIds, List<string> enemyIds)
     {
         List<BattleUnitModel> participats = new List<BattleUnitModel>();
@@ -249,7 +251,8 @@ public class BattleViewModel : ViewModelBase
 
         if (action.Result == BattleActionResult.HealUnit)
         {
-            AddBattleLog($"{unitName} - 회복 처리 (Phase 4에서 실제 구현 예정)");
+            ApplyHealUnit(action.Unit);
+            AddBattleLog($"{unitName} - 회복 완료 (현재 HP {action.Unit.CurrentHp}/{action.Unit.MaxHp})");
             return;
         }
 
@@ -316,6 +319,17 @@ public class BattleViewModel : ViewModelBase
         }
 
         Debug.Log($"[BattleViewModel] {target.ID} 피격, 데미지 {power}, 남은 HP {target.CurrentHp}");
+    }
+
+    //대상 유닛의 HP를 회복시킨다. MaxHp를 넘지 않도록 제한
+    private void ApplyHealUnit(BattleUnitModel unit)
+    {
+        unit.CurrentHp += HealUnitAmount;
+
+        if (unit.CurrentHp > unit.MaxHp)
+        {
+            unit.CurrentHp = unit.MaxHp;
+        }
     }
 
     //유닛 진영에 맞는 스킬 데이터에서 Power 값을 가져온다
