@@ -17,7 +17,14 @@
     "ID": "episodeCondition_affinity_01",
     "EpisodeId": "episode_affinity_01",
     "ConditionType": "Affinity",
-    "TargetId": "hero_02",
-    "RequiredValue": 1
+    "TargetId": "hero_01",
+    "RequiredValue": 30
+  },
+  {
+    "ID": "episodeCondition_room_01",
+    "EpisodeId": "episode_room_01",
+    "ConditionType": "RoomExists",
+    "TargetId": "Room_Office",
+    "RequiredValue": 0
   }
 ]

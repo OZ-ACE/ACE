@@ -31,5 +31,16 @@
     "IsArchiveVisible": true,
     "IsRepeatable": false,
     "MaxTriggerCount": 1
+  },
+  {
+    "ID": "episode_room_01",
+    "EpisodeName": "시설 건설 테스트 에피소드",
+    "EpisodeDescription": "특정 시설을 건설하면 해금되는 테스트 에피소드",
+    "DialogueId": "Opening_01",
+    "Category": "Character",
+    "PlaybackType": "Archive",
+    "IsArchiveVisible": true,
+    "IsRepeatable": false,
+    "MaxTriggerCount": 1
   }
 ]

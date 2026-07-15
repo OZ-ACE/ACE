@@ -4,5 +4,6 @@
     Day,
     HeroAdmitted,
     InteriorOwned,
-    Affinity
+    Affinity,
+    RoomExists
 }

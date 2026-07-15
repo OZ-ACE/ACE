@@ -296,6 +296,8 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         SaveGrid();
+        GameManager.Inst.CheckEpisodes();
+
         Debug.Log($"[BuildGridViewModel] 방 배치 성공: {roomId} @ {originCoord} (-{roomData.BuildCost}G)");
         return PlacementResult.Success;
     }
