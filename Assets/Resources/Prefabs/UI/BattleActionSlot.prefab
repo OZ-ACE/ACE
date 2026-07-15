@@ -216,17 +216,17 @@ MonoBehaviour:
   Image_ActionType: {fileID: 3596932228433294080}
   _actionTypeVisualList:
   - Type: 1
-    Icon: {fileID: 21300000, guid: 9119661b5123f914fa301b6339fac5fd, type: 3}
-    FrameSprite: {fileID: 21300000, guid: 22d95e771f22a234c98641f2bd9c7f38, type: 3}
+    Icon: {fileID: 21300000, guid: e64cb82fe6773374896bb0ceb13fdd9c, type: 3}
+    FrameSprite: {fileID: 21300000, guid: b0e21638dc36b7745b97754851c3771b, type: 3}
   - Type: 2
     Icon: {fileID: 21300000, guid: c8768f72709d81c459819a6e0db4986e, type: 3}
-    FrameSprite: {fileID: 21300000, guid: f836864692761eb4da49f4262dafbc18, type: 3}
+    FrameSprite: {fileID: 21300000, guid: 8901832ae668f3a42aec5c685dd82476, type: 3}
   - Type: 3
-    Icon: {fileID: 21300000, guid: ebff3cb85af6fb143bda17fb88ac780b, type: 3}
-    FrameSprite: {fileID: 21300000, guid: cea6c49a5a2f510409820604d770a485, type: 3}
+    Icon: {fileID: 21300000, guid: 2594a88aec73bc94ca231696cef6a476, type: 3}
+    FrameSprite: {fileID: 21300000, guid: a3035e49364817440b7cd0d3643575f4, type: 3}
   - Type: 4
     Icon: {fileID: 21300000, guid: 9c810950f1b4a6943a9e9e0262525245, type: 3}
-    FrameSprite: {fileID: 21300000, guid: dd2b8ffb76e184045833d7bb8652a226, type: 3}
+    FrameSprite: {fileID: 21300000, guid: c72719cc589469a44b09025f78fcdd7b, type: 3}
 --- !u!114 &6712844875567840785
 MonoBehaviour:
   m_ObjectHideFlags: 0

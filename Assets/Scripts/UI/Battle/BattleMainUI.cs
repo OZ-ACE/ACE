@@ -25,6 +25,7 @@ public class BattleMainUI : UIBase
     [SerializeField] private Button Button_Reinforce;
     [SerializeField] private Button Button_HealUnit;
     [SerializeField] private Button Button_ChangeUnit;
+    [SerializeField] private Button Button_EndTurn;
 
     private const int ReinforceEnergyCost = 1; //temp
     private const int ChangeUnitEnergyCost = 2; //temp
@@ -64,6 +65,7 @@ public class BattleMainUI : UIBase
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
         Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
+        Button_EndTurn.onClick.AddListener(OnClickEndTurn);
         Button_StartBattle.onClick.AddListener(OnClickStartBattle);
     }
 
@@ -87,21 +89,8 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        string heroName = GetHeroDisplayName(unitId);
-        _viewModel.AddBattleLog($"{heroName} 유닛이 선택되었습니다.");
-    }
-
-    //유닛 ID로 표시용 영웅 이름을 가져온다. 데이터가 없으면 ID를 그대로 반환
-    private string GetHeroDisplayName(string unitId)
-    {
-        HeroData heroData = GameDataManager.Inst.GetData<HeroData>(unitId);
-
-        if (heroData == null)
-        {
-            return unitId;
-        }
-
-        return heroData.HeroName;
+        string unitName = GameUtil.GetUnitDisplayName(unitId);
+        _viewModel.AddBattleLog($"{unitName} 유닛이 선택되었습니다.");
     }
 
     private void OnDestroy()
@@ -113,6 +102,7 @@ public class BattleMainUI : UIBase
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
             Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
+            Button_EndTurn.onClick.RemoveListener(OnClickEndTurn);
             Button_StartBattle.onClick.RemoveListener(OnClickStartBattle);
         }
 
@@ -239,6 +229,12 @@ public class BattleMainUI : UIBase
         RequestInterventionAction(BattleActionResult.ChangeUnit, ChangeUnitEnergyCost, "영웅 교체 실행");
     }
 
+    //개입 턴을 마치고 다음 단계(큐 실행)로 넘어가겠다는 신호를 ViewModel에 전달
+    private void OnClickEndTurn()
+    {
+        _viewModel.NotifyInterventionEnded();
+    }
+
     //개입 버튼을 눌렀을 때 대상이 이미 선택돼 있으면 바로 적용하고, 없으면 다음 유닛 클릭 때 적용하도록 대기시킨다
     private void RequestInterventionAction(BattleActionResult result, int energyCost, string logMessage)
     {
@@ -248,7 +244,7 @@ public class BattleMainUI : UIBase
             _pendingEnergyCost = energyCost;
             _pendingLogMessage = logMessage;
 
-            _viewModel.AddBattleLog("대상을 선택하세요");
+            _viewModel.AddBattleLog("대상을 선택하세요.");
             return;
         }
 
@@ -274,8 +270,8 @@ public class BattleMainUI : UIBase
 
         SetEnergyGauge(BattleManager.Inst.GetRemainingEnergy());
 
-        string heroName = GetHeroDisplayName(targetUnitId);
-        _viewModel.AddBattleLog($"{heroName} 대상 - {logMessage}");
+        string unitName = GameUtil.GetUnitDisplayName(targetUnitId);
+        _viewModel.AddBattleLog($"{unitName} 대상 - {logMessage}");
 
         _selectedTargetUnitId = null;
         _pendingActionResult = null;
