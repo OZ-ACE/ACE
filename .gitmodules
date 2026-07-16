@@ -1,0 +1,3 @@
+[submodule "Assets/AddressableRemoteAssets"]
+	path = Assets/AddressableRemoteAssets
+	url = https://github.com/OZ-ACE/AddressableRemote
