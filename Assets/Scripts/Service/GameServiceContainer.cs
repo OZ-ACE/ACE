@@ -17,6 +17,9 @@
     // 정산 뷰모델 보관 서비스
     public SettlementService SettlementService { get; private set; }
 
+    // 퀘스트 뷰모델 보관 서비스
+    public QuestService QuestService { get; private set; }
+
     public void Initialize()
     {
         CurrencyService = new CurrencyService();
@@ -25,6 +28,7 @@
         EpisodeService = new EpisodeService();
         DayService = new DayService();
         SettlementService = new SettlementService(CurrencyService, DayService);
+        QuestService = new QuestService(CurrencyService);
     }
 
     public void Release()

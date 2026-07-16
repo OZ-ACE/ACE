@@ -1,26 +1,46 @@
 [
   {
-    "ID": "Quest_1_01",
-    "Name": "첫 출근 1",
-    "Content": "요양보조사 사무실 건설",
-    "QuestClass": "Main",
-    "QuestType": "bool",
-    "Reward": "500"
+    "ID": "Quest_01_01",
+    "QuestName": "첫 삽을 뜨다",
+    "Description": "사무실 1개 건설",
+    "ConditionType": "BuildRoom",
+    "ConditionTargetID": "Room_Office",
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 500,
+    "RequiredQuestID": null
   },
   {
-    "ID": "Quest_1_02",
-    "Name": "첫 출근 2",
-    "Content": "기본 지원금 수령하기",
-    "QuestClass": "Main",
-    "QuestType": "bool",
-    "Reward": "500"
+    "ID": "Quest_01_02",
+    "QuestName": "첫 삽을 뜨다 2",
+    "Description": "방을 3개 건설",
+    "ConditionType": "BuildRoom",
+    "ConditionTargetID": null,
+    "ConditionCount": 3,
+    "RewardType": "Gold",
+    "RewardAmount": 1000,
+    "RequiredQuestID": "Quest_01_01"
   },
   {
-    "ID": "Quest_1_03",
-    "Name": "어르신 문안 인사",
-    "Content": "초기 입소 영웅 3명과 대화하기",
-    "QuestClass": "Sub",
-    "QuestType": "Num",
-    "Reward": "500"
+    "ID": "Quest_02_01",
+    "QuestName": "첫 장보기",
+    "Description": "상점에서 아이템을 1개 구매",
+    "ConditionType": "PurchaseItem",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": null
+  },
+  {
+    "ID": "Quest_03_01",
+    "QuestName": "하루의 끝",
+    "Description": "하루를 3번 마감",
+    "ConditionType": "AdvanceDay",
+    "ConditionTargetID": null,
+    "ConditionCount": 3,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": null
   }
 ]

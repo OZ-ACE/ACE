@@ -72,5 +72,6 @@ public class SaveViewModel : ViewModelBase
         SaveManager.Inst.SetCurrentSlotIndex(slotIndex);
         SaveManager.Inst.RequestLoadData(slotIndex);
         GameManager.Inst.Services.BuildService.GetBuildGridViewModel().ReloadGrid();
+        GameManager.Inst.Services.QuestService.ReloadQuest();
     }
 }

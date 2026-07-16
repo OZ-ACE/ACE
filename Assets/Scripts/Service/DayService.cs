@@ -81,6 +81,7 @@ public class DayService
         }
 
         Debug.Log($"[DayService] 다음날로 이동 Day : {player.Day}");
+        GameManager.Inst.Services.QuestService.ReportProgress(QuestConditionType.AdvanceDay, string.Empty, 1);
         return true;
     }
 }

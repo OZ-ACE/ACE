@@ -19,6 +19,7 @@ public class PlayerModel
     public List<ShopStockData> ShopStocks = new List<ShopStockData>();
     public List<HeroProgressModel> HeroProgressList = new List<HeroProgressModel>();
     public List<HeroStat> HeroStats = new List<HeroStat>();
+    public List<QuestProgressModel> QuestProgressList = new List<QuestProgressModel>();
 }
 
 [Serializable]
@@ -49,4 +50,13 @@ public class HeroStat
     public string HeroID;
     public int Affection;
     public int Satisfaction;
+
+}
+
+[Serializable]
+public class QuestProgressModel
+{
+    public string QuestID;
+    public int CurrentCount;
+    public int State;   // QuestState를 int로 저장
 }
