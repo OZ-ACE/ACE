@@ -246,6 +246,18 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
+            //행동 실행 전에 유닛이 전투 불능이면 예약된 행동을 취소
+            if (action.Unit == null || action.Unit.IsDefeated)
+            {
+                if (action.Unit != null)
+                {
+                    string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+                    AddBattleLog($"{unitName} - 전투 불능으로 행동 취소");
+                }
+
+                continue;
+            }
+
             ResolveAction(action, heroList, enemyList);
         }
     }
@@ -301,7 +313,13 @@ public class BattleViewModel : ViewModelBase
             return;
         }
 
-        ApplyActionDamage(action);
+        bool isDamageApplied = ApplyActionDamage(action, heroList, enemyList);
+
+        if (action.ActionType == ActionType.Attack && isDamageApplied == false)
+        {
+            AddBattleLog($"{unitName} - 공격 가능한 대상이 없어 행동 불발");
+            return;
+        }
 
         if (action.ActionType != ActionType.Wait)
         {
@@ -355,7 +373,14 @@ public class BattleViewModel : ViewModelBase
             return;
         }
 
-        ApplyActionDamage(revivedAction);
+        bool isDamageApplied = ApplyActionDamage(revivedAction, heroList, enemyList);
+
+        if (revivedAction.ActionType == ActionType.Attack && isDamageApplied == false)
+        {
+            AddBattleLog($"{unitName} - 페널티는 해제되었으나 공격 가능한 대상이 없습니다.");
+            return;
+        }
+
         AddBattleLog($"{unitName} - 지원하기로 페널티 해제 성공, {revivedAction.ActionType} 성공");
     }
 
@@ -373,19 +398,29 @@ public class BattleViewModel : ViewModelBase
     }
 
     //액션 결과를 대상(들)의 HP에 실제로 반영한다. 공격 타입 스킬에만 적용
-    private void ApplyActionDamage(BattleActionModel action)
+    private bool ApplyActionDamage(
+        BattleActionModel action,
+        List<BattleUnitModel> heroList,
+        List<BattleUnitModel> enemyList)
     {
         if (action.ActionType != ActionType.Attack)
         {
-            return;
+            return false;
         }
 
         int power = GetSkillPower(action.Unit, action.SkillId);
 
         if (action.TargetType == TargetType.Single)
         {
+            bool hasValidTarget = TryRetargetSingleEnemy(action, heroList, enemyList);
+
+            if (hasValidTarget == false)
+            {
+                return false;
+            }
+
             ApplyDamageToUnit(action.Target, power);
-            return;
+            return true;
         }
 
         if (action.TargetType == TargetType.Multi)
@@ -394,7 +429,46 @@ public class BattleViewModel : ViewModelBase
             {
                 ApplyDamageToUnit(target, power);
             }
+
+            return true;
         }
+
+        return false;
+    }
+
+    private bool TryRetargetSingleEnemy(
+        BattleActionModel action,
+        List<BattleUnitModel> heroList,
+        List<BattleUnitModel> enemyList)
+    {
+        if (action.Target != null && action.Target.IsDefeated == false)
+        {
+            return true;
+        }
+
+        bool isEnemyTarget =
+            action.TargetSelectType == TargetSelectType.RandomEnemy ||
+            action.TargetSelectType == TargetSelectType.LowestHpEnemy;
+
+        if (isEnemyTarget == false)
+        {
+            return false;
+        }
+
+        List<BattleUnitModel> selectedTargets = BattleTargetSelector.SelectTargets(
+            action.Unit,
+            heroList,
+            enemyList,
+            action.TargetSelectType,
+            action.TargetCount);
+
+        if (selectedTargets == null || selectedTargets.Count == 0)
+        {
+            return false;
+        }
+
+        action.Target = selectedTargets[0];
+        return action.Target != null && action.Target.IsDefeated == false;
     }
 
     private void ApplyDamageToUnit(BattleUnitModel target, int power)
