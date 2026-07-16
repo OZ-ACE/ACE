@@ -96,6 +96,7 @@ public class BattleViewModel : ViewModelBase
         List<BattleUnitModel> enemyList,
         CancellationToken token)
     {
+        LogPenaltyReleases(turnOrder);
         BattleManager.Inst.BuildActionQueue(turnOrder);
 
         foreach (BattleUnitModel unit in turnOrder)
@@ -244,6 +245,33 @@ public class BattleViewModel : ViewModelBase
         }
     }
 
+    //이번 라운드 시작으로 페널티가 자연 해제될 유닛이 있으면 실제 해제(BuildActionQueue) 전에 미리 배틀로그를 남긴다
+    private void LogPenaltyReleases(List<BattleUnitModel> turnOrder)
+    {
+        foreach (BattleUnitModel unit in turnOrder)
+        {
+            if (string.IsNullOrEmpty(unit.ActivePenaltyId))
+            {
+                continue;
+            }
+
+            if (unit.PenaltyRemainingRounds > 1)
+            {
+                continue;
+            }
+
+            Penalty penalty = GameDataManager.Inst.GetData<Penalty>(unit.ActivePenaltyId);
+
+            if (penalty == null)
+            {
+                continue;
+            }
+
+            string unitName = GameUtil.GetUnitDisplayName(unit.ID);
+            AddBattleLog($"{unitName} - {penalty.PenaltyName} 자연 해제");
+        }
+    }
+
     //액션 하나를 개입 결과에 따라 처리한다
     private void ResolveAction(BattleActionModel action, List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList)
     {
@@ -272,7 +300,12 @@ public class BattleViewModel : ViewModelBase
 
         if (action.ActionType != ActionType.Wait)
         {
-            BattleManager.Inst.UpdatePenaltyGauge(action.Unit, action.SkillId);
+            Penalty triggeredPenalty = BattleManager.Inst.UpdatePenaltyGauge(action.Unit, action.SkillId);
+
+            if (triggeredPenalty != null)
+            {
+                AddBattleLog($"{unitName} - {triggeredPenalty.PenaltyName} 발동");
+            }
         }
 
         AddBattleLog(BuildActionResolvedLogMessage(action));

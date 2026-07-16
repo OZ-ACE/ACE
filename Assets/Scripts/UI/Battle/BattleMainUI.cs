@@ -276,6 +276,12 @@ public class BattleMainUI : UIBase
             return;
         }
 
+        if (applyResult == ActionApplyResult.AlreadyApplied)
+        {
+            _viewModel.AddBattleLog("실행 실패: 이미 이번 라운드에 행동을 지정한 유닛입니다.");
+            return;
+        }
+
         if (applyResult == ActionApplyResult.NoActivePenalty)
         {
             _viewModel.AddBattleLog("실행 실패: 페널티가 없어 지원하기를 쓸 수 없습니다.");
