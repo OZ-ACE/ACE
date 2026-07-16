@@ -42,5 +42,7 @@ public enum ActionApplyResult
 {
     Success = 0,
     InsufficientEnergy,
-    TargetNotFound
+    TargetNotFound,
+    NoActivePenalty,
+    AlreadyApplied
 }
