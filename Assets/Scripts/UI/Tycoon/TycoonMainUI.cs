@@ -89,6 +89,8 @@ public class TycoonMainUI : UIBase
         SetMemory();
         SetDayText();
         ChangePanel(TycoonPanelType.Quest);
+
+        GameManager.Inst.Services.DayService.StartTimer();
     }
 
     private void OnDisable()
@@ -100,6 +102,11 @@ public class TycoonMainUI : UIBase
             GameManager.Inst.Services.DayService.OnChangeDay -= OnChangeDay;
             GameManager.Inst.Services.DayService.OnChangeHour -= OnChangeHour;
         }
+    }
+
+    private void Update()
+    {
+        GameManager.Inst.Services.DayService.UpdateTimer(Time.deltaTime);
     }
 
     private void OnChangeDay(int day)

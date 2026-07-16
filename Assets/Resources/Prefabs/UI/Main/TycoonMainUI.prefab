@@ -6971,6 +6971,7 @@ MonoBehaviour:
   - Type: 4
     PanelObject: {fileID: 3041372502667919175}
   Text_Day: {fileID: 8518081571487978185}
+  Text_Time: {fileID: 7526354422038404398}
   Text_Gold: {fileID: 457173599379241217}
   Text_Memory: {fileID: 6139886496297560485}
   Sprite_Select: {fileID: -1327821776, guid: 3965c42e7356a0346b9344c32c7f1f99, type: 3}
