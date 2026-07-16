@@ -11,6 +11,7 @@ public class BattleMainUI : UIBase
 {
     [Header("액션 큐")]
     [SerializeField] private Transform Transform_ActionQueueContent;
+    [SerializeField] private TextMeshProUGUI Text_Round;
 
     [Header("배틀 로그")]
     [SerializeField] private ScrollRect ScrollRect_BattleLog;
@@ -121,6 +122,7 @@ public class BattleMainUI : UIBase
                 break;
             case nameof(_viewModel.ActionQueue):
                 RefreshActionQueue(_viewModel.ActionQueue);
+                UpdateRoundText();
                 break;
         }
     }
@@ -134,6 +136,12 @@ public class BattleMainUI : UIBase
         {
             CreateActionQueueSlot(action);
         }
+    }
+
+    //현재 라운드 수를 화면에 표시한다
+    private void UpdateRoundText()
+    {
+        Text_Round.text = $"라운드 {BattleManager.Inst.GetCurrentRound()}";
     }
 
     private void ClearActionQueueSlots()
@@ -265,6 +273,12 @@ public class BattleMainUI : UIBase
         if (applyResult == ActionApplyResult.TargetNotFound)
         {
             _viewModel.AddBattleLog("실행 실패: 대상이 액션 큐에 없습니다.");
+            return;
+        }
+
+        if (applyResult == ActionApplyResult.NoActivePenalty)
+        {
+            _viewModel.AddBattleLog("실행 실패: 페널티가 없어 지원하기를 쓸 수 없습니다.");
             return;
         }
 
