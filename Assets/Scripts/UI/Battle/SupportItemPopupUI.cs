@@ -11,8 +11,12 @@ public class SupportItemPopupUI : UIBase
     [SerializeField] private GameObject Object_EmptyMessage;
     [SerializeField] private GameObject Object_ItemDescription;
     [SerializeField] private TextMeshProUGUI Text_ItemDescription;
+    [SerializeField] private TextMeshProUGUI Text_HealAmount;
+
+    private const float DescriptionRightInsetForHeal = 240f; //Text_HealAmount 폭만큼 오른쪽 여백 확보
 
     private RectTransform _rectTransform;
+    private float _descriptionDefaultRightInset;
     private readonly List<SupportItemSlot> _activeSlotList = new List<SupportItemSlot>();
 
     public event Action<string> OnItemApplied;
@@ -20,6 +24,7 @@ public class SupportItemPopupUI : UIBase
     private void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
+        _descriptionDefaultRightInset = -Text_ItemDescription.rectTransform.offsetMax.x;
     }
 
     private void Update()
@@ -164,10 +169,31 @@ public class SupportItemPopupUI : UIBase
         ClosePopup();
     }
 
-    private void HandleItemHoverEnter(string description)
+    private void HandleItemHoverEnter(string itemId)
     {
-        Text_ItemDescription.text = description;
+        SupportItem itemData = GameDataManager.Inst.GetData<SupportItem>(itemId);
+
+        if (itemData == null)
+        {
+            return;
+        }
+
+        Text_ItemDescription.text = itemData.Description;
         Object_ItemDescription.SetActive(true);
+
+        bool isHealItem = itemData.ItemCategory == "Heal";
+
+        Text_HealAmount.gameObject.SetActive(isHealItem);
+
+        RectTransform descriptionRect = Text_ItemDescription.rectTransform;
+        Vector2 offsetMax = descriptionRect.offsetMax;
+        offsetMax.x = isHealItem ? -DescriptionRightInsetForHeal : -_descriptionDefaultRightInset;
+        descriptionRect.offsetMax = offsetMax;
+
+        if (isHealItem)
+        {
+            Text_HealAmount.text = $"회복량 {itemData.HealAmount}";
+        }
     }
 
     private void HandleItemHoverExit()

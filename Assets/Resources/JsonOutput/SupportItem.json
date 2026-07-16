@@ -34,7 +34,7 @@
     "TargetPenaltyName": null,
     "HealAmount": 5,
     "EnergyCost": 1,
-    "StockCount": 0,
+    "StockCount": 1,
     "Price": 80,
     "Description": "맛있는 비타민 음료다.\n영웅들의 삶의 희망!"
   },
@@ -47,7 +47,7 @@
     "TargetPenaltyName": null,
     "HealAmount": 10,
     "EnergyCost": 1,
-    "StockCount": 0,
+    "StockCount": 1,
     "Price": 50,
     "Description": "영웅들이 아야!했나보다.\n영웅일지라도 다친 살갗은 아픈 법이다.\n그들의 아코!한 살갗을 덮어 위로해주자."
   }

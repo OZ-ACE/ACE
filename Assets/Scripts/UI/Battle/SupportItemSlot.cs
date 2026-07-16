@@ -14,7 +14,6 @@ public class SupportItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private Button _button;
     private string _itemId;
-    private string _itemDescription;
 
     public event Action<string> OnItemSelected;
     public event Action<string> OnItemHoverEnter;
@@ -50,7 +49,6 @@ public class SupportItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
         Text_ItemName.text = itemData.ItemName;
         Text_ItemCount.text = $"{count}";
-        _itemDescription = itemData.Description;
 
         Image_Item.sprite = await ResourceManager.Inst.LoadSprite($"Image/Item[{itemId}]");
     }
@@ -62,7 +60,7 @@ public class SupportItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        OnItemHoverEnter?.Invoke(_itemDescription);
+        OnItemHoverEnter?.Invoke(_itemId);
     }
 
     public void OnPointerExit(PointerEventData eventData)
