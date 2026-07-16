@@ -295,6 +295,8 @@ public class BuildGridViewModel : ViewModelBase
             OnPlaceRoom.Invoke(placed);
         }
 
+
+        GameManager.Inst.Services.QuestService.ReportProgress(QuestConditionType.BuildRoom, roomId, 1);
         SaveGrid();
         Debug.Log($"[BuildGridViewModel] 방 배치 성공: {roomId} @ {originCoord} (-{roomData.BuildCost}G)");
         return PlacementResult.Success;

@@ -168,6 +168,8 @@ public class ShopViewModel : ViewModelBase
         }
         OnPropertyChanged(nameof(CurrentGold));
 
+
+        GameManager.Inst.Services.QuestService.ReportProgress(QuestConditionType.PurchaseItem, itemID, 1);
         SaveShop();
 
         Debug.Log($"[ShopViewModel] 구매 성공: {item.ItemName} ({item.Price}G) → 잔여 재고 {GetRemainStock(itemID)}");

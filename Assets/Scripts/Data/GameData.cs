@@ -151,3 +151,17 @@ public class BattleConfig : GameDataBase
     public int HalfBonusRoundThreshold;
     public int ParticipateCountPerLevel;
 }
+
+//퀘스트 관련 데이터
+[Serializable]
+public class QuestData : GameDataBase
+{
+    public string QuestName;
+    public string Description;
+    public string ConditionType;      // enum 문자열
+    public string ConditionTargetID;  // 방 ID / 아이템 ID, 빈 값이면 대상 무관
+    public int ConditionCount;
+    public string RewardType;         // enum 문자열
+    public int RewardAmount;
+    public string RequiredQuestID;    // 선행 퀘스트, 없으면 빈 문자열
+}
