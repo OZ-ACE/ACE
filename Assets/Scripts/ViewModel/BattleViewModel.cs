@@ -246,6 +246,18 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
+            //행동 실행 전에 유닛이 전투 불능이면 예약된 행동을 취소
+            if (action.Unit == null || action.Unit.IsDefeated)
+            {
+                if (action.Unit != null)
+                {
+                    string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+                    AddBattleLog($"{unitName} - 전투 불능으로 행동 취소");
+                }
+
+                continue;
+            }
+
             ResolveAction(action, heroList, enemyList);
         }
     }
