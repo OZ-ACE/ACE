@@ -14,6 +14,8 @@ public class HeroModel
 
     private HeroStat _targetHeroStat;
 
+    public List<ScheduleState> HourlyStates = new List<ScheduleState>();
+
     public void LoadHeroData(string heroID)
     {
         var heroData = GameDataManager.Inst.GetData<HeroData>(heroID);
@@ -22,6 +24,7 @@ public class HeroModel
         Name = heroData.HeroName;
         Description = heroData.Remarks;
 
+        DiseaseName.Clear();
         foreach (string penaltyID in heroData.PenaltyID)
         {
             DiseaseName.Add(GameDataManager.Inst.GetData<Penalty>(penaltyID).PenaltyName);
@@ -50,6 +53,8 @@ public class HeroModel
 
         Affection = _targetHeroStat.Affection;
         Satisfaction = _targetHeroStat.Satisfaction;
+
+        HourlyStates.Clear();
     }
 
     public void SaveHeroProgress()
