@@ -41,6 +41,75 @@ public class SupportItemPopupUI : UIBase
         return RectTransformUtility.RectangleContainsScreenPoint(_rectTransform, Input.mousePosition, null);
     }
 
+    //대상 유닛의 활성 페널티에 맞는 지원 아이템만 필터링해서 팝업을 연다
+    public void OpenPopupForPenalty(BattleUnitModel unit)
+    {
+        Dictionary<string, int> filteredItems = new Dictionary<string, int>();
+
+        foreach (SupportItem item in GameDataManager.Inst.GetDataList<SupportItem>())
+        {
+            if (item.ItemCategory != "Penalty")
+            {
+                continue;
+            }
+
+            if (item.TargetPenaltyId != unit.ActivePenaltyId)
+            {
+                continue;
+            }
+
+            int count = GetOwnedItemCount(item.ID);
+
+            if (count <= 0)
+            {
+                continue;
+            }
+
+            filteredItems.Add(item.ID, count);
+        }
+
+        OpenPopup(filteredItems);
+    }
+
+    //회복 아이템만 필터링해서 팝업을 연다
+    public void OpenPopupForHeal()
+    {
+        Dictionary<string, int> filteredItems = new Dictionary<string, int>();
+
+        foreach (SupportItem item in GameDataManager.Inst.GetDataList<SupportItem>())
+        {
+            if (item.ItemCategory != "Heal")
+            {
+                continue;
+            }
+
+            int count = GetOwnedItemCount(item.ID);
+
+            if (count <= 0)
+            {
+                continue;
+            }
+
+            filteredItems.Add(item.ID, count);
+        }
+
+        OpenPopup(filteredItems);
+    }
+
+    //세이브 데이터의 실제 인벤토리에서 해당 아이템 보유 수량을 조회한다
+    private int GetOwnedItemCount(string itemId)
+    {
+        foreach (ItemModel item in SaveManager.Inst.CurrentPlayerModel.Inventory)
+        {
+            if (item.ItemID == itemId)
+            {
+                return item.ItemCount;
+            }
+        }
+
+        return 0;
+    }
+
     //표시할 아이템 목록을 받아 팝업을 열고 슬롯을 채운다. itemIdToCountMap은 itemId - 보유수량 쌍
     public void OpenPopup(Dictionary<string, int> itemIdToCountMap)
     {
