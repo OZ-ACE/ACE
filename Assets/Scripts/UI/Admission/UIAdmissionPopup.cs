@@ -1,29 +1,80 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UIAdmissionPopup : UIBase
 {
+    [SerializeField] private Button Button_Background;
+
     [Header("Paper")]
     [SerializeField] private RectTransform Rect_PaperRoot;
     [SerializeField] private UIAdmissionPaperSlot Prefab_PaperSlot;
+    [SerializeField] private Vector2 _stackedStartPosition = Vector2.zero;
 
-    [Header("Paper Position")]
-    [SerializeField]
-    private Vector2 _stackedStartPosition = Vector2.zero;
-
-    [SerializeField]
-    private Vector2 _stackedOffset = new Vector2(18f, -8f);
-
-    [SerializeField]
-    private Vector2 _flippedStartPosition = new Vector2(-420f, 0f);
-
-    [SerializeField]
-    private Vector2 _flippedOffset = new Vector2(-18f, -8f);
+    [Header("Offset")]
+    [SerializeField] private Vector2 _stackedOffset = new Vector2(18f, -8f);
+    [SerializeField] private Vector2 _flippedStartPosition = new Vector2(-420f, 0f);
+    [SerializeField] private Vector2 _flippedOffset = new Vector2(-18f, -8f);
 
     private readonly List<UIAdmissionPaperSlot> _paperSlots = new List<UIAdmissionPaperSlot>();
 
     private AdmissionPopupViewModel _viewModel;
     private int _currentPaperIndex;
+
+    private void OnEnable()
+    {
+        BindButtonEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnbindButtonEvents();
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            ClosePopup();
+        }
+    }
+
+    private void BindButtonEvents()
+    {
+        if (Button_Background == null)
+        {
+            return;
+        }
+
+        Button_Background.onClick.RemoveListener(OnClickBackgroundButton);
+        Button_Background.onClick.AddListener(OnClickBackgroundButton);
+    }
+
+    private void UnbindButtonEvents()
+    {
+        if (Button_Background == null)
+        {
+            return;
+        }
+
+        Button_Background.onClick.RemoveListener(OnClickBackgroundButton);
+    }
+
+    private void OnClickBackgroundButton()
+    {
+        ClosePopup();
+    }
+
+    private void ClosePopup()
+    {
+        UIManager.Inst.CloseAdmissionPopup();
+    }
 
     public void Initialize()
     {
@@ -48,7 +99,7 @@ public class UIAdmissionPopup : UIBase
 
             if (heroData == null)
             {
-                Debug.LogWarning($"영웅 데이터를 찾을 수 없습니다. Index : {i}");
+                Debug.LogWarning($"영웅 데이터를 찾을 수 없음. Index : {i}");
                 continue;
             }
 
@@ -56,7 +107,7 @@ public class UIAdmissionPopup : UIBase
 
             if (paperSlot == null)
             {
-                Debug.LogWarning($"입소 신청서 생성에 실패했습니다. Index : {i}");
+                Debug.LogWarning($"입소 신청서 생성에 실패함. Index : {i}");
                 continue;
             }
 
@@ -126,7 +177,7 @@ public class UIAdmissionPopup : UIBase
 
         if (paperIndex != _currentPaperIndex)
         {
-            Debug.LogWarning($"현재 종이가 아닙니다. Current : {_currentPaperIndex}, Clicked : {paperIndex}");
+            Debug.LogWarning($"펼쳐진 종이가 아님. Current : {_currentPaperIndex}, Clicked : {paperIndex}");
             return;
         }
 
@@ -139,7 +190,7 @@ public class UIAdmissionPopup : UIBase
     {
         if (paperIndex != _currentPaperIndex)
         {
-            Debug.LogWarning($"완료된 종이 순서가 일치하지 않습니다. Current : {_currentPaperIndex}, Completed : {paperIndex}");
+            Debug.LogWarning($"완료된 종이 순서가 일치하지 않음. Current : {_currentPaperIndex}, Completed : {paperIndex}");
             return;
         }
 
@@ -159,7 +210,7 @@ public class UIAdmissionPopup : UIBase
 
         if (paperIndex != previousPaperIndex)
         {
-            Debug.LogWarning($"되돌릴 수 있는 종이가 아닙니다. Expected : {previousPaperIndex}, Clicked : {paperIndex}");
+            Debug.LogWarning($"되돌릴 수 있는 종이가 아님. Expected : {previousPaperIndex}, Clicked : {paperIndex}");
             return;
         }
 
@@ -174,7 +225,7 @@ public class UIAdmissionPopup : UIBase
 
         if (paperIndex != previousPaperIndex)
         {
-            Debug.LogWarning($"되돌아온 종이 순서가 일치하지 않습니다. Expected : {previousPaperIndex}, Completed : {paperIndex}");
+            Debug.LogWarning($"되돌아온 종이 순서가 일치하지 않음. Expected : {previousPaperIndex}, Completed : {paperIndex}");
             return;
         }
 
@@ -249,7 +300,7 @@ public class UIAdmissionPopup : UIBase
     {
         if (string.IsNullOrEmpty(heroId) == true)
         {
-            Debug.LogWarning("입소 신청서의 영웅 ID가 비어있습니다.");
+            Debug.LogWarning("입소 신청서 ID가 비어있음.");
             return;
         }
 
@@ -257,7 +308,7 @@ public class UIAdmissionPopup : UIBase
 
         if (isSuccess == false)
         {
-            Debug.LogWarning("입소 처리에 실패했습니다.");
+            Debug.LogWarning("입소 처리 실패함.");
             return;
         }
 
