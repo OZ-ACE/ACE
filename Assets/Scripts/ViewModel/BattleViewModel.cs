@@ -130,7 +130,7 @@ public class BattleViewModel : ViewModelBase
 
         await WaitForInterventionEndAsync(token);
 
-        ResolveActionQueue();
+        ResolveActionQueue(heroList, enemyList);
         RefreshActionQueue();
     }
 
@@ -229,7 +229,7 @@ public class BattleViewModel : ViewModelBase
     }
 
     //개입 턴이 끝난 뒤 큐를 순서대로 꺼내며 실제 효과를 적용한다
-    private void ResolveActionQueue()
+    private void ResolveActionQueue(List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList)
     {
         while (BattleManager.Inst.HasNextAction())
         {
@@ -240,12 +240,12 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
-            ResolveAction(action);
+            ResolveAction(action, heroList, enemyList);
         }
     }
 
     //액션 하나를 개입 결과에 따라 처리한다
-    private void ResolveAction(BattleActionModel action)
+    private void ResolveAction(BattleActionModel action, List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList)
     {
         string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
 
