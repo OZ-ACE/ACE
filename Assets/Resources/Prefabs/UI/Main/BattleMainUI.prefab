@@ -2013,7 +2013,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB77C\uC6B4\uB4DC 3"
+  m_text: "\uB77C\uC6B4\uB4DC \uC218"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1196d15cf9dfab247899b48da89596d1, type: 2}
   m_sharedMaterial: {fileID: -5220014475569205097, guid: 1196d15cf9dfab247899b48da89596d1, type: 2}
@@ -6155,6 +6155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleMainUI
   Transform_ActionQueueContent: {fileID: 8123780583230695895}
+  Text_Round: {fileID: 5864252209531839442}
   ScrollRect_BattleLog: {fileID: 7333493230995692662}
   Transform_LogContent: {fileID: 5205851395069963914}
   Image_EnergySlotList:
