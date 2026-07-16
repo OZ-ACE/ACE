@@ -6,7 +6,17 @@ using System;
 public class DayService
 {
     public event Action<int> OnChangeDay;
+    public event Action<int> OnChangeHour;
 
+    private const float _realTime = 5f;
+    private float _time = 0f;
+    private bool _isTimerPlaying = false;
+
+    private int _currentHour = 0;
+    public int CurrentHour
+    {
+        get => _currentHour;
+    }
 
     // 프로퍼티
     public int CurrentDay
@@ -82,5 +92,41 @@ public class DayService
 
         Debug.Log($"[DayService] 다음날로 이동 Day : {player.Day}");
         return true;
+    }
+
+    public void StartTimer()
+    {
+        _isTimerPlaying = true;
+    }
+
+    public void PauseTimer()
+    {
+        _isTimerPlaying = false;
+    }
+
+    public void UpdateTimer(float deltaTime)
+    {
+        _time += deltaTime;
+
+        if (_time >= _realTime)
+        {
+            _time -= _realTime;
+            AddHour();
+        }
+    }
+
+    private void AddHour()
+    {
+        _currentHour++;
+
+        if (_currentHour >= 24)
+        {
+            _currentHour = 23;
+            PauseTimer();
+
+            return;
+        }
+
+        OnChangeHour?.Invoke(_currentHour);
     }
 }

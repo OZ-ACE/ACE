@@ -51,6 +51,7 @@ public class TycoonMainUI : UIBase
 
     [Header("텍스트")]
     [SerializeField] TextMeshProUGUI Text_Day;
+    [SerializeField] TextMeshProUGUI Text_Time;
     [SerializeField] TextMeshProUGUI Text_Gold;
     [SerializeField] TextMeshProUGUI Text_Memory;
 
@@ -83,6 +84,7 @@ public class TycoonMainUI : UIBase
         GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetGoldText;
         GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetMemory;
         GameManager.Inst.Services.DayService.OnChangeDay += OnChangeDay;
+        GameManager.Inst.Services.DayService.OnChangeHour += OnChangeHour;
         SetGoldText();
         SetMemory();
         SetDayText();
@@ -96,12 +98,18 @@ public class TycoonMainUI : UIBase
             GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetGoldText;
             GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetMemory;
             GameManager.Inst.Services.DayService.OnChangeDay -= OnChangeDay;
+            GameManager.Inst.Services.DayService.OnChangeHour -= OnChangeHour;
         }
     }
 
     private void OnChangeDay(int day)
     {
         SetDayText();
+    }
+
+    private void OnChangeHour(int hour)
+    {
+        Text_Time.text = $"{hour:D2} : 00";
     }
 
     private void OnClickQuest()
