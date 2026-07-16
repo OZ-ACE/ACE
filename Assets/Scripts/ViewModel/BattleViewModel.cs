@@ -269,10 +269,16 @@ public class BattleViewModel : ViewModelBase
         }
 
         ApplyActionDamage(action);
+
+        if (action.ActionType != ActionType.Wait)
+        {
+            BattleManager.Inst.UpdatePenaltyGauge(action.Unit, action.SkillId);
+        }
+
         AddBattleLog(BuildActionResolvedLogMessage(action));
     }
 
-    //강화하기 개입 처리 - 페널티로 막혔던 원래 스킬을 되살려서 실제로 적용한다
+    //지원하기 개입 처리 - 페널티로 막혔던 원래 스킬을 되살려서 실제로 적용한다
     private void ResolveReinforceAction(BattleActionModel action, List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList)
     {
         BattleUnitModel unit = action.Unit;
@@ -280,7 +286,7 @@ public class BattleViewModel : ViewModelBase
 
         if (string.IsNullOrEmpty(unit.ActivePenaltyId))
         {
-            AddBattleLog($"{unitName} - 강화하기 실패 (페널티에 걸려있지 않습니다.)");
+            AddBattleLog($"{unitName} - 지원하기 실패 (페널티에 걸려있지 않습니다.)");
             return;
         }
 
@@ -288,8 +294,8 @@ public class BattleViewModel : ViewModelBase
 
         if (penalty == null)
         {
-            Debug.LogWarning($"[BattleViewModel] {unitName} 강화하기 실패, 페널티 ID는 있는데 데이터 테이블에서 못 찾음 (penaltyId: {unit.ActivePenaltyId})"); //콘솔로그
-            AddBattleLog($"{unitName} - 강화하기 효과 없음"); //배틀로그
+            Debug.LogWarning($"[BattleViewModel] {unitName} 지원하기 실패, 페널티 ID는 있는데 데이터 테이블에서 못 찾음 (penaltyId: {unit.ActivePenaltyId})"); //콘솔로그
+            AddBattleLog($"{unitName} - 지원하기 효과 없음"); //배틀로그
             return;
         }
 
@@ -306,13 +312,13 @@ public class BattleViewModel : ViewModelBase
 
         if (isCreated == false)
         {
-            Debug.LogWarning($"[BattleViewModel] {unitName} 강화하기 스킬 재구성 실패 (skillId: {penalty.TriggerSkillId})"); //콘솔로그
+            Debug.LogWarning($"[BattleViewModel] {unitName} 지원하기 스킬 재구성 실패 (skillId: {penalty.TriggerSkillId})"); //콘솔로그
             AddBattleLog($"{unitName} - 페널티는 해제되었으나 행동은 불발되었습니다."); //배틀로그
             return;
         }
 
         ApplyActionDamage(revivedAction);
-        AddBattleLog($"{unitName} - 강화하기로 페널티 해제 성공, {revivedAction.ActionType} 성공");
+        AddBattleLog($"{unitName} - 지원하기로 페널티 해제 성공, {revivedAction.ActionType} 성공");
     }
 
     //액션이 실제로 처리된 결과를 배틀 로그 문구로 변환한다

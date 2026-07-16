@@ -94,7 +94,7 @@ public static class BattleActionFactory
         return battleAction;
     }
 
-    //스킬 ID만으로 스킬 데이터를 조회해서 BattleActionModel 생성을 시도한다 (강화하기 등 스킬 재구성이 필요한 경우 사용)
+    //스킬 ID만으로 스킬 데이터를 조회해서 BattleActionModel 생성을 시도한다 (지원하기 등 스킬 재구성이 필요한 경우 사용)
     public static bool TryCreateSkillActionFromId(
         BattleUnitModel unit,
         string skillId,
