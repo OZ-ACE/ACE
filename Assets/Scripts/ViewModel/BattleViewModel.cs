@@ -101,6 +101,11 @@ public class BattleViewModel : ViewModelBase
 
         foreach (BattleUnitModel unit in turnOrder)
         {
+            if (unit == null || unit.IsDefeated)
+            {
+                continue;
+            }
+            
             BattleBTExecutor executor = unit.IsHero ? BattleManager.Inst.HeroExecutor : BattleManager.Inst.EnemyExecutor;
 
             if (executor == null)
