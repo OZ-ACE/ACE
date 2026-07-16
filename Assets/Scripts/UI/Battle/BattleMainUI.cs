@@ -146,6 +146,12 @@ public class BattleMainUI : UIBase
 
     private void CreateActionQueueSlot(BattleActionModel action)
     {
+        //플레이어 개입 액션은 전용 UI 처리 전까지 일반 유닛 슬롯에서 제외
+        if (action == null || action.IsPlayerAction)
+        {
+            return;
+        }
+        
         GameObject loadedObj = (GameObject)Resources.Load("Prefabs/UI/BattleActionSlot");
         GameObject slotObj = Instantiate(loadedObj, Transform_ActionQueueContent);
 
