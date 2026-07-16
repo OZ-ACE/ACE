@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum UIRootType
@@ -26,7 +25,8 @@ public enum UIType
     BattleMainUI,
     OfficeUI,
     ShopUI,
-    SettlementUI
+    SettlementUI,
+    ScheduleUI
 }
 
 public static class UIExtension
@@ -182,11 +182,12 @@ public static class UIExtension
         uiManager.CloseUI(UIType.SettlementUI);
     }
 
-
-
-
-
-
-
-
+    public static void OpenScheduleUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.Popup, UIType.ScheduleUI);
+    }
+    public static void CloseScheduleUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.ScheduleUI);
+    }
 }
