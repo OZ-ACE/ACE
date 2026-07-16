@@ -12,10 +12,13 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
     private int _hour;
     private ScheduleViewModel _scheduleVM;
 
-    public void InitSlot(int hour, ScheduleViewModel scheduleVM)
+    private ScheduleUI _scheduleUI;
+
+    public void InitSlot(int hour, ScheduleViewModel scheduleVM, ScheduleUI scheduleUI)
     {
         _hour = hour;
         _scheduleVM = scheduleVM;
+        _scheduleUI = scheduleUI;
         Text_Hour.text = $"{hour:D2}:00";
 
         _scheduleVM.PropertyChanged += OnPropertyChanged_View;
@@ -40,44 +43,7 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
     {
         ScheduleState state = _scheduleVM.EditingStates[_hour];
 
-        switch (state)
-        {
-            case ScheduleState.Shower:
-                Image_Background.color = Color.navyBlue;
-                break;
-
-            case ScheduleState.Battle:
-                Image_Background.color = Color.salmon;
-                break;
-
-            case ScheduleState.Sun:
-                Image_Background.color = Color.softGreen;
-                break;
-
-            case ScheduleState.Counsel:
-                Image_Background.color = Color.wheat;
-                break;
-
-            case ScheduleState.Cure:
-                Image_Background.color = Color.turquoise;
-                break;
-
-            case ScheduleState.Gym:
-                Image_Background.color = Color.gold;
-                break;
-
-            case ScheduleState.Rest:
-                Image_Background.color = Color.steelBlue;
-                break;
-
-            case ScheduleState.Sleep:
-                Image_Background.color = Color.purple;
-                break;
-
-            case ScheduleState.Meal:
-                Image_Background.color = Color.plum;
-                break;
-        }
+        Image_Background.color = _scheduleUI.GetSlotColor(state);
     }
 
     public void OnPointerDown(PointerEventData eventData)
