@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public static class BattleActionFactory
 {
@@ -91,5 +92,96 @@ public static class BattleActionFactory
         battleAction.TargetList = new List<BattleUnitModel>();
 
         return battleAction;
+    }
+
+    //스킬 ID만으로 스킬 데이터를 조회해서 BattleActionModel 생성을 시도한다 (지원하기 등 스킬 재구성이 필요한 경우 사용)
+    public static bool TryCreateSkillActionFromId(
+        BattleUnitModel unit,
+        string skillId,
+        List<BattleUnitModel> heroList,
+        List<BattleUnitModel> enemyList,
+        out BattleActionModel battleAction)
+    {
+        battleAction = null;
+
+        if (unit == null || string.IsNullOrEmpty(skillId))
+        {
+            return false;
+        }
+
+        GameDataBase skillData;
+
+        if (unit.IsHero)
+        {
+            skillData = GameDataManager.Inst.GetData<HeroSkill>(skillId);
+        }
+        else
+        {
+            skillData = GameDataManager.Inst.GetData<EnemySkill>(skillId);
+        }
+
+        if (skillData == null)
+        {
+            return false;
+        }
+
+        string actionTypeText;
+        string skillTypeText;
+        string targetTypeText;
+        string targetSelectTypeText;
+        int targetCount;
+
+        if (skillData is HeroSkill heroSkill)
+        {
+            actionTypeText = heroSkill.ActionType;
+            skillTypeText = heroSkill.SkillType;
+            targetTypeText = heroSkill.TargetType;
+            targetSelectTypeText = heroSkill.TargetSelectType;
+            targetCount = heroSkill.TargetCount;
+        }
+        else if (skillData is EnemySkill enemySkill)
+        {
+            actionTypeText = enemySkill.ActionType;
+            skillTypeText = enemySkill.SkillType;
+            targetTypeText = enemySkill.TargetType;
+            targetSelectTypeText = enemySkill.TargetSelectType;
+            targetCount = enemySkill.TargetCount;
+        }
+        else
+        {
+            return false;
+        }
+
+        if (Enum.TryParse(actionTypeText, out ActionType actionType) == false)
+        {
+            return false;
+        }
+
+        if (Enum.TryParse(skillTypeText, out SkillType skillType) == false)
+        {
+            return false;
+        }
+
+        if (Enum.TryParse(targetTypeText, out TargetType targetType) == false)
+        {
+            return false;
+        }
+
+        if (Enum.TryParse(targetSelectTypeText, out TargetSelectType targetSelectType) == false)
+        {
+            return false;
+        }
+
+        return TryCreateSkillAction(
+            unit,
+            skillId,
+            actionType,
+            skillType,
+            targetType,
+            targetSelectType,
+            targetCount,
+            heroList,
+            enemyList,
+            out battleAction);
     }
 }

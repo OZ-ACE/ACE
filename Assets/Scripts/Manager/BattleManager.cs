@@ -62,6 +62,16 @@ public class BattleManager : SingletonBase<BattleManager>
         {
             if (action.Unit != null && action.Unit.ID == targetUnitId)
             {
+                if (action.Result != BattleActionResult.None)
+                {
+                    return ActionApplyResult.AlreadyApplied;
+                }
+
+                if (result == BattleActionResult.Reinforce && string.IsNullOrEmpty(action.Unit.ActivePenaltyId))
+                {
+                    return ActionApplyResult.NoActivePenalty;
+                }
+
                 action.Result = result;
                 _energyGauge -= energyCost;
 
@@ -188,12 +198,12 @@ public class BattleManager : SingletonBase<BattleManager>
         return battleParticipateCount / config.ParticipateCountPerLevel;
     }
 
-    //유닛이 스킬을 사용했을 때 페널티 게이지를 갱신한다. 이미 페널티가 발동 중인 유닛은 중첩 방지를 위해 게이지 갱신을 건너뛴다
-    public void UpdatePenaltyGauge(BattleUnitModel unit, string usedSkillId)
+    //스킬 반복 사용 횟수를 갱신하고, 이번 호출로 새로 페널티가 발동했다면 그 Penalty를 반환한다 (없으면 null)
+    public Penalty UpdatePenaltyGauge(BattleUnitModel unit, string usedSkillId)
     {
         if (!string.IsNullOrEmpty(unit.ActivePenaltyId))
         {
-            return;
+            return null;
         }
 
         if (unit.LastSkillId == usedSkillId)
@@ -218,10 +228,14 @@ public class BattleManager : SingletonBase<BattleManager>
                 unit.ActivePenaltyId = penalty.ID;
                 unit.PenaltyRemainingRounds = penalty.DurationRounds;
                 unit.RepeatSkillCount = 0;
+
+                return penalty;
             }
 
             break;
         }
+
+        return null;
     }
 
     //해당 유닛이 지금 skillId를 사용할 수 있는지(페널티로 막혀있는지) 검사한다. BT의 스킬 선택 단계에서 CanUseSkill과 함께 호출되어야 함

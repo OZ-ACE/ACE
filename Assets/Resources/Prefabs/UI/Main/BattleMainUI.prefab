@@ -167,7 +167,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8794f68f5b2e269468cafe17f9a0ad39, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6c32d072d7156294ba998f89c274b346, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -318,7 +318,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1676285777, guid: 8811560833bf60f478745b86aa539790, type: 3}
+  m_Sprite: {fileID: -1676285777, guid: f2498b835f73afe4ca47f3131a2f0925, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -468,7 +468,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e6d2c6cbebc8694408a471255d33123e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f9f102195b06e05438157d7e214149ae, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1755,7 +1755,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d9df7fd12a0674f4f80b6b466208935a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 949fb92b6dec10148a60a4e0e0f76623, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2013,7 +2013,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB77C\uC6B4\uB4DC 3"
+  m_text: "\uB77C\uC6B4\uB4DC \uC218"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1196d15cf9dfab247899b48da89596d1, type: 2}
   m_sharedMaterial: {fileID: -5220014475569205097, guid: 1196d15cf9dfab247899b48da89596d1, type: 2}
@@ -4209,7 +4209,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3a243952cd4c3ca4d81f2271deec5970, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ed8095628fa31ad4a91bb007bcfd44cb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4330,7 +4330,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: -40}
+  m_AnchoredPosition: {x: -0.000030517578, y: -38.21}
   m_SizeDelta: {x: 343.6181, y: 38.088}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &898213826976119014
@@ -6155,6 +6155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleMainUI
   Transform_ActionQueueContent: {fileID: 8123780583230695895}
+  Text_Round: {fileID: 5864252209531839442}
   ScrollRect_BattleLog: {fileID: 7333493230995692662}
   Transform_LogContent: {fileID: 5205851395069963914}
   Image_EnergySlotList:

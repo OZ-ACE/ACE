@@ -11,6 +11,7 @@ public class BattleMainUI : UIBase
 {
     [Header("액션 큐")]
     [SerializeField] private Transform Transform_ActionQueueContent;
+    [SerializeField] private TextMeshProUGUI Text_Round;
 
     [Header("배틀 로그")]
     [SerializeField] private ScrollRect ScrollRect_BattleLog;
@@ -121,6 +122,7 @@ public class BattleMainUI : UIBase
                 break;
             case nameof(_viewModel.ActionQueue):
                 RefreshActionQueue(_viewModel.ActionQueue);
+                UpdateRoundText();
                 break;
         }
     }
@@ -136,6 +138,12 @@ public class BattleMainUI : UIBase
         }
     }
 
+    //현재 라운드 수를 화면에 표시한다
+    private void UpdateRoundText()
+    {
+        Text_Round.text = $"라운드 {BattleManager.Inst.GetCurrentRound()}";
+    }
+
     private void ClearActionQueueSlots()
     {
         for (int i = Transform_ActionQueueContent.childCount - 1; i >= 0; i--)
@@ -146,6 +154,12 @@ public class BattleMainUI : UIBase
 
     private void CreateActionQueueSlot(BattleActionModel action)
     {
+        //플레이어 개입 액션은 전용 UI 처리 전까지 일반 유닛 슬롯에서 제외
+        if (action == null || action.IsPlayerAction)
+        {
+            return;
+        }
+        
         GameObject loadedObj = (GameObject)Resources.Load("Prefabs/UI/BattleActionSlot");
         GameObject slotObj = Instantiate(loadedObj, Transform_ActionQueueContent);
 
@@ -265,6 +279,18 @@ public class BattleMainUI : UIBase
         if (applyResult == ActionApplyResult.TargetNotFound)
         {
             _viewModel.AddBattleLog("실행 실패: 대상이 액션 큐에 없습니다.");
+            return;
+        }
+
+        if (applyResult == ActionApplyResult.AlreadyApplied)
+        {
+            _viewModel.AddBattleLog("실행 실패: 이미 이번 라운드에 행동을 지정한 유닛입니다.");
+            return;
+        }
+
+        if (applyResult == ActionApplyResult.NoActivePenalty)
+        {
+            _viewModel.AddBattleLog("실행 실패: 페널티가 없어 지원하기를 쓸 수 없습니다.");
             return;
         }
 
