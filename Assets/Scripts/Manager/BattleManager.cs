@@ -51,7 +51,7 @@ public class BattleManager : SingletonBase<BattleManager>
     }
 
     //큐 안에서 targetUnitId를 가진 행동을 찾아 결과를 확정한다. 에너지 부족과 대상 없음을 구분해서 반환한다
-    public ActionApplyResult SetActionResult(string targetUnitId, BattleActionResult result, int energyCost)
+    public ActionApplyResult SetActionResult(string targetUnitId, BattleActionResult result, int energyCost, string itemId = null)
     {
         if (_energyGauge < energyCost)
         {
@@ -73,6 +73,7 @@ public class BattleManager : SingletonBase<BattleManager>
                 }
 
                 action.Result = result;
+                action.SelectedItemId = itemId;
                 _energyGauge -= energyCost;
 
                 return ActionApplyResult.Success;
@@ -80,6 +81,20 @@ public class BattleManager : SingletonBase<BattleManager>
         }
 
         return ActionApplyResult.TargetNotFound;
+    }
+
+    //현재 액션 큐에서 targetUnitId에 해당하는 유닛 모델을 조회한다 (팝업 필터링 등에서 사용)
+    public BattleUnitModel GetQueuedUnit(string targetUnitId)
+    {
+        foreach (BattleActionModel action in _actionQueue)
+        {
+            if (action.Unit != null && action.Unit.ID == targetUnitId)
+            {
+                return action.Unit;
+            }
+        }
+
+        return null;
     }
 
     public int GetRemainingEnergy()
