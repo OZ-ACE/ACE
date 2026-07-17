@@ -15,6 +15,7 @@ public class BuildGridViewModel : ViewModelBase
     public event Action<int> OnUnlockFloor;
     public event Action OnReloadGrid;
     public event Action OnClickOffice;
+    public event Action OnClickBattle;
 
     public GridBounds Bounds { get { return _buildGridModel.Bounds; } }
 
@@ -40,6 +41,7 @@ public class BuildGridViewModel : ViewModelBase
 
     // 사무실 방 ID
     private const string OFFICE_ROOM_ID = "Room_Office";
+    private const string BATTLE_ROOM_ID = "Room_Battle";
 
     //뷰가 바인딩
     private bool _isBuildMode;
@@ -621,6 +623,13 @@ public class BuildGridViewModel : ViewModelBase
             if (OnClickOffice != null)
             {
                 OnClickOffice.Invoke();
+            }
+        }
+        else if (room.RoomId == BATTLE_ROOM_ID)
+        {
+            if (OnClickBattle != null)
+            {
+                OnClickBattle.Invoke();
             }
         }
     }
