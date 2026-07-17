@@ -166,10 +166,6 @@ public class ObjectManager : SingletonBase<ObjectManager>
                 UIManager.Inst.OpenShopUI();
                 break;
 
-            case OfficeObjectType.Battle:
-                EnterBattle();
-                break;
-
             case OfficeObjectType.Admission:
                 UIManager.Inst.OpenAdmissionPopup();
                 break;
@@ -229,8 +225,6 @@ public class ObjectManager : SingletonBase<ObjectManager>
 
         UIManager.Inst.OpenTycoonMainUI();
     }
-
-
 
     //3D 전투맵 생성 
     private void CreateBattleRoot()
