@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class UIAdmissionPaperSlot : UIBase
 {
+    [SerializeField] private Button Button_Admit;
+    
     [Header("Paper")]
     [SerializeField] private GameObject Group_Front;
     [SerializeField] private Image Image_PaperBack;
@@ -19,11 +21,6 @@ public class UIAdmissionPaperSlot : UIBase
     [SerializeField] private TextMeshProUGUI Text_Age;
     [SerializeField] private TextMeshProUGUI Text_MainSkill;
     [SerializeField] private TextMeshProUGUI Text_Remarks;
-
-    [Header("Button")]
-    [SerializeField] private Button Button_Admit;
-    [SerializeField] private Button Button_Next;
-    [SerializeField] private Button Button_Prev;
 
     private const float LiftY = 18f;
     private const float ScaleUp = 1.04f;
@@ -46,8 +43,6 @@ public class UIAdmissionPaperSlot : UIBase
 
     public int PaperIndex { get; private set; }
 
-    public event Action<int> OnClickNext;
-    public event Action<int> OnClickPrev;
     public event Action<int> OnFlipComplete;
     public event Action<int> OnReturnComplete;
     public event Action<string> OnClickAdmit;
@@ -89,7 +84,7 @@ public class UIAdmissionPaperSlot : UIBase
         _rectTransform.localScale = Vector3.one;
     }
 
-    public void ApplyState(AdmissionPaperState state, bool canReturn)
+    public void ApplyState(AdmissionPaperState state)
     {
         _state = state;
 
@@ -100,13 +95,8 @@ public class UIAdmissionPaperSlot : UIBase
         Group_Front.SetActive(isViewing || isStacked);
         Image_PaperBack.gameObject.SetActive(isFlipped);
 
-        Button_Next.gameObject.SetActive(isViewing);
         Button_Admit.gameObject.SetActive(isViewing);
-        Button_Prev.gameObject.SetActive(isFlipped && canReturn);
-
-        Button_Next.interactable = isViewing && _isPlaying == false;
         Button_Admit.interactable = isViewing && _isPlaying == false;
-        Button_Prev.interactable = isFlipped && canReturn && _isPlaying == false;
     }
 
     public void PlayFlipToLeft()
@@ -124,7 +114,7 @@ public class UIAdmissionPaperSlot : UIBase
         BeginAnimation();
 
         _sequence = DOTween.Sequence();
-
+        _sequence.SetUpdate(true);
         _sequence.Append(_rectTransform.DOScale(ScaleUp, SettleTime));
 
         _sequence.Join(_rectTransform.DOAnchorPosY(_stackedPosition.y + LiftY, SettleTime));
@@ -160,10 +150,8 @@ public class UIAdmissionPaperSlot : UIBase
 
         BeginAnimation();
 
-        _rectTransform.SetAsLastSibling();
-
         _sequence = DOTween.Sequence();
-
+        _sequence.SetUpdate(true);
         _sequence.Append(_rectTransform.DOScale(ScaleUp, SettleTime));
 
         _sequence.Join(_rectTransform.DOAnchorPosY(_flippedPosition.y + LiftY, SettleTime));
@@ -267,19 +255,12 @@ public class UIAdmissionPaperSlot : UIBase
     private void BindButtonEvents()
     {
         Button_Admit.onClick.RemoveListener(OnClickAdmitButton);
-        Button_Next.onClick.RemoveListener(OnClickNextButton);
-        Button_Prev.onClick.RemoveListener(OnClickPrevButton);
-
         Button_Admit.onClick.AddListener(OnClickAdmitButton);
-        Button_Next.onClick.AddListener(OnClickNextButton);
-        Button_Prev.onClick.AddListener(OnClickPrevButton);
     }
 
     private void UnbindButtonEvents()
     {
         Button_Admit.onClick.RemoveListener(OnClickAdmitButton);
-        Button_Next.onClick.RemoveListener(OnClickNextButton);
-        Button_Prev.onClick.RemoveListener(OnClickPrevButton);
     }
 
     private void OnClickAdmitButton()
@@ -302,36 +283,6 @@ public class UIAdmissionPaperSlot : UIBase
         OnClickAdmit?.Invoke(_heroData.ID);
     }
 
-    private void OnClickNextButton()
-    {
-        if (_isPlaying == true)
-        {
-            return;
-        }
-
-        if (_state != AdmissionPaperState.Viewing)
-        {
-            return;
-        }
-
-        OnClickNext?.Invoke(PaperIndex);
-    }
-
-    private void OnClickPrevButton()
-    {
-        if (_isPlaying == true)
-        {
-            return;
-        }
-
-        if (_state != AdmissionPaperState.Flipped)
-        {
-            return;
-        }
-
-        OnClickPrev?.Invoke(PaperIndex);
-    }
-
     private bool CanPlayAnimation()
     {
         return _isPlaying == false;
@@ -343,17 +294,13 @@ public class UIAdmissionPaperSlot : UIBase
 
         KillSequence();
 
-        Button_Next.interactable = false;
         Button_Admit.interactable = false;
-        Button_Prev.interactable = false;
     }
 
     private void ChangeToBackVisual()
     {
         Group_Front.SetActive(false);
         Image_PaperBack.gameObject.SetActive(true);
-
-        _rectTransform.SetAsLastSibling();
     }
 
     private void NormalizeFlippedRotation()
@@ -399,8 +346,6 @@ public class UIAdmissionPaperSlot : UIBase
         KillSequence();
         UnbindButtonEvents();
 
-        OnClickNext = null;
-        OnClickPrev = null;
         OnFlipComplete = null;
         OnReturnComplete = null;
         OnClickAdmit = null;
