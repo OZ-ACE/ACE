@@ -14,7 +14,7 @@ public class HeroModel
 
     private HeroStat _targetHeroStat;
 
-    public List<ScheduleState> HourlyStates = new List<ScheduleState>();
+    public List<ScheduleState> HourlyStates = new List<ScheduleState>(new ScheduleState[24]);
 
     public void LoadHeroData(string heroID)
     {

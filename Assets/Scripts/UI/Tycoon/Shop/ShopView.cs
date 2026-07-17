@@ -64,15 +64,14 @@ public class ShopView : ViewBase
     private InventoryViewModel GetInventoryViewModel()
     {
         InventoryViewModel inventoryVM = GameManager.Inst.InventoryViewModel;
+
         if (inventoryVM.InventoryItems == null)
         {
             inventoryVM.Init(SaveManager.Inst.CurrentPlayerModel.Inventory);
         }
+
         return inventoryVM;
     }
-
-
-
 
     private void OnDestroy()
     {
@@ -138,7 +137,6 @@ public class ShopView : ViewBase
         }
         _activeSlots.Clear();
     }
-
 
     // 구매 발생 시 모든 슬롯 갱신 (재고·버튼 상태) 
     private void OnPurchaseItem(string itemID)
