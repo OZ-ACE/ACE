@@ -26,7 +26,7 @@
     "PrefabPath": "Prefabs/Room/Room_Garden"
   },
   {
-    "ID": "Room_Bathroom",
+    "ID": "Room_Shower",
     "Name": "화장실",
     "Description": "화장실",
     "SizeW": 2,
@@ -36,7 +36,7 @@
     "RequiredFloor": -999,
     "EffectType": "UsingRestroom",
     "EffectDescription": "화장실 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Bathroom"
+    "PrefabPath": "Prefabs/Room/Room_Shower"
   },
   {
     "ID": "Room_CounselingRoom",

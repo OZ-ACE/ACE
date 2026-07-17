@@ -4,30 +4,49 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = UnityEngine.Random;
 
 public class HeroMovingAgent : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent HeroAgent;
-    [SerializeField] private float MinDelay = 3f;
-    [SerializeField] private float MaxDelay = 7f;
+    [SerializeField] private float MinDelay = 0.5f;
+    [SerializeField] private float MaxDelay = 0.3f;
 
     private GridSystem _gridSystem;
+    private HeroModel _heroModel;
+    private BuildGridViewModel _buildVM;
+
     private CancellationTokenSource _movingToken;
+    private int _cancelMovingHour = -1;
 
     private void OnEnable()
     {
-        _gridSystem = GameManager.Inst.Services.BuildService.GetBuildGridViewModel().GridSystem;
-
-        StartMoving().Forget();
+        _buildVM = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
+        _gridSystem = _buildVM.GridSystem;
     }
 
     private void OnDisable()
     {
+        GameManager.Inst.Services.DayService.OnChangeHour -= ChangeTargetRoom;
         CancelMoving();
     }
 
-    private async UniTask StartMoving()
+    public void InitHero(HeroModel heroModel)
+    {
+        _heroModel = heroModel;
+
+        GameManager.Inst.Services.DayService.OnChangeHour += ChangeTargetRoom;
+    }
+
+    private void ChangeTargetRoom(int hour)
+    {
+        ScheduleState state = _heroModel.HourlyStates[hour];
+
+        Vector3 targetPos = GetRoomPosition(state);
+
+        StartMoving(targetPos).Forget();
+    }
+
+    private async UniTask StartMoving(Vector3 targetPos)
     {
         if (_movingToken != null)
         {
@@ -36,35 +55,9 @@ public class HeroMovingAgent : MonoBehaviour
 
         _movingToken = new CancellationTokenSource();
 
-        while (!_movingToken.Token.IsCancellationRequested)
-        {
-            var currentRooms = GameManager.Inst.Services.BuildService.GetBuildGridViewModel().GetPlacedRooms();
+        SetDestination(targetPos);
 
-            if (currentRooms.Count == 0)
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _movingToken.Token);
-                continue;
-            }
-
-            int randomIndex = Random.Range(0, currentRooms.Count);
-            PlacedRoomData targetRoom = currentRooms[randomIndex];
-            RoomData room = GameDataManager.Inst.GetData<RoomData>(targetRoom.RoomId);
-
-            if (room == null)
-            {
-                await UniTask.DelayFrame(1, cancellationToken: _movingToken.Token);
-                continue;
-            }
-
-            Vector3 targetPos = GetRoomCenterPosition(targetRoom.Origin, room.GetSize());
-
-            SetDestination(targetPos);
-
-            await UniTask.WaitUntil(IsArrived, cancellationToken: _movingToken.Token);
-
-            float randomDelay = Random.Range(MinDelay, MaxDelay);
-            await UniTask.Delay(TimeSpan.FromSeconds(randomDelay), cancellationToken: _movingToken.Token);
-        }
+        await UniTask.WaitUntil(IsArrived, cancellationToken: _movingToken.Token);
     }
 
     public void SetDestination(Vector3 targetPos)
@@ -75,14 +68,37 @@ public class HeroMovingAgent : MonoBehaviour
         }
     }
 
-    private Vector3 GetRoomCenterPosition(GridCoord origin, Vector2 size)
+    public Vector3 GetRoomPosition(ScheduleState state)
     {
-        Vector3 originPos = _gridSystem.GetWorldPosition(origin);
+        if (_buildVM == null)
+        {
+            return Vector3.zero;
+        }
 
-        float offsetX = (size.x - 1) * 0.5f * _gridSystem.CellWidth;
-        float offsetY = (size.y - 1) * 0.5f * _gridSystem.CellHeight;
+        List<PlacedRoomData> placedRooms = _buildVM.GetPlacedRooms();
 
-        return new Vector3(originPos.x + offsetX, originPos.y + offsetY, 0f);
+        foreach (PlacedRoomData data in placedRooms)
+        {
+            if (data.RoomId.Contains($"{state}"))
+            {
+                Vector3 originWorld = _gridSystem.GetWorldPosition(data.Origin);
+
+                RoomData roomData = GameDataManager.Inst.GetData<RoomData>(data.RoomId);
+                if (roomData != null)
+                {
+                    Vector2Int size = roomData.GetSize();
+                    float offsetX = (size.x - 1) * 0.5f * _gridSystem.CellWidth;
+                    float offsetY = (size.y - 1) * 0.5f * _gridSystem.CellHeight;
+
+                    Vector3 centerPos = new Vector3(originWorld.x + offsetX, originWorld.y + offsetY, 0f);
+                    return centerPos;
+                }
+
+                return originWorld;
+            }
+        }
+
+        return Vector3.zero;
     }
 
     private bool IsArrived()

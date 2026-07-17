@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Net.NetworkInformation;
 
 //Model 역할 + ViewModel 역할
 public class BuildGridViewModel : ViewModelBase
@@ -9,18 +10,11 @@ public class BuildGridViewModel : ViewModelBase
     private readonly BuildGridModel _buildGridModel;
     private readonly ICurrencyService _currencyService;
 
-
-
-
     public event Action<PlacedRoomData> OnPlaceRoom;
     public event Action<PlacedRoomData> OnRemoveRoom;
     public event Action<int> OnUnlockFloor;
     public event Action OnReloadGrid;
     public event Action OnClickOffice;
-
-
-
-
 
     public GridBounds Bounds { get { return _buildGridModel.Bounds; } }
 
