@@ -10,6 +10,11 @@ public class ObjectManager : SingletonBase<ObjectManager>
     [Header("3D 사무실 루트 프리팹")]
     [SerializeField] private GameObject Prefab_OfficeRoot;
 
+    [Header("3D 전투 공간 프리팹")]
+    [SerializeField] private GameObject Prefab_BattleRoot;
+
+
+
 
     private BuildGridView _buildGridView;
     private GameObject _hero;
@@ -18,13 +23,15 @@ public class ObjectManager : SingletonBase<ObjectManager>
     private OfficeInputView _officeInputView;
     private Camera _mainCamera;
 
+    private GameObject _battleRoot;
+
     public BuildGridView BuildGridView { get { return _buildGridView; } }
 
     private void Start()
     {
         _mainCamera = Camera.main;
-        //CreateBuildGridView();
         CreateOfficeRoot();
+        CreateBattleRoot();
     }
 
     public void CreateBuildGridView()
@@ -153,7 +160,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
                 break;
 
             case OfficeObjectType.Battle:
-                GameManager.Inst.Services.DayService.MarkBattleDone();
+                EnterBattle();
                 break;
 
             case OfficeObjectType.Admission:
@@ -165,6 +172,105 @@ public class ObjectManager : SingletonBase<ObjectManager>
                 break;
         }
     }
+
+    // 3D 사무실에서 전투 UI로 진입
+    public void EnterBattle()
+    {
+        if (_officeRoot != null)
+        {
+            _officeRoot.SetActive(false);
+        }
+
+        if (_mainCamera != null)
+        {
+            _mainCamera.gameObject.SetActive(false);
+        }
+
+        if (_buildGridView != null)
+        {
+            _buildGridView.enabled = false;
+        }
+
+        if (_battleRoot != null)
+        {
+            _battleRoot.SetActive(true);
+        }
+
+        UIManager.Inst.CloseTycoonMainUI();
+        UIManager.Inst.OpenBattleMainUI();
+    }
+
+    // 전투 종료 후 타이쿤으로 복귀
+    public void ExitBattle()
+    {
+        UIManager.Inst.CloseBattleMainUI();
+
+        if (_battleRoot != null)
+        {
+            _battleRoot.SetActive(false);
+        }
+
+        if (_mainCamera != null)
+        {
+            _mainCamera.gameObject.SetActive(true);
+        }
+
+        if (_buildGridView != null)
+        {
+            _buildGridView.enabled = true;
+        }
+
+        UIManager.Inst.OpenTycoonMainUI();
+    }
+
+
+
+    //3D 전투맵 생성 
+    private void CreateBattleRoot()
+    {
+        if (Prefab_BattleRoot == null)
+        {
+            Debug.LogWarning("[ObjectManager] 전투 공간 프리팹 인스펙터 할당 안 됨");
+            return;
+        }
+
+        if (_battleRoot != null)
+        {
+            return;
+        }
+
+        _battleRoot = Instantiate(Prefab_BattleRoot);
+        _battleRoot.name = "BattleRoot";
+
+        BindBattleExecutors();
+
+        _battleRoot.SetActive(false);
+        Debug.Log("[ObjectManager] 3D 전투 공간 생성 완료");
+    }
+
+    //3D 전투맵 생성 후 필요한 컴포넌트 연결
+    private void BindBattleExecutors()
+    {
+        BattleRootRefs refs = _battleRoot.GetComponentInChildren<BattleRootRefs>(true);
+        if (refs == null)
+        {
+            Debug.LogWarning("[ObjectManager] BattleRootRefs 컴포넌트 없음");
+            return;
+        }
+
+        if (BattleManager.Inst == null)
+        {
+            Debug.LogWarning("[ObjectManager] BattleManager 인스턴스 없음");
+            return;
+        }
+
+        BattleManager.Inst.BindExecutors(refs.HeroExecutor, refs.EnemyExecutor);
+        Debug.Log("[ObjectManager] 전투 실행기 연결 완료");
+    }
+
+
+
+
 
     ////////////////////////////////////////
 

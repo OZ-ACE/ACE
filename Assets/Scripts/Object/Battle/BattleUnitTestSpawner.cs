@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 // 히어로 프리팹을 임시 위치에 배치하고 클릭 핸들러를 붙이는 테스트 전용 스포너 (정식 스폰 시스템 완성되면 삭제 대상)
 public class BattleUnitTestSpawner : SingletonBase<BattleUnitTestSpawner>
@@ -15,6 +16,11 @@ public class BattleUnitTestSpawner : SingletonBase<BattleUnitTestSpawner>
     private const float SpawnPositionSpacingX = 2f;
 
     [SerializeField] private List<HeroSpawnEntry> _heroSpawnEntryList;
+
+
+    [Header("스폰 기준 위치")]
+    [SerializeField] private Transform Transform_SpawnRoot;
+
 
     [Header("레이캐스트")]
     [SerializeField] private Camera Camera_Raycast;
@@ -62,7 +68,13 @@ public class BattleUnitTestSpawner : SingletonBase<BattleUnitTestSpawner>
             return;
         }
 
-        Vector3 spawnPosition = new Vector3(index * SpawnPositionSpacingX, 0f, 0f);
+        Vector3 basePosition = Vector3.zero;
+        if (Transform_SpawnRoot != null)
+        {
+            basePosition = Transform_SpawnRoot.position;
+        }
+
+        Vector3 spawnPosition = basePosition + new Vector3(index * SpawnPositionSpacingX, 0f, 0f);
         GameObject spawnedObj = Instantiate(entry.Prefab, spawnPosition, Quaternion.identity);
 
         BattleUnitClickHandler clickHandler = spawnedObj.GetComponent<BattleUnitClickHandler>();
@@ -85,6 +97,11 @@ public class BattleUnitTestSpawner : SingletonBase<BattleUnitTestSpawner>
     private void Update()
     {
         UpdateHover();
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject() == true)
+        {
+            return;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
