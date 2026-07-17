@@ -61,7 +61,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.016666668
+  m_VoxelSize: 0.026666665
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -660,6 +660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7327591dcc399934485fde1e6d3d4169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  Audio_Mixer: {fileID: 0}
 --- !u!82 &6249295694830723532
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1232,6 +1233,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectManager
   Prefab_BuildGridView: {fileID: 655304303417643039, guid: 08034392530994e4a808a16e6ca4944d, type: 3}
+  Prefab_OfficeRoot: {fileID: 1778206683947138291, guid: 3ce407f782de42b45be9fee5bc198a53, type: 3}
+  Prefab_BattleRoot: {fileID: 1778206683947138291, guid: 63f668ff854a20a4dafc75f7f7ae2535, type: 3}
 --- !u!1 &9172996825214178809
 GameObject:
   m_ObjectHideFlags: 0
