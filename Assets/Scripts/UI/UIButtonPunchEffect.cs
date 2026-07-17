@@ -30,13 +30,19 @@ public class UIButtonPunchEffect : MonoBehaviour
 
     private void OnDisable()
     {
-        _button.onClick.RemoveListener(OnClickButton);
+        if (_button != null)
+        {
+            _button.onClick.RemoveListener(OnClickButton);
+        }
 
         _cancellationTokenSource?.Cancel();
         _cancellationTokenSource?.Dispose();
         _cancellationTokenSource = null;
 
-        _rectTransform.localScale = _originalScale;
+        if (_rectTransform != null)
+        {
+            _rectTransform.localScale = _originalScale;
+        }
     }
 
     private void OnClickButton()
