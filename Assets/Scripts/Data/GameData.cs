@@ -111,8 +111,10 @@ public class SupportItem : GameDataBase
 {
     public string ItemName;
     public string ItemNameEn;
+    public string ItemCategory;
     public string TargetPenaltyId;
     public string TargetPenaltyName;
+    public int HealAmount;
     public int EnergyCost;
     public int StockCount;
     public int Price;

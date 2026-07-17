@@ -11,8 +11,12 @@ public class SupportItemPopupUI : UIBase
     [SerializeField] private GameObject Object_EmptyMessage;
     [SerializeField] private GameObject Object_ItemDescription;
     [SerializeField] private TextMeshProUGUI Text_ItemDescription;
+    [SerializeField] private TextMeshProUGUI Text_HealAmount;
+
+    private const float DescriptionRightInsetForHeal = 240f; //Text_HealAmount 폭만큼 오른쪽 여백 확보
 
     private RectTransform _rectTransform;
+    private float _descriptionDefaultRightInset;
     private readonly List<SupportItemSlot> _activeSlotList = new List<SupportItemSlot>();
 
     public event Action<string> OnItemApplied;
@@ -20,6 +24,7 @@ public class SupportItemPopupUI : UIBase
     private void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
+        _descriptionDefaultRightInset = -Text_ItemDescription.rectTransform.offsetMax.x;
     }
 
     private void Update()
@@ -39,6 +44,75 @@ public class SupportItemPopupUI : UIBase
     private bool IsPointerInsidePopup()
     {
         return RectTransformUtility.RectangleContainsScreenPoint(_rectTransform, Input.mousePosition, null);
+    }
+
+    //대상 유닛의 활성 페널티에 맞는 지원 아이템만 필터링해서 팝업을 연다
+    public void OpenPopupForPenalty(BattleUnitModel unit)
+    {
+        Dictionary<string, int> filteredItems = new Dictionary<string, int>();
+
+        foreach (SupportItem item in GameDataManager.Inst.GetDataList<SupportItem>())
+        {
+            if (item.ItemCategory != "Penalty")
+            {
+                continue;
+            }
+
+            if (item.TargetPenaltyId != unit.ActivePenaltyId)
+            {
+                continue;
+            }
+
+            int count = GetOwnedItemCount(item.ID);
+
+            if (count <= 0)
+            {
+                continue;
+            }
+
+            filteredItems.Add(item.ID, count);
+        }
+
+        OpenPopup(filteredItems);
+    }
+
+    //회복 아이템만 필터링해서 팝업을 연다
+    public void OpenPopupForHeal()
+    {
+        Dictionary<string, int> filteredItems = new Dictionary<string, int>();
+
+        foreach (SupportItem item in GameDataManager.Inst.GetDataList<SupportItem>())
+        {
+            if (item.ItemCategory != "Heal")
+            {
+                continue;
+            }
+
+            int count = GetOwnedItemCount(item.ID);
+
+            if (count <= 0)
+            {
+                continue;
+            }
+
+            filteredItems.Add(item.ID, count);
+        }
+
+        OpenPopup(filteredItems);
+    }
+
+    //세이브 데이터의 실제 인벤토리에서 해당 아이템 보유 수량을 조회한다
+    private int GetOwnedItemCount(string itemId)
+    {
+        foreach (ItemModel item in SaveManager.Inst.CurrentPlayerModel.Inventory)
+        {
+            if (item.ItemID == itemId)
+            {
+                return item.ItemCount;
+            }
+        }
+
+        return 0;
     }
 
     //표시할 아이템 목록을 받아 팝업을 열고 슬롯을 채운다. itemIdToCountMap은 itemId - 보유수량 쌍
@@ -95,10 +169,31 @@ public class SupportItemPopupUI : UIBase
         ClosePopup();
     }
 
-    private void HandleItemHoverEnter(string description)
+    private void HandleItemHoverEnter(string itemId)
     {
-        Text_ItemDescription.text = description;
+        SupportItem itemData = GameDataManager.Inst.GetData<SupportItem>(itemId);
+
+        if (itemData == null)
+        {
+            return;
+        }
+
+        Text_ItemDescription.text = itemData.Description;
         Object_ItemDescription.SetActive(true);
+
+        bool isHealItem = itemData.ItemCategory == "Heal";
+
+        Text_HealAmount.gameObject.SetActive(isHealItem);
+
+        RectTransform descriptionRect = Text_ItemDescription.rectTransform;
+        Vector2 offsetMax = descriptionRect.offsetMax;
+        offsetMax.x = isHealItem ? -DescriptionRightInsetForHeal : -_descriptionDefaultRightInset;
+        descriptionRect.offsetMax = offsetMax;
+
+        if (isHealItem)
+        {
+            Text_HealAmount.text = $"회복량 {itemData.HealAmount}";
+        }
     }
 
     private void HandleItemHoverExit()
