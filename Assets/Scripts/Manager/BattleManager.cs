@@ -83,6 +83,20 @@ public class BattleManager : SingletonBase<BattleManager>
         return ActionApplyResult.TargetNotFound;
     }
 
+    //현재 액션 큐에서 targetUnitId에 해당하는 유닛 모델을 조회한다 (팝업 필터링 등에서 사용)
+    public BattleUnitModel GetQueuedUnit(string targetUnitId)
+    {
+        foreach (BattleActionModel action in _actionQueue)
+        {
+            if (action.Unit != null && action.Unit.ID == targetUnitId)
+            {
+                return action.Unit;
+            }
+        }
+
+        return null;
+    }
+
     public int GetRemainingEnergy()
     {
         return _energyGauge;
