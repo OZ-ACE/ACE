@@ -295,6 +295,7 @@ public class BattleViewModel : ViewModelBase
         if (action.Result == BattleActionResult.HealUnit)
         {
             ApplyHealUnit(action.Unit, action.SelectedItemId);
+            ConsumeInventoryItem(action.SelectedItemId);
             AddBattleLog($"{unitName} - 회복 완료 (현재 HP {action.Unit.CurrentHp}/{action.Unit.MaxHp})");
             return;
         }
@@ -354,6 +355,7 @@ public class BattleViewModel : ViewModelBase
         }
 
         BattleManager.Inst.RemovePenalty(unit);
+        ConsumeInventoryItem(action.SelectedItemId);
 
         BattleActionModel revivedAction;
 
@@ -502,6 +504,32 @@ public class BattleViewModel : ViewModelBase
         if (unit.CurrentHp > unit.MaxHp)
         {
             unit.CurrentHp = unit.MaxHp;
+        }
+    }
+
+    //인벤토리에서 해당 아이템을 1개 소모한다
+    private void ConsumeInventoryItem(string itemId)
+    {
+        if (string.IsNullOrEmpty(itemId))
+        {
+            return;
+        }
+
+        List<ItemModel> inventory = SaveManager.Inst.CurrentPlayerModel.Inventory;
+
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i].ItemID == itemId)
+            {
+                inventory[i].ItemCount--;
+
+                if (inventory[i].ItemCount <= 0)
+                {
+                    inventory.RemoveAt(i);
+                }
+
+                return;
+            }
         }
     }
 
