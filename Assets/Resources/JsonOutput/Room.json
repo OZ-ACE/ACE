@@ -130,7 +130,7 @@
     "PrefabPath": "Prefabs/Room/Room_Stairs"
   },
   {
-    "ID": "Room_0001",
+    "ID": "Room_Sleep",
     "Name": "침실1",
     "Description": "잠자는 방1",
     "SizeW": 2,
@@ -140,84 +140,6 @@
     "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실1 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_0001"
-  },
-  {
-    "ID": "Room_0002",
-    "Name": "침실2",
-    "Description": "잠자는 방2",
-    "SizeW": 2,
-    "SizeH": 1,
-    "BuildCost": 100,
-    "RequiredCellType": "Earth",
-    "RequiredFloor": -999,
-    "EffectType": "Sleep",
-    "EffectDescription": "침실2 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_0002"
-  },
-  {
-    "ID": "Room_0003",
-    "Name": "침실3",
-    "Description": "잠자는 방3",
-    "SizeW": 2,
-    "SizeH": 1,
-    "BuildCost": 100,
-    "RequiredCellType": "Earth",
-    "RequiredFloor": -999,
-    "EffectType": "Sleep",
-    "EffectDescription": "침실3 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_0003"
-  },
-  {
-    "ID": "Room_0004",
-    "Name": "침실4",
-    "Description": "잠자는 방4",
-    "SizeW": 2,
-    "SizeH": 1,
-    "BuildCost": 100,
-    "RequiredCellType": "Earth",
-    "RequiredFloor": -999,
-    "EffectType": "Sleep",
-    "EffectDescription": "침실4 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_0004"
-  },
-  {
-    "ID": "Room_0005",
-    "Name": "침실5",
-    "Description": "잠자는 방5",
-    "SizeW": 2,
-    "SizeH": 1,
-    "BuildCost": 100,
-    "RequiredCellType": "Earth",
-    "RequiredFloor": -999,
-    "EffectType": "Sleep",
-    "EffectDescription": "침실5 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_0005"
-  },
-  {
-    "ID": "Room_0006",
-    "Name": "침실6",
-    "Description": "잠자는 방6",
-    "SizeW": 2,
-    "SizeH": 1,
-    "BuildCost": 100,
-    "RequiredCellType": "Earth",
-    "RequiredFloor": -999,
-    "EffectType": "Sleep",
-    "EffectDescription": "침실6 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_0006"
-  },
-  {
-    "ID": "Room_0007",
-    "Name": "침실7",
-    "Description": "잠자는 방7",
-    "SizeW": 2,
-    "SizeH": 1,
-    "BuildCost": 100,
-    "RequiredCellType": "Earth",
-    "RequiredFloor": -999,
-    "EffectType": "Sleep",
-    "EffectDescription": "침실7 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_0007"
+    "PrefabPath": "Prefabs/Room/Room_Sleep"
   }
 ]
