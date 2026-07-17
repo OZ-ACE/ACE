@@ -381,7 +381,10 @@ public class BattleViewModel : ViewModelBase
             return;
         }
 
-        AddBattleLog($"{unitName} - 지원하기로 페널티 해제 성공, {revivedAction.ActionType} 성공");
+        SupportItem usedItem = GameDataManager.Inst.GetData<SupportItem>(action.SelectedItemId);
+        string itemName = usedItem != null ? usedItem.ItemName : "지원 아이템";
+
+        AddBattleLog($"{unitName} - '{itemName}' 사용해 '{penalty.PenaltyName}' 페널티 해제 성공, {revivedAction.ActionType} 성공");
     }
 
     //액션이 실제로 처리된 결과를 배틀 로그 문구로 변환한다
