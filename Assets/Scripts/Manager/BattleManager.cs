@@ -51,7 +51,7 @@ public class BattleManager : SingletonBase<BattleManager>
     }
 
     //큐 안에서 targetUnitId를 가진 행동을 찾아 결과를 확정한다. 에너지 부족과 대상 없음을 구분해서 반환한다
-    public ActionApplyResult SetActionResult(string targetUnitId, BattleActionResult result, int energyCost)
+    public ActionApplyResult SetActionResult(string targetUnitId, BattleActionResult result, int energyCost, string itemId = null)
     {
         if (_energyGauge < energyCost)
         {
@@ -73,6 +73,7 @@ public class BattleManager : SingletonBase<BattleManager>
                 }
 
                 action.Result = result;
+                action.SelectedItemId = itemId;
                 _energyGauge -= energyCost;
 
                 return ActionApplyResult.Success;
