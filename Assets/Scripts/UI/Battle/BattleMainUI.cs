@@ -31,6 +31,9 @@ public class BattleMainUI : UIBase
     [Header("지원 아이템 팝업")]
     [SerializeField] private SupportItemPopupUI Panel_SupportItemPopup;
 
+    [Header("나가기")]
+    [SerializeField] private Button Button_Exit;
+
     private const int ReinforceEnergyCost = 1; //temp
     private const int ChangeUnitEnergyCost = 2; //temp
     private const int HealUnitEnergyCost = 2; //temp
@@ -49,6 +52,8 @@ public class BattleMainUI : UIBase
     [Header("전투 시작")]
     [SerializeField] private Button Button_StartBattle;
     private bool _isBattleRunning;
+    private CancellationTokenSource _battleLoopCts;
+
 
     private const int MaxRoundSafetyLimit = 15; //혹시 모를 무한루프 방지용 라운드 상한
 
@@ -57,9 +62,58 @@ public class BattleMainUI : UIBase
         _viewModel = new BattleViewModel();
         BindViewModel(_viewModel);
         BindBattleUnitSpawner();
+        ResetBattleView();
+    }
+
+    private void OnEnable()
+    {
+        // 첫 생성 시엔 Start보다 먼저 불리므로 건너뛴다
+        if (_viewModel == null)
+        {
+            return;
+        }
+
+        ResetBattleView();
+    }
+
+    //배틀 리셋
+    private void ResetBattleView()
+    {
+        CancelBattleLoop();
+        _isBattleRunning = false;
+        _selectedTargetUnitId = null;
+        _pendingActionResult = null;
+        _pendingEnergyCost = 0;
+        _pendingLogMessage = null;
 
         BattleManager.Inst.ResetBattleState();
+
+        ClearLogSlots();
+        _viewModel.ClearBattleLog();
+
         SetEnergyGauge(BattleManager.Inst.GetRemainingEnergy());
+        _viewModel.RefreshActionQueue();
+    }
+
+    //배틀 로그 슬롯을 전부 지운다
+    private void ClearLogSlots()
+    {
+        for (int i = Transform_LogContent.childCount - 1; i >= 0; i--)
+        {
+            Destroy(Transform_LogContent.GetChild(i).gameObject);
+        }
+    }
+
+    //이전 전투 루프가 아직 살아있으면 취소한다 (재진입 시 중복 루프 방지)
+    private void CancelBattleLoop()
+    {
+        if (_battleLoopCts == null)
+        {
+            return;
+        }
+        _battleLoopCts.Cancel();
+        _battleLoopCts.Dispose();
+        _battleLoopCts = null;
     }
 
     private void BindViewModel(BattleViewModel viewModel)
@@ -71,6 +125,7 @@ public class BattleMainUI : UIBase
         Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
         Button_EndTurn.onClick.AddListener(OnClickEndTurn);
         Button_StartBattle.onClick.AddListener(OnClickStartBattle);
+        Button_Exit.onClick.AddListener(OnClickExit);
 
         Panel_SupportItemPopup.OnItemApplied += HandleSupportItemApplied;
     }
@@ -89,12 +144,6 @@ public class BattleMainUI : UIBase
     {
         _selectedTargetUnitId = unitId;
 
-        if (_pendingActionResult.HasValue)
-        {
-            ResolvePendingAction(unitId, _pendingActionResult.Value);
-            return;
-        }
-
         string unitName = GameUtil.GetUnitDisplayName(unitId);
         _viewModel.AddBattleLog($"{unitName} 유닛이 선택되었습니다.");
     }
@@ -110,6 +159,7 @@ public class BattleMainUI : UIBase
             Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
             Button_EndTurn.onClick.RemoveListener(OnClickEndTurn);
             Button_StartBattle.onClick.RemoveListener(OnClickStartBattle);
+            Button_Exit.onClick.RemoveListener(OnClickExit);
 
             Panel_SupportItemPopup.OnItemApplied -= HandleSupportItemApplied;
         }
@@ -118,6 +168,7 @@ public class BattleMainUI : UIBase
         {
             BattleUnitTestSpawner.Inst.OnUnitClicked -= OnUnitClicked_Spawner;
         }
+        CancelBattleLoop();
     }
 
     private void OnPropertyChanged_View(object sender, PropertyChangedEventArgs e)
@@ -256,18 +307,18 @@ public class BattleMainUI : UIBase
         _viewModel.NotifyInterventionEnded();
     }
 
-    //개입 버튼을 눌렀을 때 대상이 이미 선택돼 있으면 바로 진행하고, 없으면 다음 유닛 클릭 때 진행하도록 대기시킨다
+    //개입 버튼을 눌렀을 때 대상이 선택돼 있으면 그 대상으로 바로 진행한다. 대상이 없으면 안내만 하고 끝낸다
     private void RequestInterventionAction(BattleActionResult result, int energyCost, string logMessage)
     {
+        if (string.IsNullOrEmpty(_selectedTargetUnitId))
+        {
+            _viewModel.AddBattleLog("액션을 적용할 대상을 선택하세요.");
+            return;
+        }
+
         _pendingActionResult = result;
         _pendingEnergyCost = energyCost;
         _pendingLogMessage = logMessage;
-
-        if (string.IsNullOrEmpty(_selectedTargetUnitId))
-        {
-            _viewModel.AddBattleLog("대상을 선택하세요.");
-            return;
-        }
 
         ResolvePendingAction(_selectedTargetUnitId, result);
     }
@@ -347,10 +398,29 @@ public class BattleMainUI : UIBase
         SetEnergyGauge(BattleManager.Inst.GetRemainingEnergy());
 
         string unitName = GameUtil.GetUnitDisplayName(targetUnitId);
-        _viewModel.AddBattleLog($"{unitName} 대상 - {logMessage}");
+        string appliedLogMessage = BuildInterventionAppliedLogMessage(logMessage, itemId);
+        _viewModel.AddBattleLog($"{unitName} 대상 - {appliedLogMessage}");
 
         _selectedTargetUnitId = null;
         _pendingActionResult = null;
+    }
+
+    //개입 적용 시점 로그 문구를 만든다. 아이템을 사용한 경우 아이템 이름을 덧붙인다
+    private string BuildInterventionAppliedLogMessage(string logMessage, string itemId)
+    {
+        if (string.IsNullOrEmpty(itemId))
+        {
+            return logMessage;
+        }
+
+        SupportItem item = GameDataManager.Inst.GetData<SupportItem>(itemId);
+
+        if (item == null)
+        {
+            return logMessage;
+        }
+
+        return $"{logMessage}, '{item.ItemName}' 아이템 사용 예정";
     }
 
     //[ContextMenu("실제 액션 큐 빌드 테스트 (스폰된 유닛 기준)")]
@@ -459,9 +529,20 @@ public class BattleMainUI : UIBase
             }
         }
 
+        CancelBattleLoop();
+        _battleLoopCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         _isBattleRunning = true;
-        RunBattleLoopAsync(turnOrder, heroList, enemyList, this.GetCancellationTokenOnDestroy()).Forget();
+        RunBattleLoopAsync(turnOrder, heroList, enemyList, _battleLoopCts.Token).Forget();
     }
+
+
+
+
+
+
+
+
+
 
     //라운드를 자동 반복 진행하다가 승패가 나면 보상 지급 후 종료한다
     private async UniTaskVoid RunBattleLoopAsync(
@@ -483,6 +564,7 @@ public class BattleMainUI : UIBase
                 if (result != BattleResult.Ongoing)
                 {
                     _viewModel.ApplyBattleReward(result, BattleManager.Inst.GetCurrentRound());
+                    GameManager.Inst.Services.DayService.MarkBattleDone();
                     _viewModel.AddBattleLog(result == BattleResult.Victory ? "전투 승리!" : "전투 패배...");
                     return;
                 }
@@ -498,5 +580,17 @@ public class BattleMainUI : UIBase
         {
             _isBattleRunning = false;
         }
+    }
+
+
+
+
+
+    //배틀메인UI 나가기
+
+    private void OnClickExit()
+    {
+        CancelBattleLoop();
+        ObjectManager.Inst.ExitBattle();
     }
 }

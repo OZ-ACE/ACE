@@ -87,6 +87,13 @@ public class BattleViewModel : ViewModelBase
         OnPropertyChanged(nameof(BattleLogs));
     }
 
+    //배틀 로그를 전부 비우고 View에 갱신을 알린다 (전투 재진입 초기화용)
+    public void ClearBattleLog()
+    {
+        BattleLogs.Clear();
+        OnPropertyChanged(nameof(BattleLogs));
+    }
+
     //턴 순서대로 유닛을 하나씩 BT에 넘기고, 결과가 올 때까지 기다렸다가 다음 유닛으로 진행한다
     public async UniTask RunRoundAsync(
         List<BattleUnitModel> turnOrder,
@@ -381,7 +388,10 @@ public class BattleViewModel : ViewModelBase
             return;
         }
 
-        AddBattleLog($"{unitName} - 지원하기로 페널티 해제 성공, {revivedAction.ActionType} 성공");
+        SupportItem usedItem = GameDataManager.Inst.GetData<SupportItem>(action.SelectedItemId);
+        string itemName = usedItem != null ? usedItem.ItemName : "지원 아이템";
+
+        AddBattleLog($"{unitName} - '{itemName}' 사용해 '{penalty.PenaltyName}' 페널티 해제 성공, {revivedAction.ActionType} 성공");
     }
 
     //액션이 실제로 처리된 결과를 배틀 로그 문구로 변환한다

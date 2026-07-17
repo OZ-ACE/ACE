@@ -13,6 +13,22 @@ public class BattleManager : SingletonBase<BattleManager>
     public BattleBTExecutor HeroExecutor { get { return Executor_Hero; } }
     public BattleBTExecutor EnemyExecutor { get { return Executor_Enemy; } }
 
+    // 런타임에 생성된 전투 공간의 실행기를 연결
+    public void BindExecutors(BattleBTExecutor heroExecutor, BattleBTExecutor enemyExecutor)
+    {
+        if (heroExecutor == null || enemyExecutor == null)
+        {
+            Debug.LogWarning("[BattleManager] 실행기 연결 실패, null 전달됨");
+            return;
+        }
+
+        Executor_Hero = heroExecutor;
+        Executor_Enemy = enemyExecutor;
+    }
+
+
+
+
     private Queue<BattleActionModel> _actionQueue = new Queue<BattleActionModel>();
     private int _energyGauge;
     private int _currentRound;
@@ -169,6 +185,7 @@ public class BattleManager : SingletonBase<BattleManager>
     {
         _currentRound = 0;
         _energyGauge = MaxEnergyGauge;
+        _actionQueue.Clear();
     }
 
     //전투 결과와 소요 라운드 수를 받아 지급할 기억의파편 수량을 계산한다. 승리가 아니면 0 반환
