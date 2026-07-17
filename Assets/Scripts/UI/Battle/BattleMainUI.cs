@@ -28,6 +28,9 @@ public class BattleMainUI : UIBase
     [SerializeField] private Button Button_ChangeUnit;
     [SerializeField] private Button Button_EndTurn;
 
+    [Header("지원 아이템 팝업")]
+    [SerializeField] private SupportItemPopupUI Panel_SupportItemPopup;
+
     private const int ReinforceEnergyCost = 1; //temp
     private const int ChangeUnitEnergyCost = 2; //temp
     private const int HealUnitEnergyCost = 2; //temp
@@ -68,6 +71,8 @@ public class BattleMainUI : UIBase
         Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
         Button_EndTurn.onClick.AddListener(OnClickEndTurn);
         Button_StartBattle.onClick.AddListener(OnClickStartBattle);
+
+        Panel_SupportItemPopup.OnItemApplied += HandleSupportItemApplied;
     }
 
     private void BindBattleUnitSpawner()
@@ -86,7 +91,7 @@ public class BattleMainUI : UIBase
 
         if (_pendingActionResult.HasValue)
         {
-            ApplyInterventionAction(unitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage);
+            ResolvePendingAction(unitId, _pendingActionResult.Value);
             return;
         }
 
@@ -105,6 +110,8 @@ public class BattleMainUI : UIBase
             Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
             Button_EndTurn.onClick.RemoveListener(OnClickEndTurn);
             Button_StartBattle.onClick.RemoveListener(OnClickStartBattle);
+
+            Panel_SupportItemPopup.OnItemApplied -= HandleSupportItemApplied;
         }
 
         if (BattleUnitTestSpawner.Inst != null)
@@ -249,26 +256,69 @@ public class BattleMainUI : UIBase
         _viewModel.NotifyInterventionEnded();
     }
 
-    //개입 버튼을 눌렀을 때 대상이 이미 선택돼 있으면 바로 적용하고, 없으면 다음 유닛 클릭 때 적용하도록 대기시킨다
+    //개입 버튼을 눌렀을 때 대상이 이미 선택돼 있으면 바로 진행하고, 없으면 다음 유닛 클릭 때 진행하도록 대기시킨다
     private void RequestInterventionAction(BattleActionResult result, int energyCost, string logMessage)
     {
+        _pendingActionResult = result;
+        _pendingEnergyCost = energyCost;
+        _pendingLogMessage = logMessage;
+
         if (string.IsNullOrEmpty(_selectedTargetUnitId))
         {
-            _pendingActionResult = result;
-            _pendingEnergyCost = energyCost;
-            _pendingLogMessage = logMessage;
-
             _viewModel.AddBattleLog("대상을 선택하세요.");
             return;
         }
 
-        ApplyInterventionAction(_selectedTargetUnitId, result, energyCost, logMessage);
+        ResolvePendingAction(_selectedTargetUnitId, result);
+    }
+
+    //보류 중이던 개입 액션을 실제로 진행한다. 아이템이 필요한 개입(지원하기/회복하기)은 팝업을 띄우고, 그 외는 바로 적용한다
+    private void ResolvePendingAction(string targetUnitId, BattleActionResult result)
+    {
+        if (result == BattleActionResult.Reinforce || result == BattleActionResult.HealUnit)
+        {
+            OpenItemPopup(targetUnitId, result);
+            return;
+        }
+
+        ApplyInterventionAction(targetUnitId, result, _pendingEnergyCost, _pendingLogMessage, null);
+    }
+
+    //개입 종류에 맞는 지원 아이템 팝업을 연다
+    private void OpenItemPopup(string targetUnitId, BattleActionResult result)
+    {
+        if (result == BattleActionResult.Reinforce)
+        {
+            BattleUnitModel unit = BattleManager.Inst.GetQueuedUnit(targetUnitId);
+
+            if (unit == null)
+            {
+                _viewModel.AddBattleLog("실행 실패: 대상 유닛 정보를 찾을 수 없습니다.");
+                return;
+            }
+
+            Panel_SupportItemPopup.OpenPopupForPenalty(unit);
+            return;
+        }
+
+        Panel_SupportItemPopup.OpenPopupForHeal();
+    }
+
+    //팝업에서 아이템을 선택했을 때 실제 개입 액션을 적용한다
+    private void HandleSupportItemApplied(string itemId)
+    {
+        if (_pendingActionResult.HasValue == false || string.IsNullOrEmpty(_selectedTargetUnitId))
+        {
+            return;
+        }
+
+        ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, itemId);
     }
 
     //실제 대상에게 개입 액션을 적용한다
-    private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage)
+    private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage, string itemId)
     {
-        ActionApplyResult applyResult = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost);
+        ActionApplyResult applyResult = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost, itemId);
 
         if (applyResult == ActionApplyResult.InsufficientEnergy)
         {

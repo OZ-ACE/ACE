@@ -10,6 +10,8 @@ public class BattleActionModel
 
     public string SkillId { get; set; } //BT에서 선택한 스킬 ID
 
+    public string SelectedItemId { get; set; } //지원하기/회복하기 실행 시 선택한 아이템 ID (SupportItem.ID)
+
     public ActionType ActionType { get; set; } = ActionType.None; //BT 행동 분류
 
     public SkillType SkillType { get; set; } = SkillType.None; //실제 스킬 효과 타입

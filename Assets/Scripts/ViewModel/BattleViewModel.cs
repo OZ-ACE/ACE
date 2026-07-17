@@ -12,8 +12,6 @@ public class BattleViewModel : ViewModelBase
 
     private UniTaskCompletionSource _interventionCompletionSource;
 
-    private const int HealUnitAmount = 20; //temp, 데이터 테이블에 회복량 필드 아직 없음
-
     public List<BattleUnitModel> GetBattleTurnOrder(List<string> heroIds, List<string> enemyIds)
     {
         List<BattleUnitModel> participats = new List<BattleUnitModel>();
@@ -296,7 +294,8 @@ public class BattleViewModel : ViewModelBase
 
         if (action.Result == BattleActionResult.HealUnit)
         {
-            ApplyHealUnit(action.Unit);
+            ApplyHealUnit(action.Unit, action.SelectedItemId);
+            ConsumeInventoryItem(action.SelectedItemId);
             AddBattleLog($"{unitName} - 회복 완료 (현재 HP {action.Unit.CurrentHp}/{action.Unit.MaxHp})");
             return;
         }
@@ -356,6 +355,7 @@ public class BattleViewModel : ViewModelBase
         }
 
         BattleManager.Inst.RemovePenalty(unit);
+        ConsumeInventoryItem(action.SelectedItemId);
 
         BattleActionModel revivedAction;
 
@@ -489,13 +489,47 @@ public class BattleViewModel : ViewModelBase
     }
 
     //대상 유닛의 HP를 회복시킨다. MaxHp를 넘지 않도록 제한
-    private void ApplyHealUnit(BattleUnitModel unit)
+    private void ApplyHealUnit(BattleUnitModel unit, string itemId)
     {
-        unit.CurrentHp += HealUnitAmount;
+        SupportItem item = GameDataManager.Inst.GetData<SupportItem>(itemId);
+
+        if (item == null)
+        {
+            Debug.LogWarning($"[BattleViewModel] 회복 아이템 데이터를 찾을 수 없음 (itemId: {itemId})");
+            return;
+        }
+
+        unit.CurrentHp += item.HealAmount;
 
         if (unit.CurrentHp > unit.MaxHp)
         {
             unit.CurrentHp = unit.MaxHp;
+        }
+    }
+
+    //인벤토리에서 해당 아이템을 1개 소모한다
+    private void ConsumeInventoryItem(string itemId)
+    {
+        if (string.IsNullOrEmpty(itemId))
+        {
+            return;
+        }
+
+        List<ItemModel> inventory = SaveManager.Inst.CurrentPlayerModel.Inventory;
+
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i].ItemID == itemId)
+            {
+                inventory[i].ItemCount--;
+
+                if (inventory[i].ItemCount <= 0)
+                {
+                    inventory.RemoveAt(i);
+                }
+
+                return;
+            }
         }
     }
 
