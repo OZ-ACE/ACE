@@ -144,12 +144,6 @@ public class BattleMainUI : UIBase
     {
         _selectedTargetUnitId = unitId;
 
-        if (_pendingActionResult.HasValue)
-        {
-            ResolvePendingAction(unitId, _pendingActionResult.Value);
-            return;
-        }
-
         string unitName = GameUtil.GetUnitDisplayName(unitId);
         _viewModel.AddBattleLog($"{unitName} 유닛이 선택되었습니다.");
     }
@@ -313,18 +307,18 @@ public class BattleMainUI : UIBase
         _viewModel.NotifyInterventionEnded();
     }
 
-    //개입 버튼을 눌렀을 때 대상이 이미 선택돼 있으면 바로 진행하고, 없으면 다음 유닛 클릭 때 진행하도록 대기시킨다
+    //개입 버튼을 눌렀을 때 대상이 선택돼 있으면 그 대상으로 바로 진행한다. 대상이 없으면 안내만 하고 끝낸다
     private void RequestInterventionAction(BattleActionResult result, int energyCost, string logMessage)
     {
+        if (string.IsNullOrEmpty(_selectedTargetUnitId))
+        {
+            _viewModel.AddBattleLog("액션을 적용할 대상을 선택하세요.");
+            return;
+        }
+
         _pendingActionResult = result;
         _pendingEnergyCost = energyCost;
         _pendingLogMessage = logMessage;
-
-        if (string.IsNullOrEmpty(_selectedTargetUnitId))
-        {
-            _viewModel.AddBattleLog("대상을 선택하세요.");
-            return;
-        }
 
         ResolvePendingAction(_selectedTargetUnitId, result);
     }
@@ -404,10 +398,29 @@ public class BattleMainUI : UIBase
         SetEnergyGauge(BattleManager.Inst.GetRemainingEnergy());
 
         string unitName = GameUtil.GetUnitDisplayName(targetUnitId);
-        _viewModel.AddBattleLog($"{unitName} 대상 - {logMessage}");
+        string appliedLogMessage = BuildInterventionAppliedLogMessage(logMessage, itemId);
+        _viewModel.AddBattleLog($"{unitName} 대상 - {appliedLogMessage}");
 
         _selectedTargetUnitId = null;
         _pendingActionResult = null;
+    }
+
+    //개입 적용 시점 로그 문구를 만든다. 아이템을 사용한 경우 아이템 이름을 덧붙인다
+    private string BuildInterventionAppliedLogMessage(string logMessage, string itemId)
+    {
+        if (string.IsNullOrEmpty(itemId))
+        {
+            return logMessage;
+        }
+
+        SupportItem item = GameDataManager.Inst.GetData<SupportItem>(itemId);
+
+        if (item == null)
+        {
+            return logMessage;
+        }
+
+        return $"{logMessage}, '{item.ItemName}' 아이템 사용 예정";
     }
 
     //[ContextMenu("실제 액션 큐 빌드 테스트 (스폰된 유닛 기준)")]
