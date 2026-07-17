@@ -74,6 +74,7 @@ public class InventoryViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(InventoryItems));
     }
+
     public bool TryRemoveItem(string itemID, int count)
     {
         for (int i = 0; i < InventoryItems.Count; i++)
@@ -98,9 +99,6 @@ public class InventoryViewModel : ViewModelBase
         return false;   
     }
 
-
-
-
     public int GetItemCount(string itemID)
     {
         foreach (ItemModel item in InventoryItems)
@@ -112,10 +110,6 @@ public class InventoryViewModel : ViewModelBase
         }
         return 0;
     }
-
-
-
-
 
     public void SetSelectItem(string itemID)
     {

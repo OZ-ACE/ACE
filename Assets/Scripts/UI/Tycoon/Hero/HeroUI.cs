@@ -5,7 +5,6 @@ public class HeroUI : UIBase
 {
     [SerializeField] private HeroSlot Prefab_Slot;
     [SerializeField] private Transform Transform_Content;
-    [SerializeField] private HeroHotBar HeroHotBar;
 
     private List<HeroSlot> _activeSlots = new List<HeroSlot>();
     private HeroViewModel _currentVM;
@@ -24,8 +23,6 @@ public class HeroUI : UIBase
 
     private void OnDisable()
     {
-        HeroHotBar.gameObject.SetActive(false);
-
         if (_currentVM != null)
         {
             _currentVM.IsSelect = false;
@@ -71,7 +68,5 @@ public class HeroUI : UIBase
 
         _currentVM = heroVM;
         _currentVM.IsSelect = true;
-
-        HeroHotBar.OpenHotBar(heroVM);
     }
 }

@@ -166,15 +166,22 @@ public class ObjectManager : SingletonBase<ObjectManager>
         }
     }
 
-
-
     ////////////////////////////////////////
 
     // 테스트용 임시 메서드
     public async UniTask SpawnHero(string heroID)
     {
         GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroID}");
-        _hero = prefab;
+
+        HeroMovingAgent movingAget = prefab.GetComponent<HeroMovingAgent>();
+        HeroModel heroData = new HeroModel();
+
+        for (int i = 0; i < 23; i++)
+        {
+            heroData.HourlyStates[i] = ScheduleState.Shower;
+        }
+
+        movingAget.InitHero(heroData);
     }
 
     public void DestroyHeroAndMap()
