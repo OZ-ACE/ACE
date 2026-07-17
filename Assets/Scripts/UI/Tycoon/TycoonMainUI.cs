@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -37,7 +36,6 @@ public class TycoonMainUI : UIBase
     [SerializeField] Button Button_Inventory;
     [SerializeField] Button Button_Hero;
     [SerializeField] Button Button_Construct;
-    [SerializeField] Button Button_Battle;
     [SerializeField] Button Button_Setting;
     [SerializeField] Button Button_Home;
     [SerializeField] List<ButtonStruct> ButtonList;
@@ -67,7 +65,6 @@ public class TycoonMainUI : UIBase
         Button_Inventory.onClick.AddListener(OnClickInventory);
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
-        Button_Battle.onClick.AddListener(OnClickBattle);
         Button_Setting.onClick.AddListener(OnClickSetting);
         Button_Home.onClick.AddListener(OnClickHome);
 
@@ -144,11 +141,6 @@ public class TycoonMainUI : UIBase
         UIManager.Inst.OpenSettingPopup();
         ChangePanel(TycoonPanelType.None);
         UpdateButton(TycoonPanelType.Setting);
-    }
-
-    private void OnClickBattle()
-    {
-        
     }
 
     private void ChangePanel(TycoonPanelType type)

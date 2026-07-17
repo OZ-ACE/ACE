@@ -13,9 +13,6 @@ public class ObjectManager : SingletonBase<ObjectManager>
     [Header("3D 전투 공간 프리팹")]
     [SerializeField] private GameObject Prefab_BattleRoot;
 
-
-
-
     private BuildGridView _buildGridView;
     private GameObject _hero;
 
@@ -62,6 +59,9 @@ public class ObjectManager : SingletonBase<ObjectManager>
         viewModel.OnClickOffice -= OnClickOffice;
         viewModel.OnClickOffice += OnClickOffice;
 
+        viewModel.OnClickBattle -= OnClickBattle;
+        viewModel.OnClickBattle += OnClickBattle;
+
         _buildGridView.Bind(viewModel);
         Debug.Log("[ObjectManager] 건설 격자 생성 완료");
     }
@@ -70,6 +70,12 @@ public class ObjectManager : SingletonBase<ObjectManager>
     {
         EnterOffice();
     }
+
+    private void OnClickBattle()
+    {
+        EnterBattle();
+    }
+
     private void CreateOfficeRoot()
     {
         if (Prefab_OfficeRoot == null)
@@ -142,6 +148,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
             _buildGridView.enabled = true;
         }
     }
+
     private void OnClickOfficeObject(OfficeObjectType type)
     {
         switch (type)
