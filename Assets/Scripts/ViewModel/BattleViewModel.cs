@@ -87,6 +87,13 @@ public class BattleViewModel : ViewModelBase
         OnPropertyChanged(nameof(BattleLogs));
     }
 
+    //배틀 로그를 전부 비우고 View에 갱신을 알린다 (전투 재진입 초기화용)
+    public void ClearBattleLog()
+    {
+        BattleLogs.Clear();
+        OnPropertyChanged(nameof(BattleLogs));
+    }
+
     //턴 순서대로 유닛을 하나씩 BT에 넘기고, 결과가 올 때까지 기다렸다가 다음 유닛으로 진행한다
     public async UniTask RunRoundAsync(
         List<BattleUnitModel> turnOrder,
