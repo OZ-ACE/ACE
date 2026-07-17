@@ -32,6 +32,7 @@ public class OfficeInputView : ViewBase
             OnClickOfficeObject.Invoke(officeObject.ObjectType);
         }
     }
+
     //왼쪽 클릭 여부 및 UI 위 클릭 판정
     private bool IsClickedThisFrame()
     {
