@@ -11,7 +11,10 @@ public class BattleUnitTestSpawner : SingletonBase<BattleUnitTestSpawner>
     {
         public string HeroId;
         public GameObject Prefab;
+        public float Scale;
     }
+
+
 
     private const float SpawnPositionSpacingX = 2f;
 
@@ -69,13 +72,17 @@ public class BattleUnitTestSpawner : SingletonBase<BattleUnitTestSpawner>
         }
 
         Vector3 basePosition = Vector3.zero;
+        Vector3 spawnDirection = Vector3.right;
         if (Transform_SpawnRoot != null)
         {
             basePosition = Transform_SpawnRoot.position;
+            spawnDirection = Transform_SpawnRoot.right; 
         }
 
-        Vector3 spawnPosition = basePosition + new Vector3(index * SpawnPositionSpacingX, 0f, 0f);
-        GameObject spawnedObj = Instantiate(entry.Prefab, spawnPosition, Quaternion.identity);
+        Vector3 spawnPosition = basePosition + spawnDirection * (index * SpawnPositionSpacingX);
+        GameObject spawnedObj = Instantiate(entry.Prefab, spawnPosition, Quaternion.Euler(0f, 100f, 0f));
+        float scale = entry.Scale > 0f ? entry.Scale : 1f; //인스펙터 미입력(0)이면 원본 크기 유지
+        spawnedObj.transform.localScale = new Vector3(scale, scale, scale);
 
         BattleUnitClickHandler clickHandler = spawnedObj.GetComponent<BattleUnitClickHandler>();
 
@@ -88,6 +95,9 @@ public class BattleUnitTestSpawner : SingletonBase<BattleUnitTestSpawner>
         clickHandler.OnUnitClicked += HandleUnitClicked;
         _spawnedHandlerList.Add(clickHandler);
     }
+
+
+
 
     private void HandleUnitClicked(string unitId)
     {
