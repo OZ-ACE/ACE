@@ -279,9 +279,19 @@ public class UIAdmissionPopup : UIBase
 
     private void AdmitHero(string heroId)
     {
-        if (string.IsNullOrEmpty(heroId) == true)
+        if (string.IsNullOrEmpty(heroId))
         {
-            Debug.LogWarning("입소 신청서 ID가 비어있음.");
+            Debug.LogWarning("입소 신청서 ID 가 비어있음.");
+            return;
+        }
+
+        RoomAssignmentService roomAssignmentService = GameManager.Inst.Services.RoomAssignmentService;
+
+        List<PlacedRoomData> emptyRooms = roomAssignmentService.GetEmptyRooms();
+
+        if (emptyRooms.Count <= 0)
+        {
+            Debug.LogWarning("빈 침실 없음.");
             return;
         }
 
@@ -290,6 +300,14 @@ public class UIAdmissionPopup : UIBase
         if (isSuccess == false)
         {
             Debug.LogWarning("입소 처리 실패함.");
+            return;
+        }
+
+        bool isAssigned = roomAssignmentService.AssignRoom(heroId, emptyRooms[0].RoomInstanceId);
+
+        if (isAssigned == false)
+        {
+            Debug.LogWarning("방 배정에 실패함.");
             return;
         }
 

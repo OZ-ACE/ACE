@@ -5,6 +5,7 @@ using System.Collections.Generic;
 [Serializable]
 public class PlacedRoomData
 {
+    public long RoomInstanceId;
     public string RoomId;    // RoomData.ID (어떤 방인지)
     public GridCoord Origin; // 방의 좌하단 기준 좌표 (어디에)
 }
