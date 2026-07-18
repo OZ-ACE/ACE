@@ -18,9 +18,14 @@ public class RoomAssignmentService
             return false;
         }
 
-        if (string.IsNullOrEmpty(heroId) == true || roomInstanceId == 0)
+        if (string.IsNullOrEmpty(heroId) == true || roomInstanceId <= 0)
         {
             return false;
+        }
+
+        if (player.HeroRoomAssignments == null)
+        {
+            player.HeroRoomAssignments = new List<HeroRoomAssignmentModel>();
         }
 
         if (IsHeroAssigned(heroId) == true)
@@ -33,9 +38,7 @@ public class RoomAssignmentService
             return false;
         }
 
-        HeroRoomAssignmentModel assignment = new HeroRoomAssignmentModel();
-        assignment.HeroId = heroId;
-        assignment.RoomInstanceId = roomInstanceId;
+        HeroRoomAssignmentModel assignment = new HeroRoomAssignmentModel{HeroId = heroId, RoomInstanceId = roomInstanceId};
 
         player.HeroRoomAssignments.Add(assignment);
         SaveManager.Inst.RequestSaveData(player);
@@ -43,11 +46,11 @@ public class RoomAssignmentService
         return true;
     }
 
-    public bool RemoveAssignment(string heroId)
+    public bool UnassignRoom(string heroId)
     {
         PlayerModel player = GetCurrentPlayer();
 
-        if (player == null)
+        if (player == null || player.HeroRoomAssignments == null)
         {
             return false;
         }
@@ -69,7 +72,7 @@ public class RoomAssignmentService
     {
         PlayerModel player = GetCurrentPlayer();
 
-        if (player == null)
+        if (player == null || player.HeroRoomAssignments == null)
         {
             return null;
         }
@@ -81,7 +84,7 @@ public class RoomAssignmentService
     {
         PlayerModel player = GetCurrentPlayer();
 
-        if (player == null)
+        if (player == null || player.HeroRoomAssignments == null)
         {
             return null;
         }
@@ -102,25 +105,13 @@ public class RoomAssignmentService
     public long GetAssignedRoomInstanceId(string heroId)
     {
         HeroRoomAssignmentModel assignment = GetAssignmentByHero(heroId);
-
-        if (assignment == null)
-        {
-            return 0;
-        }
-
-        return assignment.RoomInstanceId;
+        return assignment != null ? assignment.RoomInstanceId : 0;
     }
 
     public string GetAssignedHeroId(long roomInstanceId)
     {
         HeroRoomAssignmentModel assignment = GetAssignmentByRoom(roomInstanceId);
-
-        if (assignment == null)
-        {
-            return null;
-        }
-
-        return assignment.HeroId;
+        return assignment != null ? assignment.HeroId : null;
     }
 
     public List<PlacedRoomData> GetEmptyRooms()
@@ -129,16 +120,23 @@ public class RoomAssignmentService
 
         BuildGridViewModel buildGridViewModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
 
+        if (buildGridViewModel == null)
+        {
+            return emptyRooms;
+        }
+
         List<PlacedRoomData> rooms = buildGridViewModel.GetPlacedRooms();
 
-        foreach (PlacedRoomData room in rooms)
+        for (int i = 0; i < rooms.Count; i++)
         {
-            if (room.RoomId != BEDROOM_ROOM_ID)
+            PlacedRoomData room = rooms[i];
+
+            if (room == null || room.RoomId != BEDROOM_ROOM_ID)
             {
                 continue;
             }
 
-            if (IsRoomOccupied(room.RoomInstanceId))
+            if (IsRoomOccupied(room.RoomInstanceId) == true)
             {
                 continue;
             }

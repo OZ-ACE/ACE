@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UIAdmissionPopup : UIBase
+public class UIAdmissionPopup : UIBase, IClosablePopup
 {
     [Header("Button")]
     [SerializeField] private Button Button_Background;
@@ -23,6 +22,9 @@ public class UIAdmissionPopup : UIBase
     private readonly List<UIAdmissionPaperSlot> _paperSlots = new List<UIAdmissionPaperSlot>();
 
     private AdmissionPopupViewModel _viewModel;
+    private BuildGridViewModel _buildGridViewModel;
+    private string _pendingHeroId;
+    private long _pendingRoomInstanceId;
     private int _currentPaperIndex;
 
     private void OnEnable()
@@ -33,19 +35,6 @@ public class UIAdmissionPopup : UIBase
     private void OnDisable()
     {
         UnbindButtonEvents();
-    }
-
-    private void Update()
-    {
-        if (Keyboard.current == null)
-        {
-            return;
-        }
-
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
-        {
-            ClosePopup();
-        }
     }
 
     private void BindButtonEvents()
@@ -68,7 +57,7 @@ public class UIAdmissionPopup : UIBase
 
     private void OnClickBackgroundButton()
     {
-        ClosePopup();
+        RequestClose();
     }
 
     private void OnClickNextButton()
@@ -91,15 +80,24 @@ public class UIAdmissionPopup : UIBase
         _paperSlots[_currentPaperIndex - 1].PlayReturnToStack();
     }
 
-    private void ClosePopup()
+    public void RequestClose()
     {
-        UIManager.Inst.CloseAdmissionPopup();
+        UIManager.Inst.ClosePopup(this);
+    }
+
+    public void CloseImmediately()
+    {
+        CleanupAdmissionSelection();
+
+        gameObject.SetActive(false);
     }
 
     public void Initialize()
     {
         _viewModel = new AdmissionPopupViewModel();
         _viewModel.Initialize();
+
+        _buildGridViewModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
 
         _currentPaperIndex = 0;
 
@@ -188,7 +186,6 @@ public class UIAdmissionPopup : UIBase
         }
 
         _currentPaperIndex++;
-
         RefreshPaperLayout();
     }
 
@@ -203,7 +200,6 @@ public class UIAdmissionPopup : UIBase
         }
 
         _currentPaperIndex--;
-
         RefreshPaperLayout();
     }
 
@@ -281,7 +277,13 @@ public class UIAdmissionPopup : UIBase
     {
         if (string.IsNullOrEmpty(heroId))
         {
-            Debug.LogWarning("입소 신청서 ID 가 비어있음.");
+            Debug.LogWarning("입소 신청서 ID가 비어있음.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_pendingHeroId) == false)
+        {
+            Debug.LogWarning("방 선택하는 중.");
             return;
         }
 
@@ -295,34 +297,153 @@ public class UIAdmissionPopup : UIBase
             return;
         }
 
-        bool isSuccess = AdmissionManager.Inst.TryAdmitHero(heroId);
+        _pendingHeroId = heroId;
 
-        if (isSuccess == false)
-        {
-            Debug.LogWarning("입소 처리 실패함.");
-            return;
-        }
+        SetAdmissionButtonsLocked(true);
 
-        bool isAssigned = roomAssignmentService.AssignRoom(heroId, emptyRooms[0].RoomInstanceId);
+        _buildGridViewModel.OnRoomSelected -= OnRoomSelected;
+        _buildGridViewModel.OnRoomSelected += OnRoomSelected;
 
-        if (isAssigned == false)
-        {
-            Debug.LogWarning("방 배정에 실패함.");
-            return;
-        }
+        _buildGridViewModel.BeginRoomSelection(emptyRooms);
 
-        if (_currentPaperIndex < 0 || _currentPaperIndex >= _paperSlots.Count)
-        {
-            return;
-        }
-
-        UIAdmissionPaperSlot currentPaperSlot = _paperSlots[_currentPaperIndex];
-        currentPaperSlot.SetAdmittedState();
+        Debug.Log($"[{heroId}] 방 선택 시작");
     }
 
     private void OnDestroy()
     {
+        CleanupAdmissionSelection();
+
         UnbindButtonEvents();
         ClearPaperSlots();
+    }
+
+    private void OnRoomSelected(long roomInstanceId)
+    {
+        _buildGridViewModel.OnRoomSelected -= OnRoomSelected;
+        _buildGridViewModel.EndRoomSelection();
+
+        _pendingRoomInstanceId = roomInstanceId;
+
+        OpenAdmissionConfirmPopup();
+    }
+
+    private void SetAdmissionButtonsLocked(bool isLocked)
+    {
+        for (int i = 0; i < _paperSlots.Count; i++)
+        {
+            UIAdmissionPaperSlot paperSlot = _paperSlots[i];
+
+            if (paperSlot == null)
+            {
+                continue;
+            }
+
+            paperSlot.SetSelectionLocked(isLocked);
+        }
+    }
+
+    private void OpenAdmissionConfirmPopup()
+    {
+        HeroData heroData = GameDataManager.Inst.GetData<HeroData>(_pendingHeroId);
+
+        if (heroData == null)
+        {
+            Debug.LogWarning($"확인 팝업에 표시할 영웅 데이터를 찾을 수 없음. ID : {_pendingHeroId}");
+            ResetPendingAdmission();
+            return;
+        }
+
+        UIBase popupUI = UIManager.Inst.OpenPopup(UIType.AdmissionConfirmPopup);
+        UIAdmissionConfirmPopup confirmPopup = popupUI as UIAdmissionConfirmPopup;
+
+        if (confirmPopup == null)
+        {
+            Debug.LogError("UIAdmissionConfirmPopup 을 열 수 없음.");
+            ResetPendingAdmission();
+            return;
+        }
+
+        confirmPopup.Open(heroData.HeroName, "선택한 침실", ConfirmAdmission, CancelAdmission);
+    }
+
+    private void ConfirmAdmission()
+    {
+        if (string.IsNullOrEmpty(_pendingHeroId) == true)
+        {
+            Debug.LogWarning("입소할 영웅 ID 가 비어있음.");
+            ResetPendingAdmission();
+            return;
+        }
+
+        if (_pendingRoomInstanceId <= 0)
+        {
+            Debug.LogWarning("선택된 방 ID 가 유효하지 않음.");
+            ResetPendingAdmission();
+            return;
+        }
+
+        string admittedHeroId = _pendingHeroId;
+
+        bool isAdmitted = AdmissionManager.Inst.TryAdmitHero(admittedHeroId, _pendingRoomInstanceId);
+
+        if (isAdmitted == false)
+        {
+            Debug.LogWarning($"입소 처리에 실패함. HeroId : {admittedHeroId}");
+            ResetPendingAdmission();
+            return;
+        }
+
+        UIAdmissionPaperSlot admittedPaperSlot = FindPaperSlotByHeroId(admittedHeroId);
+
+        if (admittedPaperSlot != null)
+        {
+            admittedPaperSlot.SetAdmittedState();
+        }
+
+        ResetPendingAdmission();
+    }
+
+    private void CancelAdmission()
+    {
+        ResetPendingAdmission();
+    }
+
+    private void ResetPendingAdmission()
+    {
+        _pendingHeroId = null;
+        _pendingRoomInstanceId = 0;
+
+        SetAdmissionButtonsLocked(false);
+    }
+
+    private UIAdmissionPaperSlot FindPaperSlotByHeroId(string heroId)
+    {
+        for (int i = 0; i < _paperSlots.Count; i++)
+        {
+            UIAdmissionPaperSlot paperSlot = _paperSlots[i];
+
+            if (paperSlot == null)
+            {
+                continue;
+            }
+
+            if (paperSlot.GetHeroId() == heroId)
+            {
+                return paperSlot;
+            }
+        }
+
+        return null;
+    }
+
+    private void CleanupAdmissionSelection()
+    {
+        if (_buildGridViewModel != null)
+        {
+            _buildGridViewModel.OnRoomSelected -= OnRoomSelected;
+            _buildGridViewModel.EndRoomSelection();
+        }
+
+        ResetPendingAdmission();
     }
 }
