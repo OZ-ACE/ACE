@@ -119,6 +119,12 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
         return true;
     }
 
+    public bool CanAdmitHero()
+    {
+        List<PlacedRoomData> emptyRooms = GameManager.Inst.Services.RoomAssignmentService.GetEmptyRooms();
+        return emptyRooms.Count > 0;
+    }
+
     private bool AddAdmittedHero(string heroId)
     {
         PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;

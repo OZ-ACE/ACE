@@ -280,6 +280,7 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         PlacedRoomData placed = new PlacedRoomData();
+        placed.RoomInstanceId = GameUtil.GenerateUniqueId();
         placed.RoomId = roomId;
         placed.Origin = originCoord;
 
@@ -414,6 +415,7 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         PlacedRoomData moved = new PlacedRoomData();
+        moved.RoomInstanceId = _pickedRoom.RoomInstanceId;
         moved.RoomId = _pickedRoom.RoomId;
         moved.Origin = newOrigin;
 
@@ -591,6 +593,7 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         PlacedRoomData stair = new PlacedRoomData();
+        stair.RoomInstanceId = GameUtil.GenerateUniqueId();
         stair.RoomId = STAIR_ROOM_ID;
         stair.Origin = origin;
 
