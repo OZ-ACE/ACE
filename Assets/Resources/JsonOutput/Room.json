@@ -13,7 +13,7 @@
     "PrefabPath": "Prefabs/Room/Room_Office"
   },
   {
-    "ID": "Room_Garden",
+    "ID": "Room_Sun",
     "Name": "정원",
     "Description": "지상 정원",
     "SizeW": 2,

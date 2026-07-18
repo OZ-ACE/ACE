@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class HeroModel
 {
@@ -14,7 +15,9 @@ public class HeroModel
 
     private HeroStat _targetHeroStat;
 
-    public List<ScheduleState> HourlyStates = new List<ScheduleState>(new ScheduleState[24]);
+    public ScheduleState[] HourlyStates { get; set; } = new ScheduleState[24];
+
+    public Action OnUpdateSchedule;
 
     public void LoadHeroData(string heroID)
     {
@@ -33,7 +36,7 @@ public class HeroModel
         Age = heroData.Age;
         Skill = GameDataManager.Inst.GetData<HeroSkill>(heroData.MainSkillId).SkillName;
 
-        var playerModel = SaveManager.Inst.CurrentPlayerModel;
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
 
         _targetHeroStat = null;
         for (int i = 0; i < playerModel.HeroStats.Count; i++)
@@ -53,8 +56,6 @@ public class HeroModel
 
         Affection = _targetHeroStat.Affection;
         Satisfaction = _targetHeroStat.Satisfaction;
-
-        HourlyStates.Clear();
     }
 
     public void SaveHeroProgress()

@@ -9,11 +9,16 @@ public class HeroMovingAgent : MonoBehaviour
     [SerializeField] private NavMeshAgent Agent_Hero;
     [SerializeField] private Animator Animator_Hero;
 
+    private HeroModel _heroModel;
+    public HeroModel HeroModel
+    {
+        get => _heroModel;
+    }
+
     private IHeroTycoonState _currentState;
     private Dictionary<TycoonState, IHeroTycoonState> _states;
 
     private GridSystem _gridSystem;
-    private HeroModel _heroModel;
     private BuildGridViewModel _buildVM;
 
     private CancellationTokenSource _movingToken;
@@ -29,24 +34,31 @@ public class HeroMovingAgent : MonoBehaviour
         };
     }
 
+    private void Start()
+    {
+        _heroModel.OnUpdateSchedule += UpdateSchedule;
+        GameManager.Inst.Services.DayService.OnChangeHour += ChangeTargetRoom;
+    }
+
     private void OnEnable()
     {
-        _buildVM = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
-        _gridSystem = _buildVM.GridSystem;
+        RefreshBuildViewModel();
     }
 
     private void OnDisable()
     {
-        GameManager.Inst.Services.DayService.OnChangeHour -= ChangeTargetRoom;
         CancelMoving();
+    }
+
+    private void OnDestroy()
+    {
+        _heroModel.OnUpdateSchedule -= UpdateSchedule;
+        GameManager.Inst.Services.DayService.OnChangeHour -= ChangeTargetRoom;
     }
 
     private void Update()
     {
-        if (_currentState != null)
-        {
-            _currentState.Update(this);
-        }
+        _currentState?.Update(this);
     }
 
     public void ChangeState(TycoonState newState)
@@ -72,9 +84,28 @@ public class HeroMovingAgent : MonoBehaviour
     {
         _heroModel = heroModel;
 
-        GameManager.Inst.Services.DayService.OnChangeHour += ChangeTargetRoom;
-
         ChangeState(TycoonState.Idle);
+        UpdateSchedule();
+    }
+
+    private void UpdateSchedule()
+    {
+        int currentHour = GameManager.Inst.Services.DayService.CurrentHour;
+        ChangeTargetRoom(currentHour);
+    }
+
+    private void RefreshBuildViewModel()
+    {
+        var buildService = GameManager.Inst.Services.BuildService;
+        if (buildService != null)
+        {
+            _buildVM = buildService.GetBuildGridViewModel();
+
+            if (_buildVM != null)
+            {
+                _gridSystem = _buildVM.GridSystem;
+            }
+        }
     }
 
     private void ChangeTargetRoom(int hour)
@@ -92,12 +123,17 @@ public class HeroMovingAgent : MonoBehaviour
             nextState = TycoonState.Gym;
         }
 
-        if (targetPos == Vector3.zero || IsPathInvalid(targetPos))
+        if (targetPos == Vector3.zero)
         {
-            // 여기에 만족도 깎기
-            Debug.Log("만족도 하락");
+            Debug.LogError($"방 없음");
+            ChangeState(TycoonState.Idle);
+            return;
+        }
 
-            if (Agent_Hero != null && Agent_Hero.isOnNavMesh)
+        if (IsPathInvalid(targetPos))
+        {
+            Debug.LogError($"끊어진 길");
+            if (Agent_Hero.isOnNavMesh)
             {
                 Agent_Hero.ResetPath();
             }
@@ -106,7 +142,6 @@ public class HeroMovingAgent : MonoBehaviour
             return;
         }
 
-        ChangeState(nextState);
         StartMoving(targetPos, nextState).Forget();
     }
 
@@ -137,6 +172,8 @@ public class HeroMovingAgent : MonoBehaviour
 
     public Vector3 GetRoomPosition(ScheduleState state)
     {
+        RefreshBuildViewModel();
+
         if (_buildVM == null)
         {
             return Vector3.zero;

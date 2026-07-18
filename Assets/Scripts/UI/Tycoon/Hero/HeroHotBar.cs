@@ -4,15 +4,13 @@ using UnityEngine.UI;
 
 public class HeroHotBar : MonoBehaviour
 {
-    [SerializeField] private Button Button_Rest;
-    [SerializeField] private Button Button_Sun;
+    [SerializeField] private Button Button_Schedule;
 
     private HeroViewModel _targetVM;
 
     private void Awake()
     {
-        Button_Rest.onClick.AddListener(OnClickRest);
-        Button_Sun.onClick.AddListener(OnClickSun);
+        Button_Schedule.onClick.AddListener(OnClickSchedule);
     
         gameObject.SetActive(false);
     }
@@ -54,15 +52,13 @@ public class HeroHotBar : MonoBehaviour
         }
     }
 
-    private void OnClickRest()
+    private void OnClickSchedule()
     {
-        // 호감도, 불만도 등 반영
-        // _targetVM.AddSatisfaction(10);
-    }
+        UIBase uiBase = UIManager.Inst.OpenScheduleUI();
 
-    private void OnClickSun()
-    {
-        // 호감도, 불만도 등 반영
-        // _targetVM.AddSatisfaction(10);
+        if (uiBase is ScheduleUI scheduleUI)
+        {
+            scheduleUI.OpenSchedule(_targetVM);
+        }
     }
 }
