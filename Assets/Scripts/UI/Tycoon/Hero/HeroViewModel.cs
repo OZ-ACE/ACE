@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 public class HeroViewModel : ViewModelBase
 {
     private HeroModel _model;
+    public HeroModel Model => _model;
 
     private string _heroID;
     public string HeroID => _heroID;
