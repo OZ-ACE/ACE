@@ -23,7 +23,16 @@ public class GameManager : SingletonBase<GameManager>
 
     private void Start()
     {
+        InitializeGame();
+    }
+
+    private void InitializeGame()
+    {
+        SaveManager.Inst.Initialize();
+
         ApplySetting();
+
+        UIManager.Inst.InitStartUI();
     }
 
     public void SetDialogueID(string dialogueID)

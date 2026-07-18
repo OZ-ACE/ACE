@@ -34,6 +34,9 @@ public class SaveViewModel : ViewModelBase
         newPlayer.PlayerName = playerName;
 
         SaveManager.Inst.RequestSaveData(newPlayer);
+        SaveManager.Inst.LoadSlot(SelectedSlotIndex);
+
+        AdmissionManager.Inst.Reload();
 
         RefreshActiveSlots();
     }
@@ -45,7 +48,7 @@ public class SaveViewModel : ViewModelBase
 
     public PlayerModel GetPlayerModel(int slotIndex)
     {
-        return SaveManager.Inst.RequestLoadData(slotIndex);
+        return SaveManager.Inst.LoadPreviewData(slotIndex);
     }
 
     public void RequestDeleteSlot(int slotIndex)
@@ -69,8 +72,9 @@ public class SaveViewModel : ViewModelBase
 
     public void RequestConfirmSlot(int slotIndex)
     {
-        SaveManager.Inst.SetCurrentSlotIndex(slotIndex);
-        SaveManager.Inst.RequestLoadData(slotIndex);
+        SaveManager.Inst.LoadSlot(slotIndex);
+        AdmissionManager.Inst.Reload();
+
         GameManager.Inst.Services.BuildService.GetBuildGridViewModel().ReloadGrid();
         GameManager.Inst.Services.QuestService.ReloadQuest();
     }

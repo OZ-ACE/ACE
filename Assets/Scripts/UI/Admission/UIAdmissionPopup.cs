@@ -114,6 +114,7 @@ public class UIAdmissionPopup : UIBase
         for (int i = 0; i < candidateCount; i++)
         {
             HeroData heroData = _viewModel.GetHeroData(i);
+            AdmissionCandidateModel candidateModel = _viewModel.CandidateModels[i];
 
             if (heroData == null)
             {
@@ -135,7 +136,7 @@ public class UIAdmissionPopup : UIBase
             Vector3 stackedRotation = new Vector3(0f, 0f, GetStackedRotationZ(i));
             Vector3 flippedRotation = new Vector3(0f, 0f, 8f);
 
-            paperSlot.Initialize(heroData, i);
+            paperSlot.Initialize(heroData, i, candidateModel.IsAdmitted);
             paperSlot.SetPaperLayout(stackedPosition, flippedPosition, stackedRotation, flippedRotation);
 
             BindPaperSlotEvents(paperSlot);
@@ -291,6 +292,14 @@ public class UIAdmissionPopup : UIBase
             Debug.LogWarning("입소 처리 실패함.");
             return;
         }
+
+        if (_currentPaperIndex < 0 || _currentPaperIndex >= _paperSlots.Count)
+        {
+            return;
+        }
+
+        UIAdmissionPaperSlot currentPaperSlot = _paperSlots[_currentPaperIndex];
+        currentPaperSlot.SetAdmittedState();
     }
 
     private void OnDestroy()

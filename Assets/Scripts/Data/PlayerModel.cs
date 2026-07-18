@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 [Serializable]
 public class PlayerModel
@@ -19,6 +16,7 @@ public class PlayerModel
     public List<ShopStockData> ShopStocks = new List<ShopStockData>();
     public List<HeroProgressModel> HeroProgressList = new List<HeroProgressModel>();
     public List<HeroStat> HeroStats = new List<HeroStat>();
+    public List<AdmissionCandidateSaveData> AdmissionCandidates = new List<AdmissionCandidateSaveData>();
     public List<QuestProgressModel> QuestProgressList = new List<QuestProgressModel>();
 }
 
@@ -50,7 +48,14 @@ public class HeroStat
     public string HeroID;
     public int Affection;
     public int Satisfaction;
+}
 
+[Serializable]
+public class AdmissionCandidateSaveData
+{
+    public int CandidateId;
+    public string HeroId;
+    public bool IsAdmitted;
 }
 
 [Serializable]

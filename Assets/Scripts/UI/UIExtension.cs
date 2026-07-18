@@ -45,8 +45,6 @@ public static class UIExtension
     {
         uiManager.OpenUI(UIRootType.Front, UIType.OverlayScreen);
         uiManager.OpenTitleUI();
-
-        AdmissionManager.Inst.Initialize();
     }
 
     public static void OpenTitleUI(this UIManager uiManager)
@@ -127,8 +125,6 @@ public static class UIExtension
 
     public static void OpenAdmissionPopup(this UIManager uiManager)
     {
-        Debug.Log("팝업 열기");
-
         UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.UIAdmissionPopup);
 
         if (uiBase == null)
