@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Net.NetworkInformation;
 
 //Model 역할 + ViewModel 역할
 public class BuildGridViewModel : ViewModelBase
@@ -17,7 +16,6 @@ public class BuildGridViewModel : ViewModelBase
     public event Action<long> OnRoomSelected;
     public event Action OnReloadGrid;
     public event Action OnClickOffice;
-    public event Action OnClickBattle;
 
     public GridBounds Bounds { get { return _buildGridModel.Bounds; } }
 
@@ -43,7 +41,6 @@ public class BuildGridViewModel : ViewModelBase
 
     // 사무실 방 ID
     private const string OFFICE_ROOM_ID = "Room_Office";
-    private const string BATTLE_ROOM_ID = "Room_Battle";
 
     //뷰가 바인딩
     private bool _isBuildMode;
@@ -649,13 +646,6 @@ public class BuildGridViewModel : ViewModelBase
             if (OnClickOffice != null)
             {
                 OnClickOffice.Invoke();
-            }
-        }
-        else if (room.RoomId == BATTLE_ROOM_ID)
-        {
-            if (OnClickBattle != null)
-            {
-                OnClickBattle.Invoke();
             }
         }
     }
