@@ -22,6 +22,7 @@ public enum UIType
     DialogueUI,
     TycoonMainUI,
     UIAdmissionPopup,
+    AdmissionConfirmPopup,
     BattleMainUI,
     OfficeUI,
     ShopUI,
@@ -129,7 +130,7 @@ public static class UIExtension
 
     public static void OpenAdmissionPopup(this UIManager uiManager)
     {
-        UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.UIAdmissionPopup);
+        UIBase uiBase = uiManager.OpenPopup(UIType.UIAdmissionPopup);
 
         if (uiBase == null)
         {
@@ -137,15 +138,29 @@ public static class UIExtension
             return;
         }
 
-        if (uiBase is UIAdmissionPopup admissionPopup)
+        UIAdmissionPopup admissionPopup = uiBase as UIAdmissionPopup;
+
+        if (admissionPopup == null)
         {
-            admissionPopup.Initialize();
+            Debug.LogWarning("생성된 UI가 UIAdmissionPopup 타입이 아님.");
+            return;
         }
+
+        admissionPopup.Initialize();
     }
 
     public static void CloseAdmissionPopup(this UIManager uiManager)
     {
-        uiManager.CloseUI(UIType.UIAdmissionPopup);
+        UIBase uiBase = uiManager.IsOpened(UIType.UIAdmissionPopup);
+
+        UIAdmissionPopup admissionPopup = uiBase as UIAdmissionPopup;
+
+        if (admissionPopup == null)
+        {
+            return;
+        }
+
+        admissionPopup.RequestClose();
     }
 
     public static void OpenBattleMainUI(this UIManager uiManager)
