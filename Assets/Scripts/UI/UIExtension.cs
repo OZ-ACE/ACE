@@ -201,10 +201,9 @@ public static class UIExtension
         uiManager.CloseUI(UIType.SettlementUI);
     }
 
-    public static UIBase OpenScheduleUI(this UIManager uiManager)
+    public static void OpenScheduleUI(this UIManager uiManager)
     {
-        UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.ScheduleUI);
-        return uiBase;
+        uiManager.OpenUI(UIRootType.Popup, UIType.ScheduleUI);
     }
     public static void CloseScheduleUI(this UIManager uiManager)
     {
