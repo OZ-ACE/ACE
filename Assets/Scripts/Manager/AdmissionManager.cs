@@ -140,6 +140,14 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
         return true;
     }
 
+        HeroStat heroStat = new HeroStat{HeroID = heroId, Affection = 0, Satisfaction = 0};
+        playerModel.HeroStats.Add(heroStat);
+
+        SaveManager.Inst.RequestSaveData(playerModel);
+
+        return true;
+    }
+
     public AdmissionCandidateModel GetCandidateModel(int candidateId)
     {
         if (_candidateDict.TryGetValue(candidateId, out AdmissionCandidateModel candidateModel) == true)
