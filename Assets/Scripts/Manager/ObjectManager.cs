@@ -285,7 +285,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
 
         for (int i = 0; i < 23; i++)
         {
-            heroData.HourlyStates[i] = ScheduleState.Shower;
+            heroData.HourlyStates[i] = ScheduleState.Rest;
         }
 
         movingAget.InitHero(heroData);
