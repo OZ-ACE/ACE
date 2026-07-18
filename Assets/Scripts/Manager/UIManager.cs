@@ -30,13 +30,9 @@ public class UIManager : SingletonBase<UIManager>
         RequestCloseTopPopup();
     }
 
-    public UIBase OpenUI(
-    UIRootType root,
-    UIType type,
-    bool isActive = true)
+    public UIBase OpenUI(UIRootType root, UIType type, bool isActive = true)
     {
-        UIBase openedUI =
-            GetCreatedUI(root, type);
+        UIBase openedUI = GetCreatedUI(root, type);
 
         if (openedUI == null)
         {
@@ -191,7 +187,6 @@ public class UIManager : SingletonBase<UIManager>
         if (closablePopup == null)
         {
             Debug.LogError($"팝업이 IClosablePopup 구현하지 않음. UIType : {type}");
-
             return popupUI;
         }
 
