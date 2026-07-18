@@ -10,6 +10,9 @@ public class BuildGridViewModel : ViewModelBase
     private readonly ICurrencyService _currencyService;
     private readonly HashSet<long> _selectableRoomInstanceIds = new HashSet<long>();
 
+
+
+
     public event Action<PlacedRoomData> OnPlaceRoom;
     public event Action<PlacedRoomData> OnRemoveRoom;
     public event Action<int> OnUnlockFloor;
