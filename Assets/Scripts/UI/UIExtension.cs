@@ -22,14 +22,11 @@ public enum UIType
     DialogueUI,
     TycoonMainUI,
     UIAdmissionPopup,
-    ConfirmPopup,
     BattleMainUI,
     OfficeUI,
     ShopUI,
     SettlementUI,
-    ScheduleUI,
-    RosterUI
-
+    ScheduleUI
 }
 
 public static class UIExtension
@@ -82,13 +79,11 @@ public static class UIExtension
 
     public static void OpenSettingPopup(this UIManager uIManager)
     {
-        GameManager.Inst.PauseGame();
         uIManager.OpenUI(UIRootType.Popup, UIType.SettingPopup);
     }
 
     public static void CloseSettingPopup(this UIManager uIManager)
     {
-        GameManager.Inst.RestartGame();
         uIManager.CloseUI(UIType.SettingPopup);
     }
 
@@ -116,11 +111,7 @@ public static class UIExtension
     {
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
         ObjectManager.Inst.CreateBuildGridView();
-
-        HeroModel heroModel = new HeroModel();
-        heroModel.LoadHeroData("hero_04");
-
-        ObjectManager.Inst.SpawnHero(heroModel).Forget();
+        ObjectManager.Inst.SpawnHero("hero_03").Forget();
     }
 
     public static void CloseTycoonMainUI(this UIManager uIManager)
@@ -130,7 +121,7 @@ public static class UIExtension
 
     public static void OpenAdmissionPopup(this UIManager uiManager)
     {
-        UIBase uiBase = uiManager.OpenPopup(UIType.UIAdmissionPopup);
+        UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.UIAdmissionPopup);
 
         if (uiBase == null)
         {
@@ -138,29 +129,15 @@ public static class UIExtension
             return;
         }
 
-        UIAdmissionPopup admissionPopup = uiBase as UIAdmissionPopup;
-
-        if (admissionPopup == null)
+        if (uiBase is UIAdmissionPopup admissionPopup)
         {
-            Debug.LogWarning("생성된 UI가 UIAdmissionPopup 타입이 아님.");
-            return;
+            admissionPopup.Initialize();
         }
-
-        admissionPopup.Initialize();
     }
 
     public static void CloseAdmissionPopup(this UIManager uiManager)
     {
-        UIBase uiBase = uiManager.IsOpened(UIType.UIAdmissionPopup);
-
-        UIAdmissionPopup admissionPopup = uiBase as UIAdmissionPopup;
-
-        if (admissionPopup == null)
-        {
-            return;
-        }
-
-        admissionPopup.RequestClose();
+        uiManager.CloseUI(UIType.UIAdmissionPopup);
     }
 
     public static void OpenBattleMainUI(this UIManager uiManager)
@@ -208,47 +185,5 @@ public static class UIExtension
     public static void CloseScheduleUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.ScheduleUI);
-    }
-
-    public static ConfirmPopup OpenConfirmPopup(this UIManager uiManager, string message, System.Action onConfirm, System.Action onCancel = null)
-    {
-        UIBase uiBase = uiManager.OpenPopup(UIType.ConfirmPopup);
-
-        ConfirmPopup popup = uiBase as ConfirmPopup;
-
-        if (popup == null)
-        {
-            Debug.LogError("ConfirmPopup 열 수 없음.");
-            return null;
-        }
-
-        popup.OpenConfirm(message, onConfirm, onCancel);
-
-        return popup;
-    }
-
-    public static ConfirmPopup OpenNoticePopup(this UIManager uiManager, string message, System.Action onConfirm = null)
-    {
-        UIBase uiBase = uiManager.OpenPopup(UIType.ConfirmPopup);
-
-        ConfirmPopup popup = uiBase as ConfirmPopup;
-
-        if (popup == null)
-        {
-            Debug.LogError("ConfirmPopup 열 수 없음.");
-            return null;
-        }
-
-        popup.OpenNotice(message, onConfirm);
-
-        return popup;
-    }
-    public static UIBase OpenRosterUI(this UIManager uiManager)
-    {
-        return uiManager.OpenUI(UIRootType.Popup, UIType.RosterUI);
-    }
-    public static void CloseRosterUI(this UIManager uiManager)
-    {
-        uiManager.CloseUI(UIType.RosterUI);
     }
 }
