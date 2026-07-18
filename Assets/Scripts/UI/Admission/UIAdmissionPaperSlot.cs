@@ -14,6 +14,7 @@ public class UIAdmissionPaperSlot : UIBase
 
     [Header("Image")]
     [SerializeField] private Image Image_Hero;
+    [SerializeField] private Image Image_Stamp;
 
     [Header("Text")]
     [SerializeField] private TextMeshProUGUI Text_Title;
@@ -40,6 +41,7 @@ public class UIAdmissionPaperSlot : UIBase
     private Sequence _sequence;
 
     private bool _isPlaying;
+    private bool _isAdmitted;
 
     public int PaperIndex { get; private set; }
 
@@ -62,7 +64,7 @@ public class UIAdmissionPaperSlot : UIBase
         UnbindButtonEvents();
     }
 
-    public void Initialize(HeroData heroData, int paperIndex)
+    public void Initialize(HeroData heroData, int paperIndex, bool isAdmitted)
     {
         _heroData = heroData;
         PaperIndex = paperIndex;
@@ -70,6 +72,7 @@ public class UIAdmissionPaperSlot : UIBase
         _isPlaying = false;
 
         RefreshPaperInfo();
+        RefreshAdmissionState(isAdmitted);
     }
 
     public void SetPaperLayout(Vector2 stackedPosition, Vector2 flippedPosition, Vector3 stackedRotation, Vector3 flippedRotation)
@@ -95,8 +98,7 @@ public class UIAdmissionPaperSlot : UIBase
         Group_Front.SetActive(isViewing || isStacked);
         Image_PaperBack.gameObject.SetActive(isFlipped);
 
-        Button_Admit.gameObject.SetActive(isViewing);
-        Button_Admit.interactable = isViewing && _isPlaying == false;
+        RefreshAdmitButtonState();
     }
 
     public void PlayFlipToLeft()
@@ -181,6 +183,11 @@ public class UIAdmissionPaperSlot : UIBase
         return _heroData.ID;
     }
 
+    public void SetAdmittedState()
+    {
+        RefreshAdmissionState(true);
+    }
+
     private void RefreshPaperInfo()
     {
         if (_heroData == null)
@@ -196,6 +203,23 @@ public class UIAdmissionPaperSlot : UIBase
         Text_Remarks.text = $"특이사항 : {_heroData.Remarks}";
 
         RefreshHeroImage();
+    }
+
+    private void RefreshAdmissionState(bool isAdmitted)
+    {
+        _isAdmitted = isAdmitted;
+
+        Image_Stamp.gameObject.SetActive(_isAdmitted);
+
+        RefreshAdmitButtonState();
+    }
+
+    private void RefreshAdmitButtonState()
+    {
+        bool isViewing = _state == AdmissionPaperState.Viewing;
+
+        Button_Admit.gameObject.SetActive(isViewing && _isAdmitted == false);
+        Button_Admit.interactable = isViewing && _isAdmitted == false && _isPlaying == false;
     }
 
     private void RefreshHeroImage()

@@ -12,12 +12,6 @@ public class UIManager : SingletonBase<UIManager>
     private Dictionary<UIType, UIBase> _createdUI = new Dictionary<UIType, UIBase>();
     private HashSet<UIType> _openedUI = new HashSet<UIType>();
 
-    private void Start()
-    {
-        // 시작 시 처음 열리는 UI메서드
-        this.InitStartUI();
-    }
-
     public UIBase OpenUI(UIRootType root, UIType type, bool isActive = true)
     {
         var openedUI = GetCreatedUI(root, type);
