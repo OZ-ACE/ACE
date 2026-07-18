@@ -12,7 +12,6 @@ public class BuildGridViewModel : ViewModelBase
 
 
 
-
     public event Action<PlacedRoomData> OnPlaceRoom;
     public event Action<PlacedRoomData> OnRemoveRoom;
     public event Action<int> OnUnlockFloor;
