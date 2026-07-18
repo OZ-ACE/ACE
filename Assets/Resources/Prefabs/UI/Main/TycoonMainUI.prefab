@@ -4082,7 +4082,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4674792158478530364
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4816,7 +4816,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &329112584771077167
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6743,7 +6743,6 @@ MonoBehaviour:
   Button_Inventory: {fileID: 1452491924743914983}
   Button_Hero: {fileID: 8174959902511049501}
   Button_Construct: {fileID: 5390616246782858349}
-  Button_Battle: {fileID: 0}
   Button_Setting: {fileID: 7733312984687097195}
   Button_Home: {fileID: 8627524064072915740}
   ButtonList:
