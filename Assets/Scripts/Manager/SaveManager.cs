@@ -9,21 +9,32 @@ public class SaveManager : SingletonBase<SaveManager>
     public int CurrentSlotIndex { get; private set; } = 0;
     public SortedSet<int> SlotIndex { get; private set; } = new SortedSet<int>();
 
+    public bool IsInitialized { get; private set; }
+    public bool IsPlayerDataLoaded { get; private set; }
+
     protected override void Awake()
     {
         base.Awake();
+    }
+
+    public void Initialize()
+    {
+        if (IsInitialized == true)
+        {
+            return;
+        }
 
         SlotIndex.Clear();
 
         for (int i = 0; i < 100; i++)
         {
-            if (HasSaveFile(i))
+            if (HasSaveFile(i) == true)
             {
                 SlotIndex.Add(i);
             }
         }
 
-        CurrentPlayerModel = RequestLoadData(CurrentSlotIndex);
+        IsInitialized = true;
     }
 
     private string GetPath(int slotIndex)
@@ -60,6 +71,20 @@ public class SaveManager : SingletonBase<SaveManager>
 
             return data;
         }
+    }
+
+    public PlayerModel LoadPreviewData(int slotIndex)
+    {
+        string path = GetPath(slotIndex);
+
+        if (File.Exists(path) == false)
+        {
+            return null;
+        }
+
+        string json = File.ReadAllText(path);
+
+        return JsonUtility.FromJson<PlayerModel>(json);
     }
 
     public bool RequestDeleteData(int slotIndex)
@@ -229,7 +254,7 @@ public class SaveManager : SingletonBase<SaveManager>
     public void SetCurrentSlotIndex(int slotIndex)
     {
         CurrentSlotIndex = slotIndex;
-    }
+    } 
 
     public bool HasSaveFile(int slotIndex)
     {
@@ -258,5 +283,18 @@ public class SaveManager : SingletonBase<SaveManager>
         }
 
         return nextIndex;
+    }
+
+    public void LoadSlot(int slotIndex)
+    {
+        if (IsInitialized == false)
+        {
+            Debug.LogError("SaveManager 초기화 전에 슬롯을 불러올 수 없음.");
+            return;
+        }
+
+        CurrentSlotIndex = slotIndex;
+        CurrentPlayerModel = RequestLoadData(CurrentSlotIndex);
+        IsPlayerDataLoaded = true;
     }
 }
