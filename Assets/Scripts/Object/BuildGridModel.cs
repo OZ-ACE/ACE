@@ -143,10 +143,16 @@ public class BuildGridModel
             _cells[cell.Coord] = cell.Type;
         }
 
-        foreach (var room in data.PlacedRooms)
+        foreach (PlacedRoomData room in data.PlacedRooms)
         {
+            if (room.RoomInstanceId == 0)
+            {
+                room.RoomInstanceId = GameUtil.GenerateUniqueId();
+            }
+
             RoomData roomData = GameDataManager.Inst.GetData<RoomData>(room.RoomId);
-            Vector2Int size = (roomData != null) ? roomData.GetSize() : Vector2Int.one;
+            Vector2Int size = roomData != null ? roomData.GetSize() : Vector2Int.one;
+
             AddRoom(room, grid.GetOccupiedCoords(room.Origin, size));
         }
     }
