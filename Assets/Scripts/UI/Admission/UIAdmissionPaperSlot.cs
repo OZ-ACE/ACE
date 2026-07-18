@@ -42,7 +42,6 @@ public class UIAdmissionPaperSlot : UIBase
 
     private bool _isPlaying;
     private bool _isAdmitted;
-    private bool _isSelectionLocked;
 
     public int PaperIndex { get; private set; }
 
@@ -200,19 +199,9 @@ public class UIAdmissionPaperSlot : UIBase
         Text_Title.text = "입소 신청서";
         Text_Name.text = _heroData.HeroName;
         Text_Age.text = $"나이 : {_heroData.Age}";
+        Text_MainSkill.text = $"대표 능력 : {_heroData.MainSkillId}";
         Text_Remarks.text = $"특이사항 : {_heroData.Remarks}";
 
-        HeroSkill heroSkill = GameDataManager.Inst.GetData<HeroSkill>(_heroData.MainSkillId);
-
-        if (heroSkill != null)
-        {
-            Text_MainSkill.text = $"대표 능력 : {heroSkill.SkillName}";
-        }
-        else
-        {
-            Text_MainSkill.text = $"대표 능력 : -";
-        }
-        
         RefreshHeroImage();
     }
 
@@ -230,7 +219,7 @@ public class UIAdmissionPaperSlot : UIBase
         bool isViewing = _state == AdmissionPaperState.Viewing;
 
         Button_Admit.gameObject.SetActive(isViewing && _isAdmitted == false);
-        Button_Admit.interactable = isViewing && _isAdmitted == false && _isPlaying == false && _isSelectionLocked == false;
+        Button_Admit.interactable = isViewing && _isAdmitted == false && _isPlaying == false;
     }
 
     private void RefreshHeroImage()
@@ -270,12 +259,6 @@ public class UIAdmissionPaperSlot : UIBase
         Image_Hero.gameObject.SetActive(true);
     }
 
-    public void SetSelectionLocked(bool isLocked)
-    {
-        _isSelectionLocked = isLocked;
-        RefreshAdmitButtonState();
-    }
-
     private void ClearPaperInfo()
     {
         Text_Title.text = string.Empty;
@@ -307,11 +290,6 @@ public class UIAdmissionPaperSlot : UIBase
     private void OnClickAdmitButton()
     {
         if (_isPlaying == true)
-        {
-            return;
-        }
-
-        if (_isSelectionLocked == true)
         {
             return;
         }

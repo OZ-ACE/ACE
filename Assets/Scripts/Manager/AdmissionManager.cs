@@ -84,7 +84,7 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
         CreateWaitingHeroes();
     }
 
-    public bool TryAdmitHero(string heroId, long roomInstanceId)
+    public bool TryAdmitHero(string heroId)
     {
         AdmissionCandidateModel candidateModel = GetCandidateByHeroId(heroId);
 
@@ -104,38 +104,42 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
 
         if (heroData == null)
         {
-            Debug.LogWarning($"HeroData 찾을 수 없음. ID : {heroId}");
+            Debug.LogWarning($"HeroData 를 찾을 수 없음. ID : {heroId}");
             return false;
         }
 
-        RoomAssignmentService roomService = GameManager.Inst.Services.RoomAssignmentService;
-
-        if (roomService == null)
+        if (AddAdmittedHero(heroId) == false)
         {
-            Debug.LogWarning("RoomAssignmentService 찾을 수 없음.");
-            return false;
-        }
-
-        if (roomService.AssignRoom(heroId, roomInstanceId) == false)
-        {
-            Debug.LogWarning($"방 배정에 실패함. HeroId : {heroId}, RoomInstanceId : {roomInstanceId}");
-            return false;
-        }
-
-        if (TryRegisterAdmittedHero(heroId) == false)
-        {
-            bool isRollbackSucceeded = roomService.UnassignRoom(heroId);
-
-            if (isRollbackSucceeded == false)
-            {
-                Debug.LogError($"입소 실패 후 방 배정 롤백에도 실패함. HeroId : {heroId}");
-            }
-
+            Debug.LogWarning($"입소 영웅 저장에 실패함. ID : {heroId}");
             return false;
         }
 
         candidateModel.Admit();
         SaveWaitingHeroes();
+        return true;
+    }
+
+    private bool AddAdmittedHero(string heroId)
+    {
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
+
+        if (playerModel == null)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < playerModel.HeroStats.Count; i++)
+        {
+            if (playerModel.HeroStats[i].HeroID == heroId)
+            {
+                return true;
+            }
+        }
+
+        HeroStat heroStat = new HeroStat{HeroID = heroId, Affection = 0, Satisfaction = 0};
+        playerModel.HeroStats.Add(heroStat);
+
+        SaveManager.Inst.RequestSaveData(playerModel);
 
         return true;
     }
@@ -153,34 +157,6 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
     public List<AdmissionCandidateModel> GetCandidateModels()
     {
         return new List<AdmissionCandidateModel>(_candidateDict.Values);
-    }
-
-    private bool TryRegisterAdmittedHero(string heroId)
-    {
-        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
-
-        if (playerModel == null)
-        {
-            return false;
-        }
-
-        if (playerModel.HeroStats == null)
-        {
-            playerModel.HeroStats = new List<HeroStat>();
-        }
-
-        for (int i = 0; i < playerModel.HeroStats.Count; i++)
-        {
-            if (playerModel.HeroStats[i].HeroID == heroId)
-            {
-                return true;
-            }
-        }
-
-        HeroStat heroStat = new HeroStat {HeroID = heroId, Affection = 0, Satisfaction = 0};
-
-        playerModel.HeroStats.Add(heroStat);
-        return true;
     }
 
     private void AddCandidate(string heroId)
@@ -323,10 +299,17 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
 
         playerModel.AdmissionCandidates.Clear();
 
-        foreach (KeyValuePair<int, AdmissionCandidateModel> pair in _candidateDict)
+        foreach (
+            KeyValuePair<int, AdmissionCandidateModel> pair in _candidateDict)
         {
             AdmissionCandidateModel candidateModel = pair.Value;
-            AdmissionCandidateSaveData saveData = new AdmissionCandidateSaveData {CandidateId = candidateModel.CandidateId, HeroId = candidateModel.HeroId, IsAdmitted = candidateModel.IsAdmitted};
+
+            AdmissionCandidateSaveData saveData = new AdmissionCandidateSaveData
+                {
+                    CandidateId = candidateModel.CandidateId,
+                    HeroId = candidateModel.HeroId,
+                    IsAdmitted = candidateModel.IsAdmitted
+                };
 
             playerModel.AdmissionCandidates.Add(saveData);
         }
