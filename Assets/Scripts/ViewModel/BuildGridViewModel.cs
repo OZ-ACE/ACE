@@ -9,10 +9,12 @@ public class BuildGridViewModel : ViewModelBase
     private readonly GridSystem _gridSystem;
     private readonly BuildGridModel _buildGridModel;
     private readonly ICurrencyService _currencyService;
+    private readonly HashSet<long> _selectableRoomInstanceIds = new HashSet<long>();
 
     public event Action<PlacedRoomData> OnPlaceRoom;
     public event Action<PlacedRoomData> OnRemoveRoom;
     public event Action<int> OnUnlockFloor;
+    public event Action<long> OnRoomSelected;
     public event Action OnReloadGrid;
     public event Action OnClickOffice;
     public event Action OnClickBattle;
@@ -48,6 +50,7 @@ public class BuildGridViewModel : ViewModelBase
     private bool _isDemolishMode;
     private bool _isMoveMode;
     private string _selectedRoomId;
+    private bool _isRoomSelectMode;
 
     public bool IsBuildMode
     {
@@ -101,6 +104,21 @@ public class BuildGridViewModel : ViewModelBase
         }
     }
 
+    public bool IsRoomSelectMode
+    {
+        get => _isRoomSelectMode;
+        private set
+        {
+            if (_isRoomSelectMode == value)
+            {
+                return;
+            }
+
+            _isRoomSelectMode = value;
+            OnPropertyChanged(nameof(IsRoomSelectMode));
+        }
+    }
+
     public BuildGridViewModel(GridSystem gridSystem, BuildGridModel buildGridModel, ICurrencyService currencyService)
     {
         _gridSystem = gridSystem;
@@ -131,6 +149,11 @@ public class BuildGridViewModel : ViewModelBase
     public List<PlacedRoomData> GetPlacedRooms()
     {
         return _buildGridModel.GetAllRooms();
+    }
+
+    public PlacedRoomData GetPlacedRoom(GridCoord coord)
+    {
+        return _buildGridModel.GetRoomAt(coord);
     }
 
     //방 크기·타입 조회 헬퍼
@@ -679,5 +702,60 @@ public class BuildGridViewModel : ViewModelBase
         _buildGridModel.LoadFromSaveData(player.BuildGridData, _gridSystem);
 
         Debug.Log($"[BuildGridViewModel] 그리드 복원: 방 {player.BuildGridData.PlacedRooms.Count}개");
+    }
+
+    public void BeginRoomSelection(List<PlacedRoomData> selectableRooms)
+    {
+        _selectableRoomInstanceIds.Clear();
+
+        if (selectableRooms != null)
+        {
+            for (int i = 0; i < selectableRooms.Count; i++)
+            {
+                PlacedRoomData room = selectableRooms[i];
+
+                if (room == null)
+                {
+                    continue;
+                }
+
+                _selectableRoomInstanceIds.Add(room.RoomInstanceId);
+            }
+        }
+
+        IsRoomSelectMode = _selectableRoomInstanceIds.Count > 0;
+    }
+
+    public void EndRoomSelection()
+    {
+        _selectableRoomInstanceIds.Clear();
+        IsRoomSelectMode = false;
+    }
+
+    public bool IsSelectableRoom(PlacedRoomData room)
+    {
+        if (room == null)
+        {
+            return false;
+        }
+
+        return _selectableRoomInstanceIds.Contains(room.RoomInstanceId);
+    }
+
+    public void HandleRoomSelectionClick(GridCoord coord)
+    {
+        PlacedRoomData room = _buildGridModel.GetRoomAt(coord);
+
+        if (room == null)
+        {
+            return;
+        }
+
+        if (IsSelectableRoom(room) == false)
+        {
+            return;
+        }
+
+        OnRoomSelected?.Invoke(room.RoomInstanceId);
     }
 }
