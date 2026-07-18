@@ -92,6 +92,20 @@ public class HeroMovingAgent : MonoBehaviour
             nextState = TycoonState.Gym;
         }
 
+        if (targetPos == Vector3.zero || IsPathInvalid(targetPos))
+        {
+            // 여기에 만족도 깎기
+            Debug.Log("만족도 하락");
+
+            if (Agent_Hero != null && Agent_Hero.isOnNavMesh)
+            {
+                Agent_Hero.ResetPath();
+            }
+
+            ChangeState(TycoonState.Idle);
+            return;
+        }
+
         ChangeState(nextState);
         StartMoving(targetPos, nextState).Forget();
     }
@@ -163,6 +177,20 @@ public class HeroMovingAgent : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0f, 180f, 0f);
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    private bool IsPathInvalid(Vector3 targetPos)
+    {
+        NavMeshPath path = new NavMeshPath();
+
+        Agent_Hero.CalculatePath(targetPos, path);
+
+        if (path.status == NavMeshPathStatus.PathPartial || path.status == NavMeshPathStatus.PathInvalid)
+        {
+            return true;
         }
 
         return false;
