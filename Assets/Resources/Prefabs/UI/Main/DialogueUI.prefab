@@ -1562,11 +1562,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3737827946424613285, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 30.5574
+      value: 30.557396
       objectReference: {fileID: 0}
     - target: {fileID: 3737827946424613285, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000010252
+      value: -0.000011444092
       objectReference: {fileID: 0}
     - target: {fileID: 7448484643018522261, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_Type
@@ -1584,7 +1584,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skip Button
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5145596864259648503, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2571307544323183325, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}

@@ -238,7 +238,7 @@ public class QuestViewModel : ViewModelBase
         return 0;
     }
 
-    /// <summary> 보상 수령. 성공 시 지급 + 상태 변경 + 저장 </summary>
+    // 보상 수령. 성공 시 지급 + 상태 변경 + 저장
     public bool TryClaimReward(string questID)
     {
         QuestData quest = GameDataManager.Inst.GetData<QuestData>(questID);

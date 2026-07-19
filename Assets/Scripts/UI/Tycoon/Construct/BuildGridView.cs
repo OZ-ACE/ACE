@@ -170,8 +170,11 @@ public class BuildGridView : ViewBase
             CreateCell(new GridCoord(newUnlockedMin, column));
         }
 
+        SoundManager.Inst.PlaySFX("Construct");
+
         Debug.Log($"[BuildGridView] {newUnlockedMin}층 셀 추가 생성");
     }
+
     private void SetOverlayActive(bool isActive)
     {
         foreach (var pair  in _cellRenderers)
@@ -259,6 +262,7 @@ public class BuildGridView : ViewBase
         _ghostObject.transform.localScale = new Vector3(size.x, size.y, 1f);
         _ghostObject.SetActive(true);
     }
+
     private void UpdateGhost()
     {
         if (_ghostObject == null || _ghostObject.activeSelf == false)
@@ -335,6 +339,10 @@ public class BuildGridView : ViewBase
         if (result != PlacementResult.Success)
         {
             Debug.Log($"[BuildGridView] 배치 실패: {result}");
+        }
+        else
+        {
+            SoundManager.Inst.PlaySFX("Construct");
         }
     }
 
@@ -436,6 +444,7 @@ public class BuildGridView : ViewBase
             _placedRoomObjects.Remove(removed.Origin);
 
             NavMeshManager.Inst.UpdateNavMesh();
+            SoundManager.Inst.PlaySFX("Construct");
         }
     }
 

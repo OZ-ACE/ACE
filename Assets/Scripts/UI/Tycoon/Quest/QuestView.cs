@@ -11,7 +11,7 @@ public class QuestView : ViewBase
     private QuestViewModel _viewModel;
     private List<QuestSlot> _activeSlots = new List<QuestSlot>();
 
-    /// <summary> 뷰모델 바인딩 </summary>
+    // 뷰모델 바인딩
     public void Bind(QuestViewModel viewModel)
     {
         if (_viewModel != null)
@@ -61,7 +61,7 @@ public class QuestView : ViewBase
         }
     }
 
-    //진행도·보상 수령 시 기존 슬롯 상태만 갱신
+    // 진행도·보상 수령 시 기존 슬롯 상태만 갱신
     private void OnChangeQuestProgress()
     {
         RefreshAllSlots();
@@ -110,6 +110,7 @@ public class QuestView : ViewBase
             {
                 continue;
             }
+
             slot.UpdateState();
         }
     }

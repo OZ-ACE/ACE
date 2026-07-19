@@ -4299,34 +4299,14 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8452054073505864180, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1565421418998769952}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
---- !u!1 &2494682890676911523 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8452054073505864180, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
-  m_PrefabInstance: {fileID: 6329069000131044439}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1565421418998769952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2494682890676911523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae165b5a1de787342ab5f15a5ba7bbc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIButtonPunchEffect
 --- !u!114 &7180217759992181002 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3778551679632774493, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
   m_PrefabInstance: {fileID: 6329069000131044439}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2494682890676911523}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}

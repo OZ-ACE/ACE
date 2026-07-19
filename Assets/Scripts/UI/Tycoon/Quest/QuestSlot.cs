@@ -15,7 +15,7 @@ public class QuestSlot : MonoBehaviour
     private int _conditionCount;
     private QuestViewModel _questVM;
 
-    /// <summary> 퀘스트 데이터로 슬롯 초기화 </summary>
+    // 퀘스트 데이터로 슬롯 초기화
     public void SetSlotData(QuestData quest, QuestViewModel vm)
     {
         _questID = quest.ID;
@@ -32,7 +32,7 @@ public class QuestSlot : MonoBehaviour
         UpdateState();
     }
 
-    /// <summary> 진행도·버튼 상태 갱신 </summary>
+    // 진행도·버튼 상태 갱신
     public void UpdateState()
     {
         if (_questVM == null)
@@ -53,7 +53,7 @@ public class QuestSlot : MonoBehaviour
             Image_ProgressFill.fillAmount = GetFillRatio(current);
         }
 
-        Button_Claim.interactable = (state == QuestState.Completed);
+        Button_Claim.gameObject.SetActive(state == QuestState.Completed);
     }
 
     private float GetFillRatio(int current)
@@ -84,6 +84,11 @@ public class QuestSlot : MonoBehaviour
         if (_questVM.TryClaimReward(_questID) == false)
         {
             Debug.Log($"[QuestSlot] 보상 수령 실패: {_questID}");
+        }
+        else
+        {
+            SoundManager.Inst.PlaySFX("Success");
+            this.gameObject.SetActive(false);
         }
     }
 }

@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 7448484643018522261}
   - component: {fileID: 3778551679632774493}
   - component: {fileID: 5185874927324075569}
+  - component: {fileID: 5145596864259648503}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -271,3 +272,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1bb5de487b26d4d91546362b47a2d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSound
+--- !u!114 &5145596864259648503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8452054073505864180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae165b5a1de787342ab5f15a5ba7bbc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonPunchEffect
