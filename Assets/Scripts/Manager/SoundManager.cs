@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -42,6 +43,11 @@ public class SoundManager : SingletonBase<SoundManager>
     public void PlaySFX(string clip)
     {
         LoadAndPlayAudioClip(Audio_SFX, GetSFXPath(clip)).Forget();
+    }
+
+    public void PlayTypingSound()
+    {
+        LoadAndPlayAudioClip(Audio_SFX, GetSFXPath("Typing"), true).Forget();
     }
 
     public void StopBGM()
