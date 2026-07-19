@@ -212,18 +212,20 @@ public class BattleViewModel : ViewModelBase
         OnPropertyChanged(nameof(ActionQueue));
     }
 
-    //전투 결과에 따라 기억의파편 보상을 계산해서 실제로 지급하고, 로그를 남긴다
-    public void ApplyBattleReward(BattleResult result, int roundCount)
+    //전투 결과에 따라 기억의파편 보상을 계산해서 실제로 지급하고 로그를 남긴 뒤 지급된 보상 금액을 반환한다
+    public int ApplyBattleReward(BattleResult result, int roundCount)
     {
         int rewardAmount = BattleManager.Inst.CalculateReward(result, roundCount);
 
         if (rewardAmount <= 0)
         {
-            return;
+            return rewardAmount;
         }
 
         GameManager.Inst.Services.CurrencyService.AddMemoryFragment(rewardAmount);
-        AddBattleLog($"기억의파편 {rewardAmount} 획득");
+        AddBattleLog($"기억의 파편 {rewardAmount} 획득!");
+
+        return rewardAmount;
     }
 
     //유닛의 행동 결과를 배틀 로그 문구로 변환한다
@@ -435,6 +437,13 @@ public class BattleViewModel : ViewModelBase
 
         if (action.TargetType == TargetType.Multi)
         {
+            bool hasValidTarget = TryRetargetMultiEnemy(action, heroList, enemyList);
+
+            if (hasValidTarget == false)
+            {
+                return false;
+            }
+
             foreach (BattleUnitModel target in action.TargetList)
             {
                 ApplyDamageToUnit(target, power);
@@ -479,6 +488,78 @@ public class BattleViewModel : ViewModelBase
 
         action.Target = selectedTargets[0];
         return action.Target != null && action.Target.IsDefeated == false;
+    }
+
+    //Multi 타겟 액션에서 이미 사망한 대상을 걸러내고, 부족한 수만큼 살아있는 새 대상으로 채운다
+    private bool TryRetargetMultiEnemy(
+        BattleActionModel action,
+        List<BattleUnitModel> heroList,
+        List<BattleUnitModel> enemyList)
+    {
+        RemoveDefeatedTargets(action.TargetList);
+
+        int missingCount = action.TargetCount - action.TargetList.Count;
+
+        if (action.TargetCount <= 0 || missingCount <= 0)
+        {
+            return action.TargetList.Count > 0;
+        }
+
+        bool isEnemyTarget =
+            action.TargetSelectType == TargetSelectType.RandomEnemy ||
+            action.TargetSelectType == TargetSelectType.LowestHpEnemy;
+
+        if (isEnemyTarget == false)
+        {
+            return action.TargetList.Count > 0;
+        }
+
+        List<BattleUnitModel> remainingHeroList = BuildExcludedUnitList(heroList, action.TargetList);
+        List<BattleUnitModel> remainingEnemyList = BuildExcludedUnitList(enemyList, action.TargetList);
+
+        List<BattleUnitModel> replacementTargets = BattleTargetSelector.SelectTargets(
+            action.Unit,
+            remainingHeroList,
+            remainingEnemyList,
+            action.TargetSelectType,
+            missingCount);
+
+        if (replacementTargets != null)
+        {
+            action.TargetList.AddRange(replacementTargets);
+        }
+
+        return action.TargetList.Count > 0;
+    }
+
+    //대상 목록에서 이미 전투불능인 유닛을 제거한다
+    private void RemoveDefeatedTargets(List<BattleUnitModel> targetList)
+    {
+        for (int i = targetList.Count - 1; i >= 0; i--)
+        {
+            if (targetList[i] == null || targetList[i].IsDefeated)
+            {
+                targetList.RemoveAt(i);
+            }
+        }
+    }
+
+    //원본 목록에서 excludeList에 포함된 유닛을 제외한 새 목록을 만든다
+    private List<BattleUnitModel> BuildExcludedUnitList(List<BattleUnitModel> sourceList, List<BattleUnitModel> excludeList)
+    {
+        List<BattleUnitModel> resultList = new List<BattleUnitModel>();
+
+        foreach (BattleUnitModel unit in sourceList)
+        {
+            if (excludeList.Contains(unit))
+            {
+                continue;
+            }
+
+            resultList.Add(unit);
+        }
+
+        return resultList;
     }
 
     private void ApplyDamageToUnit(BattleUnitModel target, int power)

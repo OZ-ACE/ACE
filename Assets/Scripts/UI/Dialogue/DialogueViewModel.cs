@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-
-public class DialogueViewModel : ViewModelBase
+﻿public class DialogueViewModel : ViewModelBase
 {
     private readonly DialogueService _dialogueService = new DialogueService();
 
