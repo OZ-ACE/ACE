@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class DialogueUI : UIBase
 {
-    [SerializeField] private Image Image_Background;
+    [SerializeField] private DialogueController DialogueController;
     [SerializeField] private Button Button_Dialogue;
     [SerializeField] private Button Button_Skip;
     [SerializeField] private Toggle Toggle_Auto;
@@ -47,6 +47,7 @@ public class DialogueUI : UIBase
             BindViewModel(_dialogueVM);
         }
 
+        DialogueController.Init(_dialogueVM);
         _dialogueVM.UpdateState(GameManager.Inst.CurrentDialogueID);
     }
 
@@ -77,9 +78,9 @@ public class DialogueUI : UIBase
             case nameof(DialogueViewModel.IsSpeakerActive):
                 Image_Speaker.gameObject.SetActive(_dialogueVM.IsSpeakerActive);
                 break;
-            case nameof(DialogueViewModel.Background):
-                SetBackground(_dialogueVM.Background).Forget();
-                break;
+            //case nameof(DialogueViewModel.Background):
+            //    SetBackground(_dialogueVM.Background).Forget();
+            //    break;
             case nameof(DialogueViewModel.BGM):
                 //PlayBGM();
                 break;
@@ -98,11 +99,6 @@ public class DialogueUI : UIBase
 
     private void OnClickDialogue()
     {
-        if (_dialogueVM == null)
-        {
-            Debug.Log("asdf");
-        }
-
         if (_isTyping)
         {
             CancelTyping();
@@ -228,13 +224,13 @@ public class DialogueUI : UIBase
         }
     }
 
-    private async UniTask SetBackground(string background)
-    {
-        if (string.IsNullOrEmpty(background))
-        {
-            return;
-        }
+    //private async UniTask SetBackground(string background)
+    //{
+    //    if (string.IsNullOrEmpty(background))
+    //    {
+    //        return;
+    //    }
 
-        Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/{background}");
-    }
+    //    Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/{background}");
+    //}
 }
