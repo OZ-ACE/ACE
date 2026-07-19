@@ -83,6 +83,7 @@ public class BattleMainUI : UIBase
     private void ResetBattleView()
     {
         CancelBattleLoop();
+        Panel_BattleResultPopup.ClosePopup();
         _isBattleRunning = false;
         _selectedTargetUnitId = null;
         _pendingActionResult = null;
