@@ -1277,6 +1277,7 @@ GameObject:
   - component: {fileID: 4153445939976616150}
   - component: {fileID: 7384505786873597947}
   - component: {fileID: 8457751289660882697}
+  - component: {fileID: 694583951808414249}
   m_Layer: 0
   m_Name: Dim_Panel_BattleResultPopup
   m_TagString: Untagged
@@ -1342,6 +1343,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &694583951808414249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755570182016727191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14232047cc13d97429b2938c107fefff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleResultPopupUI
+  Text_ResultTitle: {fileID: 1885140301027639426}
+  Text_RewardAmount: {fileID: 9071506605818681148}
+  Text_RoundCount: {fileID: 7054123029493403072}
+  Button_Confirm: {fileID: 8875376652184358779}
 --- !u!1 &1785648503328290261
 GameObject:
   m_ObjectHideFlags: 0

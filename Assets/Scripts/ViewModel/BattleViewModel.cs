@@ -212,18 +212,20 @@ public class BattleViewModel : ViewModelBase
         OnPropertyChanged(nameof(ActionQueue));
     }
 
-    //전투 결과에 따라 기억의파편 보상을 계산해서 실제로 지급하고, 로그를 남긴다
-    public void ApplyBattleReward(BattleResult result, int roundCount)
+    //전투 결과에 따라 기억의파편 보상을 계산해서 실제로 지급하고 로그를 남긴 뒤 지급된 보상 금액을 반환한다
+    public int ApplyBattleReward(BattleResult result, int roundCount)
     {
         int rewardAmount = BattleManager.Inst.CalculateReward(result, roundCount);
 
         if (rewardAmount <= 0)
         {
-            return;
+            return rewardAmount;
         }
 
         GameManager.Inst.Services.CurrencyService.AddMemoryFragment(rewardAmount);
-        AddBattleLog($"기억의파편 {rewardAmount} 획득");
+        AddBattleLog($"기억의 파편 {rewardAmount} 획득!");
+
+        return rewardAmount;
     }
 
     //유닛의 행동 결과를 배틀 로그 문구로 변환한다
