@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json.Bson;
-using NUnit.Framework.Internal;
-using System.ComponentModel;
+﻿using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 
@@ -11,6 +10,7 @@ public class CameraController : MonoBehaviour
 {
     [Header("이동 속도")]
     [SerializeField] private float _moveSpeed = 10f;
+    [SerializeField] private float _dragSpeed = 0.5f;
 
     [Header("이동 범위 (격자를 벗어나지 않게)")]
     [SerializeField] private float _minX = 0f;
@@ -23,18 +23,22 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _minZoom = 3f;
     [SerializeField] private float _maxZoom = 12f;
 
-    private Camera _camera;
+    [SerializeField] private CinemachineCamera _cinemachineCamera;
 
+    private Camera _camera;
+    private bool _isDragging = false;
+    private Vector2 _lastMousePosition;
 
     private void Awake()
     {
-        _camera = GetComponent<Camera>();
+        _camera = Camera.main;
     }
 
     private void Update()
     {
-        if (Keyboard.current == null)
+        if (Keyboard.current == null || EventSystem.current.IsPointerOverGameObject())
         { 
+            _isDragging = false;
             return; 
         }
 
@@ -61,7 +65,40 @@ public class CameraController : MonoBehaviour
             y += 1f;
         }
 
-        if (Keyboard.current !=null)
+        if (x != 0f || y != 0f)
+        {
+
+            MoveCamera(x, y, false);
+        }
+
+        if (Mouse.current.middleButton.wasPressedThisFrame)
+        {
+            _isDragging = true;
+            _lastMousePosition = Mouse.current.position.ReadValue();
+        }
+
+        if (Mouse.current.middleButton.wasReleasedThisFrame)
+        {
+            _isDragging = false;
+        }
+
+        if (_isDragging)
+        {
+            Vector2 currentMousePosition = Mouse.current.position.ReadValue();
+            Vector2 mouseDelta = currentMousePosition - _lastMousePosition;
+
+            if (mouseDelta.sqrMagnitude > 0.01f)
+            {
+                float dragX = -mouseDelta.x * _dragSpeed;
+                float dragY = -mouseDelta.y * _dragSpeed;
+
+                MoveCamera(dragX, dragY, isDrag: true);
+
+                _lastMousePosition = currentMousePosition;
+            }
+        }
+
+        if (Mouse.current != null)
         {
             float scroll = Mouse.current.scroll.ReadValue().y;
             if (scroll != 0f)
@@ -69,18 +106,21 @@ public class CameraController : MonoBehaviour
                 ZoomCamera(scroll);
             }
         }
-
-        if (x == 0f && y == 0f)
-        {
-            return;
-        }
-        MoveCamera(x, y);
     }
 
-    private void MoveCamera(float x, float y)
+    private void MoveCamera(float x, float y, bool isDrag)
     {
-        Vector3 move = new Vector3(x,y,0f);
-        Vector3 next = transform.position + move.normalized * _moveSpeed * Time.deltaTime;
+        Vector3 next;
+
+        if (isDrag)
+        {
+            next = transform.position + new Vector3(x, y, 0f);
+        }
+        else
+        {
+            Vector3 move = new Vector3(x, y, 0f);
+            next = transform.position + move.normalized * _moveSpeed * Time.deltaTime;
+        }
 
         next.x = Mathf.Clamp(next.x, _minX, _maxX);
         next.y = Mathf.Clamp(next.y, _minY, _maxY);
@@ -90,19 +130,20 @@ public class CameraController : MonoBehaviour
 
     private void ZoomCamera(float scroll)
     {
-        if (_camera == null || _camera.orthographic == false)
+        if (_cinemachineCamera != null)
         {
-            return ;
+            var lens = _cinemachineCamera.Lens;
+            float size = lens.OrthographicSize;
+            size -= Mathf.Sign(scroll) * _zoomSpeed;
+            lens.OrthographicSize = Mathf.Clamp(size, _minZoom, _maxZoom);
+
+            _cinemachineCamera.Lens = lens;
         }
-
-        float size = _camera.orthographicSize;
-        size -= Mathf.Sign(scroll) * _zoomSpeed;
-        _camera.orthographicSize = Mathf.Clamp(size, _minZoom, _maxZoom);
-
+        else if (_camera != null && _camera.orthographic)
+        {
+            float size = _camera.orthographicSize;
+            size -= Mathf.Sign(scroll) * _zoomSpeed;
+            _camera.orthographicSize = Mathf.Clamp(size, _minZoom, _maxZoom);
+        }
     }
-    
-
-
-
-
 }

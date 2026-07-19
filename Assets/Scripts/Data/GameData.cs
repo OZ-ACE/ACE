@@ -15,6 +15,7 @@ public class Dialogue : GameDataBase
 {
     public string NextID;
     public string Speaker;
+    public string SpeakerPath;
     public string Content;
     public string Background;
     public string BGM;
