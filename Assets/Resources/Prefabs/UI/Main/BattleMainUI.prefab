@@ -7317,6 +7317,7 @@ MonoBehaviour:
   Button_ChangeUnit: {fileID: 8247527180954921007}
   Button_EndTurn: {fileID: 5940316157444723141}
   Panel_SupportItemPopup: {fileID: 2280851770674198175}
+  Panel_BattleResultPopup: {fileID: 694583951808414249}
   Button_Exit: {fileID: 256048195661443348}
   _testEnemyIdList:
   - enemy_01
