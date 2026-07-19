@@ -574,9 +574,11 @@ public class BattleMainUI : UIBase
 
                 if (result != BattleResult.Ongoing)
                 {
-                    _viewModel.ApplyBattleReward(result, BattleManager.Inst.GetCurrentRound());
+                    int roundCount = BattleManager.Inst.GetCurrentRound();
+                    int rewardAmount = _viewModel.ApplyBattleReward(result, roundCount);
                     GameManager.Inst.Services.DayService.MarkBattleDone();
                     _viewModel.AddBattleLog(result == BattleResult.Victory ? "전투 승리!" : "전투 패배...");
+                    Panel_BattleResultPopup.OpenPopup(result, rewardAmount, roundCount);
                     return;
                 }
 
