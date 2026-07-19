@@ -24,14 +24,24 @@ public class SoundManager : SingletonBase<SoundManager>
         }
     }
 
+    public string GetBGMPath(string clip)
+    {
+        return $"Audio/BGM/{clip}";
+    }
+
+    public string GetSFXPath(string clip)
+    {
+        return $"Audio/SFX/{clip}";
+    }
+
     public void PlayBGM(string clip)
     {
-        LoadAndPlayAudioClip(Audio_BGM, clip, true).Forget();
+        LoadAndPlayAudioClip(Audio_BGM, GetBGMPath(clip), true).Forget();
     }
 
     public void PlaySFX(string clip)
     {
-        LoadAndPlayAudioClip(Audio_BGM, clip).Forget();
+        LoadAndPlayAudioClip(Audio_SFX, GetSFXPath(clip)).Forget();
     }
 
     public void StopBGM()
