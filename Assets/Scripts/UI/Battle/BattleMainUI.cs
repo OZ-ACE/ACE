@@ -51,6 +51,8 @@ public class BattleMainUI : UIBase
 
     [Header("전투 시작")]
     [SerializeField] private Button Button_StartBattle;
+   
+    private EnemySpawner _enemySpawner;
     private bool _isBattleRunning;
     private CancellationTokenSource _battleLoopCts;
 
@@ -59,6 +61,8 @@ public class BattleMainUI : UIBase
 
     private void Start()
     {
+        _enemySpawner = FindFirstObjectByType<EnemySpawner>();
+
         _viewModel = new BattleViewModel();
         BindViewModel(_viewModel);
         BindBattleUnitSpawner();
@@ -497,6 +501,12 @@ public class BattleMainUI : UIBase
             return;
         }
 
+        if (_enemySpawner == null)
+        {
+            Debug.LogWarning("[BattleMainUI] EnemySpawner를 찾을 수 없습니다.");
+            return;
+        }
+
         if (BattleUnitTestSpawner.Inst == null)
         {
             Debug.LogWarning("[BattleMainUI] BattleUnitTestSpawner 인스턴스 없음");
@@ -528,6 +538,8 @@ public class BattleMainUI : UIBase
                 enemyList.Add(unit);
             }
         }
+
+        _enemySpawner.SpawnEnemies();
 
         CancelBattleLoop();
         _battleLoopCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
