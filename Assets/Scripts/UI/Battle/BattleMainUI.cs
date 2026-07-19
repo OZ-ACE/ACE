@@ -31,6 +31,9 @@ public class BattleMainUI : UIBase
     [Header("지원 아이템 팝업")]
     [SerializeField] private SupportItemPopupUI Panel_SupportItemPopup;
 
+    [Header("전투 결과 팝업")]
+    [SerializeField] private BattleResultPopupUI Panel_BattleResultPopup;
+
     [Header("나가기")]
     [SerializeField] private Button Button_Exit;
 
@@ -80,6 +83,7 @@ public class BattleMainUI : UIBase
     private void ResetBattleView()
     {
         CancelBattleLoop();
+        Panel_BattleResultPopup.ClosePopup();
         _isBattleRunning = false;
         _selectedTargetUnitId = null;
         _pendingActionResult = null;
@@ -128,6 +132,7 @@ public class BattleMainUI : UIBase
         Button_Exit.onClick.AddListener(OnClickExit);
 
         Panel_SupportItemPopup.OnItemApplied += HandleSupportItemApplied;
+        Panel_BattleResultPopup.OnConfirmed += HandleBattleResultConfirmed;
     }
 
     private void BindBattleUnitSpawner()
@@ -162,6 +167,7 @@ public class BattleMainUI : UIBase
             Button_Exit.onClick.RemoveListener(OnClickExit);
 
             Panel_SupportItemPopup.OnItemApplied -= HandleSupportItemApplied;
+            Panel_BattleResultPopup.OnConfirmed -= HandleBattleResultConfirmed;
         }
 
         if (BattleUnitTestSpawner.Inst != null)
@@ -366,6 +372,12 @@ public class BattleMainUI : UIBase
         ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, itemId);
     }
 
+    //결과 팝업 확인 버튼 클릭 시 타이쿤 화면으로 복귀한다
+    private void HandleBattleResultConfirmed()
+    {
+        ObjectManager.Inst.ExitBattle();
+    }
+
     //실제 대상에게 개입 액션을 적용한다
     private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage, string itemId)
     {
@@ -563,9 +575,11 @@ public class BattleMainUI : UIBase
 
                 if (result != BattleResult.Ongoing)
                 {
-                    _viewModel.ApplyBattleReward(result, BattleManager.Inst.GetCurrentRound());
+                    int roundCount = BattleManager.Inst.GetCurrentRound();
+                    int rewardAmount = _viewModel.ApplyBattleReward(result, roundCount);
                     GameManager.Inst.Services.DayService.MarkBattleDone();
                     _viewModel.AddBattleLog(result == BattleResult.Victory ? "전투 승리!" : "전투 패배...");
+                    Panel_BattleResultPopup.OpenPopup(result, rewardAmount, roundCount);
                     return;
                 }
 
