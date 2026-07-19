@@ -230,6 +230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1128377930456941763}
+  - component: {fileID: 6544233496226948705}
   m_Layer: 0
   m_Name: EnemySpawnRoot
   m_TagString: Untagged
@@ -255,6 +256,24 @@ Transform:
   - {fileID: 7858362490322591448}
   m_Father: {fileID: 7751817152220707542}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6544233496226948705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769081604920085882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87f29d99d2b2d4c499e655e3e78fa078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  EnemyPrefab: {fileID: 6560627093669963204, guid: ff4d81da6fef33b4f80bbcbfabfd93ed, type: 3}
+  EnemySpawnRoot: {fileID: 1128377930456941763}
+  SpawnPoints:
+  - {fileID: 4057666532324615634}
+  - {fileID: 4199804501973132301}
+  - {fileID: 7858362490322591448}
 --- !u!1 &809732057323987199
 GameObject:
   m_ObjectHideFlags: 0
