@@ -113,7 +113,11 @@ public static class UIExtension
     {
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
         ObjectManager.Inst.CreateBuildGridView();
-        ObjectManager.Inst.SpawnHero("hero_03").Forget();
+
+        HeroModel heroModel = new HeroModel();
+        heroModel.LoadHeroData("hero_04");
+
+        ObjectManager.Inst.SpawnHero(heroModel).Forget();
     }
 
     public static void CloseTycoonMainUI(this UIManager uIManager)
@@ -182,9 +186,10 @@ public static class UIExtension
         uiManager.CloseUI(UIType.SettlementUI);
     }
 
-    public static void OpenScheduleUI(this UIManager uiManager)
+    public static UIBase OpenScheduleUI(this UIManager uiManager)
     {
-        uiManager.OpenUI(UIRootType.Popup, UIType.ScheduleUI);
+        UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.ScheduleUI);
+        return uiBase;
     }
     public static void CloseScheduleUI(this UIManager uiManager)
     {

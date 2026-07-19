@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -23,6 +24,8 @@ public class ObjectManager : SingletonBase<ObjectManager>
     private GameObject _battleRoot;
 
     public BuildGridView BuildGridView { get { return _buildGridView; } }
+
+    private Dictionary<string, HeroMovingAgent> _spawnHero = new Dictionary<string, HeroMovingAgent>();
 
     private void Start()
     {
@@ -270,30 +273,52 @@ public class ObjectManager : SingletonBase<ObjectManager>
     }
 
 
-
-
-
     ////////////////////////////////////////
 
     // 테스트용 임시 메서드
-    public async UniTask SpawnHero(string heroID)
+    public async UniTask SpawnHero(HeroModel heroModel)
     {
-        GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroID}");
-
-        HeroMovingAgent movingAget = prefab.GetComponent<HeroMovingAgent>();
-        HeroModel heroData = new HeroModel();
-
-        for (int i = 0; i < 23; i++)
+        if (_spawnHero.ContainsKey(heroModel.HeroID))
         {
-            heroData.HourlyStates[i] = ScheduleState.Shower;
+            return;
         }
 
-        movingAget.InitHero(heroData);
+        GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroModel.HeroID}");
+        _hero = prefab;
+
+        HeroMovingAgent movingAgent = prefab.GetComponent<HeroMovingAgent>();
+        movingAgent.InitHero(heroModel);
+
+        _spawnHero[heroModel.HeroID] = movingAgent;
+    }
+
+    public HeroMovingAgent GetSpawnAgent(string heroID)
+    {
+        if (_spawnHero != null && _spawnHero.TryGetValue(heroID, out HeroMovingAgent agent))
+        {
+            return agent;
+        }
+
+        return null;
     }
 
     public void DestroyHeroAndMap()
     {
-        Destroy(_hero);
-        Destroy(_buildGridView.gameObject);
+        foreach (var pair in _spawnHero)
+        {
+            if (pair.Value != null && pair.Value.gameObject != null)
+            {
+                Destroy(pair.Value.gameObject);
+            }
+        }
+
+        _spawnHero.Clear();
+        _hero = null;
+
+        if (_buildGridView != null)
+        {
+            Destroy(_buildGridView.gameObject);
+            _buildGridView = null;
+        }
     }
 }

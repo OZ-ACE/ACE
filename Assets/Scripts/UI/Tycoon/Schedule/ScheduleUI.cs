@@ -32,6 +32,7 @@ public class ScheduleUI : UIBase
     [SerializeField] private Color Color_Sleep = new Color(0.50f, 1.00f, 0.83f);
     [SerializeField] private Color Color_Meal = new Color(0.87f, 0.63f, 0.87f);
 
+    private HeroViewModel _targetHeroVM;
     private ScheduleViewModel _scheduleVM;
     private List<ScheduleSlot> _slots = new List<ScheduleSlot>();
     private Dictionary<ScheduleState, Button> _buttons = new Dictionary<ScheduleState, Button>();
@@ -70,9 +71,11 @@ public class ScheduleUI : UIBase
         _buttons.Add(ScheduleState.Battle, Button_Battle);
     }
 
-    public void OpenSchedule(HeroModel target)
+    public void OpenSchedule(HeroViewModel targetVM)
     {
-        _scheduleVM.Init(target);
+        _targetHeroVM = targetVM;
+
+        _scheduleVM.Init(_targetHeroVM.Model);
     }
 
     private void CreateTimeSlot()
@@ -141,6 +144,7 @@ public class ScheduleUI : UIBase
     private void OnClickConfirm()
     {
         _scheduleVM.SaveAndApply();
+
         UIManager.Inst.CloseScheduleUI();
     }
 
