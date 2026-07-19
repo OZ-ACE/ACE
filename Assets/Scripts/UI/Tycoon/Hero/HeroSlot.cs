@@ -56,7 +56,7 @@ public class HeroSlot : MonoBehaviour
         {
             case nameof(_heroVM.HeroName):
                 Text_HeroName.text = _heroVM.HeroName;
-                SetPortrait(_heroVM.HeroName).Forget();
+                SetPortrait(_heroID).Forget();
                 break;
 
             case nameof(_heroVM.Description):
@@ -91,9 +91,9 @@ public class HeroSlot : MonoBehaviour
         }
     }
 
-    private async UniTask SetPortrait(string name)
+    private async UniTask SetPortrait(string heroID)
     {
-        Image_Portrait.sprite = await ResourceManager.Inst.LoadSprite($"Image/Portrait/{name}");
+        Image_Portrait.sprite = await ResourceManager.Inst.LoadSprite($"Image/Portrait[{heroID}]");
     }
 
     private void SetSlotBackground(bool isSelect)

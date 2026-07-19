@@ -69,5 +69,7 @@ public class ScheduleViewModel : ViewModelBase
         {
             _hero.HourlyStates[i] = _editingStates[i];
         }
+
+        _hero.OnUpdateSchedule?.Invoke();
     }
 }

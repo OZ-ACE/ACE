@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -7,46 +6,146 @@ using UnityEngine.AI;
 
 public class HeroMovingAgent : MonoBehaviour
 {
-    [SerializeField] private NavMeshAgent HeroAgent;
-    [SerializeField] private float MinDelay = 0.5f;
-    [SerializeField] private float MaxDelay = 0.3f;
+    [SerializeField] private NavMeshAgent Agent_Hero;
+    [SerializeField] private Animator Animator_Hero;
+
+    private HeroModel _heroModel;
+    public HeroModel HeroModel
+    {
+        get => _heroModel;
+    }
+
+    private IHeroTycoonState _currentState;
+    private Dictionary<TycoonState, IHeroTycoonState> _states;
 
     private GridSystem _gridSystem;
-    private HeroModel _heroModel;
     private BuildGridViewModel _buildVM;
 
     private CancellationTokenSource _movingToken;
-    private int _cancelMovingHour = -1;
+
+    private void Awake()
+    {
+        _states = new Dictionary<TycoonState, IHeroTycoonState>
+        {
+            { TycoonState.Idle, new HeroTycoonState_Idle() },
+            { TycoonState.Walking, new HeroTycoonState_Walking() },
+            { TycoonState.Rest, new HeroTycoonState_Rest() },
+            { TycoonState.Gym, new HeroTycoonState_Gym() }
+        };
+    }
+
+    private void Start()
+    {
+        _heroModel.OnUpdateSchedule += UpdateSchedule;
+        GameManager.Inst.Services.DayService.OnChangeHour += ChangeTargetRoom;
+    }
 
     private void OnEnable()
     {
-        _buildVM = GameManager.Inst.Services.BuildService.GetBuildGridViewModel();
-        _gridSystem = _buildVM.GridSystem;
+        RefreshBuildViewModel();
     }
 
     private void OnDisable()
     {
-        GameManager.Inst.Services.DayService.OnChangeHour -= ChangeTargetRoom;
         CancelMoving();
+    }
+
+    private void OnDestroy()
+    {
+        _heroModel.OnUpdateSchedule -= UpdateSchedule;
+        GameManager.Inst.Services.DayService.OnChangeHour -= ChangeTargetRoom;
+    }
+
+    private void Update()
+    {
+        _currentState?.Update(this);
+    }
+
+    public void ChangeState(TycoonState newState)
+    {
+        if (_states.ContainsKey(newState) == false)
+        {
+            return;
+        }
+
+        IHeroTycoonState nextState = _states[newState];
+
+        if (_currentState == nextState)
+        {
+            return;
+        }
+
+        _currentState?.Exit(this);
+        _currentState = nextState;
+        _currentState.Enter(this);
     }
 
     public void InitHero(HeroModel heroModel)
     {
         _heroModel = heroModel;
 
-        GameManager.Inst.Services.DayService.OnChangeHour += ChangeTargetRoom;
+        ChangeState(TycoonState.Idle);
+        UpdateSchedule();
+    }
+
+    private void UpdateSchedule()
+    {
+        int currentHour = GameManager.Inst.Services.DayService.CurrentHour;
+        ChangeTargetRoom(currentHour);
+    }
+
+    private void RefreshBuildViewModel()
+    {
+        var buildService = GameManager.Inst.Services.BuildService;
+        if (buildService != null)
+        {
+            _buildVM = buildService.GetBuildGridViewModel();
+
+            if (_buildVM != null)
+            {
+                _gridSystem = _buildVM.GridSystem;
+            }
+        }
     }
 
     private void ChangeTargetRoom(int hour)
     {
         ScheduleState state = _heroModel.HourlyStates[hour];
-
         Vector3 targetPos = GetRoomPosition(state);
 
-        StartMoving(targetPos).Forget();
+        TycoonState nextState = TycoonState.Idle;
+        if (state == ScheduleState.Rest)
+        {
+            nextState = TycoonState.Rest;
+        }
+        else if (state == ScheduleState.Gym)
+        {
+            nextState = TycoonState.Gym;
+        }
+
+        if (targetPos == Vector3.zero)
+        {
+            Debug.LogError($"방 없음");
+            ChangeState(TycoonState.Idle);
+            return;
+        }
+
+        if (IsPathInvalid(targetPos))
+        {
+            Debug.LogError($"끊어진 길");
+            if (Agent_Hero.isOnNavMesh)
+            {
+                Agent_Hero.ResetPath();
+            }
+
+            ChangeState(TycoonState.Idle);
+            return;
+        }
+
+        StartMoving(targetPos, nextState).Forget();
     }
 
-    private async UniTask StartMoving(Vector3 targetPos)
+    private async UniTask StartMoving(Vector3 targetPos, TycoonState targetState)
     {
         if (_movingToken != null)
         {
@@ -55,21 +154,26 @@ public class HeroMovingAgent : MonoBehaviour
 
         _movingToken = new CancellationTokenSource();
 
+        ChangeState(TycoonState.Walking);
         SetDestination(targetPos);
 
         await UniTask.WaitUntil(IsArrived, cancellationToken: _movingToken.Token);
+
+        ChangeState(targetState);
     }
 
     public void SetDestination(Vector3 targetPos)
     {
-        if (HeroAgent != null && HeroAgent.isOnNavMesh)
+        if (Agent_Hero != null && Agent_Hero.isOnNavMesh)
         {
-            HeroAgent.SetDestination(targetPos);
+            Agent_Hero.SetDestination(targetPos);
         }
     }
 
     public Vector3 GetRoomPosition(ScheduleState state)
     {
+        RefreshBuildViewModel();
+
         if (_buildVM == null)
         {
             return Vector3.zero;
@@ -103,12 +207,27 @@ public class HeroMovingAgent : MonoBehaviour
 
     private bool IsArrived()
     {
-        if (!HeroAgent.pathPending && HeroAgent.remainingDistance <= HeroAgent.stoppingDistance)
+        if (!Agent_Hero.pathPending && Agent_Hero.remainingDistance <= Agent_Hero.stoppingDistance)
         {
-            if (!HeroAgent.hasPath || HeroAgent.velocity.sqrMagnitude == 0f)
+            if (!Agent_Hero.hasPath || Agent_Hero.velocity.sqrMagnitude == 0f)
             {
+                transform.rotation = Quaternion.Euler(0f, 180f, 0f);
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    private bool IsPathInvalid(Vector3 targetPos)
+    {
+        NavMeshPath path = new NavMeshPath();
+
+        Agent_Hero.CalculatePath(targetPos, path);
+
+        if (path.status == NavMeshPathStatus.PathPartial || path.status == NavMeshPathStatus.PathInvalid)
+        {
+            return true;
         }
 
         return false;
@@ -122,5 +241,10 @@ public class HeroMovingAgent : MonoBehaviour
             _movingToken.Dispose();
             _movingToken = null;
         }
+    }
+
+    public Animator GetAnimator()
+    {
+        return Animator_Hero;
     }
 }

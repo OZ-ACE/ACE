@@ -32,7 +32,7 @@ public class ObjectPooling<T> where T : MonoBehaviour
 
     private void DestroyObject(T prefab)
     {
-        DestroyObject(prefab);
+        Object.Destroy(prefab.gameObject);
     }
 
     public T Get()
