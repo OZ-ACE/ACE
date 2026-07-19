@@ -2,7 +2,7 @@
   {
     "ID": "Room_Office",
     "Name": "사무실",
-    "Description": "사무실",
+    "Description": "당신이 일하는 곳입니다. 상점 이용, 마감 등 많은 일을 할 수 있습니다.",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
@@ -15,7 +15,7 @@
   {
     "ID": "Room_Sun",
     "Name": "정원",
-    "Description": "지상 정원",
+    "Description": "지하 건물이기에 하루에 한 번 영웅들에게 햇빛을 쬐어주는 일을 빼먹어서는 안됩니다.",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
@@ -28,7 +28,7 @@
   {
     "ID": "Room_Shower",
     "Name": "화장실",
-    "Description": "화장실",
+    "Description": "화장실의 중요성은 이미 잘 알고 계시겠죠?",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
@@ -41,7 +41,7 @@
   {
     "ID": "Room_Counsel",
     "Name": "상담실",
-    "Description": "상담실",
+    "Description": "전성기를 점차 잊어가며 트라우마를 겪고 있는 요양원의 영웅들에게 상담 시간은 매우 중요합니다.",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
@@ -53,8 +53,8 @@
   },
   {
     "ID": "Room_Cure",
-    "Name": "진료실",
-    "Description": "진료실",
+    "Name": "치료실",
+    "Description": "안전한 H.B 프로젝트이지만 아주 가끔 다치는 경우가 있을 수도 있습니다.",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
@@ -67,7 +67,7 @@
   {
     "ID": "Room_Meal",
     "Name": "식당",
-    "Description": "식당",
+    "Description": "영웅들의 건강을 위한 건강식이 준비되어 있습니다!",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
@@ -80,7 +80,7 @@
   {
     "ID": "Room_Gym",
     "Name": "체육관",
-    "Description": "체육관",
+    "Description": "아무리 은퇴했더라도 건강을 위해 가벼운 운동은 해야합니다.",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
@@ -93,7 +93,7 @@
   {
     "ID": "Room_Rest",
     "Name": "휴게실",
-    "Description": "휴게실",
+    "Description": "게임, 책 등 영웅들이 취미를 즐길 수 있도록 준비해두었습니다.",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
@@ -106,7 +106,7 @@
   {
     "ID": "Room_Battle",
     "Name": "VR룸",
-    "Description": "VR룸",
+    "Description": "오로지 영웅들만을 위한 H.B 프로젝트가 진행되는 공간입니다! 자주 들러주세요!",
     "SizeW": 4,
     "SizeH": 1,
     "BuildCost": 150,
@@ -131,8 +131,8 @@
   },
   {
     "ID": "Room_Sleep",
-    "Name": "침실1",
-    "Description": "잠자는 방1",
+    "Name": "침실",
+    "Description": "앞으로 입소한 영웅들이 지내게 될 방입니다. 좋지는 않지만 나쁘지도 않죠.",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 100,

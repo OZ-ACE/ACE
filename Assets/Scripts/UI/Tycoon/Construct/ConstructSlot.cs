@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Cysharp.Threading.Tasks;
 
 public class ConstructSlot : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class ConstructSlot : MonoBehaviour
     private BuildGridViewModel _viewModel;
     private string _roomId;
 
-    /// <summary> 슬롯에 방 데이터를 채운다 </summary>
+    // 슬롯에 방 데이터를 채운다
     public void SetSlotData(RoomData roomData, BuildGridViewModel viewModel)
     {
         if (roomData == null || viewModel == null)
@@ -28,7 +29,7 @@ public class ConstructSlot : MonoBehaviour
         _viewModel = viewModel;
         _roomId = roomData.ID;
 
-        SetRoomIcon(roomData.ID);
+        SetRoomIcon(roomData.ID).Forget();
 
         Text_RoomName.text = roomData.Name;
         Text_Description.text = roomData.Description;
@@ -39,15 +40,16 @@ public class ConstructSlot : MonoBehaviour
         Button_Select.onClick.AddListener(OnClickSelect);
     }
 
-    /// <summary> 방 아이콘 로드 </summary>
-    private void SetRoomIcon(string roomId)
+    // 방 아이콘 로드
+    private async UniTask SetRoomIcon(string roomId)
     {
         if (Image_RoomIcon == null)
         {
             return;
         }
 
-        Sprite sprite = Resources.Load<Sprite>($"Image/Room[{roomId}]");
+        Sprite sprite = await ResourceManager.Inst.LoadSprite($"Image/Room/{roomId}");
+
         if (sprite == null)
         {
             Debug.LogWarning($"[ConstructSlot] 아이콘 없음: {roomId}");
@@ -56,7 +58,7 @@ public class ConstructSlot : MonoBehaviour
         Image_RoomIcon.sprite = sprite;
     }
 
-    /// <summary> 방 선택 </summary>
+    // 방 선택
     private void OnClickSelect()
     {
         if (_viewModel == null)
