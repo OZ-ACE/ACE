@@ -1,5 +1,6 @@
 ﻿using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 
@@ -26,6 +27,7 @@ public class CameraController : MonoBehaviour
 
     private Camera _camera;
     private bool _isDragging = false;
+    private Vector2 _lastMousePosition;
 
     private void Awake()
     {
@@ -34,8 +36,9 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current == null)
+        if (Keyboard.current == null || EventSystem.current.IsPointerOverGameObject())
         { 
+            _isDragging = false;
             return; 
         }
 
@@ -68,18 +71,30 @@ public class CameraController : MonoBehaviour
             MoveCamera(x, y, false);
         }
 
-        _isDragging = Mouse.current.middleButton.wasPressedThisFrame ? true : false;
+        if (Mouse.current.middleButton.wasPressedThisFrame)
+        {
+            _isDragging = true;
+            _lastMousePosition = Mouse.current.position.ReadValue();
+        }
+
+        if (Mouse.current.middleButton.wasReleasedThisFrame)
+        {
+            _isDragging = false;
+        }
 
         if (_isDragging)
         {
-            Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+            Vector2 currentMousePosition = Mouse.current.position.ReadValue();
+            Vector2 mouseDelta = currentMousePosition - _lastMousePosition;
 
             if (mouseDelta.sqrMagnitude > 0.01f)
             {
-                float dragX = -mouseDelta.x * _dragSpeed * Time.deltaTime;
-                float dragY = -mouseDelta.y * _dragSpeed * Time.deltaTime;
+                float dragX = -mouseDelta.x * _dragSpeed;
+                float dragY = -mouseDelta.y * _dragSpeed;
 
-                MoveCamera(dragX, dragY, true);
+                MoveCamera(dragX, dragY, isDrag: true);
+
+                _lastMousePosition = currentMousePosition;
             }
         }
 
