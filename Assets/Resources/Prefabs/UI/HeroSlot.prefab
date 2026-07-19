@@ -1440,6 +1440,7 @@ GameObject:
   - component: {fileID: 3371847395698436870}
   - component: {fileID: 3457628838743771710}
   - component: {fileID: 9074445025116067147}
+  - component: {fileID: 6905191310790746423}
   m_Layer: 0
   m_Name: Hero Button
   m_TagString: Untagged
@@ -1548,6 +1549,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6905191310790746423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6388423156141914553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e1bb5de487b26d4d91546362b47a2d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSound
 --- !u!1 &6933685085217334474
 GameObject:
   m_ObjectHideFlags: 0

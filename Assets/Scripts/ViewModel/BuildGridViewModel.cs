@@ -295,6 +295,7 @@ public class BuildGridViewModel : ViewModelBase
         GameManager.Inst.Services.QuestService.ReportProgress(QuestConditionType.BuildRoom, roomId, 1);
         SaveGrid();
         Debug.Log($"[BuildGridViewModel] 방 배치 성공: {roomId} @ {originCoord} (-{roomData.BuildCost}G)");
+        SoundManager.Inst.PlaySFX("Construct");
         return PlacementResult.Success;
     }
 
@@ -427,6 +428,7 @@ public class BuildGridViewModel : ViewModelBase
         _pickedRoom = null;  
         SaveGrid();
 
+        SoundManager.Inst.PlaySFX("Construct");
         Debug.Log($"[BuildGridViewModel] 방 이동 완료: {moved.RoomId} → {newOrigin}");
         return true;
     }

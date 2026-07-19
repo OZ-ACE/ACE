@@ -78,14 +78,11 @@ public class DialogueUI : UIBase
             case nameof(DialogueViewModel.IsSpeakerActive):
                 Image_Speaker.gameObject.SetActive(_dialogueVM.IsSpeakerActive);
                 break;
-            //case nameof(DialogueViewModel.Background):
-            //    SetBackground(_dialogueVM.Background).Forget();
-            //    break;
             case nameof(DialogueViewModel.BGM):
-                //PlayBGM();
+                SoundManager.Inst.PlayBGM(_dialogueVM.BGM);
                 break;
             case nameof(DialogueViewModel.SFX):
-                //PlaySFX();
+                SoundManager.Inst.PlaySFX(_dialogueVM.SFX);
                 break;
             case nameof(DialogueViewModel.IsNextArrow):
                 Image_NextArrow.gameObject.SetActive(_dialogueVM.IsNextArrow);
@@ -105,6 +102,7 @@ public class DialogueUI : UIBase
             _isTyping = false;
             Text_Content.maxVisibleCharacters = Text_Content.text.Length;
             _dialogueVM.IsNextArrow = true;
+            SoundManager.Inst.StopSFX();
 
             if (_isAuto)
             {
@@ -168,6 +166,7 @@ public class DialogueUI : UIBase
         _dialogueVM.IsNextArrow = false;
         Text_Content.text = content;
         Text_Content.maxVisibleCharacters = 0;
+        SoundManager.Inst.PlayTypingSound();
 
         if (_typingWaitTime <= 0f)
         {
@@ -187,6 +186,7 @@ public class DialogueUI : UIBase
 
         _isTyping = false;
         _dialogueVM.IsNextArrow = true;
+        SoundManager.Inst.StopSFX();
 
         if (_isAuto)
         {
@@ -223,14 +223,4 @@ public class DialogueUI : UIBase
             _autoWaitToken = null;
         }
     }
-
-    //private async UniTask SetBackground(string background)
-    //{
-    //    if (string.IsNullOrEmpty(background))
-    //    {
-    //        return;
-    //    }
-
-    //    Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/{background}");
-    //}
 }

@@ -24,6 +24,7 @@ public class GameManager : SingletonBase<GameManager>
     private void Start()
     {
         ApplySetting();
+        SoundManager.Inst.PlayBGM("Tycoon");
     }
 
     public void SetDialogueID(string dialogueID)

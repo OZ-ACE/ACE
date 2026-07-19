@@ -119,6 +119,16 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!82 &921656055 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5966065318125314744, guid: 7c691629d11923a47beab944aa443942, type: 3}
+  m_PrefabInstance: {fileID: 2239917123589012840}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &921656056 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 6249295694830723532, guid: 7c691629d11923a47beab944aa443942, type: 3}
+  m_PrefabInstance: {fileID: 2239917123589012840}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1631899071
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,6 +292,18 @@ PrefabInstance:
       propertyPath: m_Resource
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8840175373238251691, guid: 7c691629d11923a47beab944aa443942, type: 3}
+      propertyPath: Audio_BGM
+      value: 
+      objectReference: {fileID: 921656056}
+    - target: {fileID: 8840175373238251691, guid: 7c691629d11923a47beab944aa443942, type: 3}
+      propertyPath: Audio_SFX
+      value: 
+      objectReference: {fileID: 921656055}
+    - target: {fileID: 8840175373238251691, guid: 7c691629d11923a47beab944aa443942, type: 3}
+      propertyPath: Audio_Mixer
+      value: 
+      objectReference: {fileID: 24100000, guid: 56e2ddc4f5da593479a3b8323d685403, type: 2}
     - target: {fileID: 9098816157169331345, guid: 7c691629d11923a47beab944aa443942, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
@@ -311,7 +333,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3483180786397676280, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 3483180786397676280, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -327,6 +349,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3483180786397676280, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3483180786397676280, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3483180786397676280, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3483180786397676280, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3547893546778266574, guid: e5551d76a55055145b5cc197c092860b, type: 3}
@@ -386,12 +420,16 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8723681498635524471, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: orthographic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8723681498635524471, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: field of view
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 8723681498635524471, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: far clip plane
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8723681498635524471, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: near clip plane
@@ -399,7 +437,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8723681498635524471, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: orthographic size
-      value: 0.33
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8723681498635524471, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_BackGroundColor.b
