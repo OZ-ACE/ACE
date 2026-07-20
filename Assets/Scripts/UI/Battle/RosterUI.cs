@@ -111,6 +111,7 @@ public class RosterUI : UIBase
     private void OnClickClose()
     {
         UIManager.Inst.CloseRosterUI();
+        ObjectManager.Inst.ExitBattle();
     }
     private void OnDestroy()
     {

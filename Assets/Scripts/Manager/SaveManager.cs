@@ -10,21 +10,32 @@ public class SaveManager : SingletonBase<SaveManager>
     public int CurrentSlotIndex { get; private set; } = 0;
     public SortedSet<int> SlotIndex { get; private set; } = new SortedSet<int>();
 
+    public bool IsInitialized { get; private set; }
+    public bool IsPlayerDataLoaded { get; private set; }
+
     protected override void Awake()
     {
         base.Awake();
+    }
+
+    public void Initialize()
+    {
+        if (IsInitialized == true)
+        {
+            return;
+        }
 
         SlotIndex.Clear();
 
         for (int i = 0; i < 100; i++)
         {
-            if (HasSaveFile(i))
+            if (HasSaveFile(i) == true)
             {
                 SlotIndex.Add(i);
             }
         }
 
-        CurrentPlayerModel = RequestLoadData(CurrentSlotIndex);
+        IsInitialized = true;
     }
 
     private string GetPath(int slotIndex)
@@ -47,9 +58,6 @@ public class SaveManager : SingletonBase<SaveManager>
         {
             string json = File.ReadAllText(path);
             PlayerModel data = JsonUtility.FromJson<PlayerModel>(json);
-
-            MigrateNewData(data);
-
             CurrentPlayerModel = data;
 
             return data;
@@ -61,6 +69,20 @@ public class SaveManager : SingletonBase<SaveManager>
 
             return data;
         }
+    }
+
+    public PlayerModel LoadPreviewData(int slotIndex)
+    {
+        string path = GetPath(slotIndex);
+
+        if (File.Exists(path) == false)
+        {
+            return null;
+        }
+
+        string json = File.ReadAllText(path);
+
+        return JsonUtility.FromJson<PlayerModel>(json);
     }
 
     public bool RequestDeleteData(int slotIndex)
@@ -141,21 +163,18 @@ public class SaveManager : SingletonBase<SaveManager>
     private List<HeroStat> SetDefaultHero()
     {
         List<HeroStat> hero = new List<HeroStat>();
-        List<HeroData> datas = GameDataManager.Inst.GetDataList<HeroData>();
+        List<HeroData> data = GameDataManager.Inst.GetDataList<HeroData>();
 
-        foreach (HeroData data in datas)
+        for (int i = 1; i <= 3; i++)
         {
-            if (data.IsBasic)
+            HeroStat heroModel = new HeroStat
             {
-                HeroStat heroModel = new HeroStat
-                {
-                    HeroID = data.ID,
-                    Affection = 0,
-                    Satisfaction = 0
-                };
+                HeroID = data[i].ID,
+                Affection = 0,
+                Satisfaction = 0
+            };
 
-                hero.Add(heroModel);
-            }
+            hero.Add(heroModel);
         }
 
         return hero;
@@ -289,7 +308,7 @@ public class SaveManager : SingletonBase<SaveManager>
     public void SetCurrentSlotIndex(int slotIndex)
     {
         CurrentSlotIndex = slotIndex;
-    }
+    } 
 
     public bool HasSaveFile(int slotIndex)
     {
@@ -318,5 +337,18 @@ public class SaveManager : SingletonBase<SaveManager>
         }
 
         return nextIndex;
+    }
+
+    public void LoadSlot(int slotIndex)
+    {
+        if (IsInitialized == false)
+        {
+            Debug.LogError("SaveManager 초기화 전에 슬롯을 불러올 수 없음.");
+            return;
+        }
+
+        CurrentSlotIndex = slotIndex;
+        CurrentPlayerModel = RequestLoadData(CurrentSlotIndex);
+        IsPlayerDataLoaded = true;
     }
 }

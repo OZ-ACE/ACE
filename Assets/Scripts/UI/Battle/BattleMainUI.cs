@@ -37,6 +37,10 @@ public class BattleMainUI : UIBase
     [Header("나가기")]
     [SerializeField] private Button Button_Exit;
 
+    [Header("도움말")]
+    [SerializeField] private Button Button_Help;
+    [SerializeField] private HelpGuideUI Panel_HelpGuide;
+
     private const int ReinforceEnergyCost = 1; //temp
     private const int ChangeUnitEnergyCost = 2; //temp
     private const int HealUnitEnergyCost = 2; //temp
@@ -70,6 +74,7 @@ public class BattleMainUI : UIBase
         BindViewModel(_viewModel);
         BindBattleUnitSpawner();
         ResetBattleView();
+        OpenRoster();
     }
 
     private void OnEnable()
@@ -81,6 +86,7 @@ public class BattleMainUI : UIBase
         }
 
         ResetBattleView();
+        OpenRoster();
     }
 
     //배틀 리셋
@@ -140,6 +146,7 @@ public class BattleMainUI : UIBase
         Button_EndTurn.onClick.AddListener(OnClickEndTurn);
         Button_StartBattle.onClick.AddListener(OnClickStartBattle);
         Button_Exit.onClick.AddListener(OnClickExit);
+        Button_Help.onClick.AddListener(OnClickHelp);
 
         Panel_SupportItemPopup.OnItemApplied += HandleSupportItemApplied;
         Panel_BattleResultPopup.OnConfirmed += HandleBattleResultConfirmed;
@@ -186,6 +193,7 @@ public class BattleMainUI : UIBase
             Button_EndTurn.onClick.RemoveListener(OnClickEndTurn);
             Button_StartBattle.onClick.RemoveListener(OnClickStartBattle);
             Button_Exit.onClick.RemoveListener(OnClickExit);
+            Button_Help.onClick.RemoveListener(OnClickHelp);
 
             Panel_SupportItemPopup.OnItemApplied -= HandleSupportItemApplied;
             Panel_BattleResultPopup.OnConfirmed -= HandleBattleResultConfirmed;
@@ -332,6 +340,11 @@ public class BattleMainUI : UIBase
     private void OnClickEndTurn()
     {
         _viewModel.NotifyInterventionEnded();
+    }
+
+    private void OnClickHelp()
+    {
+        Panel_HelpGuide.ToggleGuide();
     }
 
     //개입 버튼을 눌렀을 때 대상이 선택돼 있으면 그 대상으로 바로 진행한다. 대상이 없으면 안내만 하고 끝낸다
@@ -606,6 +619,7 @@ public class BattleMainUI : UIBase
                 {
                     int roundCount = BattleManager.Inst.GetCurrentRound();
                     int rewardAmount = _viewModel.ApplyBattleReward(result, roundCount);
+                    _viewModel.UpdateHeroBattleParticipation(heroList);
                     GameManager.Inst.Services.DayService.MarkBattleDone();
                     _viewModel.AddBattleLog(result == BattleResult.Victory ? "전투 승리!" : "전투 패배...");
                     Panel_BattleResultPopup.OpenPopup(result, rewardAmount, roundCount);
@@ -636,4 +650,23 @@ public class BattleMainUI : UIBase
         CancelBattleLoop();
         ObjectManager.Inst.ExitBattle();
     }
+
+    //배틀메인UI 진입시 로스터 자동 열기
+    private void OpenRoster()
+    {
+        if (_isBattleRunning)
+        {
+            return;
+        }
+        UIBase ui = UIManager.Inst.OpenRosterUI();
+        RosterUI rosterUI = ui as RosterUI;
+        if (rosterUI == null)
+        {
+            Debug.LogWarning("[BattleMainUI] RosterUI를 찾을 수 없습니다.");
+            return;
+        }
+        rosterUI.Initialize(OnRosterConfirmed);
+    }
+
+
 }
