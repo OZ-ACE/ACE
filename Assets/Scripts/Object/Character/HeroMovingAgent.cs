@@ -125,14 +125,14 @@ public class HeroMovingAgent : MonoBehaviour
 
         if (targetPos == Vector3.zero)
         {
-            Debug.LogError($"방 없음");
+            Debug.Log($"방 없음");
             ChangeState(TycoonState.Idle);
             return;
         }
 
         if (IsPathInvalid(targetPos))
         {
-            Debug.LogError($"끊어진 길");
+            Debug.Log($"끊어진 길");
             if (Agent_Hero.isOnNavMesh)
             {
                 Agent_Hero.ResetPath();

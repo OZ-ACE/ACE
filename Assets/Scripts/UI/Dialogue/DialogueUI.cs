@@ -27,6 +27,9 @@ public class DialogueUI : UIBase
 
     private DialogueViewModel _dialogueVM;
 
+    private string _currentBGM = string.Empty;
+    private string _currentSFX = string.Empty;
+
     private void Awake()
     {
         Button_Dialogue.onClick.AddListener(OnClickDialogue);
@@ -79,10 +82,10 @@ public class DialogueUI : UIBase
                 Image_Speaker.gameObject.SetActive(_dialogueVM.IsSpeakerActive);
                 break;
             case nameof(DialogueViewModel.BGM):
-                SoundManager.Inst.PlayBGM(_dialogueVM.BGM);
+                SetBGM(_dialogueVM.BGM);
                 break;
             case nameof(DialogueViewModel.SFX):
-                SoundManager.Inst.PlaySFX(_dialogueVM.SFX);
+                SetSFX(_dialogueVM.SFX);
                 break;
             case nameof(DialogueViewModel.IsNextArrow):
                 Image_NextArrow.gameObject.SetActive(_dialogueVM.IsNextArrow);
@@ -222,5 +225,27 @@ public class DialogueUI : UIBase
             _autoWaitToken.Dispose();
             _autoWaitToken = null;
         }
+    }
+
+    private void SetBGM(string bgm)
+    {
+        if (string.IsNullOrEmpty(bgm) || _currentBGM == bgm)
+        {
+            return;
+        }
+
+        _currentBGM = bgm;
+        SoundManager.Inst.PlayBGM(bgm);
+    }
+
+    private void SetSFX(string sfx)
+    {
+        if (string.IsNullOrEmpty(sfx) || _currentBGM == sfx)
+        {
+            return;
+        }
+
+        _currentSFX = sfx;
+        SoundManager.Inst.PlaySFX(sfx);
     }
 }
