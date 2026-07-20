@@ -34,12 +34,6 @@ public class HeroMovingAgent : MonoBehaviour
         };
     }
 
-    private void Start()
-    {
-        _heroModel.OnUpdateSchedule += UpdateSchedule;
-        GameManager.Inst.Services.DayService.OnChangeHour += ChangeTargetRoom;
-    }
-
     private void OnEnable()
     {
         RefreshBuildViewModel();
@@ -83,6 +77,9 @@ public class HeroMovingAgent : MonoBehaviour
     public void InitHero(HeroModel heroModel)
     {
         _heroModel = heroModel;
+
+        _heroModel.OnUpdateSchedule += UpdateSchedule;
+        GameManager.Inst.Services.DayService.OnChangeHour += ChangeTargetRoom;
 
         ChangeState(TycoonState.Idle);
         UpdateSchedule();
