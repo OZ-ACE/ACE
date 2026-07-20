@@ -585,6 +585,15 @@ public class BattleMainUI : UIBase
                 enemyList.Add(unit);
             }
         }
+
+        if (_enemySpawner == null)
+        {
+            Debug.LogWarning("[BattleMainUI] EnemySpawner를 찾을 수 없습니다.");
+            return;
+        }
+
+        _enemySpawner.SpawnEnemies(enemyList);
+
         CancelBattleLoop();
         _battleLoopCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         _isBattleRunning = true;
