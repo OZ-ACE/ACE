@@ -94,6 +94,11 @@ public class BattleMainUI : UIBase
         _pendingEnergyCost = 0;
         _pendingLogMessage = null;
 
+        if (_enemySpawner != null)
+        {
+            _enemySpawner.ClearEnemies();
+        }
+
         BattleManager.Inst.ResetBattleState();
 
         ClearLogSlots();

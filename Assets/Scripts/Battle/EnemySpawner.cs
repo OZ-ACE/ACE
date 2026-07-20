@@ -92,4 +92,22 @@ public class EnemySpawner : MonoBehaviour
 
         return true;
     }
+
+    public void ClearEnemies()
+    {
+        foreach (KeyValuePair<BattleUnitModel, EnemyUnitView> pair in _enemyViewMap)
+        {
+            EnemyUnitView enemyView = pair.Value;
+
+            if (enemyView == null)
+            {
+                continue;
+            }
+
+            Destroy(enemyView.gameObject);
+        }
+
+        _enemyViewMap.Clear();
+        _isSpawned = false;
+    }
 }
