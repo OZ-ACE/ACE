@@ -8,7 +8,7 @@ public static class GameUtil
         return DateTime.UtcNow.Ticks;
     }
 
-    //유닛ID로 표시용 이름을 반환한다. 영웅은 HeroData.HeroName, 적은 없어서 아직 추가 전
+    //유닛ID로 표시용 이름을 반환한다.
     public static string GetUnitDisplayName(string unitId)
     {
         HeroData heroData = GameDataManager.Inst.GetData<HeroData>(unitId);
@@ -16,6 +16,13 @@ public static class GameUtil
         if (heroData != null)
         {
             return heroData.HeroName;
+        }
+
+        EnemyData enemyData = GameDataManager.Inst.GetData<EnemyData>(unitId);
+
+        if (enemyData != null)
+        {
+            return enemyData.EnemyName;
         }
 
         return unitId;
