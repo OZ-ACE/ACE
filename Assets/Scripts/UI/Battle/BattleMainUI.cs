@@ -459,13 +459,13 @@ public class BattleMainUI : UIBase
     //[ContextMenu("실제 액션 큐 빌드 테스트 (스폰된 유닛 기준)")]
     //private void Test_BuildActionQueue()
     //{
-    //    if (BattleUnitTestSpawner.Inst == null)
+    //    if (BattleHeroSpawner.Inst == null)
     //    {
-    //        Debug.LogWarning("[BattleMainUI] BattleUnitTestSpawner 인스턴스 없음");
+    //        Debug.LogWarning("[BattleMainUI] BattleHeroSpawner 인스턴스 없음");
     //        return;
     //    }
 
-    //    List<string> heroIds = BattleUnitTestSpawner.Inst.GetHeroIdList();
+    //    List<string> heroIds = BattleHeroSpawner.Inst.GetHeroIdList();
     //    List<string> enemyIds = new List<string>();
 
     //    List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(heroIds, enemyIds);
@@ -482,13 +482,13 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        if (BattleUnitTestSpawner.Inst == null)
+        if (BattleHeroSpawner.Inst == null)
         {
-            Debug.LogWarning("[BattleMainUI] BattleUnitTestSpawner 인스턴스 없음");
+            Debug.LogWarning("[BattleMainUI] BattleHeroSpawner 인스턴스 없음");
             return;
         }
 
-        List<string> heroIds = BattleUnitTestSpawner.Inst.GetHeroIdList();
+        List<string> heroIds = BattleHeroSpawner.Inst.GetHeroIdList();
         List<string> enemyIds = new List<string>(_testEnemyIdList);
 
         List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(heroIds, enemyIds);
