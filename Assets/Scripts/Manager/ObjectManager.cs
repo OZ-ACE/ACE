@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ObjectManager : SingletonBase<ObjectManager>
 {
     [Header("건설 격자 뷰 프리팹")]
@@ -61,6 +60,9 @@ public class ObjectManager : SingletonBase<ObjectManager>
 
         viewModel.OnClickOffice -= OnClickOffice;
         viewModel.OnClickOffice += OnClickOffice;
+
+        viewModel.OnClickBattle -= OnClickBattle;
+        viewModel.OnClickBattle += OnClickBattle;
 
         _buildGridView.Bind(viewModel);
         Debug.Log("[ObjectManager] 건설 격자 생성 완료");

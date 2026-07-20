@@ -74,6 +74,11 @@ public class QuestView : ViewBase
         List<QuestData> quests = _viewModel.QuestList;
         foreach (QuestData quest in quests)
         {
+            if (_viewModel.GetState(quest.ID) == QuestState.Rewarded)
+            {
+                continue;
+            }
+
             GameObject slotObj = Instantiate(Prefab_QuestSlot, Transform_SlotParent);
             slotObj.name = $"Slot_{quest.ID}";
 

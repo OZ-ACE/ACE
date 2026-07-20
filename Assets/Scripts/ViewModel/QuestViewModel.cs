@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,6 +46,7 @@ public class QuestViewModel : ViewModelBase
     {
         return GetState(questID) == QuestState.Completed;
     }
+
     // 세이브에 퀘스트 기록이 없으면 생성 (슬롯 전환 시에도 호출)
     public void InitQuest()
     {
@@ -211,11 +213,7 @@ public class QuestViewModel : ViewModelBase
             }
 
             QuestProgressModel progress = FindProgress(quest.ID);
-            if (progress == null)
-            {
-                continue;
-            }
-            if (progress.State != (int)QuestState.InProgress)
+            if (progress == null || progress.State != (int)QuestState.InProgress)
             {
                 continue;
             }
@@ -235,6 +233,7 @@ public class QuestViewModel : ViewModelBase
         {
             return _currencyService.CurrentGold;
         }
+
         return 0;
     }
 

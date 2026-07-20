@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -112,9 +113,33 @@ public class SaveManager : SingletonBase<SaveManager>
         newPlayer.HeroStats = SetDefaultHero();
 
         newPlayer.BuildGridData = new BuildGridData();
+        newPlayer.QuestProgressList = SetDefaultQuest();
 
         CurrentPlayerModel = newPlayer;
         return newPlayer;
+    }
+
+    private List<QuestProgressModel> SetDefaultQuest()
+    {
+        List<QuestProgressModel> questList = new List<QuestProgressModel>();
+        List<QuestData> quests = GameDataManager.Inst.GetDataList<QuestData>();
+
+        if (quests != null)
+        {
+            foreach (QuestData quest in quests)
+            {
+                QuestProgressModel questProgressModel = new QuestProgressModel
+                {
+                    QuestID = quest.ID,
+                    CurrentCount = 0,
+                    State = 1
+                };
+
+                questList.Add(questProgressModel);
+            }
+        }
+
+        return questList;
     }
 
     private List<ItemModel> SetDefaultItem()
@@ -153,6 +178,131 @@ public class SaveManager : SingletonBase<SaveManager>
         }
 
         return hero;
+    }
+
+    private void MigrateNewData(PlayerModel data)
+    {
+        if (data == null)
+        {
+            return;
+        }
+
+        bool isOldData = false;
+
+        List<SupportItem> items = GameDataManager.Inst.GetDataList<SupportItem>();
+        if (items != null)
+        {
+            if (data.Inventory == null)
+            {
+                data.Inventory = new List<ItemModel>();
+            }
+
+            foreach (SupportItem item in items)
+            {
+                bool isExist = false;
+
+                foreach (ItemModel itemModel in data.Inventory)
+                {
+                    if (itemModel.ItemID == item.ID)
+                    {
+                        isExist = true;
+                        break;
+                    }
+                }
+
+                if (isExist == false)
+                {
+                    ItemModel newItem = new ItemModel
+                    {
+                        ItemID = item.ID,
+                        ItemCount = item.StockCount
+                    };
+                    data.Inventory.Add(newItem);
+                    isOldData = true;
+                }
+            }
+        }
+
+        List<HeroData> heroes = GameDataManager.Inst.GetDataList<HeroData>();
+        if (heroes != null)
+        {
+            if (data.HeroStats == null)
+            {
+                data.HeroStats = new List<HeroStat>();
+            }
+
+            foreach (HeroData hero in heroes)
+            {
+                if (hero.IsBasic == false)
+                {
+                    continue;
+                }
+
+                bool isExist = false;
+                
+                foreach (HeroStat heroStat in data.HeroStats)
+                {
+                    if (heroStat.HeroID == hero.ID)
+                    {
+                        isExist = true;
+                        break;
+                    }
+                }
+
+                if (isExist == false)
+                {
+                    HeroStat newHero = new HeroStat
+                    {
+                        HeroID = hero.ID,
+                        Affection = 0,
+                        Satisfaction = 0
+                    };
+
+                    data.HeroStats.Add(newHero);
+                    isOldData = true;
+                }
+            }
+        }
+
+        List<QuestData> quests = GameDataManager.Inst.GetDataList<QuestData>();
+        if (quests != null)
+        {
+            if (data.QuestProgressList == null)
+            {
+                data.QuestProgressList = new List<QuestProgressModel>();
+            }
+
+            foreach (QuestData quest in quests)
+            {
+                bool isExist = false;
+
+                foreach (QuestProgressModel questProgress in data.QuestProgressList)
+                {
+                    if (questProgress.QuestID == quest.ID)
+                    {
+                        isExist = true;
+                        break;
+                    }
+                }
+
+                if (isExist == false)
+                {
+                    QuestProgressModel newProgress = new QuestProgressModel
+                    {
+                        QuestID = quest.ID,
+                        CurrentCount = 0,
+                        State = 1
+                    };
+                    data.QuestProgressList.Add(newProgress);
+                    isOldData = true;
+                }
+            }
+        }
+
+        if (isOldData == true)
+        {
+            RequestSaveData(data);
+        }
     }
 
     public void SetCurrentSlotIndex(int slotIndex)
