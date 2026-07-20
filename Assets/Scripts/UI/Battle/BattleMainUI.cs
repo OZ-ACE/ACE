@@ -147,12 +147,12 @@ public class BattleMainUI : UIBase
 
     private void BindBattleUnitSpawner()
     {
-        if (BattleUnitTestSpawner.Inst == null)
+        if (BattleHeroSpawner.Inst == null)
         {
             return;
         }
 
-        BattleUnitTestSpawner.Inst.OnUnitClicked += OnUnitClicked_Spawner;
+        BattleHeroSpawner.Inst.OnUnitClicked += OnUnitClicked_Spawner;
     }
 
     private void OnUnitClicked_Spawner(string unitId)
@@ -191,9 +191,9 @@ public class BattleMainUI : UIBase
             Panel_BattleResultPopup.OnConfirmed -= HandleBattleResultConfirmed;
         }
 
-        if (BattleUnitTestSpawner.Inst != null)
+        if (BattleHeroSpawner.Inst != null)
         {
-            BattleUnitTestSpawner.Inst.OnUnitClicked -= OnUnitClicked_Spawner;
+            BattleHeroSpawner.Inst.OnUnitClicked -= OnUnitClicked_Spawner;
         }
         CancelBattleLoop();
     }
@@ -521,7 +521,7 @@ public class BattleMainUI : UIBase
             this.GetCancellationTokenOnDestroy());
     }
 
-    //전투 시작 버튼 - 스폰된 히어로와 테스트 적 목록으로 자동 진행 루프를 시작한다
+    //전투 시작 버튼 
     private void OnClickStartBattle()
     {
         if (_isBattleRunning)
@@ -529,33 +529,38 @@ public class BattleMainUI : UIBase
             Debug.LogWarning("[BattleMainUI] 이미 전투가 진행 중입니다.");
             return;
         }
-
-        if (_enemySpawner == null)
+        UIBase ui = UIManager.Inst.OpenRosterUI();
+        RosterUI rosterUI = ui as RosterUI;
+        if (rosterUI == null)
         {
-            Debug.LogWarning("[BattleMainUI] EnemySpawner를 찾을 수 없습니다.");
+            Debug.LogWarning("[BattleMainUI] RosterUI를 찾을 수 없습니다.");
             return;
         }
+        rosterUI.Initialize(OnRosterConfirmed);
+    }
 
-        if (BattleUnitTestSpawner.Inst == null)
+    //로스터에서 3명을 확정하면 그 영웅들을 스폰시키고 전투 루프를 시작한다
+    private void OnRosterConfirmed(List<string> selectedHeroIds)
+    {
+        if (selectedHeroIds == null || selectedHeroIds.Count <= 0)
         {
-            Debug.LogWarning("[BattleMainUI] BattleUnitTestSpawner 인스턴스 없음");
+            Debug.LogWarning("[BattleMainUI] 선택된 영웅이 없습니다.");
             return;
         }
-
-        List<string> heroIds = BattleUnitTestSpawner.Inst.GetHeroIdList();
+        //SetSelectedHeroIdList는 저장만 하므로 SpawnHeroes로 실제 스폰까지 트리거
+        BattleHeroSpawner.Inst.SetSelectedHeroIdList(selectedHeroIds);
+        BattleHeroSpawner.Inst.SpawnHeroes();
+        //실제 스폰된 유닛 기준으로 턴 순서 구성 (프리팹 매핑 없는 영웅은 스폰에서 빠지므로 로직도 그에 맞춤)
+        List<string> spawnedHeroIds = BattleHeroSpawner.Inst.GetHeroIdList();
         List<string> enemyIds = new List<string>(_testEnemyIdList);
-
-        List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(heroIds, enemyIds);
-
+        List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(spawnedHeroIds, enemyIds);
         if (turnOrder == null || turnOrder.Count <= 0)
         {
             Debug.LogWarning("[BattleMainUI] 전투에 참여할 유닛이 없습니다.");
             return;
         }
-
         List<BattleUnitModel> heroList = new List<BattleUnitModel>();
         List<BattleUnitModel> enemyList = new List<BattleUnitModel>();
-
         foreach (BattleUnitModel unit in turnOrder)
         {
             if (unit.IsHero)
@@ -567,16 +572,11 @@ public class BattleMainUI : UIBase
                 enemyList.Add(unit);
             }
         }
-
-        _enemySpawner.SpawnEnemies(enemyList);
-
         CancelBattleLoop();
         _battleLoopCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         _isBattleRunning = true;
         RunBattleLoopAsync(turnOrder, heroList, enemyList, _battleLoopCts.Token).Forget();
     }
-
-
 
 
 
