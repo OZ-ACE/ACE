@@ -47,43 +47,46 @@ public class QuestViewModel : ViewModelBase
         return GetState(questID) == QuestState.Completed;
     }
 
-    // 세이브에 퀘스트 기록이 없으면 생성 (슬롯 전환 시에도 호출)
-    public void InitQuest()
+    //누락된 퀘스트 진행 엔트리를 생성
+    private void EnsureProgressEntries()
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
         if (player == null)
         {
             return;
         }
-
-        // 구버전 세이브 파일 대비
         if (player.QuestProgressList == null)
         {
             player.QuestProgressList = new List<QuestProgressModel>();
         }
-
         foreach (QuestData quest in QuestList)
         {
             if (FindProgress(quest.ID) != null)
             {
                 continue;
             }
-
             QuestProgressModel progress = new QuestProgressModel();
             progress.QuestID = quest.ID;
             progress.CurrentCount = 0;
             progress.State = (int)QuestState.InProgress;
             player.QuestProgressList.Add(progress);
         }
+    }
 
+
+
+    // 세이브에 퀘스트 기록이 없으면 생성 (슬롯 전환 시에도 호출)
+    public void InitQuest()
+    {
+        EnsureProgressEntries();
         RefreshLocks();
         RefreshStateConditions();
-        //SaveQuest();
     }
 
     //뷰가 켜질 때 1회 호출
     public void InvokeOnceOnInit()
     {
+        RefreshLocks();            //표시 여부(잠금) 최신화
         RefreshStateConditions();
         OnPropertyChanged(nameof(QuestList));
     }
@@ -151,6 +154,9 @@ public class QuestViewModel : ViewModelBase
             return;
         }
 
+        EnsureProgressEntries();   //로드로 엔트리가 누락됐어도 복구
+        RefreshLocks();            //선행 미완료 퀘스트는 여기서 Locked로 확정
+
         bool isChanged = false;
         foreach (QuestData quest in QuestList)
         {
@@ -188,7 +194,6 @@ public class QuestViewModel : ViewModelBase
             return;
         }
 
-        //SaveQuest();
         NotifyProgress();
     }
 
@@ -260,7 +265,6 @@ public class QuestViewModel : ViewModelBase
         progress.State = (int)QuestState.Rewarded;
 
         RefreshLocks();
-        //SaveQuest();
         NotifyProgress();
 
         Debug.Log($"[QuestViewModel] 보상 수령: {quest.QuestName} (+{quest.RewardAmount})");
@@ -298,15 +302,22 @@ public class QuestViewModel : ViewModelBase
         return null;
     }
 
-    //private void SaveQuest()
-    //{
-    //    PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-    //    if (player == null)
-    //    {
-    //        return;
-    //    }
-    //    SaveManager.Inst.RequestSaveData(player);
-    //}
+
+    //UI에 표시할 퀘스트만 반환 (선행 미완료로 잠긴 퀘스트 제외)
+    public List<QuestData> GetVisibleQuestList()
+    {
+        List<QuestData> result = new List<QuestData>();
+        foreach (QuestData quest in QuestList)
+        {
+            if (GetState(quest.ID) == QuestState.Locked)
+            {
+                continue;
+            }
+            result.Add(quest);
+        }
+        return result;
+    }
+
 
     private void NotifyProgress()
     {
