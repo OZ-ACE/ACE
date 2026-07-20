@@ -46,8 +46,15 @@ public class HeroMovingAgent : MonoBehaviour
 
     private void OnDestroy()
     {
-        _heroModel.OnUpdateSchedule -= UpdateSchedule;
-        GameManager.Inst.Services.DayService.OnChangeHour -= ChangeTargetRoom;
+        if (_heroModel != null)
+        {
+            _heroModel.OnUpdateSchedule -= UpdateSchedule;
+        }
+
+        if (GameManager.Inst.Services.DayService != null)
+        {
+            GameManager.Inst.Services.DayService.OnChangeHour -= ChangeTargetRoom;
+        }
     }
 
     private void Update()

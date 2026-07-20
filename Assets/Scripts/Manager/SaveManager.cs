@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -90,9 +91,33 @@ public class SaveManager : SingletonBase<SaveManager>
         newPlayer.HeroStats = SetDefaultHero();
 
         newPlayer.BuildGridData = new BuildGridData();
+        newPlayer.QuestProgressList = SetDefaultQuest();
 
         CurrentPlayerModel = newPlayer;
         return newPlayer;
+    }
+
+    private List<QuestProgressModel> SetDefaultQuest()
+    {
+        List<QuestProgressModel> questList = new List<QuestProgressModel>();
+        List<QuestData> quests = GameDataManager.Inst.GetDataList<QuestData>();
+
+        if (quests != null)
+        {
+            foreach (QuestData quest in quests)
+            {
+                QuestProgressModel questProgressModel = new QuestProgressModel
+                {
+                    QuestID = quest.ID,
+                    CurrentCount = 0,
+                    State = 1
+                };
+
+                questList.Add(questProgressModel);
+            }
+        }
+
+        return questList;
     }
 
     private List<ItemModel> SetDefaultItem()
@@ -215,6 +240,41 @@ public class SaveManager : SingletonBase<SaveManager>
                     };
 
                     data.HeroStats.Add(newHero);
+                    isOldData = true;
+                }
+            }
+        }
+
+        List<QuestData> quests = GameDataManager.Inst.GetDataList<QuestData>();
+        if (quests != null)
+        {
+            if (data.QuestProgressList == null)
+            {
+                data.QuestProgressList = new List<QuestProgressModel>();
+            }
+
+            foreach (QuestData quest in quests)
+            {
+                bool isExist = false;
+
+                foreach (QuestProgressModel questProgress in data.QuestProgressList)
+                {
+                    if (questProgress.QuestID == quest.ID)
+                    {
+                        isExist = true;
+                        break;
+                    }
+                }
+
+                if (isExist == false)
+                {
+                    QuestProgressModel newProgress = new QuestProgressModel
+                    {
+                        QuestID = quest.ID,
+                        CurrentCount = 0,
+                        State = 1
+                    };
+                    data.QuestProgressList.Add(newProgress);
                     isOldData = true;
                 }
             }

@@ -1,11 +1,4 @@
-﻿
-
-
-
-
-
-
-// 퀘스트 뷰모델을 생성 및 보관, 진행도 보고
+﻿// 퀘스트 뷰모델을 생성 및 보관, 진행도 보고
 public class QuestService
 {
     private QuestViewModel _questViewModel;
@@ -39,8 +32,5 @@ public class QuestService
             return;
         }
         _questViewModel.ReloadQuest();
-}
-
-
-
+    }
 }
