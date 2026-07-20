@@ -85,6 +85,11 @@ public class EnemySpawner : MonoBehaviour
             enemyUnit.CurrentHp,
             enemyUnit.MaxHp);
 
+        if (enemyUnit.IsDefeated)
+        {
+            enemyView.gameObject.SetActive(false);
+        }
+
         return true;
     }
 }
