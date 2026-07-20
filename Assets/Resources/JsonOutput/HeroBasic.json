@@ -7,7 +7,7 @@
     "Remarks": "방패를 베개처럼 끌어안고 잠. 회의가 길어지면 영웅담이 자동 재생됨.",
     "MainSkillId": "heroSkill_01_01",
     "CandidateWeight": 100,
-    "ProfileImage": null,
+    "ProfileImage": "Image/Portrait[hero_01]",
     "PenaltyID": [
       "penalty_01",
       "penalty_02",
@@ -23,7 +23,7 @@
     "Remarks": "냉기보다 오십견이 더 무서움. 팔을 높이 들면 표정이 급격히 차가워짐.",
     "MainSkillId": "heroSkill_02_01",
     "CandidateWeight": 100,
-    "ProfileImage": null,
+    "ProfileImage": "Image/Portrait[hero_02]",
     "PenaltyID": [
       "penalty_02",
       "penalty_03",
@@ -39,7 +39,7 @@
     "Remarks": "작은 글씨를 못 봄. 표적판보다 돋보기를 먼저 찾는 원거리 담당.",
     "MainSkillId": "heroSkill_03_01",
     "CandidateWeight": 100,
-    "ProfileImage": null,
+    "ProfileImage": "Image/Portrait[hero_03]",
     "PenaltyID": [
       "penalty_02",
       "penalty_03",
@@ -55,7 +55,7 @@
     "Remarks": "감정 기복이 공간을 흔듦. 집중하면 주변 사물이 살짝 떨림.",
     "MainSkillId": "heroSkill_04_01",
     "CandidateWeight": 100,
-    "ProfileImage": null,
+    "ProfileImage": "Image/Portrait[hero_04]",
     "PenaltyID": [
       "penalty_04"
     ],
@@ -97,7 +97,7 @@
     "Remarks": "피부가 단단해지는 대신 간식 취향도 단단함. 아몬드를 늘 챙김.",
     "MainSkillId": "heroSkill_07_01",
     "CandidateWeight": 100,
-    "ProfileImage": null,
+    "ProfileImage": "Image/Portrait[hero_07]",
     "PenaltyID": [
       "penalty_07"
     ],
