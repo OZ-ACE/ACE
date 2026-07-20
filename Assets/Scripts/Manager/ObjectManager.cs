@@ -75,6 +75,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
 
     private void OnClickBattle()
     {
+        SoundManager.Inst.PlayBGM("Battle");
         EnterBattle();
     }
 

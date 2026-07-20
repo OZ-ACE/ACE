@@ -111,6 +111,7 @@ public static class UIExtension
 
     public static void OpenTycoonMainUI(this UIManager uIManager)
     {
+        SoundManager.Inst.PlayBGM("Tycoon");
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
         ObjectManager.Inst.CreateBuildGridView();
         HeroModel heroModel = new HeroModel();
