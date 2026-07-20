@@ -2,10 +2,10 @@
   {
     "ID": "Quest_01_01",
     "QuestName": "첫 삽을 뜨다",
-    "Description": "사무실 1개 건설",
+    "Description": "영웅들이 지낼 방이 필요합니다.\n침실 3개를 건설해봅시다.",
     "ConditionType": "BuildRoom",
-    "ConditionTargetID": "Room_Office",
-    "ConditionCount": 1,
+    "ConditionTargetID": "Room_Sleep",
+    "ConditionCount": 3,
     "RewardType": "Gold",
     "RewardAmount": 500,
     "RequiredQuestID": null
@@ -13,24 +13,24 @@
   {
     "ID": "Quest_01_02",
     "QuestName": "첫 삽을 뜨다 2",
-    "Description": "방을 3개 건설",
+    "Description": "이제 업무를 볼 사무실이 필요합니다!\n사무실을 건설해주세요!",
     "ConditionType": "BuildRoom",
-    "ConditionTargetID": null,
-    "ConditionCount": 3,
+    "ConditionTargetID": "Room_Office",
+    "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 1000,
     "RequiredQuestID": "Quest_01_01"
   },
   {
-    "ID": "Quest_02_01",
-    "QuestName": "첫 장보기",
-    "Description": "상점에서 아이템을 1개 구매",
-    "ConditionType": "PurchaseItem",
+    "ID": "Quest_01_03",
+    "QuestName": "영웅들과의 만남",
+    "Description": "실버타운을 만들었으면 영웅들이 필요하겠죠.\n사무실을 클릭하고 3명의 영웅을 데려옵시다.",
+    "ConditionType": "AdmitHero",
     "ConditionTargetID": null,
-    "ConditionCount": 1,
+    "ConditionCount": 3,
     "RewardType": "Gold",
     "RewardAmount": 300,
-    "RequiredQuestID": null
+    "RequiredQuestID": "Quest_01_02"
   },
   {
     "ID": "Quest_03_01",

@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -78,7 +77,6 @@ public class QuestViewModel : ViewModelBase
 
         RefreshLocks();
         RefreshStateConditions();
-        //SaveQuest();
     }
 
     //뷰가 켜질 때 1회 호출
@@ -188,7 +186,6 @@ public class QuestViewModel : ViewModelBase
             return;
         }
 
-        //SaveQuest();
         NotifyProgress();
     }
 
@@ -297,16 +294,6 @@ public class QuestViewModel : ViewModelBase
         }
         return null;
     }
-
-    //private void SaveQuest()
-    //{
-    //    PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-    //    if (player == null)
-    //    {
-    //        return;
-    //    }
-    //    SaveManager.Inst.RequestSaveData(player);
-    //}
 
     private void NotifyProgress()
     {

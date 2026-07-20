@@ -42,8 +42,6 @@ public class QuestSlot : MonoBehaviour
 
         int current = _questVM.GetProgressCount(_questID);
 
-        Debug.Log($"{current}");
-
         QuestState state = _questVM.GetState(_questID);
 
         if (Text_Progress != null)

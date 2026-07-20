@@ -9,6 +9,7 @@
             case "PurchaseItem": return QuestConditionType.PurchaseItem;
             case "AdvanceDay": return QuestConditionType.AdvanceDay;
             case "ReachGold": return QuestConditionType.ReachGold;
+            case "AdmitHero": return QuestConditionType.AdmitHero;
         }
 
         return QuestConditionType.None;

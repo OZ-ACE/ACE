@@ -272,24 +272,53 @@ public class ObjectManager : SingletonBase<ObjectManager>
         Debug.Log("[ObjectManager] 전투 실행기 연결 완료");
     }
 
-
-    ////////////////////////////////////////
-
-    // 테스트용 임시 메서드
-    public async UniTask SpawnHero(HeroModel heroModel)
+    public async UniTask SpawnHero(string heroId, long roomInstanceId)
     {
-        if (_spawnHero.ContainsKey(heroModel.HeroID))
+        if (_spawnHero.ContainsKey(heroId))
         {
+            Debug.LogWarning($"[ObjectManager] 이미 스폰된 영웅입니다. ID: {heroId}");
             return;
         }
 
-        GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroModel.HeroID}");
-        _hero = prefab;
+        var buildService = GameManager.Inst.Services.BuildService;
+        BuildGridViewModel buildVM = buildService.GetBuildGridViewModel();
+
+        List<PlacedRoomData> placedRooms = buildVM.GetPlacedRooms();
+        PlacedRoomData targetRoomData = null;
+
+        for (int i = 0; i < placedRooms.Count; i++)
+        {
+            if (placedRooms[i] != null && placedRooms[i].RoomInstanceId == roomInstanceId)
+            {
+                targetRoomData = placedRooms[i];
+                break;
+            }
+        }
+
+        GridSystem gridSystem = buildVM.GridSystem;
+        Vector3 spawnPosition = gridSystem.GetWorldPosition(targetRoomData.Origin);
+
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(targetRoomData.RoomId);
+        if (roomData != null)
+        {
+            Vector2Int size = roomData.GetSize();
+            float offsetX = (size.x - 1) * 0.5f * gridSystem.CellWidth;
+            float offsetY = (size.y - 1) * 0.5f * gridSystem.CellHeight;
+
+            spawnPosition = new Vector3(spawnPosition.x + offsetX, spawnPosition.y + offsetY, 0f);
+        }
+
+        GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroId}");
+        prefab.transform.position = spawnPosition;
+        prefab.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
         HeroMovingAgent movingAgent = prefab.GetComponent<HeroMovingAgent>();
+
+        HeroModel heroModel = new HeroModel();
+        heroModel.LoadHeroData(heroId);
         movingAgent.InitHero(heroModel);
 
-        _spawnHero[heroModel.HeroID] = movingAgent;
+        _spawnHero[heroId] = movingAgent;
     }
 
     public HeroMovingAgent GetSpawnAgent(string heroID)

@@ -30,7 +30,6 @@ public class HeroData : GameDataBase
     public int CandidateWeight;
     public string ProfileImage;
     public List<string> PenaltyID;
-    public bool IsBasic;
 }
 
 [Serializable]

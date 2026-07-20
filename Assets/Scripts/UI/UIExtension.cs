@@ -114,9 +114,6 @@ public static class UIExtension
         SoundManager.Inst.PlayBGM("Tycoon");
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
         ObjectManager.Inst.CreateBuildGridView();
-        HeroModel heroModel = new HeroModel();
-        heroModel.LoadHeroData("hero_03");
-        ObjectManager.Inst.SpawnHero(heroModel).Forget();
     }
 
     public static void CloseTycoonMainUI(this UIManager uIManager)
