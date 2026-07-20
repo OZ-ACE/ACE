@@ -41,7 +41,7 @@ public class RoomAssignmentService
         HeroRoomAssignmentModel assignment = new HeroRoomAssignmentModel{HeroId = heroId, RoomInstanceId = roomInstanceId};
 
         player.HeroRoomAssignments.Add(assignment);
-        SaveManager.Inst.RequestSaveData(player);
+        //SaveManager.Inst.RequestSaveData(player);
 
         return true;
     }
@@ -63,7 +63,7 @@ public class RoomAssignmentService
         }
 
         player.HeroRoomAssignments.Remove(assignment);
-        SaveManager.Inst.RequestSaveData(player);
+        //SaveManager.Inst.RequestSaveData(player);
 
         return true;
     }

@@ -83,7 +83,7 @@ public class RosterViewModel : ViewModelBase
         if (player != null)
         {
             player.SelectedHeroIds = new List<string>(_selectedHeroIds);
-            SaveManager.Inst.RequestSaveData(player);
+            //SaveManager.Inst.RequestSaveData(player);
         }
         return new List<string>(_selectedHeroIds);
     }

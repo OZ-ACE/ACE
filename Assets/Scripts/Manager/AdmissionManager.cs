@@ -331,7 +331,7 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
             playerModel.AdmissionCandidates.Add(saveData);
         }
 
-        SaveManager.Inst.RequestSaveData(playerModel);
+        //SaveManager.Inst.RequestSaveData(playerModel);
     }
 
     private void BindDayService()
