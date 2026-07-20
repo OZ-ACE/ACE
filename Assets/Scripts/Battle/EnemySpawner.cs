@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -9,35 +10,104 @@ public class EnemySpawner : MonoBehaviour
 
     private bool _isSpawned;
 
-    public bool SpawnEnemies()
+    private readonly Dictionary<BattleUnitModel, EnemyUnitView> _enemyViewMap
+        = new Dictionary<BattleUnitModel, EnemyUnitView>();
+
+    public bool SpawnEnemies(List<BattleUnitModel> enemyList)
     {
         if (_isSpawned)
         {
             return false;
         }
         
-        if (EnemyPrefab == null || EnemySpawnRoot == null)
+        if (EnemyPrefab == null ||
+            EnemySpawnRoot == null || 
+            SpawnPoints == null ||
+            SpawnPoints.Length == 0 ||
+            enemyList == null || 
+            enemyList.Count == 0)
         {
             return false;
         }
 
-        for (int i = 0; i < SpawnPoints.Length; i++)
+        int spawnCount = Mathf.Min(enemyList.Count, SpawnPoints.Length);
+        
+        for (int i = 0; i < spawnCount; i++)
         {
             Transform spawnPoint = SpawnPoints[i];
+            BattleUnitModel enemyUnit = enemyList[i];
 
-            if (spawnPoint == null)
+            if (spawnPoint == null || enemyUnit == null)
             {
                 continue;
             }
 
-            Instantiate(
+            GameObject enemyObject = Instantiate(
                 EnemyPrefab,
                 spawnPoint.position,
                 spawnPoint.rotation,
                 EnemySpawnRoot);
+
+            EnemyUnitView enemyView = enemyObject.GetComponent<EnemyUnitView>();
+
+            if (enemyView == null)
+            {
+                continue;
+            }
+
+            enemyView.Initialize(
+                GameUtil.GetUnitDisplayName(enemyUnit.ID),
+                enemyUnit.CurrentHp,
+                enemyUnit.MaxHp);
+
+            _enemyViewMap.Add(enemyUnit, enemyView);
         }
 
         _isSpawned = true;
         return true;
+    }
+
+    public bool RefreshEnemyView(BattleUnitModel enemyUnit)
+    {
+        if (enemyUnit == null)
+        {
+            return false;
+        }
+
+        bool hasView = _enemyViewMap.TryGetValue(enemyUnit, out EnemyUnitView enemyView);
+
+        if (hasView == false || enemyView == null)
+        {
+            return false;
+        }
+
+        enemyView.RefreshHp(
+            enemyUnit.CurrentHp,
+            enemyUnit.MaxHp);
+
+        if (enemyUnit.IsDefeated)
+        {
+            enemyView.gameObject.SetActive(false);
+        }
+
+        return true;
+    }
+
+    public void ClearEnemies()
+    {
+        foreach (KeyValuePair<BattleUnitModel, EnemyUnitView> pair in _enemyViewMap)
+        {
+            EnemyUnitView enemyView = pair.Value;
+
+            if (enemyView == null)
+            {
+                continue;
+            }
+
+            Destroy(enemyView.gameObject);
+        }
+
+        _enemyViewMap.Clear();
+        _isSpawned = false;
     }
 }
