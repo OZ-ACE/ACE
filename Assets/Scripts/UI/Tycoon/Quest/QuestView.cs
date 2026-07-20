@@ -64,7 +64,7 @@ public class QuestView : ViewBase
     // 진행도·보상 수령 시 기존 슬롯 상태만 갱신
     private void OnChangeQuestProgress()
     {
-        RefreshAllSlots();
+        CreateSlots();
     }
 
     private void CreateSlots()
@@ -74,20 +74,19 @@ public class QuestView : ViewBase
         List<QuestData> quests = _viewModel.QuestList;
         foreach (QuestData quest in quests)
         {
-            if (_viewModel.GetState(quest.ID) == QuestState.Rewarded)
+            QuestState state = _viewModel.GetState(quest.ID);
+            //수령 완료(Rewarded)했거나 선행 미완료로 잠긴(Locked) 퀘스트는 표시 안 함
+            if (state == QuestState.Rewarded || state == QuestState.Locked)
             {
                 continue;
             }
-
             GameObject slotObj = Instantiate(Prefab_QuestSlot, Transform_SlotParent);
             slotObj.name = $"Slot_{quest.ID}";
-
             QuestSlot slot = slotObj.GetComponent<QuestSlot>();
             if (slot == null)
             {
                 continue;
             }
-
             _activeSlots.Add(slot);
             slot.SetSlotData(quest, _viewModel);
         }
