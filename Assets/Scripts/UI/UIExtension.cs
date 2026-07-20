@@ -27,7 +27,8 @@ public enum UIType
     OfficeUI,
     ShopUI,
     SettlementUI,
-    ScheduleUI
+    ScheduleUI,
+    RosterUI
 }
 
 public static class UIExtension
@@ -112,7 +113,9 @@ public static class UIExtension
     {
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
         ObjectManager.Inst.CreateBuildGridView();
-        ObjectManager.Inst.SpawnHero("hero_03").Forget();
+        HeroModel heroModel = new HeroModel();
+        heroModel.LoadHeroData("hero_03");
+        ObjectManager.Inst.SpawnHero(heroModel).Forget();
     }
 
     public static void CloseTycoonMainUI(this UIManager uIManager)
@@ -193,13 +196,22 @@ public static class UIExtension
         uiManager.CloseUI(UIType.SettlementUI);
     }
 
-    public static void OpenScheduleUI(this UIManager uiManager)
+    public static UIBase OpenScheduleUI(this UIManager uiManager)
     {
-        uiManager.OpenUI(UIRootType.Popup, UIType.ScheduleUI);
+        return uiManager.OpenUI(UIRootType.Popup, UIType.ScheduleUI);
     }
     public static void CloseScheduleUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.ScheduleUI);
+    }
+
+    public static UIBase OpenRosterUI(this UIManager uiManager)
+    {
+        return uiManager.OpenUI(UIRootType.Popup, UIType.RosterUI);
+    }
+    public static void CloseRosterUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.RosterUI);
     }
 
     public static ConfirmPopup OpenConfirmPopup(this UIManager uiManager, string message, System.Action onConfirm, System.Action onCancel = null)
