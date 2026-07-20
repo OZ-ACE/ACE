@@ -35,6 +35,13 @@ public class HeroData : GameDataBase
     public List<string> PenaltyID;
 }
 
+[Serializable]
+public class EnemyData : GameDataBase
+{
+    public string EnemyName;
+    public string EnemyNameEn;
+}
+
 //영웅 전투 스탯 데이터
 [Serializable]
 public class HeroBattleData : GameDataBase
