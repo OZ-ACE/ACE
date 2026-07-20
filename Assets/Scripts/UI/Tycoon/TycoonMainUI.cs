@@ -11,6 +11,7 @@ public enum TycoonPanelType
     Inventory,
     Hero,
     Construct,
+    Furniture,
     Setting,
     Home
 }
@@ -36,6 +37,7 @@ public class TycoonMainUI : UIBase
     [SerializeField] Button Button_Inventory;
     [SerializeField] Button Button_Hero;
     [SerializeField] Button Button_Construct;
+    [SerializeField] Button Button_Furniture;
     [SerializeField] Button Button_Setting;
     [SerializeField] Button Button_Home;
     [SerializeField] List<ButtonStruct> ButtonList;
@@ -45,6 +47,7 @@ public class TycoonMainUI : UIBase
     [SerializeField] GameObject Panel_Inventory;
     [SerializeField] GameObject Panel_Hero;
     [SerializeField] GameObject Panel_Construct;
+    [SerializeField] GameObject Panel_Furniture;
     [SerializeField] List<PanelStruct> PanelList;
 
     [Header("텍스트")]
@@ -65,6 +68,7 @@ public class TycoonMainUI : UIBase
         Button_Inventory.onClick.AddListener(OnClickInventory);
         Button_Hero.onClick.AddListener(OnClickHero);
         Button_Construct.onClick.AddListener(OnClickConstruct);
+        Button_Furniture.onClick.AddListener(OnClickFurniture);
         Button_Setting.onClick.AddListener(OnClickSetting);
         Button_Home.onClick.AddListener(OnClickHome);
 
@@ -134,6 +138,11 @@ public class TycoonMainUI : UIBase
     private void OnClickConstruct()
     {
         ChangePanel(TycoonPanelType.Construct);
+    }
+
+    private void OnClickFurniture()
+    {
+        ChangePanel(TycoonPanelType.Furniture);
     }
 
     private void OnClickSetting()

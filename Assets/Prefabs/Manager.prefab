@@ -660,7 +660,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7327591dcc399934485fde1e6d3d4169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  Audio_Mixer: {fileID: 0}
+  Audio_Mixer: {fileID: 24100000, guid: 56e2ddc4f5da593479a3b8323d685403, type: 2}
+  Audio_BGM: {fileID: 6249295694830723532}
+  Audio_SFX: {fileID: 5966065318125314744}
 --- !u!82 &6249295694830723532
 AudioSource:
   m_ObjectHideFlags: 0
