@@ -76,7 +76,7 @@ public class QuestViewModel : ViewModelBase
 
         RefreshLocks();
         RefreshStateConditions();
-        SaveQuest();
+        //SaveQuest();
     }
 
     //뷰가 켜질 때 1회 호출
@@ -186,7 +186,7 @@ public class QuestViewModel : ViewModelBase
             return;
         }
 
-        SaveQuest();
+        //SaveQuest();
         NotifyProgress();
     }
 
@@ -261,7 +261,7 @@ public class QuestViewModel : ViewModelBase
         progress.State = (int)QuestState.Rewarded;
 
         RefreshLocks();
-        SaveQuest();
+        //SaveQuest();
         NotifyProgress();
 
         Debug.Log($"[QuestViewModel] 보상 수령: {quest.QuestName} (+{quest.RewardAmount})");
@@ -299,15 +299,15 @@ public class QuestViewModel : ViewModelBase
         return null;
     }
 
-    private void SaveQuest()
-    {
-        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-        if (player == null)
-        {
-            return;
-        }
-        SaveManager.Inst.RequestSaveData(player);
-    }
+    //private void SaveQuest()
+    //{
+    //    PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+    //    if (player == null)
+    //    {
+    //        return;
+    //    }
+    //    SaveManager.Inst.RequestSaveData(player);
+    //}
 
     private void NotifyProgress()
     {

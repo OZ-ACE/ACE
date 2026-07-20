@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -25,6 +24,16 @@ public class GameManager : SingletonBase<GameManager>
     {
         ApplySetting();
         SoundManager.Inst.PlayBGM("Tycoon");
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
     }
 
     public void SetDialogueID(string dialogueID)

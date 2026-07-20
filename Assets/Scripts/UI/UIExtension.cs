@@ -81,11 +81,13 @@ public static class UIExtension
 
     public static void OpenSettingPopup(this UIManager uIManager)
     {
+        GameManager.Inst.PauseGame();
         uIManager.OpenUI(UIRootType.Popup, UIType.SettingPopup);
     }
 
     public static void CloseSettingPopup(this UIManager uIManager)
     {
+        GameManager.Inst.RestartGame();
         uIManager.CloseUI(UIType.SettingPopup);
     }
 
