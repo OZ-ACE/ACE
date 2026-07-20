@@ -66,4 +66,25 @@ public class EnemySpawner : MonoBehaviour
         _isSpawned = true;
         return true;
     }
+
+    public bool RefreshEnemyView(BattleUnitModel enemyUnit)
+    {
+        if (enemyUnit == null)
+        {
+            return false;
+        }
+
+        bool hasView = _enemyViewMap.TryGetValue(enemyUnit, out EnemyUnitView enemyView);
+
+        if (hasView == false || enemyView == null)
+        {
+            return false;
+        }
+
+        enemyView.RefreshHp(
+            enemyUnit.CurrentHp,
+            enemyUnit.MaxHp);
+
+        return true;
+    }
 }

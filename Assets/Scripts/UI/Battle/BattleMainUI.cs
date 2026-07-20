@@ -127,6 +127,7 @@ public class BattleMainUI : UIBase
     private void BindViewModel(BattleViewModel viewModel)
     {
         _viewModel.PropertyChanged += OnPropertyChanged_View;
+        _viewModel.EnemyHpChanged += OnEnemyHpChanged;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
@@ -157,11 +158,22 @@ public class BattleMainUI : UIBase
         _viewModel.AddBattleLog($"{unitName} 유닛이 선택되었습니다.");
     }
 
+    private void OnEnemyHpChanged(BattleUnitModel enemyUnit)
+    {
+        if (_enemySpawner == null)
+        {
+            return;
+        }
+
+        _enemySpawner.RefreshEnemyView(enemyUnit);
+    }
+
     private void OnDestroy()
     {
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnPropertyChanged_View;
+            _viewModel.EnemyHpChanged -= OnEnemyHpChanged;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
