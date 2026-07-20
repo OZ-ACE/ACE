@@ -660,14 +660,13 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         player.BuildGridData = _buildGridModel.GetSaveData();
-        SaveManager.Inst.RequestSaveData(player);
+        //SaveManager.Inst.RequestSaveData(player);
     }
 
     //그리드 불러오기
     public void LoadGrid()
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-        Debug.Log(player.PlayerName);
 
         if (player == null || player.BuildGridData == null)
         {

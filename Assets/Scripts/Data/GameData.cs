@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
 public class GameDataBase
@@ -33,6 +30,7 @@ public class HeroData : GameDataBase
     public int CandidateWeight;
     public string ProfileImage;
     public List<string> PenaltyID;
+    public bool IsBasic;
 }
 
 //영웅 전투 스탯 데이터

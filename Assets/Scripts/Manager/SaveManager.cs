@@ -46,6 +46,9 @@ public class SaveManager : SingletonBase<SaveManager>
         {
             string json = File.ReadAllText(path);
             PlayerModel data = JsonUtility.FromJson<PlayerModel>(json);
+
+            MigrateNewData(data);
+
             CurrentPlayerModel = data;
 
             return data;
@@ -113,22 +116,114 @@ public class SaveManager : SingletonBase<SaveManager>
     private List<HeroStat> SetDefaultHero()
     {
         List<HeroStat> hero = new List<HeroStat>();
+        List<HeroData> datas = GameDataManager.Inst.GetDataList<HeroData>();
 
-        List<HeroData> data = GameDataManager.Inst.GetDataList<HeroData>();
-
-        for (int i = 1; i <= 3; i++)
+        foreach (HeroData data in datas)
         {
-            HeroStat heroModel = new HeroStat
+            if (data.IsBasic)
             {
-                HeroID = data[i].ID,
-                Affection = 0,
-                Satisfaction = 0
-            };
+                HeroStat heroModel = new HeroStat
+                {
+                    HeroID = data.ID,
+                    Affection = 0,
+                    Satisfaction = 0
+                };
 
-            hero.Add(heroModel);
+                hero.Add(heroModel);
+            }
         }
 
         return hero;
+    }
+
+    private void MigrateNewData(PlayerModel data)
+    {
+        if (data == null)
+        {
+            return;
+        }
+
+        bool isOldData = false;
+
+        List<SupportItem> items = GameDataManager.Inst.GetDataList<SupportItem>();
+        if (items != null)
+        {
+            if (data.Inventory == null)
+            {
+                data.Inventory = new List<ItemModel>();
+            }
+
+            foreach (SupportItem item in items)
+            {
+                bool isExist = false;
+
+                foreach (ItemModel itemModel in data.Inventory)
+                {
+                    if (itemModel.ItemID == item.ID)
+                    {
+                        isExist = true;
+                        break;
+                    }
+                }
+
+                if (isExist == false)
+                {
+                    ItemModel newItem = new ItemModel
+                    {
+                        ItemID = item.ID,
+                        ItemCount = item.StockCount
+                    };
+                    data.Inventory.Add(newItem);
+                    isOldData = true;
+                }
+            }
+        }
+
+        List<HeroData> heroes = GameDataManager.Inst.GetDataList<HeroData>();
+        if (heroes != null)
+        {
+            if (data.HeroStats == null)
+            {
+                data.HeroStats = new List<HeroStat>();
+            }
+
+            foreach (HeroData hero in heroes)
+            {
+                if (hero.IsBasic == false)
+                {
+                    continue;
+                }
+
+                bool isExist = false;
+                
+                foreach (HeroStat heroStat in data.HeroStats)
+                {
+                    if (heroStat.HeroID == hero.ID)
+                    {
+                        isExist = true;
+                        break;
+                    }
+                }
+
+                if (isExist == false)
+                {
+                    HeroStat newHero = new HeroStat
+                    {
+                        HeroID = hero.ID,
+                        Affection = 0,
+                        Satisfaction = 0
+                    };
+
+                    data.HeroStats.Add(newHero);
+                    isOldData = true;
+                }
+            }
+        }
+
+        if (isOldData == true)
+        {
+            RequestSaveData(data);
+        }
     }
 
     public void SetCurrentSlotIndex(int slotIndex)
