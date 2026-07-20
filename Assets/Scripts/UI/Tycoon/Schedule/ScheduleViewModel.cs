@@ -44,23 +44,25 @@ public class ScheduleViewModel : ViewModelBase
 
         for (int i = 0; i < 24; i++)
         {
+            if (_hero.HourlyStates[i] == ScheduleState.None)
+            {
+                _hero.HourlyStates[i] = ScheduleState.Sleep;
+            }
+
             _editingStates[i] = _hero.HourlyStates[i];
             OnPropertyChanged($"Hour_{i}");
         }
     }
 
-    public void SetSchedule(int hour)
+    public void SetSchedule(int hour, ScheduleState state)
     {
         if (hour < 0 || hour >= _editingStates.Count)
         {
             return;
         }
 
-        if (_editingStates[hour] != _selectedState)
-        {
-            _editingStates[hour] = _selectedState;
-            OnPropertyChanged($"Hour_{hour}");
-        }
+        _editingStates[hour] = state;
+        OnPropertyChanged($"Hour_{hour}");
     }
 
     public void SaveAndApply()

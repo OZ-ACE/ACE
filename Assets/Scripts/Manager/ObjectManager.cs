@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ObjectManager : SingletonBase<ObjectManager>
 {
@@ -274,12 +275,6 @@ public class ObjectManager : SingletonBase<ObjectManager>
 
     public async UniTask SpawnHero(string heroId, long roomInstanceId)
     {
-        if (_spawnHero.ContainsKey(heroId))
-        {
-            Debug.LogWarning($"[ObjectManager] 이미 스폰된 영웅입니다. ID: {heroId}");
-            return;
-        }
-
         var buildService = GameManager.Inst.Services.BuildService;
         BuildGridViewModel buildVM = buildService.GetBuildGridViewModel();
 
@@ -305,12 +300,25 @@ public class ObjectManager : SingletonBase<ObjectManager>
             float offsetX = (size.x - 1) * 0.5f * gridSystem.CellWidth;
             float offsetY = (size.y - 1) * 0.5f * gridSystem.CellHeight;
 
-            spawnPosition = new Vector3(spawnPosition.x + offsetX, spawnPosition.y + offsetY, 0f);
+            spawnPosition = new Vector3(spawnPosition.x + offsetX, spawnPosition.y + offsetY, spawnPosition.z);
         }
 
         GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroId}");
+
+        if (prefab.TryGetComponent<NavMeshAgent>(out var agent))
+        {
+            agent.enabled = false;
+        }
+
         prefab.transform.position = spawnPosition;
         prefab.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+
+        if (agent != null)
+        {
+            agent.enabled = true;
+            agent.Warp(spawnPosition);
+            agent.SetDestination(spawnPosition);
+        }
 
         HeroMovingAgent movingAgent = prefab.GetComponent<HeroMovingAgent>();
 

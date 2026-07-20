@@ -37,6 +37,11 @@ public class ScheduleUI : UIBase
     private List<ScheduleSlot> _slots = new List<ScheduleSlot>();
     private Dictionary<ScheduleState, Button> _buttons = new Dictionary<ScheduleState, Button>();
 
+    public ScheduleState CurrentSelectedToolState
+    {
+        get => _scheduleVM.SelectedState;
+    }
+
     private void Awake()
     {
         _scheduleVM = new ScheduleViewModel();
@@ -76,6 +81,7 @@ public class ScheduleUI : UIBase
         _targetHeroVM = targetVM;
 
         _scheduleVM.Init(_targetHeroVM.Model);
+        SetSelectedState(ScheduleState.Sleep);
     }
 
     private void CreateTimeSlot()
@@ -120,6 +126,9 @@ public class ScheduleUI : UIBase
 
             case ScheduleState.Meal:
                 return Color_Meal;
+
+            case ScheduleState.None:
+                return Color.white;
 
             default:
                 return Color.white;

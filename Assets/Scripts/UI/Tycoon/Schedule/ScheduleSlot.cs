@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ScheduleSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
+public class ScheduleSlot : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private Image Image_Background;
     [SerializeField] private TextMeshProUGUI Text_Hour;
@@ -48,14 +48,16 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        _scheduleVM.SetSchedule(_hour);
-    }
+        ScheduleState selectedTool = _scheduleUI.CurrentSelectedToolState;
+        ScheduleState currentSlotState = _scheduleVM.EditingStates[_hour];
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (eventData.dragging || Input.GetMouseButton(0))
+        if (currentSlotState == selectedTool)
         {
-            _scheduleVM.SetSchedule(_hour);
+            _scheduleVM.SetSchedule(_hour, ScheduleState.None);
+        }
+        else
+        {
+            _scheduleVM.SetSchedule(_hour, selectedTool);
         }
     }
 }
