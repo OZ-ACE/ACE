@@ -551,7 +551,7 @@ public class BattleMainUI : UIBase
             }
         }
 
-        _enemySpawner.SpawnEnemies();
+        _enemySpawner.SpawnEnemies(enemyList);
 
         CancelBattleLoop();
         _battleLoopCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
