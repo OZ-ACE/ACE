@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIAdmissionConfirmPopup : UIBase, IClosablePopup
+public class ConfirmPopup : UIBase, IClosablePopup
 {
     [SerializeField] private TMP_Text _messageText;
     [SerializeField] private Button _confirmButton;
@@ -22,12 +22,29 @@ public class UIAdmissionConfirmPopup : UIBase, IClosablePopup
         UnbindButtonEvents();
     }
 
-    public void Open(string heroName, string roomName, Action onConfirm, Action onCancel)
+    public void OpenConfirm(string message, Action onConfirm, Action onCancel = null)
     {
         _onConfirm = onConfirm;
         _onCancel = onCancel;
 
-        _messageText.text = $"{heroName} 영웅을\n{roomName}에 입소시키겠습니까?";
+        _messageText.text = message;
+
+        _confirmButton.gameObject.SetActive(true);
+        _cancelButton.gameObject.SetActive(true);
+
+        gameObject.SetActive(true);
+        transform.SetAsLastSibling();
+    }
+
+    public void OpenNotice(string message, Action onConfirm = null)
+    {
+        _onConfirm = onConfirm;
+        _onCancel = null;
+
+        _messageText.text = message;
+
+        _confirmButton.gameObject.SetActive(true);
+        _cancelButton.gameObject.SetActive(false);
 
         gameObject.SetActive(true);
         transform.SetAsLastSibling();

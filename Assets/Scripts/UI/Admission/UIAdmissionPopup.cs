@@ -277,23 +277,13 @@ public class UIAdmissionPopup : UIBase, IClosablePopup
     {
         if (string.IsNullOrEmpty(heroId))
         {
-            Debug.LogWarning("입소 신청서 ID가 비어있음.");
+            Debug.LogWarning("입소 신청서 ID 가 비어있음.");
             return;
         }
 
         if (string.IsNullOrEmpty(_pendingHeroId) == false)
         {
-            Debug.LogWarning("방 선택하는 중.");
-            return;
-        }
-
-        RoomAssignmentService roomAssignmentService = GameManager.Inst.Services.RoomAssignmentService;
-
-        List<PlacedRoomData> emptyRooms = roomAssignmentService.GetEmptyRooms();
-
-        if (emptyRooms.Count <= 0)
-        {
-            Debug.LogWarning("빈 침실 없음.");
+            Debug.LogWarning("방 선택하는 중");
             return;
         }
 
@@ -301,10 +291,10 @@ public class UIAdmissionPopup : UIBase, IClosablePopup
 
         SetAdmissionButtonsLocked(true);
 
-        _buildGridViewModel.OnRoomSelected -= OnRoomSelected;
-        _buildGridViewModel.OnRoomSelected += OnRoomSelected;
+        HidePopup();
+        ObjectManager.Inst.ExitOffice();
 
-        _buildGridViewModel.BeginRoomSelection(emptyRooms);
+        BeginRoomSelection();
 
         Debug.Log($"[{heroId}] 방 선택 시작");
     }
@@ -348,22 +338,17 @@ public class UIAdmissionPopup : UIBase, IClosablePopup
 
         if (heroData == null)
         {
-            Debug.LogWarning($"확인 팝업에 표시할 영웅 데이터를 찾을 수 없음. ID : {_pendingHeroId}");
+            Debug.LogWarning($"ConfirmPopup 에 표시할 영웅 데이터를 찾을 수 없음. ID : {_pendingHeroId}");
             ResetPendingAdmission();
             return;
         }
 
-        UIBase popupUI = UIManager.Inst.OpenPopup(UIType.AdmissionConfirmPopup);
-        UIAdmissionConfirmPopup confirmPopup = popupUI as UIAdmissionConfirmPopup;
+        ConfirmPopup confirmPopup = UIManager.Inst.OpenConfirmPopup($"{heroData.HeroName} 을(를)\n선택한 침실에 입소시키겠습니까?", ConfirmAdmission, CancelAdmission);
 
         if (confirmPopup == null)
         {
-            Debug.LogError("UIAdmissionConfirmPopup 을 열 수 없음.");
             ResetPendingAdmission();
-            return;
         }
-
-        confirmPopup.Open(heroData.HeroName, "선택한 침실", ConfirmAdmission, CancelAdmission);
     }
 
     private void ConfirmAdmission()
@@ -400,12 +385,16 @@ public class UIAdmissionPopup : UIBase, IClosablePopup
             admittedPaperSlot.SetAdmittedState();
         }
 
+        ObjectManager.Inst.EnterOffice();
+        ShowPopup();
+
         ResetPendingAdmission();
     }
 
     private void CancelAdmission()
     {
-        ResetPendingAdmission();
+        _pendingRoomInstanceId = 0;
+        BeginRoomSelection();
     }
 
     private void ResetPendingAdmission()
@@ -445,5 +434,34 @@ public class UIAdmissionPopup : UIBase, IClosablePopup
         }
 
         ResetPendingAdmission();
+    }
+
+    private void BeginRoomSelection()
+    {
+        RoomAssignmentService roomAssignmentService = GameManager.Inst.Services.RoomAssignmentService;
+
+        List<PlacedRoomData> emptyRooms = roomAssignmentService.GetEmptyRooms();
+
+        if (emptyRooms.Count <= 0)
+        {
+            UIManager.Inst.OpenNoticePopup("빈 침실이 없어 영웅을 입소시킬 수 없습니다.\n먼저 침실을 건설해 주세요.");
+            return;
+        }
+
+        _buildGridViewModel.OnRoomSelected -= OnRoomSelected;
+        _buildGridViewModel.OnRoomSelected += OnRoomSelected;
+
+        _buildGridViewModel.BeginRoomSelection(emptyRooms);
+    }
+
+    public void HidePopup()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void ShowPopup()
+    {
+        gameObject.SetActive(true);
+        transform.SetAsLastSibling();
     }
 }
