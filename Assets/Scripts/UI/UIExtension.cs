@@ -22,7 +22,7 @@ public enum UIType
     DialogueUI,
     TycoonMainUI,
     UIAdmissionPopup,
-    AdmissionConfirmPopup,
+    ConfirmPopup,
     BattleMainUI,
     OfficeUI,
     ShopUI,
@@ -205,5 +205,39 @@ public static class UIExtension
     public static void CloseScheduleUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.ScheduleUI);
+    }
+
+    public static ConfirmPopup OpenConfirmPopup(this UIManager uiManager, string message, System.Action onConfirm, System.Action onCancel = null)
+    {
+        UIBase uiBase = uiManager.OpenPopup(UIType.ConfirmPopup);
+
+        ConfirmPopup popup = uiBase as ConfirmPopup;
+
+        if (popup == null)
+        {
+            Debug.LogError("ConfirmPopup 열 수 없음.");
+            return null;
+        }
+
+        popup.OpenConfirm(message, onConfirm, onCancel);
+
+        return popup;
+    }
+
+    public static ConfirmPopup OpenNoticePopup(this UIManager uiManager, string message, System.Action onConfirm = null)
+    {
+        UIBase uiBase = uiManager.OpenPopup(UIType.ConfirmPopup);
+
+        ConfirmPopup popup = uiBase as ConfirmPopup;
+
+        if (popup == null)
+        {
+            Debug.LogError("ConfirmPopup 열 수 없음.");
+            return null;
+        }
+
+        popup.OpenNotice(message, onConfirm);
+
+        return popup;
     }
 }
