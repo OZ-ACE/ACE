@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ShopViewModel : ViewModelBase
 {
     private readonly ICurrencyService _currencyService;
@@ -44,8 +43,6 @@ public class ShopViewModel : ViewModelBase
         return CheckPurchasable(itemID) == PurchaseResult.Success;
     }
 
-
-
     // ── 재고 관리 ──
     private void InitStocks()
     {
@@ -67,7 +64,7 @@ public class ShopViewModel : ViewModelBase
         }
     }
 
-    /// <summary> 해당 아이템의 재고 기록이 세이브에 있는가 </summary>
+    // 해당 아이템의 재고 기록이 세이브에 있는가
     private bool IsStockRecorded(string itemID)
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
@@ -81,7 +78,7 @@ public class ShopViewModel : ViewModelBase
         return false;
     }
 
-    /// <summary> 현재 남은 재고 (기록 없으면 0) </summary>
+    // 현재 남은 재고 (기록 없으면 0)
     public int GetRemainStock(string itemID)
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
@@ -100,7 +97,7 @@ public class ShopViewModel : ViewModelBase
         return 0;
     }
 
-    /// <summary> 재고 1개 감소 </summary>
+    // 재고 1개 감소
     private void DecreaseStock(string itemID)
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
@@ -116,7 +113,7 @@ public class ShopViewModel : ViewModelBase
 
     // ── 구매 ──
 
-    /// <summary> 구매 가능 여부 판정 (실패 이유 반환) </summary>
+    // 구매 가능 여부 판정 (실패 이유 반환)
     public PurchaseResult CheckPurchasable(string itemID)
     {
         SupportItem item = GameDataManager.Inst.GetData<SupportItem>(itemID);
@@ -138,7 +135,7 @@ public class ShopViewModel : ViewModelBase
         return PurchaseResult.Success;
     }
 
-    /// <summary> 구매 시도. 성공 시 Gold 차감 + 재고 감소 + 인벤토리 추가 + 저장 </summary>
+    // 구매 시도. 성공 시 Gold 차감 + 재고 감소 + 인벤토리 추가 + 저장
     public PurchaseResult TryPurchase(string itemID)
     {
         PurchaseResult result = CheckPurchasable(itemID);
@@ -170,22 +167,24 @@ public class ShopViewModel : ViewModelBase
 
 
         GameManager.Inst.Services.QuestService.ReportProgress(QuestConditionType.PurchaseItem, itemID, 1);
-        SaveShop();
+        //SaveShop();
 
         Debug.Log($"[ShopViewModel] 구매 성공: {item.ItemName} ({item.Price}G) → 잔여 재고 {GetRemainStock(itemID)}");
         return PurchaseResult.Success;
     }
 
-    /// <summary> 상점 상태 저장 </summary>
-    private void SaveShop()
-    {
-        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-        if (player == null)
-        {
-            return;
-        }
-        SaveManager.Inst.RequestSaveData(player);
-    }
+    //// 상점 상태 저장
+    //private void SaveShop()
+    //{
+    //    PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+    //    if (player == null)
+    //    {
+    //        return;
+    //    }
+
+    //    SaveManager.Inst.RequestSaveData(player);
+    //}
 
     // ── 판매 ──
     // 아이템의 판매 가격 (구매가의 일정 비율)
@@ -245,10 +244,9 @@ public class ShopViewModel : ViewModelBase
         }
         OnPropertyChanged(nameof(CurrentGold));
 
-        SaveShop();
+        //SaveShop();
 
         Debug.Log($"[ShopViewModel] 판매 성공: {itemID} (+{sellPrice}G)");
         return SellResult.Success;
     }
-
 }

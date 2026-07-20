@@ -728,7 +728,7 @@ MonoBehaviour:
   _minY: -4
   _maxY: 4
   _zoomSpeed: 2
-  _minZoom: 3
+  _minZoom: 2
   _maxZoom: 12
   _cinemachineCamera: {fileID: 1863255570178840309}
 --- !u!1 &1489784017734347544

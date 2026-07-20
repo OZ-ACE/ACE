@@ -61,7 +61,7 @@ public class DayService
         }
 
         player.IsBattleDoneToday = true;
-        SaveManager.Inst.RequestSaveData(player);
+        //SaveManager.Inst.RequestSaveData(player);
 
         Debug.Log("[DayService] 오늘 전투 완료 표시");
     }

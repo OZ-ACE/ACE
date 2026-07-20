@@ -12,7 +12,8 @@
       "penalty_01",
       "penalty_02",
       "penalty_03"
-    ]
+    ],
+    "IsBasic": true
   },
   {
     "ID": "hero_02",
@@ -27,7 +28,8 @@
       "penalty_02",
       "penalty_03",
       "penalty_04"
-    ]
+    ],
+    "IsBasic": true
   },
   {
     "ID": "hero_03",
@@ -42,7 +44,8 @@
       "penalty_02",
       "penalty_03",
       "penalty_04"
-    ]
+    ],
+    "IsBasic": true
   },
   {
     "ID": "hero_04",
@@ -55,7 +58,8 @@
     "ProfileImage": null,
     "PenaltyID": [
       "penalty_04"
-    ]
+    ],
+    "IsBasic": false
   },
   {
     "ID": "hero_05",
@@ -68,7 +72,8 @@
     "ProfileImage": null,
     "PenaltyID": [
       "penalty_05"
-    ]
+    ],
+    "IsBasic": false
   },
   {
     "ID": "hero_06",
@@ -81,7 +86,8 @@
     "ProfileImage": null,
     "PenaltyID": [
       "penalty_06"
-    ]
+    ],
+    "IsBasic": false
   },
   {
     "ID": "hero_07",
@@ -94,6 +100,7 @@
     "ProfileImage": null,
     "PenaltyID": [
       "penalty_07"
-    ]
+    ],
+    "IsBasic": false
   }
 ]

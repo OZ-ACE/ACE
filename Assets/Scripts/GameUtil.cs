@@ -1,7 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public static class GameUtil
 {
+    public static long GenerateUniqueId()
+    {
+        return DateTime.UtcNow.Ticks;
+    }
+
     //유닛ID로 표시용 이름을 반환한다.
     public static string GetUnitDisplayName(string unitId)
     {
