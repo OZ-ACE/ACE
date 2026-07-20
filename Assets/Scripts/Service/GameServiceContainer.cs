@@ -19,6 +19,7 @@
 
     // 퀘스트 뷰모델 보관 서비스
     public QuestService QuestService { get; private set; }
+    public RoomAssignmentService RoomAssignmentService { get; private set; }
 
 
     // 영웅로스터 뷰모델 보관 서비스
@@ -33,6 +34,7 @@
         DayService = new DayService();
         SettlementService = new SettlementService(CurrencyService, DayService);
         QuestService = new QuestService(CurrencyService);
+        RoomAssignmentService = new RoomAssignmentService();
         RosterService = new RosterService();
     }
 

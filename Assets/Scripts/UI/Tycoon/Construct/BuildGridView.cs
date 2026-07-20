@@ -16,6 +16,7 @@ public class BuildGridView : ViewBase
     [SerializeField] private Color _ghostValidColor = new Color(0f, 1f, 0f, 0.5f);   // 배치 가능(초록)
     [SerializeField] private Color _ghostInvalidColor = new Color(1f, 0f, 0f, 0.5f); // 배치 불가(빨강)
     [SerializeField] private Color _placedColor = new Color(0.3f, 0.5f, 1f, 0.8f);   // 배치된 방(파랑)
+    [SerializeField] private Color _roomSelectColor = new Color(0f, 0.8f, 1f, 0.5f);
 
     [Header("방 프리팹 캐시")]
     private Dictionary<string, GameObject> _roomPrefabCache = new Dictionary<string, GameObject>();
@@ -89,6 +90,10 @@ public class BuildGridView : ViewBase
         {
             ApplySelectedRoom();
         }
+        else if (e.PropertyName == nameof(BuildGridViewModel.IsRoomSelectMode))
+        {
+            ApplyRoomSelectMode(_viewModel.IsRoomSelectMode);
+        }
     }
 
     private void ApplyBuildMode (bool isBuildMode)
@@ -107,6 +112,28 @@ public class BuildGridView : ViewBase
         {
             SetOverlayActive(false);
             HideGhost();
+        }
+    }
+
+    private void ApplyRoomSelectMode(bool isRoomSelectMode)
+    {
+        if (isRoomSelectMode == true)
+        {
+            if (_isOverlayCreated == false)
+            {
+                CreateGridOverlay();
+            }
+
+            SetOverlayActive(true);
+            RefreshRoomSelectionHighlight();
+            return;
+        }
+
+        RefreshRoomSelectionHighlight();
+
+        if (_viewModel.IsBuildMode == false)
+        {
+            SetOverlayActive(false);
         }
     }
 
@@ -616,7 +643,14 @@ public class BuildGridView : ViewBase
             return;
         }
 
-        _viewModel.HandleNormalClick(coord);
+        if (_viewModel.IsRoomSelectMode)
+        {
+            _viewModel.HandleRoomSelectionClick(coord);
+        }
+        else
+        {
+            _viewModel.HandleNormalClick(coord);
+        }
     }
 
 
@@ -658,5 +692,43 @@ public class BuildGridView : ViewBase
 
         _roomPrefabCache[cacheKey] = prefab;
         return prefab;
+    }
+
+    private void RefreshRoomSelectionHighlight()
+    {
+        foreach (KeyValuePair<GridCoord, SpriteRenderer> pair in _cellRenderers)
+        {
+            pair.Value.color = _normalColor;
+        }
+
+        if (_viewModel.IsRoomSelectMode == false)
+        {
+            return;
+        }
+
+        foreach (PlacedRoomData room in _viewModel.GetPlacedRooms())
+        {
+            if (_viewModel.IsSelectableRoom(room) == false)
+            {
+                continue;
+            }
+
+            RoomData roomData = GameDataManager.Inst.GetData<RoomData>(room.RoomId);
+
+            if (roomData == null)
+            {
+                continue;
+            }
+
+            List<GridCoord> occupiedCoords = _viewModel.GridSystem.GetOccupiedCoords(room.Origin, roomData.GetSize());
+
+            foreach (GridCoord coord in occupiedCoords)
+            {
+                if (_cellRenderers.TryGetValue(coord, out SpriteRenderer renderer))
+                {
+                    renderer.color = _roomSelectColor;
+                }
+            }
+        }
     }
 }
