@@ -606,6 +606,7 @@ public class BattleMainUI : UIBase
                 {
                     int roundCount = BattleManager.Inst.GetCurrentRound();
                     int rewardAmount = _viewModel.ApplyBattleReward(result, roundCount);
+                    _viewModel.UpdateHeroBattleParticipation(heroList);
                     GameManager.Inst.Services.DayService.MarkBattleDone();
                     _viewModel.AddBattleLog(result == BattleResult.Victory ? "전투 승리!" : "전투 패배...");
                     Panel_BattleResultPopup.OpenPopup(result, rewardAmount, roundCount);

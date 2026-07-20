@@ -230,6 +230,40 @@ public class BattleViewModel : ViewModelBase
         return rewardAmount;
     }
 
+    //전투에 참여한 영웅들의 누적 참여 횟수를 증가시킨다 (승패 무관, 세이브 반영은 하루 경과 시 일괄 처리 정책을 따름)
+    public void UpdateHeroBattleParticipation(List<BattleUnitModel> heroList)
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+        if (player == null)
+        {
+            return;
+        }
+
+        foreach (BattleUnitModel hero in heroList)
+        {
+            HeroProgressModel progress = FindOrCreateHeroProgress(player, hero.ID);
+            progress.BattleParticipateCount++;
+        }
+    }
+
+    //해당 영웅의 진행 데이터를 찾고, 없으면 새로 만들어 리스트에 추가한다
+    private HeroProgressModel FindOrCreateHeroProgress(PlayerModel player, string heroId)
+    {
+        foreach (HeroProgressModel progress in player.HeroProgressList)
+        {
+            if (progress.HeroId == heroId)
+            {
+                return progress;
+            }
+        }
+
+        HeroProgressModel newProgress = new HeroProgressModel();
+        newProgress.HeroId = heroId;
+        player.HeroProgressList.Add(newProgress);
+        return newProgress;
+    }
+
     //유닛의 행동 결과를 배틀 로그 문구로 변환한다
     private string BuildUnitActionLogMessage(BattleActionModel action)
     {
