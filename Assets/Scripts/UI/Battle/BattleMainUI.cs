@@ -70,6 +70,7 @@ public class BattleMainUI : UIBase
         BindViewModel(_viewModel);
         BindBattleUnitSpawner();
         ResetBattleView();
+        OpenRoster();
     }
 
     private void OnEnable()
@@ -81,6 +82,7 @@ public class BattleMainUI : UIBase
         }
 
         ResetBattleView();
+        OpenRoster();
     }
 
     //배틀 리셋
@@ -636,4 +638,23 @@ public class BattleMainUI : UIBase
         CancelBattleLoop();
         ObjectManager.Inst.ExitBattle();
     }
+
+    //배틀메인UI 진입시 로스터 자동 열기
+    private void OpenRoster()
+    {
+        if (_isBattleRunning)
+        {
+            return;
+        }
+        UIBase ui = UIManager.Inst.OpenRosterUI();
+        RosterUI rosterUI = ui as RosterUI;
+        if (rosterUI == null)
+        {
+            Debug.LogWarning("[BattleMainUI] RosterUI를 찾을 수 없습니다.");
+            return;
+        }
+        rosterUI.Initialize(OnRosterConfirmed);
+    }
+
+
 }
