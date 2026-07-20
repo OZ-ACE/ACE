@@ -8521,33 +8521,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4420078211431790988, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: Camera_Raycast
       value: 
       objectReference: {fileID: 4476748603401714830}
-    - target: {fileID: 4420078211431790988, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: Transform_SpawnRoot
       value: 
       objectReference: {fileID: 291035409296440918}
-    - target: {fileID: 4420078211431790988, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
-      propertyPath: _heroSpawnEntryList.Array.data[0].Scale
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4420078211431790988, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
-      propertyPath: _heroSpawnEntryList.Array.data[1].Scale
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4420078211431790988, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
-      propertyPath: _heroSpawnEntryList.Array.data[2].Scale
-      value: 2.5
-      objectReference: {fileID: 0}
     - target: {fileID: 7711888709231574003, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: m_Name
-      value: BattleUnitTestSpawner
+      value: BattleHeroSpawner
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 1604065789342568605, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
