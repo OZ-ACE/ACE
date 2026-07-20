@@ -126,6 +126,10 @@ public class HeroMovingAgent : MonoBehaviour
         {
             nextState = TycoonState.Gym;
         }
+        else if (state == ScheduleState.Sleep)
+        {
+            nextState = TycoonState.Idle;
+        }
 
         if (targetPos == Vector3.zero)
         {
@@ -187,7 +191,27 @@ public class HeroMovingAgent : MonoBehaviour
 
         foreach (PlacedRoomData data in placedRooms)
         {
-            if (data.RoomId.Contains($"{state}"))
+            bool isTargetRoom = false;
+
+            if (state == ScheduleState.Sleep)
+            {
+                if (data.RoomInstanceId == _heroModel.RoomInstanceID)
+                {
+                    if (data.RoomInstanceId == _heroModel.RoomInstanceID)
+                    {
+                        isTargetRoom = true;
+                    }
+                }
+            }
+            else
+            {
+                if (data.RoomId.Contains($"{state}"))
+                    {
+                    isTargetRoom = true;
+                }
+            }
+
+            if (isTargetRoom == true)
             {
                 Vector3 originWorld = _gridSystem.GetWorldPosition(data.Origin);
 

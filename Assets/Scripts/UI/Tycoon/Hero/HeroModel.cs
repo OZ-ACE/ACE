@@ -15,6 +15,7 @@ public class HeroModel
 
     private HeroStat _targetHeroStat;
 
+    public long RoomInstanceID {  get; set; }
     public ScheduleState[] HourlyStates { get; set; } = new ScheduleState[24];
 
     public Action OnUpdateSchedule;

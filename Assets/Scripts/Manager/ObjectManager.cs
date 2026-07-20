@@ -324,6 +324,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
 
         HeroModel heroModel = new HeroModel();
         heroModel.LoadHeroData(heroId);
+        heroModel.RoomInstanceID = roomInstanceId;
         movingAgent.InitHero(heroModel);
 
         _spawnHero[heroId] = movingAgent;
