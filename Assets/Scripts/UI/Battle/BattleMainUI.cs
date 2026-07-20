@@ -37,6 +37,10 @@ public class BattleMainUI : UIBase
     [Header("나가기")]
     [SerializeField] private Button Button_Exit;
 
+    [Header("도움말")]
+    [SerializeField] private Button Button_Help;
+    [SerializeField] private HelpGuideUI Panel_HelpGuide;
+
     private const int ReinforceEnergyCost = 1; //temp
     private const int ChangeUnitEnergyCost = 2; //temp
     private const int HealUnitEnergyCost = 2; //temp
@@ -140,6 +144,7 @@ public class BattleMainUI : UIBase
         Button_EndTurn.onClick.AddListener(OnClickEndTurn);
         Button_StartBattle.onClick.AddListener(OnClickStartBattle);
         Button_Exit.onClick.AddListener(OnClickExit);
+        Button_Help.onClick.AddListener(OnClickHelp);
 
         Panel_SupportItemPopup.OnItemApplied += HandleSupportItemApplied;
         Panel_BattleResultPopup.OnConfirmed += HandleBattleResultConfirmed;
@@ -186,6 +191,7 @@ public class BattleMainUI : UIBase
             Button_EndTurn.onClick.RemoveListener(OnClickEndTurn);
             Button_StartBattle.onClick.RemoveListener(OnClickStartBattle);
             Button_Exit.onClick.RemoveListener(OnClickExit);
+            Button_Help.onClick.RemoveListener(OnClickHelp);
 
             Panel_SupportItemPopup.OnItemApplied -= HandleSupportItemApplied;
             Panel_BattleResultPopup.OnConfirmed -= HandleBattleResultConfirmed;
@@ -332,6 +338,11 @@ public class BattleMainUI : UIBase
     private void OnClickEndTurn()
     {
         _viewModel.NotifyInterventionEnded();
+    }
+
+    private void OnClickHelp()
+    {
+        Panel_HelpGuide.ToggleGuide();
     }
 
     //개입 버튼을 눌렀을 때 대상이 선택돼 있으면 그 대상으로 바로 진행한다. 대상이 없으면 안내만 하고 끝낸다
