@@ -5,11 +5,15 @@
     public bool IsAdmitted { get; private set; }
     public bool IsExpired { get; private set; }
 
-    public AdmissionCandidateModel(int candidateId, string heroId)
+    public AdmissionCandidateModel(int candidateId, string heroId) : this(candidateId, heroId, false)
+    {
+    }
+
+    public AdmissionCandidateModel(int candidateId, string heroId, bool isAdmitted)
     {
         CandidateId = candidateId;
         HeroId = heroId;
-        IsAdmitted = false;
+        IsAdmitted = isAdmitted;
         IsExpired = false;
     }
 
