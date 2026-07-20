@@ -110,6 +110,7 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
         _candidateDict.Add(candidateModel.CandidateId, candidateModel);
     }
 
+
     private AdmissionCandidateModel GetCandidateByHeroId(string heroId)
     {
         foreach (KeyValuePair<int, AdmissionCandidateModel> pair in _candidateDict)
@@ -147,4 +148,5 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
 
         return result;
     }
+
 }

@@ -26,7 +26,9 @@ public enum UIType
     OfficeUI,
     ShopUI,
     SettlementUI,
-    ScheduleUI
+    ScheduleUI,
+    RosterUI
+
 }
 
 public static class UIExtension
@@ -196,5 +198,13 @@ public static class UIExtension
     public static void CloseScheduleUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.ScheduleUI);
+    }
+    public static UIBase OpenRosterUI(this UIManager uiManager)
+    {
+        return uiManager.OpenUI(UIRootType.Popup, UIType.RosterUI);
+    }
+    public static void CloseRosterUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.RosterUI);
     }
 }

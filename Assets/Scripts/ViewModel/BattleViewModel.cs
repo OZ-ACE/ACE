@@ -10,6 +10,8 @@ public class BattleViewModel : ViewModelBase
     public List<string> BattleLogs = new List<string>();
     public List<BattleActionModel> ActionQueue = new List<BattleActionModel>();
 
+    public event Action<BattleUnitModel> EnemyHpChanged;
+
     private UniTaskCompletionSource _interventionCompletionSource;
 
     public List<BattleUnitModel> GetBattleTurnOrder(List<string> heroIds, List<string> enemyIds)
@@ -574,6 +576,11 @@ public class BattleViewModel : ViewModelBase
         if (target.CurrentHp < 0)
         {
             target.CurrentHp = 0;
+        }
+
+        if (target.IsHero == false)
+        {
+            EnemyHpChanged?.Invoke(target);
         }
 
         Debug.Log($"[BattleViewModel] {target.ID} 피격, 데미지 {power}, 남은 HP {target.CurrentHp}");

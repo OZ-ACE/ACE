@@ -20,6 +20,10 @@
     // 퀘스트 뷰모델 보관 서비스
     public QuestService QuestService { get; private set; }
 
+
+    // 영웅로스터 뷰모델 보관 서비스
+    public RosterService RosterService { get; private set; }
+
     public void Initialize()
     {
         CurrencyService = new CurrencyService();
@@ -29,6 +33,7 @@
         DayService = new DayService();
         SettlementService = new SettlementService(CurrencyService, DayService);
         QuestService = new QuestService(CurrencyService);
+        RosterService = new RosterService();
     }
 
     public void Release()
