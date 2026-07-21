@@ -63,6 +63,10 @@ public class BattleMainUI : UIBase
     private bool _isBattleRunning;
     private CancellationTokenSource _battleLoopCts;
 
+    //도움말 패널이 닫힌 뒤 전투 루프에 넘겨줄 대기 데이터
+    private List<BattleUnitModel> _pendingTurnOrder;
+    private List<BattleUnitModel> _pendingHeroList;
+    private List<BattleUnitModel> _pendingEnemyList;
 
     private const int MaxRoundSafetyLimit = 15; //혹시 모를 무한루프 방지용 라운드 상한
 
@@ -94,6 +98,7 @@ public class BattleMainUI : UIBase
     {
         CancelBattleLoop();
         Panel_BattleResultPopup.ClosePopup();
+        Panel_HelpGuide.CloseGuideSilently();
         _isBattleRunning = false;
         _selectedTargetUnitId = null;
         _pendingActionResult = null;
@@ -594,13 +599,30 @@ public class BattleMainUI : UIBase
 
         _enemySpawner.SpawnEnemies(enemyList);
 
+        //도움말을 먼저 띄우고, 닫히는 시점에 전투 루프를 시작한다
+        _pendingTurnOrder = turnOrder;
+        _pendingHeroList = heroList;
+        _pendingEnemyList = enemyList;
+        Panel_HelpGuide.ShowGuideOnBattleStart(StartBattleLoopAfterGuide);
+    }
+
+    //도움말이 닫힌 뒤 실제 전투 루프를 시작한다
+    private void StartBattleLoopAfterGuide()
+    {
+        if (_pendingTurnOrder == null)
+        {
+            return;
+        }
+
         CancelBattleLoop();
         _battleLoopCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         _isBattleRunning = true;
-        RunBattleLoopAsync(turnOrder, heroList, enemyList, _battleLoopCts.Token).Forget();
+        RunBattleLoopAsync(_pendingTurnOrder, _pendingHeroList, _pendingEnemyList, _battleLoopCts.Token).Forget();
+
+        _pendingTurnOrder = null;
+        _pendingHeroList = null;
+        _pendingEnemyList = null;
     }
-
-
 
 
 
