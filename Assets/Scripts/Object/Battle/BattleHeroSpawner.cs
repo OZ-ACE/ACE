@@ -11,6 +11,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     {
         public string HeroId;
         public GameObject Prefab;
+        public RuntimeAnimatorController BattleAnimatorController;
         public float Scale;
     }
 
@@ -155,6 +156,15 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         GameObject spawnedObj = Instantiate(entry.Prefab, spawnPosition, Quaternion.Euler(0f, 100f, 0f));
         float scale = entry.Scale > 0f ? entry.Scale : 1f; //인스펙터 미입력(0)이면 원본 크기 유지
         spawnedObj.transform.localScale = new Vector3(scale, scale, scale);
+
+        Animator animator = spawnedObj.GetComponentInChildren<Animator>(true);
+
+        if (animator != null && entry.BattleAnimatorController != null)
+        {
+            animator.runtimeAnimatorController = entry.BattleAnimatorController;
+            animator.applyRootMotion = false;
+        }
+
         BattleUnitClickHandler clickHandler = spawnedObj.GetComponent<BattleUnitClickHandler>();
         if (clickHandler == null)
         {

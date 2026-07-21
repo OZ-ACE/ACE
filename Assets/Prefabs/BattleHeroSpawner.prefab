@@ -47,12 +47,17 @@ MonoBehaviour:
   _heroSpawnEntryList:
   - HeroId: hero_01
     Prefab: {fileID: 163111264663608575, guid: 5e9a0762e23645a4e8ed8d611945ea04, type: 3}
+    BattleAnimatorController: {fileID: 22100000, guid: 4291df536230974429ad1ffb45e64ae4, type: 2}
     Scale: 3.5
   - HeroId: hero_02
     Prefab: {fileID: 7993281141073697287, guid: e9ed00b03569c1c4cafa60f1ab2490d7, type: 3}
+    BattleAnimatorController: {fileID: 22100000, guid: 11be89a1f162a9b4dbdb7432e8dac070, type: 2}
     Scale: 2.5
   - HeroId: hero_03
     Prefab: {fileID: 387497188889260216, guid: 6dd0074f4a9502f459dbf344bee96634, type: 3}
+    BattleAnimatorController: {fileID: 22100000, guid: e8f3a6e6667b2fa42a558c74c4f50b2e, type: 2}
     Scale: 2.5
   Transform_SpawnRoot: {fileID: 0}
   Camera_Raycast: {fileID: 0}
+  Prefab_HeroHpBar: {fileID: 0}
+  _hpBarWorldOffset: {x: 0, y: 1.2, z: 0}
