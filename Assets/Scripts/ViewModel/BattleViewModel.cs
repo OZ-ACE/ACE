@@ -15,6 +15,9 @@ public class BattleViewModel : ViewModelBase
     public event Action<BattleUnitModel> UnitHit;
     public event Action<BattleUnitModel> UnitDied;
 
+    private const int AttackAnimationDelayMilliseconds = 800;
+    private const int HitAnimationDelayMilliseconds = 800;
+
     private UniTaskCompletionSource _interventionCompletionSource;
 
     public List<BattleUnitModel> GetBattleTurnOrder(List<string> heroIds, List<string> enemyIds)
@@ -146,7 +149,8 @@ public class BattleViewModel : ViewModelBase
 
         await WaitForInterventionEndAsync(token);
 
-        ResolveActionQueue(heroList, enemyList);
+        await ResolveActionQueueAsync(heroList, enemyList, token);
+
         RefreshActionQueue();
     }
 
@@ -281,10 +285,12 @@ public class BattleViewModel : ViewModelBase
     }
 
     //개입 턴이 끝난 뒤 큐를 순서대로 꺼내며 실제 효과를 적용한다
-    private void ResolveActionQueue(List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList)
+    private async UniTask ResolveActionQueueAsync(List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList, CancellationToken token)
     {
         while (BattleManager.Inst.HasNextAction())
         {
+            token.ThrowIfCancellationRequested();
+            
             BattleActionModel action = BattleManager.Inst.GetNextAction();
 
             if (action.IsPlayerAction)
@@ -304,7 +310,7 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
-            ResolveAction(action, heroList, enemyList);
+            await ResolveActionAsync(action, heroList, enemyList, token);
         }
     }
 
@@ -336,7 +342,7 @@ public class BattleViewModel : ViewModelBase
     }
 
     //액션 하나를 개입 결과에 따라 처리한다
-    private void ResolveAction(BattleActionModel action, List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList)
+    private async UniTask ResolveActionAsync(BattleActionModel action, List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList, CancellationToken token)
     {
         string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
 
@@ -350,7 +356,12 @@ public class BattleViewModel : ViewModelBase
 
         if (action.Result == BattleActionResult.Reinforce)
         {
-            ResolveReinforceAction(action, heroList, enemyList);
+            await ResolveReinforceActionAsync(
+                action, 
+                heroList, 
+                enemyList,
+                token);
+
             return;
         }
 
@@ -360,7 +371,11 @@ public class BattleViewModel : ViewModelBase
             return;
         }
 
-        bool isDamageApplied = ApplyActionDamage(action, heroList, enemyList);
+        bool isDamageApplied = await ApplyActionDamageAsync(
+            action, 
+            heroList, 
+            enemyList,
+            token);
 
         if (action.ActionType == ActionType.Attack && isDamageApplied == false)
         {
@@ -382,7 +397,7 @@ public class BattleViewModel : ViewModelBase
     }
 
     //지원하기 개입 처리 - 페널티로 막혔던 원래 스킬을 되살려서 실제로 적용한다
-    private void ResolveReinforceAction(BattleActionModel action, List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList)
+    private async UniTask ResolveReinforceActionAsync(BattleActionModel action, List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList, CancellationToken token)
     {
         BattleUnitModel unit = action.Unit;
         string unitName = GameUtil.GetUnitDisplayName(unit.ID);
@@ -421,7 +436,11 @@ public class BattleViewModel : ViewModelBase
             return;
         }
 
-        bool isDamageApplied = ApplyActionDamage(revivedAction, heroList, enemyList);
+        bool isDamageApplied = await ApplyActionDamageAsync(
+            revivedAction, 
+            heroList, 
+            enemyList,
+            token);
 
         if (revivedAction.ActionType == ActionType.Attack && isDamageApplied == false)
         {
@@ -449,10 +468,11 @@ public class BattleViewModel : ViewModelBase
     }
 
     //액션 결과를 대상(들)의 HP에 실제로 반영한다. 공격 타입 스킬에만 적용
-    private bool ApplyActionDamage(
+    private async UniTask<bool> ApplyActionDamageAsync(
         BattleActionModel action,
         List<BattleUnitModel> heroList,
-        List<BattleUnitModel> enemyList)
+        List<BattleUnitModel> enemyList,
+        CancellationToken token)
     {
         if (action.ActionType != ActionType.Attack)
         {
@@ -471,7 +491,17 @@ public class BattleViewModel : ViewModelBase
             }
 
             UnitAttackStarted?.Invoke(action.Unit);
+
+            await UniTask.Delay(
+                AttackAnimationDelayMilliseconds,
+                cancellationToken: token);
+                
             ApplyDamageToUnit(action.Target, power);
+
+            await UniTask.Delay(
+                HitAnimationDelayMilliseconds,
+                cancellationToken: token);
+
             return true;
         }
 
@@ -486,10 +516,18 @@ public class BattleViewModel : ViewModelBase
 
             UnitAttackStarted?.Invoke(action.Unit);
 
+            await UniTask.Delay(
+                AttackAnimationDelayMilliseconds,
+                cancellationToken: token);
+
             foreach (BattleUnitModel target in action.TargetList)
             {
                 ApplyDamageToUnit(target, power);
             }
+
+            await UniTask.Delay(
+                HitAnimationDelayMilliseconds,
+                cancellationToken: token);
 
             return true;
         }
