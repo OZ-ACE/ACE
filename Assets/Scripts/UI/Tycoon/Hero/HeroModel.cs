@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class HeroModel
 {
@@ -10,8 +11,8 @@ public class HeroModel
     public string Age;
     public string Skill;
 
-    public int Affection;
-    public int Satisfaction;
+    private int _affection;
+    private int _satisfaction;
 
     private HeroStat _targetHeroStat;
 
@@ -19,6 +20,47 @@ public class HeroModel
     public ScheduleState[] HourlyStates { get; set; } = new ScheduleState[24];
 
     public Action OnUpdateSchedule;
+    public Action OnStatChanged;
+
+    public HeroModel()
+    {
+        for (int i = 0; i < 24; i++)
+        {
+            HourlyStates[i] = ScheduleState.Sleep;
+        }
+    }
+
+    public int Affection
+    {
+        get => _affection;
+        set
+        {
+            int clampedValue = Mathf.Clamp(value, 0, 100);
+
+            if (_affection != clampedValue)
+            {
+                _affection = clampedValue;
+                SaveHeroProgress();
+                OnStatChanged?.Invoke();
+            }
+        }
+    }
+
+    public int Satisfaction
+    {
+        get => _satisfaction;
+        set
+        {
+            int clampedValue = Mathf.Clamp(value, 0, 100);
+
+            if (_satisfaction != clampedValue)
+            {
+                _satisfaction = clampedValue;
+                SaveHeroProgress();
+                OnStatChanged?.Invoke();
+            }
+        }
+    }
 
     public void LoadHeroData(string heroID)
     {
@@ -55,8 +97,8 @@ public class HeroModel
             playerModel.HeroStats.Add(_targetHeroStat);
         }
 
-        Affection = _targetHeroStat.Affection;
-        Satisfaction = _targetHeroStat.Satisfaction;
+        _affection = _targetHeroStat.Affection;
+        _satisfaction = _targetHeroStat.Satisfaction;
     }
 
     public void SaveHeroProgress()

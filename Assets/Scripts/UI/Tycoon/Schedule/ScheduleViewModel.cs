@@ -52,11 +52,6 @@ public class ScheduleViewModel : ViewModelBase
 
         for (int i = 0; i < 24; i++)
         {
-            if (_hero.HourlyStates[i] == ScheduleState.None)
-            {
-                _hero.HourlyStates[i] = ScheduleState.Sleep;
-            }
-
             _editingStates[i] = _hero.HourlyStates[i];
             OnPropertyChanged($"Hour_{i}");
             OnPropertyChanged($"VisualType_{i}");

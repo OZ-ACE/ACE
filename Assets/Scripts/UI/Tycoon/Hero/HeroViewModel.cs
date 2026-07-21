@@ -24,29 +24,27 @@ public class HeroViewModel : ViewModelBase
     private string _skill;
     public string Skill => _skill;
 
-    private int _affection;
     public int Affection
     {
-        get => _affection;
+        get => _model.Affection;
         set
         {
-            if (_affection != value)
+            if (_model.Affection != value)
             {
-                _model.Affection = Mathf.Clamp(value, 0, 100);
+                _model.Affection = value;
                 OnPropertyChanged(nameof(Affection));
             }
         }
     }
 
-    private int _satisfaction;
     public int Satisfaction
     {
-        get => _satisfaction;
+        get => _model.Satisfaction;
         set
         {
-            if (_satisfaction != value)
+            if (_model.Satisfaction != value)
             {
-                _model.Satisfaction = Mathf.Clamp(value, 0, 100);
+                _model.Satisfaction = value;
                 OnPropertyChanged(nameof(Satisfaction));
             }
         }
@@ -68,6 +66,11 @@ public class HeroViewModel : ViewModelBase
 
     public void Init(HeroModel model)
     {
+        if (_model != null)
+        {
+            _model.OnStatChanged -= HandleStatChanged;
+        }
+
         _model = model;
 
         _heroID = _model.HeroID;
@@ -76,11 +79,16 @@ public class HeroViewModel : ViewModelBase
         _diseaseName = _model.DiseaseName;
         _age = _model.Age;
         _skill = _model.Skill;
-        
-        _affection = _model.Affection;
-        _satisfaction = _model.Satisfaction;
+
+        _model.OnStatChanged += HandleStatChanged;
 
         _isSelect = false;
+    }
+
+    private void HandleStatChanged()
+    {
+        OnPropertyChanged(nameof(Affection));
+        OnPropertyChanged(nameof(Satisfaction));
     }
 
     public void InvokeOnceOnInit()
@@ -93,21 +101,5 @@ public class HeroViewModel : ViewModelBase
         OnPropertyChanged(nameof(Satisfaction));
         OnPropertyChanged(nameof(Affection));
         OnPropertyChanged(nameof(IsSelect));
-    }
-
-    public void AddAffection(int amount)
-    {
-        Affection += amount;
-
-        _model.Affection = Affection;
-        _model.SaveHeroProgress();
-    }
-
-    public void AddSatisfaction(int amount)
-    {
-        Satisfaction += amount;
-
-        _model.Satisfaction = Satisfaction;
-        _model.SaveHeroProgress();
     }
 }

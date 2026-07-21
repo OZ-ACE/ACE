@@ -28,7 +28,8 @@ public enum UIType
     ShopUI,
     SettlementUI,
     ScheduleUI,
-    RosterUI
+    RosterUI,
+    InfoText
 }
 
 public static class UIExtension
@@ -246,5 +247,20 @@ public static class UIExtension
         popup.OpenNotice(message, onConfirm);
 
         return popup;
+    }
+
+    public static void OpenInfoText(this UIManager uiManager, string message)
+    {
+        UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.InfoText);
+
+        if (uiBase is InfoText info)
+        {
+            info.ShowMessage(message).Forget();
+        }
+    }
+
+    public static void CloseInfoText(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.InfoText);
     }
 }

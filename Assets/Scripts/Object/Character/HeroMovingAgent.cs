@@ -138,6 +138,8 @@ public class HeroMovingAgent : MonoBehaviour
         if (targetPos == Vector3.zero)
         {
             Debug.Log($"방 없음 {_heroModel.Name}");
+            ApplyPenalty(state, 3, 0);
+
             ChangeState(TycoonState.Idle);
             return;
         }
@@ -145,6 +147,8 @@ public class HeroMovingAgent : MonoBehaviour
         if (IsPathInvalid(targetPos))
         {
             Debug.Log($"끊어진 길 {_heroModel.Name}");
+            ApplyPenalty(state,0, 3);
+
             if (Agent_Hero.isOnNavMesh)
             {
                 Agent_Hero.ResetPath();
@@ -157,6 +161,35 @@ public class HeroMovingAgent : MonoBehaviour
         }
 
         StartMoving(targetPos, nextState).Forget();
+    }
+
+    private void ApplyPenalty(ScheduleState state, int penaltyAffection, int penaltySatisfaction)
+    {
+        _heroModel.Affection = Mathf.Max(0, _heroModel.Affection - penaltyAffection);
+        _heroModel.Satisfaction = Mathf.Max(0, _heroModel.Satisfaction - penaltySatisfaction);
+
+        _heroModel.SaveHeroProgress();
+
+        string heroName = _heroModel.Name;
+        string actionName = GetActionText(state);
+        string property = penaltyAffection == 0 ? "만족도" : "호감도";
+        int penalty = penaltyAffection == 0 ? penaltySatisfaction : penaltyAffection;
+        string text = $"{heroName}이(가) {actionName}을(를) 수행할 수 있는 방이 없습니다.\n{property}가 -{penalty} 하락합니다.";
+
+        UIManager.Inst.OpenInfoText(text);
+    }
+
+    private string GetActionText(ScheduleState state)
+    {
+        switch (state)
+        {
+            case ScheduleState.Sun: return "일광욕";
+            case ScheduleState.Sleep: return "수면";
+            case ScheduleState.Shower: return "샤워";
+            case ScheduleState.Rest: return "휴식";
+            case ScheduleState.Gym: return "운동";
+            default: return "활동";
+        }
     }
 
     private void LeaveCurrentRoom()

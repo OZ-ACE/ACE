@@ -31,6 +31,11 @@ public class HeroSlot : MonoBehaviour
     private HeroViewModel _heroVM;
     private string _heroID;
 
+    private void Awake()
+    {
+        Button_Slot.onClick.AddListener(OnClickSlot);
+    }
+
     private void OnEnable()
     {
         GameManager.Inst.Services.DayService.OnChangeDay += OnDayChanged;
@@ -49,12 +54,16 @@ public class HeroSlot : MonoBehaviour
 
     public void InitSlot(HeroViewModel viewModel)
     {
-        _heroVM = viewModel;
-        _heroVM.PropertyChanged += OnPropertyChanged_View;
+        if (_heroVM != null)
+        {
+            _heroVM.PropertyChanged -= OnPropertyChanged_View;
+            _heroVM = null;
+        }
 
+        _heroVM = viewModel;
         _heroID = _heroVM.HeroID;
 
-        Button_Slot.onClick.AddListener(OnClickSlot);
+        _heroVM.PropertyChanged += OnPropertyChanged_View;
         _heroVM.InvokeOnceOnInit();
     }
 
@@ -65,7 +74,11 @@ public class HeroSlot : MonoBehaviour
 
     private void OnDestroy()
     {
-        _heroVM.PropertyChanged -= OnPropertyChanged_View;
+        if (_heroVM != null)
+        {
+            _heroVM.PropertyChanged -= OnPropertyChanged_View;
+            _heroVM = null;
+        }
     }
 
     private void OnPropertyChanged_View(object sender, PropertyChangedEventArgs e)
