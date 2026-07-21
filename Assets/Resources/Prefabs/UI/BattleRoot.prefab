@@ -8526,9 +8526,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4476748603401714830}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: Prefab_HeroHpBar
+      value: 
+      objectReference: {fileID: 3777629281522864661, guid: 7290bf7eaf5cfb64792bbadb92a9002c, type: 3}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: Transform_SpawnRoot
       value: 
       objectReference: {fileID: 291035409296440918}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _hpBarWorldOffset.y
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.size
       value: 5

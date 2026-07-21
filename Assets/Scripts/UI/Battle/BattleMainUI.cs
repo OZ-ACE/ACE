@@ -27,6 +27,9 @@ public class BattleMainUI : UIBase
     [SerializeField] private Button Button_HealUnit;
     [SerializeField] private Button Button_ChangeUnit;
     [SerializeField] private Button Button_EndTurn;
+    [SerializeField] private TextMeshProUGUI Text_ReinforceEnergyCost;
+    [SerializeField] private TextMeshProUGUI Text_HealUnitEnergyCost;
+    [SerializeField] private TextMeshProUGUI Text_ChangeUnitEnergyCost;
 
     [Header("지원 아이템 팝업")]
     [SerializeField] private SupportItemPopupUI Panel_SupportItemPopup;
@@ -77,6 +80,7 @@ public class BattleMainUI : UIBase
         _viewModel = new BattleViewModel();
         BindViewModel(_viewModel);
         BindBattleUnitSpawner();
+        SetActionEnergyCostTexts();
         ResetBattleView();
         OpenRoster();
     }
@@ -143,7 +147,7 @@ public class BattleMainUI : UIBase
     private void BindViewModel(BattleViewModel viewModel)
     {
         _viewModel.PropertyChanged += OnPropertyChanged_View;
-        _viewModel.EnemyHpChanged += OnEnemyHpChanged;
+        _viewModel.UnitHpChanged += OnUnitHpChanged;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
@@ -175,14 +179,24 @@ public class BattleMainUI : UIBase
         _viewModel.AddBattleLog($"{unitName} 유닛이 선택되었습니다.");
     }
 
-    private void OnEnemyHpChanged(BattleUnitModel enemyUnit)
+    private void OnUnitHpChanged(BattleUnitModel unit)
     {
-        if (_enemySpawner == null)
+        if (unit == null)
         {
             return;
         }
-
-        _enemySpawner.RefreshEnemyView(enemyUnit);
+        if (unit.IsHero)
+        {
+            if (BattleHeroSpawner.Inst != null)
+            {
+                BattleHeroSpawner.Inst.RefreshHeroView(unit);
+            }
+            return;
+        }
+        if (_enemySpawner != null)
+        {
+            _enemySpawner.RefreshEnemyView(unit);
+        }
     }
 
     private void OnDestroy()
@@ -190,7 +204,7 @@ public class BattleMainUI : UIBase
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnPropertyChanged_View;
-            _viewModel.EnemyHpChanged -= OnEnemyHpChanged;
+            _viewModel.UnitHpChanged -= OnUnitHpChanged;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
@@ -324,6 +338,24 @@ public class BattleMainUI : UIBase
             color.a = i < currentEnergy ? 1f : DimmedEnergyAlpha;
             Image_EnergySlotList[i].color = color;
         }
+    }
+
+    //각 개입 액션 버튼에 소모 에너지를 표시한다. 상수 값을 그대로 읽으므로 밸런싱으로 수치가 바뀌어도 화면과 어긋나지 않는다
+    private void SetActionEnergyCostTexts()
+    {
+        SetEnergyCostText(Text_ReinforceEnergyCost, ReinforceEnergyCost);
+        SetEnergyCostText(Text_HealUnitEnergyCost, HealUnitEnergyCost);
+        SetEnergyCostText(Text_ChangeUnitEnergyCost, ChangeUnitEnergyCost);
+    }
+
+    private void SetEnergyCostText(TextMeshProUGUI targetText, int energyCost)
+    {
+        if (targetText == null)
+        {
+            return;
+        }
+
+        targetText.text = $"에너지 {energyCost}";
     }
 
     private void OnClickReinforce()
@@ -598,6 +630,8 @@ public class BattleMainUI : UIBase
         }
 
         _enemySpawner.SpawnEnemies(enemyList);
+        BattleHeroSpawner.Inst.InitializeHeroViews(heroList);   //영웅 HP바 초기값 세팅
+
 
         //도움말을 먼저 띄우고, 닫히는 시점에 전투 루프를 시작한다
         _pendingTurnOrder = turnOrder;

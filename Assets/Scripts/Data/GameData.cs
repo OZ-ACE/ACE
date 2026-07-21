@@ -37,6 +37,7 @@ public class EnemyData : GameDataBase
 {
     public string EnemyName;
     public string EnemyNameEn;
+    public string ProfileImage;
 }
 
 //영웅 전투 스탯 데이터
