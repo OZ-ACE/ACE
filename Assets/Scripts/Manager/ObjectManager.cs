@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.AI;
 
 public class ObjectManager : SingletonBase<ObjectManager>
 {
@@ -168,7 +169,8 @@ public class ObjectManager : SingletonBase<ObjectManager>
         switch (type)
         {
             case OfficeObjectType.NextDay:
-                if (GameManager.Inst.Services.DayService.IsAdvanceable() == false)
+                DayService dayService = GameManager.Inst.Services.DayService;
+                if (dayService.CurrentDay != 1 && dayService.IsAdvanceable() == false)
                 {
                     Debug.Log("[ObjectManager] 오늘 전투를 마쳐야 다음날로 넘어갈 수 있음");
                     return;
@@ -304,27 +306,61 @@ public class ObjectManager : SingletonBase<ObjectManager>
         Debug.Log("[ObjectManager] 배경 생성 완료");
     }
 
-
-
-
-
-    ////////////////////////////////////////
-
-    // 테스트용 임시 메서드
-    public async UniTask SpawnHero(HeroModel heroModel)
+    public async UniTask SpawnHero(string heroId, long roomInstanceId)
     {
-        if (_spawnHero.ContainsKey(heroModel.HeroID))
+        var buildService = GameManager.Inst.Services.BuildService;
+        BuildGridViewModel buildVM = buildService.GetBuildGridViewModel();
+
+        List<PlacedRoomData> placedRooms = buildVM.GetPlacedRooms();
+        PlacedRoomData targetRoomData = null;
+
+        for (int i = 0; i < placedRooms.Count; i++)
         {
-            return;
+            if (placedRooms[i] != null && placedRooms[i].RoomInstanceId == roomInstanceId)
+            {
+                targetRoomData = placedRooms[i];
+                break;
+            }
         }
 
-        GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroModel.HeroID}");
-        _hero = prefab;
+        GridSystem gridSystem = buildVM.GridSystem;
+        Vector3 spawnPosition = gridSystem.GetWorldPosition(targetRoomData.Origin);
+
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(targetRoomData.RoomId);
+        if (roomData != null)
+        {
+            Vector2Int size = roomData.GetSize();
+            float offsetX = (size.x - 1) * 0.5f * gridSystem.CellWidth;
+            float offsetY = (size.y - 1) * 0.5f * gridSystem.CellHeight;
+
+            spawnPosition = new Vector3(spawnPosition.x + offsetX, spawnPosition.y + offsetY, spawnPosition.z);
+        }
+
+        GameObject prefab = await ResourceManager.Inst.InstantiateAsync($"Prefabs/Character/Hero/{heroId}");
+
+        if (prefab.TryGetComponent<NavMeshAgent>(out var agent))
+        {
+            agent.enabled = false;
+        }
+
+        prefab.transform.position = spawnPosition;
+        prefab.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+
+        if (agent != null)
+        {
+            agent.enabled = true;
+            agent.Warp(spawnPosition);
+            agent.SetDestination(spawnPosition);
+        }
 
         HeroMovingAgent movingAgent = prefab.GetComponent<HeroMovingAgent>();
+
+        HeroModel heroModel = new HeroModel();
+        heroModel.LoadHeroData(heroId);
+        heroModel.RoomInstanceID = roomInstanceId;
         movingAgent.InitHero(heroModel);
 
-        _spawnHero[heroModel.HeroID] = movingAgent;
+        _spawnHero[heroId] = movingAgent;
     }
 
     public HeroMovingAgent GetSpawnAgent(string heroID)

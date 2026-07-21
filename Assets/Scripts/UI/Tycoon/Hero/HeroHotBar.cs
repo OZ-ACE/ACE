@@ -58,7 +58,7 @@ public class HeroHotBar : MonoBehaviour
 
         if (uiBase is ScheduleUI scheduleUI)
         {
-            scheduleUI.OpenSchedule(_targetVM);
+            scheduleUI.OpenSchedule(_targetVM, GameManager.Inst.Services.DayService.CurrentHour);
         }
     }
 }

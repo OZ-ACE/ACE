@@ -24,7 +24,7 @@ public class DayService
         get
         {
             PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-            return (player !=null) ? player.Day : 1;
+            return (player != null) ? player.Day : 1;
         }
     }
 
@@ -36,7 +36,6 @@ public class DayService
             return (player != null) && player.IsBattleDoneToday;
         }
     }
-
 
     // 메서드
 
@@ -61,7 +60,6 @@ public class DayService
         }
 
         player.IsBattleDoneToday = true;
-        //SaveManager.Inst.RequestSaveData(player);
 
         Debug.Log("[DayService] 오늘 전투 완료 표시");
     }
@@ -75,7 +73,9 @@ public class DayService
             return false;
         }
 
-        if (player.IsBattleDoneToday == false)
+        EvaluateHeroSchedule();
+
+        if (CurrentDay != 1 && player.IsBattleDoneToday == false)
         {
             Debug.Log("[DayService] 오늘 전투 마쳐야 함");
             return false;
@@ -83,7 +83,13 @@ public class DayService
 
         player.Day++;
         player.IsBattleDoneToday = false;
+
         SaveManager.Inst.RequestSaveData(player);
+
+        _currentHour = 0;
+        _time = 0f;
+
+        StartTimer();
 
         if (OnChangeDay != null)
         {
@@ -129,5 +135,18 @@ public class DayService
         }
 
         OnChangeHour?.Invoke(_currentHour);
+    }
+
+    private void EvaluateHeroSchedule()
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+        foreach (HeroStat heroStat in player.HeroStats)
+        {
+            HeroModel heroModel = new HeroModel();
+            heroModel.LoadHeroData(heroStat.HeroID);
+
+            ScheduleEvaluator.EvaluateDailySchedule(heroModel);
+        }
     }
 }

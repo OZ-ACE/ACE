@@ -44,10 +44,16 @@ public class HeroUI : UIBase
         _activeSlots.Clear();
 
         PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
+        RoomAssignmentService roomService = GameManager.Inst.Services.RoomAssignmentService;
 
         foreach (var hero in playerModel.HeroStats)
         {
             string currentHero = hero.HeroID;
+
+            if (roomService != null && roomService.IsHeroAssigned(currentHero) == false)
+            {
+                continue;
+            }
 
             HeroModel targetModel = null;
             var spawnedAgent = ObjectManager.Inst.GetSpawnAgent(currentHero);

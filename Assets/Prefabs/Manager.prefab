@@ -1237,6 +1237,7 @@ MonoBehaviour:
   Prefab_BuildGridView: {fileID: 655304303417643039, guid: 08034392530994e4a808a16e6ca4944d, type: 3}
   Prefab_OfficeRoot: {fileID: 1778206683947138291, guid: 3ce407f782de42b45be9fee5bc198a53, type: 3}
   Prefab_BattleRoot: {fileID: 1778206683947138291, guid: 63f668ff854a20a4dafc75f7f7ae2535, type: 3}
+  Prefab_BackGround: {fileID: 655304303417643039, guid: 6e313e947d6ac184fb25c3922e57b773, type: 3}
 --- !u!1 &9172996825214178809
 GameObject:
   m_ObjectHideFlags: 0

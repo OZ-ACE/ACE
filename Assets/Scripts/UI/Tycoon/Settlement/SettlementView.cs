@@ -17,7 +17,7 @@ public class SettlementView : ViewBase
 
     private SettlementViewModel _viewModel;
 
-    /// <summary> 뷰모델 바인딩 </summary>
+    // 뷰모델 바인딩
     public void Bind(SettlementViewModel viewModel)
     {
         if (_viewModel != null)
@@ -97,6 +97,7 @@ public class SettlementView : ViewBase
             Debug.Log("[SettlementView] 정산 실패 - 다음날로 넘길 수 없음");
             return;
         }
+
         UIManager.Inst.CloseSettlementUI();
     }
 

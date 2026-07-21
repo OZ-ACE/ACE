@@ -11,7 +11,6 @@ public class ScheduleUI : UIBase
     [SerializeField] private Button Button_Shower;
     [SerializeField] private Button Button_Rest;
     [SerializeField] private Button Button_Sun;
-    [SerializeField] private Button Button_Battle;
     [SerializeField] private Button Button_Meal;
     [SerializeField] private Button Button_Counsel;
     [SerializeField] private Button Button_Cure;
@@ -22,8 +21,7 @@ public class ScheduleUI : UIBase
     [SerializeField] private Button Button_Close;
 
     [Header("버튼 색")]
-    [SerializeField] private Color Color_Shower = new Color(0.93f, 0.93f, 0.88f);
-    [SerializeField] private Color Color_Battle = new Color(0.98f, 0.50f, 0.45f);
+    [SerializeField] private Color Color_Shower = new Color(0.98f, 0.50f, 0.45f);
     [SerializeField] private Color Color_Sun = new Color(0.60f, 0.85f, 0.60f);
     [SerializeField] private Color Color_Counsel = new Color(0.96f, 0.87f, 0.70f);
     [SerializeField] private Color Color_Cure = new Color(0.25f, 0.88f, 0.82f);
@@ -37,6 +35,11 @@ public class ScheduleUI : UIBase
     private List<ScheduleSlot> _slots = new List<ScheduleSlot>();
     private Dictionary<ScheduleState, Button> _buttons = new Dictionary<ScheduleState, Button>();
 
+    public ScheduleState CurrentSelectedToolState
+    {
+        get => _scheduleVM.SelectedState;
+    }
+
     private void Awake()
     {
         _scheduleVM = new ScheduleViewModel();
@@ -47,7 +50,6 @@ public class ScheduleUI : UIBase
         Button_Shower.onClick.AddListener(OnClickShower);
         Button_Rest.onClick.AddListener(OnClickRest);
         Button_Sun.onClick.AddListener(OnClickSun);
-        Button_Battle.onClick.AddListener(OnClickBattle);
         Button_Meal.onClick.AddListener(OnClickMeal);
         Button_Counsel.onClick.AddListener(OnClickCounsel);
         Button_Cure.onClick.AddListener(OnClickCure);
@@ -68,14 +70,14 @@ public class ScheduleUI : UIBase
         _buttons.Add(ScheduleState.Cure, Button_Cure);
         _buttons.Add(ScheduleState.Sleep, Button_Sleep);
         _buttons.Add(ScheduleState.Shower, Button_Shower);
-        _buttons.Add(ScheduleState.Battle, Button_Battle);
     }
 
-    public void OpenSchedule(HeroViewModel targetVM)
+    public void OpenSchedule(HeroViewModel targetVM, int currentInGameHour)
     {
         _targetHeroVM = targetVM;
 
-        _scheduleVM.Init(_targetHeroVM.Model);
+        _scheduleVM.Init(_targetHeroVM.Model, currentInGameHour);
+        SetSelectedState(ScheduleState.Sleep);
     }
 
     private void CreateTimeSlot()
@@ -97,9 +99,6 @@ public class ScheduleUI : UIBase
             case ScheduleState.Shower:
                 return Color_Shower;
 
-            case ScheduleState.Battle:
-                return Color_Battle;
-
             case ScheduleState.Sun:
                 return Color_Sun;
 
@@ -120,6 +119,9 @@ public class ScheduleUI : UIBase
 
             case ScheduleState.Meal:
                 return Color_Meal;
+
+            case ScheduleState.None:
+                return Color.white;
 
             default:
                 return Color.white;
@@ -156,7 +158,6 @@ public class ScheduleUI : UIBase
     private void OnClickShower() => SetSelectedState(ScheduleState.Shower);
     private void OnClickRest() => SetSelectedState(ScheduleState.Rest);
     private void OnClickSun() => SetSelectedState(ScheduleState.Sun);
-    private void OnClickBattle() => SetSelectedState(ScheduleState.Battle);
     private void OnClickMeal() => SetSelectedState(ScheduleState.Meal);
     private void OnClickCounsel() => SetSelectedState(ScheduleState.Counsel);
     private void OnClickCure() => SetSelectedState(ScheduleState.Cure);
