@@ -1,9 +1,4 @@
-﻿using UnityEngine;
-
-
-
-
-//마감정산 뷰 모델
+﻿//마감정산 뷰 모델
 public class SettlementViewModel : ViewModelBase
 {
     private readonly ICurrencyService _currencyService;
@@ -21,10 +16,6 @@ public class SettlementViewModel : ViewModelBase
 
     public int CurrentMemoryFragment { get { return _currencyService.CurrentMemoryFragment; } }
 
-
-
-
-
     // 뷰가 켜질때 화면 갱신
     public void InvokeOnceOnInit()
     {
@@ -37,14 +28,11 @@ public class SettlementViewModel : ViewModelBase
     // 마감정산 확정
     public bool TryConfirmSettlement()
     {
-        if (_dayService.CurrentDay != 1 && _dayService.IsAdvanceable() == false)
-        {
-            return false;
-        }
-
         _currencyService.ResetTodayMemoryFragment();
 
-        if (_dayService.TryAdvanceDay() == false)
+        bool isSuccess = _dayService.TryAdvanceDay();
+
+        if (isSuccess == false)
         {
             return false;
         }
@@ -52,6 +40,8 @@ public class SettlementViewModel : ViewModelBase
         OnPropertyChanged(nameof(CurrentDay));
         OnPropertyChanged(nameof(TodayMemoryFragment));
         OnPropertyChanged(nameof(CurrentMemoryFragment));
+        OnPropertyChanged(nameof(CurrentGold));
+
         return true;
     }
 }

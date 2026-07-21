@@ -6,15 +6,15 @@ public class ScheduleEvaluator
     private const int SCORE_SLEEP = 10;
     private const int SCORE_SHOWER = 5;
 
-    public static void EvaluateDailySchedule(HeroViewModel heroVM)
+    public static void EvaluateDailySchedule(HeroModel heroModel)
     {
-        ScheduleState[] states = heroVM.Model.HourlyStates;
+        ScheduleState[] states = heroModel.HourlyStates;
 
         int sunCount = 0;
         int sleepCount = 0;
         int showerCount = 0;
 
-        for (int i = 0; i < 24; i++)
+        for (int i = 0; i < states.Length; i++)
         {
             switch (states[i])
             {
@@ -68,8 +68,10 @@ public class ScheduleEvaluator
             deltaAffection -= SCORE_SHOWER;
         }
 
-        heroVM.AddSatisfaction(deltaSatisfaction);
-        heroVM.AddAffection(deltaAffection);
+        heroModel.Satisfaction = Mathf.Clamp(heroModel.Satisfaction + deltaSatisfaction, 0, 100);
+        heroModel.Affection = Mathf.Clamp(heroModel.Affection + deltaAffection, 0, 100);
+
+        heroModel.SaveHeroProgress();
 
         Debug.Log($"햇빛:{sunCount}, 수면:{sleepCount}, 샤워:{showerCount} 만족:{deltaSatisfaction}, 호감:{deltaAffection}");
     }

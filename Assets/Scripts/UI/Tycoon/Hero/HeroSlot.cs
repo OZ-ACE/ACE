@@ -31,6 +31,22 @@ public class HeroSlot : MonoBehaviour
     private HeroViewModel _heroVM;
     private string _heroID;
 
+    private void OnEnable()
+    {
+        GameManager.Inst.Services.DayService.OnChangeDay += OnDayChanged;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Inst.Services.DayService.OnChangeDay -= OnDayChanged;
+    }
+    
+    private void OnDayChanged(int newDay)
+    {
+        _heroVM.Model?.LoadHeroData(_heroID);
+        _heroVM.InvokeOnceOnInit();
+    }
+
     public void InitSlot(HeroViewModel viewModel)
     {
         _heroVM = viewModel;

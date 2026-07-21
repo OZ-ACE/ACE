@@ -306,9 +306,10 @@ public class ObjectManager : SingletonBase<ObjectManager>
         Debug.Log("[ObjectManager] 배경 생성 완료");
     }
 
-
-
-
+    public async UniTask SpawnHero(string heroId, long roomInstanceId)
+    {
+        var buildService = GameManager.Inst.Services.BuildService;
+        BuildGridViewModel buildVM = buildService.GetBuildGridViewModel();
 
         List<PlacedRoomData> placedRooms = buildVM.GetPlacedRooms();
         PlacedRoomData targetRoomData = null;
