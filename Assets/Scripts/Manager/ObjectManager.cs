@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.AI;
 
 public class ObjectManager : SingletonBase<ObjectManager>
@@ -14,6 +15,10 @@ public class ObjectManager : SingletonBase<ObjectManager>
     [Header("3D 전투 공간 프리팹")]
     [SerializeField] private GameObject Prefab_BattleRoot;
 
+    [Header("3D 배경 프리팹")]
+    [SerializeField] private GameObject Prefab_BackGround;
+
+
     private BuildGridView _buildGridView;
     private GameObject _hero;
 
@@ -22,6 +27,9 @@ public class ObjectManager : SingletonBase<ObjectManager>
     private Camera _mainCamera;
 
     private GameObject _battleRoot;
+    private GameObject _backGround;
+
+
 
     public BuildGridView BuildGridView { get { return _buildGridView; } }
 
@@ -32,6 +40,9 @@ public class ObjectManager : SingletonBase<ObjectManager>
         _mainCamera = Camera.main;
         CreateOfficeRoot();
         CreateBattleRoot();
+        CreateBackGround();
+
+
     }
 
     public void CreateBuildGridView()
@@ -274,10 +285,30 @@ public class ObjectManager : SingletonBase<ObjectManager>
         Debug.Log("[ObjectManager] 전투 실행기 연결 완료");
     }
 
-    public async UniTask SpawnHero(string heroId, long roomInstanceId)
+    //3D 배경 생성
+    private void CreateBackGround()
     {
-        var buildService = GameManager.Inst.Services.BuildService;
-        BuildGridViewModel buildVM = buildService.GetBuildGridViewModel();
+        if (Prefab_BackGround == null)
+        {
+            Debug.LogWarning("[ObjectManager] 배경 프리팹 인스펙터 할당 안 됨");
+            return;
+        }
+
+        if (_backGround != null)
+        {
+            return;
+        }
+
+        _backGround = Instantiate(Prefab_BackGround);
+        _backGround.name = "BackGround";
+
+        _backGround.SetActive(true);
+        Debug.Log("[ObjectManager] 배경 생성 완료");
+    }
+
+
+
+
 
         List<PlacedRoomData> placedRooms = buildVM.GetPlacedRooms();
         PlacedRoomData targetRoomData = null;
