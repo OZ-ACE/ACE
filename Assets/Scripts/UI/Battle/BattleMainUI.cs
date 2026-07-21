@@ -148,6 +148,9 @@ public class BattleMainUI : UIBase
     {
         _viewModel.PropertyChanged += OnPropertyChanged_View;
         _viewModel.UnitHpChanged += OnUnitHpChanged;
+        _viewModel.UnitAttackStarted += OnUnitAttackStarted;
+        _viewModel.UnitHit += OnUnitHit;
+        _viewModel.UnitDied += OnUnitDied;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
@@ -199,12 +202,86 @@ public class BattleMainUI : UIBase
         }
     }
 
+    //애니메이션 이벤트 처리 메서드
+    private void OnUnitAttackStarted(BattleUnitModel unit)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (unit.IsHero)
+        {
+            if (BattleHeroSpawner.Inst != null)
+            {
+                BattleHeroSpawner.Inst.PlayAttackAnimation(unit);
+            }
+
+            return;
+        }
+
+        if (_enemySpawner != null)
+        {
+            _enemySpawner.PlayAttackAnimation(unit);
+        }
+    }
+
+
+    private void OnUnitHit(BattleUnitModel unit)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (unit.IsHero)
+        {
+            if (BattleHeroSpawner.Inst != null)
+            {
+                BattleHeroSpawner.Inst.PlayHitAnimation(unit);
+            }
+
+            return;
+        }
+
+        if (_enemySpawner != null)
+        {
+            _enemySpawner.PlayHitAnimation(unit);
+        }
+    }
+
+    private void OnUnitDied(BattleUnitModel unit)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (unit.IsHero)
+        {
+            if (BattleHeroSpawner.Inst != null)
+            {
+                BattleHeroSpawner.Inst.PlayDeathAnimation(unit);
+            }
+
+            return;
+        }
+
+        if (_enemySpawner != null)
+        {
+            _enemySpawner.PlayDeathAnimation(unit);
+        }
+    }
+
     private void OnDestroy()
     {
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnPropertyChanged_View;
             _viewModel.UnitHpChanged -= OnUnitHpChanged;
+            _viewModel.UnitAttackStarted -= OnUnitAttackStarted;
+            _viewModel.UnitHit -= OnUnitHit;
+            _viewModel.UnitDied -= OnUnitDied;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);

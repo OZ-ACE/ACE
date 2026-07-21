@@ -11,10 +11,15 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     {
         public string HeroId;
         public GameObject Prefab;
+        public RuntimeAnimatorController BattleAnimatorController;
         public float Scale;
     }
 
     private const float SpawnPositionSpacingX = 2f;
+
+    private static readonly int AttackTrigger = Animator.StringToHash("Attack");
+    private static readonly int HitTrigger = Animator.StringToHash("Hit");
+    private static readonly int DeathTrigger = Animator.StringToHash("Death");
 
     [Header("영웅 프리팹 매핑")]
     [SerializeField] private List<HeroSpawnEntry> _heroSpawnEntryList;
@@ -39,6 +44,8 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     public event Action<string> OnUnitClicked;
 
     private readonly Dictionary<string, EnemyUnitView> _heroViewMap = new Dictionary<string, EnemyUnitView>();
+
+    private readonly Dictionary<string, Animator> _heroAnimatorMap = new Dictionary<string, Animator>();
 
     private void OnEnable()
     {
@@ -121,6 +128,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
             }
         }
         _heroViewMap.Clear();
+        _heroAnimatorMap.Clear();
         _hoveredHandler = null;
     }
 
@@ -155,6 +163,20 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         GameObject spawnedObj = Instantiate(entry.Prefab, spawnPosition, Quaternion.Euler(0f, 100f, 0f));
         float scale = entry.Scale > 0f ? entry.Scale : 1f; //인스펙터 미입력(0)이면 원본 크기 유지
         spawnedObj.transform.localScale = new Vector3(scale, scale, scale);
+
+        Animator animator = spawnedObj.GetComponentInChildren<Animator>(true);
+
+        if (animator != null && entry.BattleAnimatorController != null)
+        {
+            animator.runtimeAnimatorController = entry.BattleAnimatorController;
+            animator.applyRootMotion = false;
+        }
+
+        if (animator != null)
+        {
+            _heroAnimatorMap[entry.HeroId] = animator;
+        }
+
         BattleUnitClickHandler clickHandler = spawnedObj.GetComponent<BattleUnitClickHandler>();
         if (clickHandler == null)
         {
@@ -283,6 +305,42 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         {
             view.gameObject.SetActive(false);
         }
+        return true;
+    }
+
+    //영웅 애니메이션 연결부
+    public bool PlayAttackAnimation(BattleUnitModel heroUnit)
+    {
+        return SetAnimationTrigger(heroUnit, AttackTrigger);
+    }
+
+    public bool PlayHitAnimation(BattleUnitModel heroUnit)
+    {
+        return SetAnimationTrigger(heroUnit, HitTrigger);
+    }
+
+    public bool PlayDeathAnimation(BattleUnitModel heroUnit)
+    {
+        return SetAnimationTrigger(heroUnit, DeathTrigger);
+    }
+
+    private bool SetAnimationTrigger(BattleUnitModel heroUnit, int triggerHash)
+    {
+        if (heroUnit == null)
+        {
+            return false;
+        }
+
+        bool hasAnimator = _heroAnimatorMap.TryGetValue(
+            heroUnit.ID,
+            out Animator animator);
+
+        if (hasAnimator == false || animator == null)
+        {
+            return false;
+        }
+
+        animator.SetTrigger(triggerHash);
         return true;
     }
 

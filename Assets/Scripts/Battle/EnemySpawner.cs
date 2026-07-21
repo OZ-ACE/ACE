@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    private static readonly int AttackTrigger = Animator.StringToHash("Attack");
+    private static readonly int HitTrigger = Animator.StringToHash("Hit");
+    private static readonly int DeathTrigger = Animator.StringToHash("Death");
+
     [Header("Spawn")]
     [SerializeField] private GameObject EnemyPrefab;
     [SerializeField] private Transform EnemySpawnRoot;
@@ -12,6 +16,9 @@ public class EnemySpawner : MonoBehaviour
 
     private readonly Dictionary<BattleUnitModel, EnemyUnitView> _enemyViewMap
         = new Dictionary<BattleUnitModel, EnemyUnitView>();
+
+    private readonly Dictionary<BattleUnitModel, Animator> _enemyAnimatorMap
+        = new Dictionary<BattleUnitModel, Animator>();
 
     public bool SpawnEnemies(List<BattleUnitModel> enemyList)
     {
@@ -61,6 +68,13 @@ public class EnemySpawner : MonoBehaviour
                 enemyUnit.MaxHp);
 
             _enemyViewMap.Add(enemyUnit, enemyView);
+
+            Animator animator = enemyObject.GetComponentInChildren<Animator>(true);
+
+            if (animator != null)
+            {
+                _enemyAnimatorMap.Add(enemyUnit, animator);
+            }
         }
 
         _isSpawned = true;
@@ -85,11 +99,41 @@ public class EnemySpawner : MonoBehaviour
             enemyUnit.CurrentHp,
             enemyUnit.MaxHp);
 
-        if (enemyUnit.IsDefeated)
+        return true;
+    }
+
+    public bool PlayAttackAnimation(BattleUnitModel enemyUnit)
+    {
+        return SetAnimationTrigger(enemyUnit, AttackTrigger);
+    }
+
+    public bool PlayHitAnimation(BattleUnitModel enemyUnit)
+    {
+        return SetAnimationTrigger(enemyUnit, HitTrigger);
+    }
+
+    public bool PlayDeathAnimation(BattleUnitModel enemyUnit)
+    {
+        return SetAnimationTrigger(enemyUnit, DeathTrigger);
+    }
+
+    private bool SetAnimationTrigger(BattleUnitModel enemyUnit, int triggerHash)
+    {
+        if (enemyUnit == null)
         {
-            enemyView.gameObject.SetActive(false);
+            return false;
         }
 
+        bool hasAnimator = _enemyAnimatorMap.TryGetValue(
+            enemyUnit,
+            out Animator animator);
+
+        if (hasAnimator == false || animator == null)
+        {
+            return false;
+        }
+
+        animator.SetTrigger(triggerHash);
         return true;
     }
 
@@ -108,6 +152,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         _enemyViewMap.Clear();
+        _enemyAnimatorMap.Clear();
         _isSpawned = false;
     }
 }
