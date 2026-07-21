@@ -12,6 +12,7 @@ public class BuildGridView : ViewBase
 
     [Header("색상")]
     [SerializeField] private Color _normalColor = new Color(1f, 1f, 1f, 0.2f);
+    [SerializeField] private Color _lockedColor = new Color(0.5f, 0.5f, 0.5f, 0.2f); // 굴착 안 된 칸(비활성)
     [SerializeField] private Color _hoverColor = new Color(1f, 1f, 0f, 0.5f);
     [SerializeField] private Color _ghostValidColor = new Color(0f, 1f, 0f, 0.5f);   // 배치 가능(초록)
     [SerializeField] private Color _ghostInvalidColor = new Color(1f, 0f, 0f, 0.5f); // 배치 불가(빨강)
@@ -30,6 +31,7 @@ public class BuildGridView : ViewBase
 
     private GridCoord _lastHoverCoord;
     private bool _hasHover;
+    private HashSet<GridCoord> _lockedCells = new HashSet<GridCoord>();   // 굴착 안 된(비활성) 칸
 
     private GameObject _ghostObject;
     private SpriteRenderer _ghostRenderer;
@@ -152,54 +154,73 @@ public class BuildGridView : ViewBase
     private void CreateGridOverlay()
     {
         GridBounds bounds = _viewModel.Bounds;
-        int unlockedMin = _viewModel.UnlockedMinFloor;   
-
-        for (int floor = unlockedMin; floor <= bounds.MaxFloor; floor++)
+        int unlockedMin = _viewModel.UnlockedMinFloor;
+        // 최저층(MinFloor)까지 전부 깔되, 아직 굴착 안 된 층은 비활성으로
+        for (int floor = bounds.MinFloor; floor <= bounds.MaxFloor; floor++)
         {
+            bool isLocked = floor < unlockedMin;
             for (int column = bounds.MinColumn; column <= bounds.MaxColumn; column++)
             {
-                CreateCell(new GridCoord(floor, column));
+                CreateCell(new GridCoord(floor, column), isLocked);
             }
         }
-
         _isOverlayCreated = true;
         Debug.Log($"[BuildGridView] 셀 오버레이 {_cellRenderers.Count}개 생성 (열린 최저층: {unlockedMin})");
     }
 
-    private void CreateCell(GridCoord coord)
+    private void CreateCell(GridCoord coord, bool isLocked)
     {
         if (_cellRenderers.ContainsKey(coord) == true)
         {
-            return;   
+            return;
         }
-
         GridSystem grid = _viewModel.GridSystem;
         Vector3 worldPos = grid.GetWorldPosition(coord);
-
         GameObject cell = Instantiate(Prefab_Cell, worldPos, Quaternion.identity, this.transform);
         cell.name = $"Cell_{coord}";
-
         SpriteRenderer renderer = cell.GetComponent<SpriteRenderer>();
         if (renderer != null)
         {
-            renderer.color = _normalColor;
+            if (isLocked == true)
+            {
+                _lockedCells.Add(coord);
+            }
+            renderer.color = GetBaseCellColor(coord);
             _cellRenderers[coord] = renderer;
         }
     }
 
+    // 셀의 기본 색 (굴착 여부에 따라 흰색/비활성)
+    private Color GetBaseCellColor(GridCoord coord)
+    {
+        if (_lockedCells.Contains(coord) == true)
+        {
+            return _lockedColor;
+        }
+        return _normalColor;
+    }
+
+    //해금된 층 셀 생성
     //해금된 층 셀 생성
     private void OnUnlockFloor(int newUnlockedMin)
     {
         GridBounds bounds = _viewModel.Bounds;
-
         for (int column = bounds.MinColumn; column <= bounds.MaxColumn; column++)
         {
-            CreateCell(new GridCoord(newUnlockedMin, column));
+            GridCoord coord = new GridCoord(newUnlockedMin, column);
+            if (_cellRenderers.TryGetValue(coord, out SpriteRenderer renderer) == true)
+            {
+                // 이미 비활성 칸으로 깔려 있으면 활성(보라)으로 전환
+                _lockedCells.Remove(coord);
+                renderer.color = GetBaseCellColor(coord);
+            }
+            else
+            {
+                CreateCell(coord, false);
+            }
         }
-
         SoundManager.Inst.PlaySFX("Construct");
-
-        Debug.Log($"[BuildGridView] {newUnlockedMin}층 셀 추가 생성");
+        Debug.Log($"[BuildGridView] {newUnlockedMin}층 셀 활성화");
     }
 
     private void SetOverlayActive(bool isActive)
@@ -249,14 +270,15 @@ public class BuildGridView : ViewBase
         {
             return;
         }
-
         if (_hasHover && coord == _lastHoverCoord)
         {
             return;
         }
-
         ClearHover();
-
+        if (_lockedCells.Contains(coord) == true)   // 굴착 안 된 칸은 하이라이트 안 함
+        {
+            return;
+        }
         if (_cellRenderers.TryGetValue(coord, out var renderer))
         {
             renderer.color = _hoverColor;
@@ -270,7 +292,7 @@ public class BuildGridView : ViewBase
     {
         if (_hasHover && _cellRenderers.TryGetValue(_lastHoverCoord, out var renderer))
         {
-            renderer.color = _normalColor;
+            renderer.color = GetBaseCellColor(_lastHoverCoord);
         }
         _hasHover = false;
     }
@@ -497,6 +519,7 @@ public class BuildGridView : ViewBase
         }
 
         _cellRenderers.Clear();
+        _lockedCells.Clear();
         _isOverlayCreated = false;
 
         // 방 다시 그리기
@@ -698,7 +721,7 @@ public class BuildGridView : ViewBase
     {
         foreach (KeyValuePair<GridCoord, SpriteRenderer> pair in _cellRenderers)
         {
-            pair.Value.color = _normalColor;
+            pair.Value.color = GetBaseCellColor(pair.Key);  
         }
 
         if (_viewModel.IsRoomSelectMode == false)
