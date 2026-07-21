@@ -44,14 +44,47 @@
     "RequiredQuestID": "Quest_01_03"
   },
   {
-    "ID": "Quest_03_01",
+    "ID": "Quest_01_05",
     "QuestName": "하루의 끝",
-    "Description": "하루를 3번 마감",
+    "Description": "영웅 관리도 중요하지만 실버타운 운영 또한 빼놓을 수 없죠.\n사무실에 들어가 모래시계를 클릭하고 마감합시다!",
     "ConditionType": "AdvanceDay",
     "ConditionTargetID": null,
-    "ConditionCount": 3,
+    "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 800,
-    "RequiredQuestID": null
+    "RequiredQuestID": "Quest_01_04"
+  },
+  {
+    "ID": "Quest_02_01",
+    "QuestName": "하루의 시작1",
+    "Description": "하루의 시작은 일정 관리부터!\n영웅들은 건강을 위해 7시간 이상 자야합니다.",
+    "ConditionType": "Schedule",
+    "ConditionTargetID": "Sleep",
+    "ConditionCount": 7,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_01_05"
+  },
+  {
+    "ID": "Quest_02_02",
+    "QuestName": "하루의 시작2",
+    "Description": "하루의 시작은 일정 관리부터!\n영웅들은 건강을 위해 하루 한 시간 햇빛을 쬐야합니다.",
+    "ConditionType": "Schedule",
+    "ConditionTargetID": "Sun",
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_01_05"
+  },
+  {
+    "ID": "Quest_02_03",
+    "QuestName": "하루의 시작3",
+    "Description": "하루의 시작은 일정 관리부터!\n영웅들은 위생을 위해 하루 한 번 샤워를 해야합니다.",
+    "ConditionType": "Schedule",
+    "ConditionTargetID": "Shower",
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_01_05"
   }
 ]

@@ -59,7 +59,6 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler
         switch (visualType)
         {
             case ScheduleVisualType.Past:
-                Image_Background.color = Color.darkGray;
                 Image_Lock.gameObject.SetActive(true);
                 Text_Hour.gameObject.SetActive(false);
                 Image_Highlight.gameObject.SetActive(false);

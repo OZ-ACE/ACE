@@ -158,7 +158,8 @@ public class ObjectManager : SingletonBase<ObjectManager>
         switch (type)
         {
             case OfficeObjectType.NextDay:
-                if (GameManager.Inst.Services.DayService.IsAdvanceable() == false)
+                DayService dayService = GameManager.Inst.Services.DayService;
+                if (dayService.CurrentDay != 1 && dayService.IsAdvanceable() == false)
                 {
                     Debug.Log("[ObjectManager] 오늘 전투를 마쳐야 다음날로 넘어갈 수 있음");
                     return;

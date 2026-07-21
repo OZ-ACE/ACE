@@ -233,8 +233,8 @@ public class SaveManager : SingletonBase<SaveManager>
                     HeroStat newHero = new HeroStat
                     {
                         HeroID = hero.ID,
-                        Affection = 0,
-                        Satisfaction = 0
+                        Affection = 50,
+                        Satisfaction = 50
                     };
 
                     data.HeroStats.Add(newHero);

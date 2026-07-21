@@ -37,7 +37,7 @@ public class SettlementViewModel : ViewModelBase
     // 마감정산 확정
     public bool TryConfirmSettlement()
     {
-        if (_dayService.IsAdvanceable() == false)
+        if (_dayService.CurrentDay != 1 && _dayService.IsAdvanceable() == false)
         {
             return false;
         }

@@ -51,7 +51,7 @@ public class HeroModel
 
         if (_targetHeroStat == null)
         {
-            _targetHeroStat = new HeroStat { HeroID = heroID, Affection = 0, Satisfaction = 0 };
+            _targetHeroStat = new HeroStat { HeroID = heroID, Affection = 50, Satisfaction = 50 };
             playerModel.HeroStats.Add(_targetHeroStat);
         }
 

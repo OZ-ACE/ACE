@@ -24,6 +24,8 @@ public class HeroSlot : MonoBehaviour
     [SerializeField] private Sprite Sprite_Select;
     [SerializeField] private Sprite Sprite_Unselect;
 
+    private const float MAX_STAT_VALUE = 100f;
+
     public Action<HeroViewModel> OnSlotClick;
 
     private HeroViewModel _heroVM;
@@ -77,12 +79,12 @@ public class HeroSlot : MonoBehaviour
 
             case nameof(_heroVM.Affection):
                 Text_Affection.text = $"{_heroVM.Affection}";
-                Image_Affection.fillAmount = _heroVM.Affection;
+                Image_Affection.fillAmount = Mathf.Clamp01(_heroVM.Affection / MAX_STAT_VALUE);
                 break;
 
             case nameof(_heroVM.Satisfaction):
                 Text_Satisfaction.text = $"{_heroVM.Satisfaction}";
-                Image_Satisfaction.fillAmount = _heroVM.Satisfaction;
+                Image_Satisfaction.fillAmount = Mathf.Clamp01(_heroVM.Satisfaction / MAX_STAT_VALUE);
                 break;
 
             case nameof(_heroVM.IsSelect):
@@ -98,13 +100,6 @@ public class HeroSlot : MonoBehaviour
 
     private void SetSlotBackground(bool isSelect)
     {
-        if (isSelect)
-        {
-            Image_Background.sprite = Sprite_Select;
-        }
-        else
-        {
-            Image_Background.sprite = Sprite_Unselect;
-        }
+        Image_Background.sprite = isSelect ? Sprite_Select : Sprite_Unselect;
     }
 }

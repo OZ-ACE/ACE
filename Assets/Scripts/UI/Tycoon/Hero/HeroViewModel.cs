@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEngine;
 
 public class HeroViewModel : ViewModelBase
 {
@@ -32,7 +32,7 @@ public class HeroViewModel : ViewModelBase
         {
             if (_affection != value)
             {
-                _affection = value;
+                _model.Affection = Mathf.Clamp(value, 0, 100);
                 OnPropertyChanged(nameof(Affection));
             }
         }
@@ -46,7 +46,7 @@ public class HeroViewModel : ViewModelBase
         {
             if (_satisfaction != value)
             {
-                _satisfaction = value;
+                _model.Satisfaction = Mathf.Clamp(value, 0, 100);
                 OnPropertyChanged(nameof(Satisfaction));
             }
         }
