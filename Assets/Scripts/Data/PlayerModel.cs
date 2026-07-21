@@ -24,6 +24,7 @@ public class PlayerModel
     public List<string> SelectedHeroIds = new List<string>(); //전투에 내보낼 선택 파티 (최대 3)
     public List<DailyEvaluationRecord> DailyEvaluations = new List<DailyEvaluationRecord>();
 
+    public List<FurnitureProgressModel> FurnitureProgressList = new List<FurnitureProgressModel>();
 }
 
 [Serializable]
