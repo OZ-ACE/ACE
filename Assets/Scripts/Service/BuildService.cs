@@ -11,7 +11,7 @@ public class BuildService
     private const float CELL_HEIGHT = 1f;
 
     private const int MIN_FLOOR = -10;
-    private const int MAX_FLOOR = 1;
+    private const int MAX_FLOOR = 0;
     private const int MIN_COLUMN = 0;
     private const int MAX_COLUMN = 20;
 
