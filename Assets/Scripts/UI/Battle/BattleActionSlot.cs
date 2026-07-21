@@ -32,25 +32,44 @@ public class BattleActionSlot : MonoBehaviour
             return;
         }
 
-        SetUnitPortrait(unit.ID);
+        SetUnitPortrait(unit);
         SetActionTypeVisual(actionType);
     }
 
-    private void SetUnitPortrait(string unitId)
+    private void SetUnitPortrait(BattleUnitModel unit)
     {
         if (Image_UnitPortrait == null)
         {
             return;
         }
 
-        HeroData heroData = GameDataManager.Inst.GetData<HeroData>(unitId);
+        string profileImagePath = string.Empty;
 
-        if (heroData == null || string.IsNullOrEmpty(heroData.ProfileImage) == true)
+        if (unit.IsHero == true)
+        {
+            HeroData heroData = GameDataManager.Inst.GetData<HeroData>(unit.ID);
+
+            if (heroData != null)
+            {
+                profileImagePath = heroData.ProfileImage;
+            }
+        }
+        else
+        {
+            EnemyData enemyData = GameDataManager.Inst.GetData<EnemyData>(unit.ID);
+
+            if (enemyData != null)
+            {
+                profileImagePath = enemyData.ProfileImage;
+            }
+        }
+
+        if (string.IsNullOrEmpty(profileImagePath) == true)
         {
             return;
         }
 
-        ResourceManager.Inst.LoadSprite(heroData.ProfileImage, SetPortraitSprite);
+        ResourceManager.Inst.LoadSprite(profileImagePath, SetPortraitSprite);
     }
 
     private void SetPortraitSprite(Sprite sprite)
