@@ -4,7 +4,9 @@
     BuildRoom,      // 방 건설 (누적)
     PurchaseItem,   // 아이템 구매 (누적)
     AdvanceDay,     // 날짜 진행 (누적)
-    ReachGold       // 보유 골드 달성 (상태)
+    ReachGold,       // 보유 골드 달성 (상태)
+    AdmitHero,
+    Schedule
 }
 
 public enum QuestRewardType

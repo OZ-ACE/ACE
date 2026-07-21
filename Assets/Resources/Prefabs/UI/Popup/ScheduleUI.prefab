@@ -55,7 +55,6 @@ MonoBehaviour:
   Button_Shower: {fileID: 4979520152977280922}
   Button_Rest: {fileID: 9160385441042294091}
   Button_Sun: {fileID: 6653598296362925372}
-  Button_Battle: {fileID: 8855190617621210477}
   Button_Meal: {fileID: 722928032824541583}
   Button_Counsel: {fileID: 358941689654949634}
   Button_Cure: {fileID: 5713341348593492792}
@@ -64,7 +63,6 @@ MonoBehaviour:
   Button_Confirm: {fileID: 6739525290030033603}
   Button_Close: {fileID: 1397537179782759889}
   Color_Shower: {r: 0.93, g: 0.93, b: 0.88, a: 1}
-  Color_Battle: {r: 0.98, g: 0.5, b: 0.45, a: 1}
   Color_Sun: {r: 0.6, g: 0.85, b: 0.6, a: 1}
   Color_Counsel: {r: 0.96, g: 0.87, b: 0.7, a: 1}
   Color_Cure: {r: 0.25, g: 0.88, b: 0.82, a: 1}
@@ -280,7 +278,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 5
+  m_ScrollSensitivity: 10
   m_Viewport: {fileID: 581412728006162645}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
@@ -1969,17 +1967,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2571307544323183325, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
   m_PrefabInstance: {fileID: 5662124554757648432}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8855190617621210477 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3778551679632774493, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
-  m_PrefabInstance: {fileID: 5662124554757648432}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1001 &6321735484500476703
 PrefabInstance:
   m_ObjectHideFlags: 0

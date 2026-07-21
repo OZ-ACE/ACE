@@ -10,7 +10,8 @@
     "RequiredFloor": -999,
     "EffectType": null,
     "EffectDescription": "사무실 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Office"
+    "PrefabPath": "Prefabs/Room/Room_Office",
+    "MaxCapacity": 1
   },
   {
     "ID": "Room_Sun",
@@ -23,7 +24,8 @@
     "RequiredFloor": 0,
     "EffectType": "Sunlight",
     "EffectDescription": "정원 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Garden"
+    "PrefabPath": "Prefabs/Room/Room_Garden",
+    "MaxCapacity": 2
   },
   {
     "ID": "Room_Shower",
@@ -36,7 +38,8 @@
     "RequiredFloor": -999,
     "EffectType": "UsingRestroom",
     "EffectDescription": "화장실 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Shower"
+    "PrefabPath": "Prefabs/Room/Room_Shower",
+    "MaxCapacity": 1
   },
   {
     "ID": "Room_Counsel",
@@ -49,7 +52,8 @@
     "RequiredFloor": -999,
     "EffectType": "UsingCounselingRoom",
     "EffectDescription": "상담실 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Counsel"
+    "PrefabPath": "Prefabs/Room/Room_Counsel",
+    "MaxCapacity": 1
   },
   {
     "ID": "Room_Cure",
@@ -62,7 +66,8 @@
     "RequiredFloor": -999,
     "EffectType": "UsingConsultationRoom",
     "EffectDescription": "진료실 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Cure"
+    "PrefabPath": "Prefabs/Room/Room_Cure",
+    "MaxCapacity": 1
   },
   {
     "ID": "Room_Meal",
@@ -75,7 +80,8 @@
     "RequiredFloor": -999,
     "EffectType": "UsingDiningRoom",
     "EffectDescription": "식당 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Meal"
+    "PrefabPath": "Prefabs/Room/Room_Meal",
+    "MaxCapacity": 2
   },
   {
     "ID": "Room_Gym",
@@ -88,7 +94,8 @@
     "RequiredFloor": -999,
     "EffectType": "UsingGymnasium",
     "EffectDescription": "체육관 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Gym"
+    "PrefabPath": "Prefabs/Room/Room_Gym",
+    "MaxCapacity": 2
   },
   {
     "ID": "Room_Rest",
@@ -101,7 +108,8 @@
     "RequiredFloor": -999,
     "EffectType": "UsingLounge",
     "EffectDescription": "휴게실 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Rest"
+    "PrefabPath": "Prefabs/Room/Room_Rest",
+    "MaxCapacity": 2
   },
   {
     "ID": "Room_Battle",
@@ -114,7 +122,8 @@
     "RequiredFloor": -999,
     "EffectType": "Battle",
     "EffectDescription": "휴게실 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Battle"
+    "PrefabPath": "Prefabs/Room/Room_Battle",
+    "MaxCapacity": 1
   },
   {
     "ID": "Room_Stairs",
@@ -127,7 +136,8 @@
     "RequiredFloor": -999,
     "EffectType": "UsingStairs",
     "EffectDescription": "계단 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Stairs"
+    "PrefabPath": "Prefabs/Room/Room_Stairs",
+    "MaxCapacity": 100
   },
   {
     "ID": "Room_Sleep",
@@ -140,6 +150,7 @@
     "RequiredFloor": -999,
     "EffectType": "Sleep",
     "EffectDescription": "침실1 효과 설명문",
-    "PrefabPath": "Prefabs/Room/Room_Sleep"
+    "PrefabPath": "Prefabs/Room/Room_Sleep",
+    "MaxCapacity": 1
   }
 ]

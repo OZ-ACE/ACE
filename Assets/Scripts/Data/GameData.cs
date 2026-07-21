@@ -30,7 +30,6 @@ public class HeroData : GameDataBase
     public int CandidateWeight;
     public string ProfileImage;
     public List<string> PenaltyID;
-    public bool IsBasic;
 }
 
 [Serializable]
@@ -111,6 +110,7 @@ public class RoomData : GameDataBase
     public string EffectType;
     public string EffectDescription;
     public string PrefabPath;
+    public int MaxCapacity;
 }
 
 [Serializable]

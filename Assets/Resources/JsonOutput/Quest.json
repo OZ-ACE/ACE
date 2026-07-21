@@ -2,10 +2,10 @@
   {
     "ID": "Quest_01_01",
     "QuestName": "첫 삽을 뜨다",
-    "Description": "사무실 1개 건설",
+    "Description": "영웅들이 지낼 방이 필요합니다.\n침실 3개를 건설해봅시다.",
     "ConditionType": "BuildRoom",
-    "ConditionTargetID": "Room_Office",
-    "ConditionCount": 1,
+    "ConditionTargetID": "Room_Sleep",
+    "ConditionCount": 3,
     "RewardType": "Gold",
     "RewardAmount": 500,
     "RequiredQuestID": null
@@ -13,34 +13,78 @@
   {
     "ID": "Quest_01_02",
     "QuestName": "첫 삽을 뜨다 2",
-    "Description": "방을 3개 건설",
+    "Description": "이제 업무를 볼 사무실이 필요합니다!\n사무실을 건설해주세요!",
     "ConditionType": "BuildRoom",
-    "ConditionTargetID": null,
-    "ConditionCount": 3,
+    "ConditionTargetID": "Room_Office",
+    "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 1000,
     "RequiredQuestID": "Quest_01_01"
   },
   {
-    "ID": "Quest_02_01",
-    "QuestName": "첫 장보기",
-    "Description": "상점에서 아이템을 1개 구매",
-    "ConditionType": "PurchaseItem",
+    "ID": "Quest_01_03",
+    "QuestName": "영웅들과의 만남",
+    "Description": "실버타운을 만들었으면 영웅들이 필요하겠죠.\n사무실을 클릭하고 3명의 영웅을 데려옵시다.",
+    "ConditionType": "AdmitHero",
+    "ConditionTargetID": null,
+    "ConditionCount": 3,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_01_02"
+  },
+  {
+    "ID": "Quest_01_04",
+    "QuestName": "실버타운의 시작",
+    "Description": "영웅들의 일정 관리 또한 당신의 업무!\n하루의 일정을 정해봅시다!",
+    "ConditionType": "Schedule",
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 300,
-    "RequiredQuestID": null
+    "RequiredQuestID": "Quest_01_03"
   },
   {
-    "ID": "Quest_03_01",
+    "ID": "Quest_01_05",
     "QuestName": "하루의 끝",
-    "Description": "하루를 3번 마감",
+    "Description": "영웅 관리도 중요하지만 실버타운 운영 또한 빼놓을 수 없죠.\n사무실에 들어가 모래시계를 클릭하고 마감합시다!",
     "ConditionType": "AdvanceDay",
     "ConditionTargetID": null,
-    "ConditionCount": 3,
+    "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 800,
-    "RequiredQuestID": null
+    "RequiredQuestID": "Quest_01_04"
+  },
+  {
+    "ID": "Quest_02_01",
+    "QuestName": "하루의 시작1",
+    "Description": "하루의 시작은 일정 관리부터!\n영웅들은 건강을 위해 7시간 이상 자야합니다.",
+    "ConditionType": "Schedule",
+    "ConditionTargetID": "Sleep",
+    "ConditionCount": 7,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_01_05"
+  },
+  {
+    "ID": "Quest_02_02",
+    "QuestName": "하루의 시작2",
+    "Description": "하루의 시작은 일정 관리부터!\n영웅들은 건강을 위해 하루 한 시간 햇빛을 쬐야합니다.",
+    "ConditionType": "Schedule",
+    "ConditionTargetID": "Sun",
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_01_05"
+  },
+  {
+    "ID": "Quest_02_03",
+    "QuestName": "하루의 시작3",
+    "Description": "하루의 시작은 일정 관리부터!\n영웅들은 위생을 위해 하루 한 번 샤워를 해야합니다.",
+    "ConditionType": "Schedule",
+    "ConditionTargetID": "Shower",
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_01_05"
   }
 ]

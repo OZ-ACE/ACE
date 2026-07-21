@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ScheduleSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
+public class ScheduleSlot : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private Image Image_Background;
+    [SerializeField] private Image Image_Lock;
+    [SerializeField] private Image Image_Highlight;
     [SerializeField] private TextMeshProUGUI Text_Hour;
 
     private int _hour;
@@ -37,6 +39,10 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
         {
             RefreshColor();
         }
+        else if (e.PropertyName == $"VisualType_{_hour}")
+        {
+            RefreshVisualType();
+        }
     }
 
     private void RefreshColor()
@@ -46,16 +52,45 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
         Image_Background.color = _scheduleUI.GetSlotColor(state);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    private void RefreshVisualType()
     {
-        _scheduleVM.SetSchedule(_hour);
+        ScheduleVisualType visualType = _scheduleVM.GetVisualType(_hour);
+
+        switch (visualType)
+        {
+            case ScheduleVisualType.Past:
+                Image_Lock.gameObject.SetActive(true);
+                Text_Hour.gameObject.SetActive(false);
+                Image_Highlight.gameObject.SetActive(false);
+                break;
+
+            case ScheduleVisualType.Current:
+                Image_Highlight.gameObject.SetActive(true);
+                break;
+
+            case ScheduleVisualType.Future:
+                Image_Highlight.gameObject.SetActive(false);
+                break;
+        }
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.dragging || Input.GetMouseButton(0))
+        if (!_scheduleVM.IsEditable(_hour))
         {
-            _scheduleVM.SetSchedule(_hour);
+            return;
+        }
+
+        ScheduleState selectedTool = _scheduleUI.CurrentSelectedToolState;
+        ScheduleState currentSlotState = _scheduleVM.EditingStates[_hour];
+
+        if (currentSlotState == selectedTool)
+        {
+            _scheduleVM.SetSchedule(_hour, ScheduleState.None);
+        }
+        else
+        {
+            _scheduleVM.SetSchedule(_hour, selectedTool);
         }
     }
 }

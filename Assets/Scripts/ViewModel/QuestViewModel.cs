@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,10 +54,12 @@ public class QuestViewModel : ViewModelBase
         {
             return;
         }
+
         if (player.QuestProgressList == null)
         {
             player.QuestProgressList = new List<QuestProgressModel>();
         }
+
         foreach (QuestData quest in QuestList)
         {
             if (FindProgress(quest.ID) != null)
@@ -72,8 +73,6 @@ public class QuestViewModel : ViewModelBase
             player.QuestProgressList.Add(progress);
         }
     }
-
-
 
     // 세이브에 퀘스트 기록이 없으면 생성 (슬롯 전환 시에도 호출)
     public void InitQuest()
@@ -164,6 +163,7 @@ public class QuestViewModel : ViewModelBase
             {
                 continue;
             }
+
             if (IsTargetMatched(quest, targetID) == false)
             {
                 continue;
@@ -174,6 +174,7 @@ public class QuestViewModel : ViewModelBase
             {
                 continue;
             }
+
             if (progress.State != (int)QuestState.InProgress)
             {
                 continue;
@@ -302,7 +303,6 @@ public class QuestViewModel : ViewModelBase
         return null;
     }
 
-
     //UI에 표시할 퀘스트만 반환 (선행 미완료로 잠긴 퀘스트 제외)
     public List<QuestData> GetVisibleQuestList()
     {
@@ -317,7 +317,6 @@ public class QuestViewModel : ViewModelBase
         }
         return result;
     }
-
 
     private void NotifyProgress()
     {

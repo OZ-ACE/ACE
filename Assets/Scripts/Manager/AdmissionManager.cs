@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AdmissionManager : SingletonBase<AdmissionManager>
@@ -137,6 +138,11 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
         candidateModel.Admit();
         SaveWaitingHeroes();
 
+        QuestViewModel questVM = GameManager.Inst.Services.QuestService?.GetQuestViewModel();
+        questVM.ReportProgress(QuestConditionType.AdmitHero, heroId, 1);
+
+        ObjectManager.Inst.SpawnHero(heroId, roomInstanceId).Forget();
+
         return true;
     }
 
@@ -250,17 +256,11 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
 
     private bool IsAdmittedHero(PlayerModel playerModel, string heroId)
     {
-        if (playerModel == null || playerModel.HeroStats == null)
-        {
-            return false;
-        }
+        RoomAssignmentService roomService = GameManager.Inst.Services.RoomAssignmentService;
 
-        for (int i = 0; i < playerModel.HeroStats.Count; i++)
+        if (roomService != null)
         {
-            if (playerModel.HeroStats[i].HeroID == heroId)
-            {
-                return true;
-            }
+            return roomService.IsHeroAssigned(heroId);
         }
 
         return false;
@@ -330,8 +330,6 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
 
             playerModel.AdmissionCandidates.Add(saveData);
         }
-
-        //SaveManager.Inst.RequestSaveData(playerModel);
     }
 
     private void BindDayService()
