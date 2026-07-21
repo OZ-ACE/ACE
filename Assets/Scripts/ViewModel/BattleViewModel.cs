@@ -10,7 +10,7 @@ public class BattleViewModel : ViewModelBase
     public List<string> BattleLogs = new List<string>();
     public List<BattleActionModel> ActionQueue = new List<BattleActionModel>();
 
-    public event Action<BattleUnitModel> EnemyHpChanged;
+    public event Action<BattleUnitModel> UnitHpChanged;
 
     private UniTaskCompletionSource _interventionCompletionSource;
 
@@ -604,19 +604,12 @@ public class BattleViewModel : ViewModelBase
         {
             return;
         }
-
         target.CurrentHp -= power;
-
         if (target.CurrentHp < 0)
         {
             target.CurrentHp = 0;
         }
-
-        if (target.IsHero == false)
-        {
-            EnemyHpChanged?.Invoke(target);
-        }
-
+        UnitHpChanged?.Invoke(target); 
         Debug.Log($"[BattleViewModel] {target.ID} 피격, 데미지 {power}, 남은 HP {target.CurrentHp}");
     }
 
@@ -637,6 +630,8 @@ public class BattleViewModel : ViewModelBase
         {
             unit.CurrentHp = unit.MaxHp;
         }
+
+        UnitHpChanged?.Invoke(unit);
     }
 
     //인벤토리에서 해당 아이템을 1개 소모한다

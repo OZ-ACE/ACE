@@ -147,7 +147,7 @@ public class BattleMainUI : UIBase
     private void BindViewModel(BattleViewModel viewModel)
     {
         _viewModel.PropertyChanged += OnPropertyChanged_View;
-        _viewModel.EnemyHpChanged += OnEnemyHpChanged;
+        _viewModel.UnitHpChanged += OnUnitHpChanged;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
@@ -179,14 +179,24 @@ public class BattleMainUI : UIBase
         _viewModel.AddBattleLog($"{unitName} 유닛이 선택되었습니다.");
     }
 
-    private void OnEnemyHpChanged(BattleUnitModel enemyUnit)
+    private void OnUnitHpChanged(BattleUnitModel unit)
     {
-        if (_enemySpawner == null)
+        if (unit == null)
         {
             return;
         }
-
-        _enemySpawner.RefreshEnemyView(enemyUnit);
+        if (unit.IsHero)
+        {
+            if (BattleHeroSpawner.Inst != null)
+            {
+                BattleHeroSpawner.Inst.RefreshHeroView(unit);
+            }
+            return;
+        }
+        if (_enemySpawner != null)
+        {
+            _enemySpawner.RefreshEnemyView(unit);
+        }
     }
 
     private void OnDestroy()
@@ -194,7 +204,7 @@ public class BattleMainUI : UIBase
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnPropertyChanged_View;
-            _viewModel.EnemyHpChanged -= OnEnemyHpChanged;
+            _viewModel.UnitHpChanged -= OnUnitHpChanged;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
@@ -620,6 +630,8 @@ public class BattleMainUI : UIBase
         }
 
         _enemySpawner.SpawnEnemies(enemyList);
+        BattleHeroSpawner.Inst.InitializeHeroViews(heroList);   //영웅 HP바 초기값 세팅
+
 
         //도움말을 먼저 띄우고, 닫히는 시점에 전투 루프를 시작한다
         _pendingTurnOrder = turnOrder;
