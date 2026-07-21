@@ -207,42 +207,6 @@ public class SaveManager : SingletonBase<SaveManager>
             }
         }
 
-        List<HeroData> heroes = GameDataManager.Inst.GetDataList<HeroData>();
-        if (heroes != null)
-        {
-            if (data.HeroStats == null)
-            {
-                data.HeroStats = new List<HeroStat>();
-            }
-
-            foreach (HeroData hero in heroes)
-            {
-                bool isExist = false;
-                
-                foreach (HeroStat heroStat in data.HeroStats)
-                {
-                    if (heroStat.HeroID == hero.ID)
-                    {
-                        isExist = true;
-                        break;
-                    }
-                }
-
-                if (isExist == false)
-                {
-                    HeroStat newHero = new HeroStat
-                    {
-                        HeroID = hero.ID,
-                        Affection = 50,
-                        Satisfaction = 50
-                    };
-
-                    data.HeroStats.Add(newHero);
-                    isOldData = true;
-                }
-            }
-        }
-
         List<QuestData> quests = GameDataManager.Inst.GetDataList<QuestData>();
         if (quests != null)
         {

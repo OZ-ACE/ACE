@@ -16,6 +16,7 @@ public class RosterViewModel : ViewModelBase
         }
         foreach (HeroStat heroStat in player.HeroStats)
         {
+            Debug.Log(heroStat.HeroID);
             ownedHeroIds.Add(heroStat.HeroID);
         }
         return ownedHeroIds;
