@@ -11,6 +11,9 @@ public class BattleViewModel : ViewModelBase
     public List<BattleActionModel> ActionQueue = new List<BattleActionModel>();
 
     public event Action<BattleUnitModel> UnitHpChanged;
+    public event Action<BattleUnitModel> UnitAttackStarted;
+    public event Action<BattleUnitModel> UnitHit;
+    public event Action<BattleUnitModel> UnitDied;
 
     private UniTaskCompletionSource _interventionCompletionSource;
 
@@ -467,6 +470,7 @@ public class BattleViewModel : ViewModelBase
                 return false;
             }
 
+            UnitAttackStarted?.Invoke(action.Unit);
             ApplyDamageToUnit(action.Target, power);
             return true;
         }
@@ -479,6 +483,8 @@ public class BattleViewModel : ViewModelBase
             {
                 return false;
             }
+
+            UnitAttackStarted?.Invoke(action.Unit);
 
             foreach (BattleUnitModel target in action.TargetList)
             {
@@ -610,6 +616,16 @@ public class BattleViewModel : ViewModelBase
             target.CurrentHp = 0;
         }
         UnitHpChanged?.Invoke(target); 
+
+        if (target.CurrentHp <= 0)
+        {
+            UnitDied?.Invoke(target);
+        }
+        else
+        {
+            UnitHit?.Invoke(target);
+        }
+
         Debug.Log($"[BattleViewModel] {target.ID} 피격, 데미지 {power}, 남은 HP {target.CurrentHp}");
     }
 
