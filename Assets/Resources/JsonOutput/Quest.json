@@ -33,6 +33,17 @@
     "RequiredQuestID": "Quest_01_02"
   },
   {
+    "ID": "Quest_01_04",
+    "QuestName": "실버타운의 시작",
+    "Description": "영웅들의 일정 관리 또한 당신의 업무!\n하루의 일정을 정해봅시다!",
+    "ConditionType": "Schedule",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_01_03"
+  },
+  {
     "ID": "Quest_03_01",
     "QuestName": "하루의 끝",
     "Description": "하루를 3번 마감",

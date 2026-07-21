@@ -196,10 +196,12 @@ public static class UIExtension
 
     public static UIBase OpenScheduleUI(this UIManager uiManager)
     {
+        GameManager.Inst.PauseGame();
         return uiManager.OpenUI(UIRootType.Popup, UIType.ScheduleUI);
     }
     public static void CloseScheduleUI(this UIManager uiManager)
     {
+        GameManager.Inst.RestartGame();
         uiManager.CloseUI(UIType.ScheduleUI);
     }
 

@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class ScheduleSlot : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private Image Image_Background;
+    [SerializeField] private Image Image_Lock;
+    [SerializeField] private Image Image_Highlight;
     [SerializeField] private TextMeshProUGUI Text_Hour;
 
     private int _hour;
@@ -37,6 +39,10 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler
         {
             RefreshColor();
         }
+        else if (e.PropertyName == $"VisualType_{_hour}")
+        {
+            RefreshVisualType();
+        }
     }
 
     private void RefreshColor()
@@ -46,8 +52,36 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler
         Image_Background.color = _scheduleUI.GetSlotColor(state);
     }
 
+    private void RefreshVisualType()
+    {
+        ScheduleVisualType visualType = _scheduleVM.GetVisualType(_hour);
+
+        switch (visualType)
+        {
+            case ScheduleVisualType.Past:
+                Image_Background.color = Color.darkGray;
+                Image_Lock.gameObject.SetActive(true);
+                Text_Hour.gameObject.SetActive(false);
+                Image_Highlight.gameObject.SetActive(false);
+                break;
+
+            case ScheduleVisualType.Current:
+                Image_Highlight.gameObject.SetActive(true);
+                break;
+
+            case ScheduleVisualType.Future:
+                Image_Highlight.gameObject.SetActive(false);
+                break;
+        }
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (!_scheduleVM.IsEditable(_hour))
+        {
+            return;
+        }
+
         ScheduleState selectedTool = _scheduleUI.CurrentSelectedToolState;
         ScheduleState currentSlotState = _scheduleVM.EditingStates[_hour];
 

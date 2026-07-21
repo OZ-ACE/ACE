@@ -65,8 +65,6 @@ public class HeroModel
         {
             _targetHeroStat.Affection = Affection;
             _targetHeroStat.Satisfaction = Satisfaction;
-            
-            //SaveManager.Inst.RequestSaveData(SaveManager.Inst.CurrentPlayerModel);
         }
     }
 }
