@@ -8539,7 +8539,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[0].Scale
@@ -8562,6 +8562,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[5].Scale
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[3].HeroId
       value: hero_04
       objectReference: {fileID: 0}
@@ -8575,6 +8579,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[4].Prefab
+      value: 
+      objectReference: {fileID: 3791300385592474153, guid: f51d60bab3aada645a3178cba2551a5a, type: 3}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[5].HeroId
+      value: hero_07
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[5].Prefab
       value: 
       objectReference: {fileID: 3791300385592474153, guid: f51d60bab3aada645a3178cba2551a5a, type: 3}
     - target: {fileID: 7711888709231574003, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
