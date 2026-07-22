@@ -1,7 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-
+public enum GameOverType
+{
+    None,
+    Warning,
+    GameOver
+}
 
 //마감정산 뷰 모델
 public class SettlementViewModel : ViewModelBase
@@ -25,7 +30,6 @@ public class SettlementViewModel : ViewModelBase
     public int CurrentDay { get { return _dayService.CurrentDay; } }
     public int TodayMemoryFragment { get { return _currencyService.CurrentTodayMemoryFragment; } }
     public int CurrentGold { get { return _currencyService.CurrentGold; } }
-
     public int CurrentMemoryFragment { get { return _currencyService.CurrentMemoryFragment; } }
 
     public List<HeroEvaluation> HeroEvaluations
@@ -39,8 +43,6 @@ public class SettlementViewModel : ViewModelBase
             return _evaluationResult.Heroes;
         }
     }
-
-
 
     // 뷰가 켜질때 화면 갱신
     public void InvokeOnceOnInit()
@@ -76,6 +78,7 @@ public class SettlementViewModel : ViewModelBase
     {
         return GradeCalculator.GetText(grade);
     }
+
     // 업무평가 실행 (뷰가 config 넘겨 호출)
     public void Evaluate(WorkEvaluationConfig config)
     {
@@ -84,19 +87,25 @@ public class SettlementViewModel : ViewModelBase
             Debug.LogWarning("[SettlementViewModel] WorkEvaluationConfig 없음 - 평가 스킵");
             return;
         }
+
         WorkEvaluationResult result = new WorkEvaluationResult();
+
         // 돈 / 파편
         result.GoldGrade = config.Gold.GetGrade(_currencyService.CurrentGold);
         result.FragmentGrade = config.Fragment.GetGrade(_currencyService.CurrentMemoryFragment);
+
         // 영웅관리 (호감도 + 만족도 전체 평균)
         result.Heroes = BuildHeroEvaluations(config);
         List<EvaluationGrade> heroGrades = new List<EvaluationGrade>();
+
         for (int i = 0; i < result.Heroes.Count; i++)
         {
             heroGrades.Add(result.Heroes[i].Affection);
             heroGrades.Add(result.Heroes[i].Satisfaction);
         }
+
         result.HeroManageGrade = GradeCalculator.GetAverage(heroGrades);
+
         // 종합 (영웅관리 / 돈 / 파편 평균)
         List<EvaluationGrade> categoryGrades = new List<EvaluationGrade>();
         categoryGrades.Add(result.HeroManageGrade);
@@ -115,24 +124,54 @@ public class SettlementViewModel : ViewModelBase
     {
         List<HeroEvaluation> list = new List<HeroEvaluation>();
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
         if (player == null || player.HeroStats == null)
         {
             return list;
         }
+
         for (int i = 0; i < player.HeroStats.Count; i++)
         {
             HeroStat stat = player.HeroStats[i];
+
             if (stat == null)
             {
                 continue;
             }
+
             HeroEvaluation eval = new HeroEvaluation();
             eval.HeroId = stat.HeroID;
             eval.Affection = config.Affection.GetGrade(stat.Affection);
             eval.Satisfaction = config.Satisfaction.GetGrade(stat.Satisfaction);
             list.Add(eval);
         }
+
         return list;
     }
 
+    public bool IsLowGrade()
+    {
+        return _evaluationResult.Overall >= EvaluationGrade.F;
+    }
+
+    public GameOverType CheckResult()
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+        if (IsLowGrade())
+        {
+            player.LowGrade++;
+        }
+        
+        if (player.LowGrade == 1)
+        {
+            return GameOverType.Warning;
+        }
+        else if (player.LowGrade == 2)
+        {
+            return GameOverType.GameOver;
+        }
+
+        return GameOverType.None;
+    }
 }

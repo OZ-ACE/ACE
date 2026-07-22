@@ -45,6 +45,17 @@
   },
   {
     "ID": "Quest_01_05",
+    "QuestName": "연이은 건설",
+    "Description": "영웅들은 일정을 수행하지 못하면 스트레스를 받습니다.\n일정에 맞는 방을 건설해주세요!",
+    "ConditionType": "BuildRoom",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_01_04"
+  },
+  {
+    "ID": "Quest_01_06",
     "QuestName": "하루의 끝",
     "Description": "영웅 관리도 중요하지만 실버타운 운영 또한 빼놓을 수 없죠.\n사무실에 들어가 모래시계를 클릭하고 마감합시다!",
     "ConditionType": "AdvanceDay",
@@ -52,7 +63,7 @@
     "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 800,
-    "RequiredQuestID": "Quest_01_04"
+    "RequiredQuestID": "Quest_01_05"
   },
   {
     "ID": "Quest_02_01",
@@ -60,10 +71,10 @@
     "Description": "하루의 시작은 일정 관리부터!\n영웅들은 건강을 위해 7시간 이상 자야합니다.",
     "ConditionType": "Schedule",
     "ConditionTargetID": "Sleep",
-    "ConditionCount": 7,
+    "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 800,
-    "RequiredQuestID": "Quest_01_05"
+    "RequiredQuestID": "Quest_01_06"
   },
   {
     "ID": "Quest_02_02",
@@ -74,7 +85,7 @@
     "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 800,
-    "RequiredQuestID": "Quest_01_05"
+    "RequiredQuestID": "Quest_01_06"
   },
   {
     "ID": "Quest_02_03",
@@ -85,6 +96,39 @@
     "ConditionCount": 1,
     "RewardType": "Gold",
     "RewardAmount": 800,
-    "RequiredQuestID": "Quest_01_05"
+    "RequiredQuestID": "Quest_01_06"
+  },
+  {
+    "ID": "Quest_02_04",
+    "QuestName": "전설적인 영웅들",
+    "Description": "H.B 프로젝트를 위한 VR 방을 건설해봅시다.\n이 모든 것은 영웅들을 위해!",
+    "ConditionType": "BuildRoom",
+    "ConditionTargetID": "Room_Battle",
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_02_03"
+  },
+  {
+    "ID": "Quest_02_05",
+    "QuestName": "전설적인 서포터",
+    "Description": "H.B 프로젝트는 영웅들이 주인공이지만 서포터는 당신입니다.\n사무실에서 당신이 사용할 무기들을 구매하세요!",
+    "ConditionType": "PurchaseItem",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_02_04"
+  },
+  {
+    "ID": "Quest_02_06",
+    "QuestName": "전설의 재구성",
+    "Description": "전설은 반드시 다시 쓰입니다.\nVR방을 클릭해 영웅들이 전설을 다시 쓸 수 있도록 도와주세요!",
+    "ConditionType": "Battle",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 800,
+    "RequiredQuestID": "Quest_02_05"
   }
 ]

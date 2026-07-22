@@ -49,6 +49,7 @@ public class TycoonMainUI : UIBase
     [SerializeField] GameObject Panel_Construct;
     [SerializeField] GameObject Panel_Furniture;
     [SerializeField] List<PanelStruct> PanelList;
+    [SerializeField] private GameObject Panel_Warning;
 
     [Header("텍스트")]
     [SerializeField] TextMeshProUGUI Text_Day;
@@ -90,6 +91,7 @@ public class TycoonMainUI : UIBase
         SetMemory();
         SetDayText();
         ChangePanel(TycoonPanelType.Quest);
+        SetWarning();
 
         GameManager.Inst.Services.DayService.StartTimer();
     }
@@ -221,5 +223,19 @@ public class TycoonMainUI : UIBase
 
         int memory = GameManager.Inst.Services.CurrencyService.CurrentMemoryFragment;
         Text_Memory.text = $"{memory}";
+    }
+
+    private void SetWarning()
+    {
+        int lowGrade = SaveManager.Inst.CurrentPlayerModel.LowGrade;
+
+        if (lowGrade == 0)
+        {
+            Panel_Warning.SetActive(false);
+        }
+        else if (lowGrade == 1)
+        {
+            Panel_Warning.SetActive(true);
+        }
     }
 }
