@@ -7094,13 +7094,14 @@ GameObject:
   - component: {fileID: 4168768743196337936}
   - component: {fileID: 6305148780092037994}
   - component: {fileID: 2875276840121821766}
+  - component: {fileID: 1337673915948320349}
   m_Layer: 0
   m_Name: Panel_ChangeUnitPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4168768743196337936
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7162,6 +7163,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1337673915948320349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6770700398525910997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55e43c54aab0f2e43a484b9b8b24c564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChangeUnitPopupUI
+  Prefab_HeroSlot: {fileID: 4082708234872230721, guid: 1f041b45a0dc0c8479913678657945cd, type: 3}
+  Transform_SlotParent: {fileID: 7379180397109374992}
+  Object_NoHeroMessage: {fileID: 7221958710177710483}
 --- !u!1 &6811658537839562903
 GameObject:
   m_ObjectHideFlags: 0
