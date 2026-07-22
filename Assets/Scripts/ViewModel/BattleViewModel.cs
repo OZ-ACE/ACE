@@ -14,6 +14,7 @@ public class BattleViewModel : ViewModelBase
     public event Action<BattleUnitModel> UnitAttackStarted;
     public event Action<BattleUnitModel> UnitHit;
     public event Action<BattleUnitModel> UnitDied;
+    public event Action<BattleUnitModel> UnitHitVfxRequested;
     public event Action<List<BattleUnitModel>> HeroListChanged;
 
     private const int AttackAnimationDelayMilliseconds = 800;
@@ -733,12 +734,16 @@ public class BattleViewModel : ViewModelBase
         {
             return;
         }
+
         target.CurrentHp -= power;
+
         if (target.CurrentHp < 0)
         {
             target.CurrentHp = 0;
         }
-        UnitHpChanged?.Invoke(target); 
+        
+        UnitHpChanged?.Invoke(target);
+        UnitHitVfxRequested?.Invoke(target);
 
         if (target.CurrentHp <= 0)
         {

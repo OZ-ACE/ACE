@@ -117,6 +117,48 @@ public class EnemySpawner : MonoBehaviour
         return SetAnimationTrigger(enemyUnit, DeathTrigger);
     }
 
+    public bool TryGetVfxPoint(BattleUnitModel enemyUnit, out Transform vfxPoint)
+    {
+        vfxPoint = null;
+
+        if (enemyUnit == null)
+        {
+            return false;
+        }
+
+        bool hasView = _enemyViewMap.TryGetValue(enemyUnit, out EnemyUnitView enemyView);
+
+        if (hasView == false || enemyView == null)
+        {
+            return false;
+        }
+
+        vfxPoint = enemyView.VfxPoint;
+        return vfxPoint != null;
+    }
+
+    public bool TryGetMuzzlePoint(BattleUnitModel enemyUnit, out Transform muzzlePoint)
+    {
+        muzzlePoint = null;
+
+        if (enemyUnit == null)
+        {
+            return false;
+        }
+
+        bool hasView = _enemyViewMap.TryGetValue(
+            enemyUnit,
+            out EnemyUnitView enemyView);
+
+        if (hasView == false || enemyView == null)
+        {
+            return false;
+        }
+
+        muzzlePoint = enemyView.muzzlePoint;
+        return muzzlePoint != null;
+    }
+
     private bool SetAnimationTrigger(BattleUnitModel enemyUnit, int triggerHash)
     {
         if (enemyUnit == null)
