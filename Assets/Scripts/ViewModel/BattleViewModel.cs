@@ -14,7 +14,7 @@ public class BattleViewModel : ViewModelBase
     public event Action<BattleUnitModel> UnitAttackStarted;
     public event Action<BattleUnitModel> UnitHit;
     public event Action<BattleUnitModel> UnitDied;
-    public event Action<List<string>> HeroListChanged;
+    public event Action<List<BattleUnitModel>> HeroListChanged;
 
     private const int AttackAnimationDelayMilliseconds = 800;
     private const int HitAnimationDelayMilliseconds = 800;
@@ -468,7 +468,7 @@ public class BattleViewModel : ViewModelBase
 
         AddBattleLog($"{outHeroName} 영웅이 물러나고 {inHeroName} 영웅이 투입되었습니다.");
 
-        HeroListChanged?.Invoke(BuildHeroIdList(heroList));
+        HeroListChanged?.Invoke(heroList);
     }
 
     //TurnManager가 내부 리스트 하나를 재사용하는 구조라, 복사본을 거쳐야 원본이 비워지지 않는다
@@ -479,19 +479,6 @@ public class BattleViewModel : ViewModelBase
 
         turnOrder.Clear();
         turnOrder.AddRange(sortedCopy);
-    }
-
-    //재스폰에 넘길 영웅 ID 목록을 만든다
-    private List<string> BuildHeroIdList(List<BattleUnitModel> heroList)
-    {
-        List<string> heroIdList = new List<string>();
-
-        foreach (BattleUnitModel hero in heroList)
-        {
-            heroIdList.Add(hero.ID);
-        }
-
-        return heroIdList;
     }
 
     //지원하기 개입 처리 - 페널티로 막혔던 원래 스킬을 되살려서 실제로 적용한다

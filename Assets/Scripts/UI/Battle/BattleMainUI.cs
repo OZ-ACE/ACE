@@ -153,6 +153,7 @@ public class BattleMainUI : UIBase
         _viewModel.UnitAttackStarted += OnUnitAttackStarted;
         _viewModel.UnitHit += OnUnitHit;
         _viewModel.UnitDied += OnUnitDied;
+        _viewModel.HeroListChanged += HandleHeroListChanged;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
@@ -283,6 +284,7 @@ public class BattleMainUI : UIBase
             _viewModel.UnitAttackStarted -= OnUnitAttackStarted;
             _viewModel.UnitHit -= OnUnitHit;
             _viewModel.UnitDied -= OnUnitDied;
+            _viewModel.HeroListChanged -= HandleHeroListChanged;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
@@ -516,6 +518,31 @@ public class BattleMainUI : UIBase
         }
 
         ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, null, heroId);
+    }
+
+    //교체가 반영되면 현재 영웅 목록으로 전부 다시 스폰한다. 스포너에 개별 교체 API가 없어 전체 재스폰으로 처리
+    private void HandleHeroListChanged(List<BattleUnitModel> heroList)
+    {
+        if (heroList == null)
+        {
+            return;
+        }
+
+        List<string> heroIdList = new List<string>();
+
+        foreach (BattleUnitModel hero in heroList)
+        {
+            heroIdList.Add(hero.ID);
+
+            if (_excludedHeroIdList.Contains(hero.ID) == false)
+            {
+                _excludedHeroIdList.Add(hero.ID);
+            }
+        }
+
+        BattleHeroSpawner.Inst.SetSelectedHeroIdList(heroIdList);
+        BattleHeroSpawner.Inst.SpawnHeroes();
+        BattleHeroSpawner.Inst.InitializeHeroViews(heroList);
     }
 
     //개입 종류에 맞는 지원 아이템 팝업을 연다
