@@ -21,6 +21,8 @@ public class PlayerModel
     public List<AdmissionCandidateSaveData> AdmissionCandidates = new List<AdmissionCandidateSaveData>();
     public List<QuestProgressModel> QuestProgressList = new List<QuestProgressModel>();
     public List<string> SelectedHeroIds = new List<string>(); //전투에 내보낼 선택 파티 (최대 3)
+    public List<DailyEvaluationRecord> DailyEvaluations = new List<DailyEvaluationRecord>();
+
 }
 
 [Serializable]
