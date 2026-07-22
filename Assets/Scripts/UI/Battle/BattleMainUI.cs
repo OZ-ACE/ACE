@@ -37,6 +37,9 @@ public class BattleMainUI : UIBase
     [Header("전투 결과 팝업")]
     [SerializeField] private BattleResultPopupUI Panel_BattleResultPopup;
 
+    [Header("영웅 교체 팝업")]
+    [SerializeField] private ChangeUnitPopupUI Panel_ChangeUnitPopup;
+
     [Header("도움말")]
     [SerializeField] private Button Button_Help;
     [SerializeField] private HelpGuideUI Panel_HelpGuide;
@@ -64,6 +67,9 @@ public class BattleMainUI : UIBase
     private List<BattleUnitModel> _pendingTurnOrder;
     private List<BattleUnitModel> _pendingHeroList;
     private List<BattleUnitModel> _pendingEnemyList;
+
+    //이번 전투에 한 번이라도 출전한 영웅 목록. 교체 후보에서 제외한다
+    private readonly List<string> _excludedHeroIdList = new List<string>();
 
     private const int MaxRoundSafetyLimit = 15; //혹시 모를 무한루프 방지용 라운드 상한
 
@@ -97,6 +103,8 @@ public class BattleMainUI : UIBase
         CancelBattleLoop();
         Panel_BattleResultPopup.ClosePopup();
         Panel_HelpGuide.CloseGuideSilently();
+        Panel_ChangeUnitPopup.ClosePopup();
+        _excludedHeroIdList.Clear();
         _isBattleRunning = false;
         _selectedTargetUnitId = null;
         _pendingActionResult = null;
@@ -153,6 +161,7 @@ public class BattleMainUI : UIBase
         Button_Help.onClick.AddListener(OnClickHelp);
 
         Panel_SupportItemPopup.OnItemApplied += HandleSupportItemApplied;
+        Panel_ChangeUnitPopup.OnHeroSelected += HandleChangeHeroSelected;
         Panel_BattleResultPopup.OnConfirmed += HandleBattleResultConfirmed;
     }
 
@@ -282,6 +291,7 @@ public class BattleMainUI : UIBase
             Button_Help.onClick.RemoveListener(OnClickHelp);
 
             Panel_SupportItemPopup.OnItemApplied -= HandleSupportItemApplied;
+            Panel_ChangeUnitPopup.OnHeroSelected -= HandleChangeHeroSelected;
             Panel_BattleResultPopup.OnConfirmed -= HandleBattleResultConfirmed;
         }
 
@@ -476,7 +486,31 @@ public class BattleMainUI : UIBase
             return;
         }
 
+        if (result == BattleActionResult.ChangeUnit)
+        {
+            OpenChangeUnitPopup();
+            return;
+        }
+
         ApplyInterventionAction(targetUnitId, result, _pendingEnergyCost, _pendingLogMessage, null);
+    }
+
+    //교체 후보가 있을 때만 팝업을 연다. 후보가 없으면 에너지를 소모하지 않고 안내만 한다
+    private void OpenChangeUnitPopup()
+    {
+        if (Panel_ChangeUnitPopup.HasWaitingHero(_excludedHeroIdList) == false)
+        {
+            _viewModel.AddBattleLog("실행 실패: 교체할 수 있는 대기 영웅이 없습니다.");
+            return;
+        }
+
+        Panel_ChangeUnitPopup.OpenPopup(_excludedHeroIdList);
+    }
+
+    //교체 팝업에서 영웅을 고르면 실제 교체 액션을 지정한다
+    private void HandleChangeHeroSelected(string heroId)
+    {
+        _viewModel.AddBattleLog($"[임시] 교체 대상 선택: {heroId}");
     }
 
     //개입 종류에 맞는 지원 아이템 팝업을 연다
@@ -669,6 +703,8 @@ public class BattleMainUI : UIBase
         BattleHeroSpawner.Inst.SpawnHeroes();
         //실제 스폰된 유닛 기준으로 턴 순서 구성 (프리팹 매핑 없는 영웅은 스폰에서 빠지므로 로직도 그에 맞춤)
         List<string> spawnedHeroIds = BattleHeroSpawner.Inst.GetHeroIdList();
+        _excludedHeroIdList.Clear();
+        _excludedHeroIdList.AddRange(spawnedHeroIds);
         List<string> enemyIds = new List<string>(_testEnemyIdList);
         List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(spawnedHeroIds, enemyIds);
         if (turnOrder == null || turnOrder.Count <= 0)

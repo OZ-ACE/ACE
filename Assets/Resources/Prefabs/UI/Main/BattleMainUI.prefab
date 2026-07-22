@@ -7101,7 +7101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4168768743196337936
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9428,6 +9428,7 @@ MonoBehaviour:
   Text_ChangeUnitEnergyCost: {fileID: 6440662361505008267}
   Panel_SupportItemPopup: {fileID: 2280851770674198175}
   Panel_BattleResultPopup: {fileID: 694583951808414249}
+  Panel_ChangeUnitPopup: {fileID: 1337673915948320349}
   Button_Help: {fileID: 4608871183006150661}
   Panel_HelpGuide: {fileID: 4516442565653341156}
   _testEnemyIdList:
