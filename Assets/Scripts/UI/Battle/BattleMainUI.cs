@@ -23,6 +23,7 @@ public class BattleMainUI : UIBase
 
     private const float DimmedEnergyAlpha = 0.2f;
     private const string CommonHitVfxAddress = "BattleVFX_CommonHit"; //피격 VFX
+    private const string EnemyMuzzleVfxAddress = "BattleVFX_Enemy01Muzzle";
 
     [Header("액션 버튼")]
     [SerializeField] private Button Button_Reinforce;
@@ -228,6 +229,7 @@ public class BattleMainUI : UIBase
         if (_enemySpawner != null)
         {
             _enemySpawner.PlayAttackAnimation(unit);
+            PlayEnemyMuzzleVfxAsync(unit).Forget();
         }
     }
 
@@ -292,6 +294,59 @@ public class BattleMainUI : UIBase
         vfxObject.transform.SetPositionAndRotation(
             vfxPoint.position,
             vfxPoint.rotation);
+
+        float playDuration = GetParticlePlayDuration(vfxObject);
+
+        try
+        {
+            await UniTask.Delay(
+                System.TimeSpan.FromSeconds(playDuration),
+                cancellationToken: this.GetCancellationTokenOnDestroy())
+                .SuppressCancellationThrow();
+        }
+        finally
+        {
+            if (vfxObject != null)
+            {
+                Addressables.ReleaseInstance(vfxObject);
+            }
+        }
+    }
+
+    private async UniTask PlayEnemyMuzzleVfxAsync(BattleUnitModel unit)
+    {
+        if (unit == null || unit.IsHero)
+        {
+            return;
+        }
+
+        if (_enemySpawner == null)
+        {
+            return;
+        }
+
+        bool hasMuzzlePoint = _enemySpawner.TryGetMuzzlePoint(
+            unit,
+            out Transform muzzlePoint);
+
+        if (hasMuzzlePoint == false || muzzlePoint == null)
+        {
+            return;
+        }
+
+        GameObject vfxObject = await ResourceManager.Inst.InstantiateAsync(
+            EnemyMuzzleVfxAddress,
+            muzzlePoint);
+
+        if (vfxObject == null)
+        {
+            return;
+        }
+
+        vfxObject.transform.localPosition = Vector3.zero;
+        vfxObject.transform.localRotation = Quaternion.identity;
+
+        PrepareOneShotParticleVfx(vfxObject);
 
         float playDuration = GetParticlePlayDuration(vfxObject);
 

@@ -11,6 +11,7 @@ public class EnemyUnitView : MonoBehaviour
 
     [Header("VFX")]
     [SerializeField] private Transform _vfxPoint;
+    [SerializeField] private Transform _muzzlePoint;
 
     public Transform VfxPoint
     {
@@ -19,6 +20,19 @@ public class EnemyUnitView : MonoBehaviour
             if (_vfxPoint != null)
             {
                 return _vfxPoint;
+            }
+
+            return transform;
+        }
+    }
+
+    public Transform muzzlePoint
+    {
+        get
+        {
+            if (_muzzlePoint != null)
+            {
+                return _muzzlePoint;
             }
 
             return transform;
