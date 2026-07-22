@@ -14,8 +14,11 @@
     public DayService DayService { get; private set; }
 
 
-    // 정산 뷰모델 보관 서비스
+    // 일일 정산 뷰모델 보관 서비스
     public SettlementService SettlementService { get; private set; }
+
+    //주간 정산 뷰모델 보관 서비스
+    public WeeklyEvaluationService WeeklyEvaluationService { get; private set; }
 
     // 퀘스트 뷰모델 보관 서비스
     public QuestService QuestService { get; private set; }
@@ -36,6 +39,7 @@
         QuestService = new QuestService(CurrencyService);
         RoomAssignmentService = new RoomAssignmentService();
         RosterService = new RosterService();
+        WeeklyEvaluationService = new WeeklyEvaluationService(DayService);
     }
 
     public void Release()
