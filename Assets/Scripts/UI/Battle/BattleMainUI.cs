@@ -262,19 +262,49 @@ public class BattleMainUI : UIBase
         PlayCommonHitVfxAsync(unit).Forget();
     }
 
-    private async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
+    private bool TryGetUnitVfxPoint(
+        BattleUnitModel unit,
+        out Transform vfxPoint)
     {
-        if (unit == null || unit.IsHero)
+        vfxPoint = null;
+
+        if (unit == null)
         {
-            return;
+            return false;
+        }
+
+        if (unit.IsHero)
+        {
+            if (BattleHeroSpawner.Inst == null)
+            {
+                return false;
+            }
+
+            return BattleHeroSpawner.Inst.TryGetVfxPoint(
+                unit,
+                out vfxPoint);
         }
 
         if (_enemySpawner == null)
         {
+            return false;
+        }
+
+        return _enemySpawner.TryGetVfxPoint(
+            unit,
+            out vfxPoint);
+    }
+
+    private async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
+    {
+        if (unit == null)
+        {
             return;
         }
 
-        bool hasVfxPoint = _enemySpawner.TryGetVfxPoint(unit, out Transform vfxPoint);
+        bool hasVfxPoint = TryGetUnitVfxPoint(
+            unit,
+            out Transform vfxPoint);
 
         if (hasVfxPoint == false || vfxPoint == null)
         {
