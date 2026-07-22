@@ -492,7 +492,7 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        ApplyInterventionAction(targetUnitId, result, _pendingEnergyCost, _pendingLogMessage, null);
+        ApplyInterventionAction(targetUnitId, result, _pendingEnergyCost, _pendingLogMessage, null, null);
     }
 
     //교체 후보가 있을 때만 팝업을 연다. 후보가 없으면 에너지를 소모하지 않고 안내만 한다
@@ -510,7 +510,12 @@ public class BattleMainUI : UIBase
     //교체 팝업에서 영웅을 고르면 실제 교체 액션을 지정한다
     private void HandleChangeHeroSelected(string heroId)
     {
-        _viewModel.AddBattleLog($"[임시] 교체 대상 선택: {heroId}");
+        if (_pendingActionResult.HasValue == false || string.IsNullOrEmpty(_selectedTargetUnitId))
+        {
+            return;
+        }
+
+        ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, null, heroId);
     }
 
     //개입 종류에 맞는 지원 아이템 팝업을 연다
@@ -541,7 +546,7 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, itemId);
+        ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, itemId, null);
     }
 
     //결과 팝업 확인 버튼 클릭 시 타이쿤 화면으로 복귀한다
@@ -551,9 +556,9 @@ public class BattleMainUI : UIBase
     }
 
     //실제 대상에게 개입 액션을 적용한다
-    private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage, string itemId)
+    private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage, string itemId, string changeHeroId)
     {
-        ActionApplyResult applyResult = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost, itemId);
+        ActionApplyResult applyResult = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost, itemId, changeHeroId);
 
         if (applyResult == ActionApplyResult.InsufficientEnergy)
         {
