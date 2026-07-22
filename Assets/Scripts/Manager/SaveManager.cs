@@ -108,8 +108,9 @@ public class SaveManager : SingletonBase<SaveManager>
 
         newPlayer.PlayerName = "요양보조사";
         newPlayer.Day = 1;
-        newPlayer.Gold = 99999;
+        newPlayer.Gold = 990;
         newPlayer.MemoryFragment = 0;
+        newPlayer.LowGrade = 0;
 
         newPlayer.Inventory = SetDefaultItem();
         newPlayer.HeroStats = new List<HeroStat>();

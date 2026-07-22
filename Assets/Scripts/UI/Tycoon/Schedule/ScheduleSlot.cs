@@ -65,10 +65,14 @@ public class ScheduleSlot : MonoBehaviour, IPointerDownHandler
                 break;
 
             case ScheduleVisualType.Current:
+                Image_Lock.gameObject.SetActive(false);
+                Text_Hour.gameObject.SetActive(true);
                 Image_Highlight.gameObject.SetActive(true);
                 break;
 
             case ScheduleVisualType.Future:
+                Image_Lock.gameObject.SetActive(false);
+                Text_Hour.gameObject.SetActive(true);
                 Image_Highlight.gameObject.SetActive(false);
                 break;
         }

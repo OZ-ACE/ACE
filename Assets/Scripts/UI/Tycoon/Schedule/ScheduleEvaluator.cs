@@ -74,5 +74,7 @@ public class ScheduleEvaluator
         heroModel.SaveHeroProgress();
 
         Debug.Log($"햇빛:{sunCount}, 수면:{sleepCount}, 샤워:{showerCount} 만족:{deltaSatisfaction}, 호감:{deltaAffection}");
+
+        heroModel.ResetSchedule();
     }
 }

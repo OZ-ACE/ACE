@@ -29,7 +29,8 @@ public enum UIType
     SettlementUI,
     ScheduleUI,
     RosterUI,
-    InfoText
+    InfoText,
+    GameOver
 }
 
 public static class UIExtension
@@ -262,5 +263,15 @@ public static class UIExtension
     public static void CloseInfoText(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.InfoText);
+    }
+
+    public static void OpenGameOver(this UIManager uiManager)
+    {
+        UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.GameOver);
+    }
+
+    public static void CloseGameOver(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.GameOver);
     }
 }

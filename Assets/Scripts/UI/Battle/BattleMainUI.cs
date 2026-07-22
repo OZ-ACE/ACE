@@ -755,6 +755,10 @@ public class BattleMainUI : UIBase
                     GameManager.Inst.Services.DayService.MarkBattleDone();
                     _viewModel.AddBattleLog(result == BattleResult.Victory ? "전투 승리!" : "전투 패배...");
                     Panel_BattleResultPopup.OpenPopup(result, rewardAmount, roundCount);
+
+                    QuestViewModel questVM = GameManager.Inst.Services.QuestService?.GetQuestViewModel();
+                    questVM.ReportProgress(QuestConditionType.Battle, "", 1);
+
                     return;
                 }
 
@@ -770,10 +774,6 @@ public class BattleMainUI : UIBase
             _isBattleRunning = false;
         }
     }
-
-
-
-
 
     //배틀메인UI 나가기
 
@@ -799,6 +799,4 @@ public class BattleMainUI : UIBase
         }
         rosterUI.Initialize(OnRosterConfirmed);
     }
-
-
 }

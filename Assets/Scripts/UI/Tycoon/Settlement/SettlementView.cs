@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+
 public class SettlementView : ViewBase
 {
     [Header("텍스트")]
@@ -124,10 +125,32 @@ public class SettlementView : ViewBase
 
     private void OnClickConfirm()
     {
+        GameOverType gameOverType = _viewModel.CheckResult();
+
         if (_viewModel.TryConfirmSettlement() == false)
         {
             Debug.Log("[SettlementView] 정산 실패 - 다음날로 넘길 수 없음");
             return;
+        }
+
+        switch (gameOverType)
+        {
+            case GameOverType.GameOver:
+                GameManager.Inst.SetDialogueID("GameOver_2_01");
+                ObjectManager.Inst.ExitOffice();
+                UIManager.Inst.CloseTycoonMainUI();
+                UIManager.Inst.OpenDialogueUI();
+                break;
+
+            case GameOverType.Warning:
+                GameManager.Inst.SetDialogueID("GameOver_1_01");
+                ObjectManager.Inst.ExitOffice();
+                UIManager.Inst.CloseTycoonMainUI();
+                UIManager.Inst.OpenDialogueUI();
+                break;
+
+            case GameOverType.None:
+                break;
         }
 
         UIManager.Inst.CloseSettlementUI();

@@ -8,6 +8,7 @@ public class WorkEvaluationResult
     public EvaluationGrade FragmentGrade;    // 파편
     public List<HeroEvaluation> Heroes = new List<HeroEvaluation>();
 }
+
 // 영웅 1명 평가
 public class HeroEvaluation
 {

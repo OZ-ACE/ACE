@@ -11,6 +11,7 @@
             case "ReachGold": return QuestConditionType.ReachGold;
             case "AdmitHero": return QuestConditionType.AdmitHero;
             case "Schedule": return QuestConditionType.Schedule;
+            case "Battle": return QuestConditionType.Battle;
         }
 
         return QuestConditionType.None;
