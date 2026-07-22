@@ -30,6 +30,7 @@ public enum UIType
     ScheduleUI,
     RosterUI,
     InfoText,
+    WeeklyEvaluationUI,
     GameOver
 }
 
@@ -232,7 +233,6 @@ public static class UIExtension
 
         return popup;
     }
-
     public static ConfirmPopup OpenNoticePopup(this UIManager uiManager, string message, System.Action onConfirm = null)
     {
         UIBase uiBase = uiManager.OpenPopup(UIType.ConfirmPopup);
@@ -259,11 +259,42 @@ public static class UIExtension
             info.ShowMessage(message).Forget();
         }
     }
-
     public static void CloseInfoText(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.InfoText);
     }
+
+
+    public static void OpenWeeklyEvaluationUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.Popup, UIType.WeeklyEvaluationUI);
+    }
+    public static void CloseWeeklyEvaluationUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.WeeklyEvaluationUI);
+    }
+    public static void OpenSettlementSnapshot(this UIManager uiManager, DailyEvaluationRecord record)
+    {
+        UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.SettlementUI);
+        if (uiBase == null)
+        {
+            return;
+        }
+        uiBase.transform.SetAsLastSibling();   // 주간창보다 앞으로
+        SettlementView view = uiBase.GetComponent<SettlementView>();
+        if (view == null)
+        {
+            view = uiBase.GetComponentInChildren<SettlementView>(true);
+        }
+        if (view == null)
+        {
+            Debug.LogWarning("[UIExtension] SettlementView 없음");
+            return;
+        }
+        view.ShowSnapshot(record);
+    }
+
+
 
     public static void OpenGameOver(this UIManager uiManager)
     {
