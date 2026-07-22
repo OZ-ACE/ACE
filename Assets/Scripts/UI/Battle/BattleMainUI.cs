@@ -37,9 +37,6 @@ public class BattleMainUI : UIBase
     [Header("전투 결과 팝업")]
     [SerializeField] private BattleResultPopupUI Panel_BattleResultPopup;
 
-    [Header("나가기")]
-    [SerializeField] private Button Button_Exit;
-
     [Header("도움말")]
     [SerializeField] private Button Button_Help;
     [SerializeField] private HelpGuideUI Panel_HelpGuide;
@@ -59,9 +56,6 @@ public class BattleMainUI : UIBase
     [Header("BT 라운드 테스트")]
     [SerializeField] private List<string> _testEnemyIdList = new List<string>();
 
-    [Header("전투 시작")]
-    [SerializeField] private Button Button_StartBattle;
-   
     private EnemySpawner _enemySpawner;
     private bool _isBattleRunning;
     private CancellationTokenSource _battleLoopCts;
@@ -156,8 +150,6 @@ public class BattleMainUI : UIBase
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
         Button_ChangeUnit.onClick.AddListener(OnClickChangeUnit);
         Button_EndTurn.onClick.AddListener(OnClickEndTurn);
-        Button_StartBattle.onClick.AddListener(OnClickStartBattle);
-        Button_Exit.onClick.AddListener(OnClickExit);
         Button_Help.onClick.AddListener(OnClickHelp);
 
         Panel_SupportItemPopup.OnItemApplied += HandleSupportItemApplied;
@@ -287,8 +279,6 @@ public class BattleMainUI : UIBase
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
             Button_ChangeUnit.onClick.RemoveListener(OnClickChangeUnit);
             Button_EndTurn.onClick.RemoveListener(OnClickEndTurn);
-            Button_StartBattle.onClick.RemoveListener(OnClickStartBattle);
-            Button_Exit.onClick.RemoveListener(OnClickExit);
             Button_Help.onClick.RemoveListener(OnClickHelp);
 
             Panel_SupportItemPopup.OnItemApplied -= HandleSupportItemApplied;

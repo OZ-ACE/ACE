@@ -356,6 +356,10 @@ PrefabInstance:
       value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5114975155138864792, guid: 7c691629d11923a47beab944aa443942, type: 3}
+      propertyPath: Prefab_BackGround
+      value: 
+      objectReference: {fileID: 655304303417643039, guid: 6e313e947d6ac184fb25c3922e57b773, type: 3}
+    - target: {fileID: 5114975155138864792, guid: 7c691629d11923a47beab944aa443942, type: 3}
       propertyPath: Prefab_BattleRoot
       value: 
       objectReference: {fileID: 1778206683947138291, guid: 63f668ff854a20a4dafc75f7f7ae2535, type: 3}
