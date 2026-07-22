@@ -12,6 +12,8 @@ public class BattleActionModel
 
     public string SelectedItemId { get; set; } //지원하기/회복하기 실행 시 선택한 아이템 ID (SupportItem.ID)
 
+    public string SelectedChangeHeroId { get; set; } //영웅 교체 실행 시 새로 투입할 영웅 ID (HeroData.ID)
+
     public ActionType ActionType { get; set; } = ActionType.None; //BT 행동 분류
 
     public SkillType SkillType { get; set; } = SkillType.None; //실제 스킬 효과 타입
