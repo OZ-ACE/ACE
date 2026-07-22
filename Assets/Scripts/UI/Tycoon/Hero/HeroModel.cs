@@ -109,4 +109,15 @@ public class HeroModel
             _targetHeroStat.Satisfaction = Satisfaction;
         }
     }
+
+    public void ResetSchedule()
+    {
+        for (int i = 0; i < 24; i++)
+        {
+            HourlyStates[i] = ScheduleState.Sleep;
+        }
+
+        SaveHeroProgress();
+        OnUpdateSchedule?.Invoke();
+    }
 }

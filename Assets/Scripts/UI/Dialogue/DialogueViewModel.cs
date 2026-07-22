@@ -171,6 +171,15 @@
             UIManager.Inst.OpenLoadingUI();
             UIManager.Inst.OpenTycoonMainUI();
             UIManager.Inst.CloseDialogueUI();
+            SoundManager.Inst.PlayBGM("Tycoon");
+            return;
+        }
+        else if (nextID == "Home")
+        {
+            UIManager.Inst.OpenGameOver();
+            UIManager.Inst.CloseTycoonMainUI();
+            UIManager.Inst.CloseDialogueUI();
+            SoundManager.Inst.PlayBGM("Tycoon");
             return;
         }
 

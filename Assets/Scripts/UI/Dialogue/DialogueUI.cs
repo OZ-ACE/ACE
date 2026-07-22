@@ -148,7 +148,7 @@ public class DialogueUI : UIBase
 
         foreach (var data in GameDataManager.Inst.GetDataList<Dialogue>())
         {
-            if (nextID == "0" || string.IsNullOrEmpty(nextID))
+            if (nextID == "0" || nextID == "Home"|| string.IsNullOrEmpty(nextID))
             {
                 break;
             }

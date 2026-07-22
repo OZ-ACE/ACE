@@ -6,7 +6,8 @@
     AdvanceDay,     // 날짜 진행 (누적)
     ReachGold,       // 보유 골드 달성 (상태)
     AdmitHero,
-    Schedule
+    Schedule,
+    Battle
 }
 
 public enum QuestRewardType

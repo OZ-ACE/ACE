@@ -208,5 +208,125 @@
     "Background": null,
     "BGM": null,
     "SFX": null
+  },
+  {
+    "ID": "GameOver_1_01",
+    "NextID": "GameOver_1_02",
+    "Speaker": "인사팀장",
+    "SpeakerPath": "Prefabs/Character/NPC/Boss",
+    "Content": "오늘 정산 보고서 봤네. 등급이 'D'라니, 지금 제정신인가?",
+    "Background": "Room_Office",
+    "BGM": "GameOver",
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_1_02",
+    "NextID": "GameOver_1_03",
+    "Speaker": "{PlayerName}",
+    "SpeakerPath": "Prefabs/Character/NPC/Player",
+    "Content": "아, 지부장님! 그게 이번에 어르신들 관절염 민원이 겹치는 바람에 온천 짓느라 지원금이 좀...",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_1_03",
+    "NextID": "GameOver_1_04",
+    "Speaker": "인사팀장",
+    "SpeakerPath": "Prefabs/Character/NPC/Boss",
+    "Content": "핑계는 됐고. 자네도 우리 조직 방침 알지? ‘D 등급 이하 2회 기록 시 즉시 계약 해지’야.",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_1_04",
+    "NextID": "0",
+    "Speaker": "인사팀장",
+    "SpeakerPath": "Prefabs/Character/NPC/Boss",
+    "Content": "이번 한 번은 넘어가지. 대신 다음 정산 때도 이따위 성적표를 들고 오면, 그땐 짐 쌀 생각 하게. 알겠나?",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_2_01",
+    "NextID": "GameOver_2_02",
+    "Speaker": "인사팀장",
+    "SpeakerPath": "Prefabs/Character/NPC/Boss",
+    "Content": "...결국 또 D 등급이군. 지난번 경고가 가벼웠던 모양이지?",
+    "Background": null,
+    "BGM": "GameOver",
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_2_02",
+    "NextID": "GameOver_2_03",
+    "Speaker": "{PlayerName}",
+    "SpeakerPath": "Prefabs/Character/NPC/Player",
+    "Content": "지, 지부장님! 한 번만 더 기회를 주십시오!",
+    "Background": "Room_Office",
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_2_03",
+    "NextID": "GameOver_2_04",
+    "Speaker": "{PlayerName}",
+    "SpeakerPath": "Prefabs/Character/NPC/Player",
+    "Content": "다음 주엔 정말 캡틴물렁카 할아버지 만족도도 올리고 파편도 많이...!",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_2_04",
+    "NextID": "GameOver_2_05",
+    "Speaker": "인사팀장",
+    "SpeakerPath": "Prefabs/Character/NPC/Boss",
+    "Content": "규정은 규정이야. 자네한테 줄 기회 따위는 없어.",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_2_05",
+    "NextID": "GameOver_2_06",
+    "Speaker": "인사팀장",
+    "SpeakerPath": "Prefabs/Character/NPC/Boss",
+    "Content": "말단 요양보조사 하나 교체하는 건 일도 아니지.",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_2_06",
+    "NextID": "GameOver_2_07",
+    "Speaker": "인사팀장",
+    "SpeakerPath": "Prefabs/Character/NPC/Boss",
+    "Content": "보안요원, 이 친구 짐 정리시키고 밖으로 던져버리게.",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_2_07",
+    "NextID": "GameOver_2_08",
+    "Speaker": "{PlayerName}",
+    "SpeakerPath": "Prefabs/Character/NPC/Player",
+    "Content": "아니, 어르신들 파스도 붙여드려야 하고! 총명탕도 끓여야 하는데! 놓으세요! 놔!",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
+  },
+  {
+    "ID": "GameOver_2_08",
+    "NextID": "Home",
+    "Speaker": null,
+    "SpeakerPath": null,
+    "Content": "당신은 요양보조사 직에서 해고되었습니다. 다음 보조사는 과연 어르신들의 허리를 지켜낼 수 있을까요?",
+    "Background": null,
+    "BGM": null,
+    "SFX": null
   }
 ]

@@ -40,9 +40,7 @@ public class ObjectManager : SingletonBase<ObjectManager>
         _mainCamera = Camera.main;
         CreateOfficeRoot();
         CreateBattleRoot();
-        CreateBackGround();
-
-
+        CreateBackGround(); 
     }
 
     public void CreateBuildGridView()

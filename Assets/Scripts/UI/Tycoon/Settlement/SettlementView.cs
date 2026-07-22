@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 public class SettlementView : ViewBase
 {
     [Header("텍스트")]
@@ -10,64 +10,42 @@ public class SettlementView : ViewBase
     [SerializeField] private TextMeshProUGUI Text_TodayFragment;
     [SerializeField] private TextMeshProUGUI Text_TotalFragment;
     [SerializeField] private TextMeshProUGUI Text_Gold;
-
     [Header("버튼")]
     [SerializeField] private Button Button_Confirm;
     [SerializeField] private Button Button_Close;
-
     [Header("업무평가")]
     [SerializeField] private WorkEvaluationConfig Config_Evaluation;
     [SerializeField] private TextMeshProUGUI Text_OverallGrade;
     [SerializeField] private TextMeshProUGUI Text_HeroManageGrade;
     [SerializeField] private TextMeshProUGUI Text_GoldGrade;
     [SerializeField] private TextMeshProUGUI Text_FragmentGrade;
-
     [Header("영웅별 평가 슬롯")]
     [SerializeField] private SettlementHeroSlot Prefab_HeroSlot;
     [SerializeField] private Transform Transform_HeroSlotParent;
     private List<SettlementHeroSlot> _heroSlots = new List<SettlementHeroSlot>();
-
     private SettlementViewModel _viewModel;
-
-    // 뷰모델 바인딩
+    /// <summary> 뷰모델 바인딩 </summary>
     public void Bind(SettlementViewModel viewModel)
     {
         if (_viewModel != null)
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
-
         _viewModel = viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         _viewModel.InvokeOnceOnInit();
         _viewModel.Evaluate(Config_Evaluation);
         RefreshHeroSlots();
     }
-
     private void OnEnable()
     {
         Button_Confirm.onClick.RemoveListener(OnClickConfirm);
         Button_Confirm.onClick.AddListener(OnClickConfirm);
         Button_Close.onClick.RemoveListener(OnClickClose);
         Button_Close.onClick.AddListener(OnClickClose);
-
-        if (_viewModel == null)
-        {
-            SettlementViewModel vm = GameManager.Inst.Services.SettlementService.GetSettlementViewModel();
-            if (vm == null)
-            {
-                vm = GameManager.Inst.Services.SettlementService.CreateSettlementViewModel();
-            }
-            Bind(vm);
-        }
-        else
-        {
-            _viewModel.InvokeOnceOnInit();
-            _viewModel.Evaluate(Config_Evaluation);
-            RefreshHeroSlots();
-        }
+        // 항상 오늘(라이브) 정산으로 초기화
+        BindLive();
     }
-
     private void OnDestroy()
     {
         if (_viewModel != null)
@@ -75,19 +53,48 @@ public class SettlementView : ViewBase
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
     }
-
+    // 오늘 정산(라이브) 바인딩
+    private void BindLive()
+    {
+        SettlementViewModel vm = GameManager.Inst.Services.SettlementService.GetSettlementViewModel();
+        if (vm == null)
+        {
+            vm = GameManager.Inst.Services.SettlementService.CreateSettlementViewModel();
+        }
+        Bind(vm);
+        if (Button_Confirm != null)
+        {
+            Button_Confirm.gameObject.SetActive(true);
+        }
+    }
+    // 과거 일일평가 스냅샷 표시 (주간창 상세보기)
+    public void ShowSnapshot(DailyEvaluationRecord record)
+    {
+        SettlementViewModel vm = GameManager.Inst.Services.SettlementService.CreateSnapshotViewModel();
+        if (_viewModel != null)
+        {
+            _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        }
+        _viewModel = vm;
+        _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        _viewModel.LoadFromRecord(record);
+        UpdateAllText();
+        RefreshHeroSlots();
+        if (Button_Confirm != null)
+        {
+            Button_Confirm.gameObject.SetActive(false);
+        }
+    }
     private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         UpdateAllText();
     }
-
     private void UpdateAllText()
     {
         if (_viewModel == null)
         {
             return;
         }
-
         if (Text_Day != null)
         {
             Text_Day.text = $"Day {_viewModel.CurrentDay}";
@@ -121,7 +128,6 @@ public class SettlementView : ViewBase
             Text_FragmentGrade.text = _viewModel.FragmentGradeText;
         }
     }
-
     private void OnClickConfirm()
     {
         if (_viewModel.TryConfirmSettlement() == false)
@@ -129,15 +135,17 @@ public class SettlementView : ViewBase
             Debug.Log("[SettlementView] 정산 실패 - 다음날로 넘길 수 없음");
             return;
         }
-
+        bool weeklyDue = _viewModel.IsWeeklyReviewDue;
         UIManager.Inst.CloseSettlementUI();
+        if (weeklyDue == true)
+        {
+            UIManager.Inst.OpenWeeklyEvaluationUI();
+        }
     }
-
     private void OnClickClose()
     {
         UIManager.Inst.CloseSettlementUI();
     }
-
     // 영웅 수만큼 슬롯을 복제해 채운다
     private void RefreshHeroSlots()
     {
@@ -145,7 +153,6 @@ public class SettlementView : ViewBase
         {
             return;
         }
-        // 기존 슬롯 정리
         for (int i = 0; i < _heroSlots.Count; i++)
         {
             if (_heroSlots[i] != null)
@@ -154,7 +161,6 @@ public class SettlementView : ViewBase
             }
         }
         _heroSlots.Clear();
-        // 영웅별 슬롯 생성 + 바인딩
         List<HeroEvaluation> heroes = _viewModel.HeroEvaluations;
         for (int i = 0; i < heroes.Count; i++)
         {
