@@ -638,23 +638,23 @@ public class BattleMainUI : UIBase
             this.GetCancellationTokenOnDestroy());
     }
 
-    //전투 시작 버튼 
-    private void OnClickStartBattle()
-    {
-        if (_isBattleRunning)
-        {
-            Debug.LogWarning("[BattleMainUI] 이미 전투가 진행 중입니다.");
-            return;
-        }
-        UIBase ui = UIManager.Inst.OpenRosterUI();
-        RosterUI rosterUI = ui as RosterUI;
-        if (rosterUI == null)
-        {
-            Debug.LogWarning("[BattleMainUI] RosterUI를 찾을 수 없습니다.");
-            return;
-        }
-        rosterUI.Initialize(OnRosterConfirmed);
-    }
+    ////전투 시작 버튼 
+    //private void OnClickStartBattle()
+    //{
+    //    if (_isBattleRunning)
+    //    {
+    //        Debug.LogWarning("[BattleMainUI] 이미 전투가 진행 중입니다.");
+    //        return;
+    //    }
+    //    UIBase ui = UIManager.Inst.OpenRosterUI();
+    //    RosterUI rosterUI = ui as RosterUI;
+    //    if (rosterUI == null)
+    //    {
+    //        Debug.LogWarning("[BattleMainUI] RosterUI를 찾을 수 없습니다.");
+    //        return;
+    //    }
+    //    rosterUI.Initialize(OnRosterConfirmed);
+    //}
 
     //로스터에서 3명을 확정하면 그 영웅들을 스폰시키고 전투 루프를 시작한다
     private void OnRosterConfirmed(List<string> selectedHeroIds)
@@ -775,13 +775,13 @@ public class BattleMainUI : UIBase
 
 
 
-    //배틀메인UI 나가기
+    ////배틀메인UI 나가기
 
-    private void OnClickExit()
-    {
-        CancelBattleLoop();
-        ObjectManager.Inst.ExitBattle();
-    }
+    //private void OnClickExit()
+    //{
+    //    CancelBattleLoop();
+    //    ObjectManager.Inst.ExitBattle();
+    //}
 
     //배틀메인UI 진입시 로스터 자동 열기
     private void OpenRoster()
