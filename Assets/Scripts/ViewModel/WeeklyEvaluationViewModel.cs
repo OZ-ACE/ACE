@@ -61,4 +61,38 @@ public class WeeklyEvaluationViewModel : ViewModelBase
         OnPropertyChanged(nameof(GoldGradeText));
         OnPropertyChanged(nameof(FragmentGradeText));
     }
+
+    // 이번 주 종합이 D 이하(저평가)인지
+    public bool IsLowGrade()
+    {
+        return _overall <= EvaluationGrade.D;
+    }
+    // 주간 결과로 게임오버 판정 (D 이하 연속 2회 → 게임오버)
+    public GameOverType CheckResult()
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+        if (player == null)
+        {
+            return GameOverType.None;
+        }
+        if (IsLowGrade() == true)
+        {
+            player.LowGrade++;
+        }
+        else
+        {
+            player.LowGrade = 0;   // 연속이 끊기면 리셋
+        }
+        // 저평가 누적(연속)은 즉시 저장해 다음 주까지 유지
+        SaveManager.Inst.RequestSaveData(player);
+        if (player.LowGrade >= 2)
+        {
+            return GameOverType.GameOver;
+        }
+        if (player.LowGrade == 1)
+        {
+            return GameOverType.Warning;
+        }
+        return GameOverType.None;
+    }
 }

@@ -139,7 +139,16 @@ public class SettlementView : ViewBase
         UIManager.Inst.CloseSettlementUI();
         if (weeklyDue == true)
         {
+            // 주간 평가 계산 + 게임오버 판정 (주 1회만)
+            WeeklyEvaluationViewModel weeklyVm = GameManager.Inst.Services.WeeklyEvaluationService.GetWeeklyEvaluationViewModel();
+            if (weeklyVm == null)
+            {
+                weeklyVm = GameManager.Inst.Services.WeeklyEvaluationService.CreateWeeklyEvaluationViewModel();
+            }
+            weeklyVm.BuildWeekly();
+            GameOverType result = weeklyVm.CheckResult();
             UIManager.Inst.OpenWeeklyEvaluationUI();
+            HandleGameOverResult(result);
         }
     }
     private void OnClickClose()
@@ -167,6 +176,22 @@ public class SettlementView : ViewBase
             SettlementHeroSlot slot = Instantiate(Prefab_HeroSlot, Transform_HeroSlotParent);
             slot.SetSlot(heroes[i]);
             _heroSlots.Add(slot);
+        }
+    }
+
+
+    //평가 D 이하 처리
+    private void HandleGameOverResult(GameOverType result)
+    {
+        if (result == GameOverType.Warning)
+        {
+            UIManager.Inst.OpenNoticePopup("경고! 이번 주 평가가 D 이하입니다. 다음 주에도 D 이하면 게임오버됩니다.");
+        }
+        else if (result == GameOverType.GameOver)
+        {
+            UIManager.Inst.CloseWeeklyEvaluationUI();
+            UIManager.Inst.CloseTycoonMainUI();
+            UIManager.Inst.OpenGameOver();
         }
     }
 }
