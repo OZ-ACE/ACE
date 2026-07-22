@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using UnityEngine.AddressableAssets;
 
 // 전투 메인 UI 전체를 관리하는 스크립트 (배틀 로그 표시도 담당)
 public class BattleMainUI : UIBase
@@ -21,6 +22,7 @@ public class BattleMainUI : UIBase
     [SerializeField] private Image[] Image_EnergySlotList;
 
     private const float DimmedEnergyAlpha = 0.2f;
+    private const string CommonHitVfxAddress = "BattleVFX_CommonHit"; //피격 VFX
 
     [Header("액션 버튼")]
     [SerializeField] private Button Button_Reinforce;
@@ -145,6 +147,7 @@ public class BattleMainUI : UIBase
         _viewModel.UnitAttackStarted += OnUnitAttackStarted;
         _viewModel.UnitHit += OnUnitHit;
         _viewModel.UnitDied += OnUnitDied;
+        _viewModel.UnitHitVfxRequested += OnUnitHitVfxRequested;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
@@ -242,6 +245,103 @@ public class BattleMainUI : UIBase
         }
     }
 
+    private void OnUnitHitVfxRequested(BattleUnitModel unit)
+    {
+        PlayCommonHitVfxAsync(unit).Forget();
+    }
+
+    private async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
+    {
+        if (unit == null || unit.IsHero)
+        {
+            return;
+        }
+
+        if (_enemySpawner == null)
+        {
+            return;
+        }
+
+        bool hasVfxPoint = _enemySpawner.TryGetVfxPoint(unit, out Transform vfxPoint);
+
+        if (hasVfxPoint == false || vfxPoint == null)
+        {
+            return;
+        }
+
+        GameObject vfxObject = await ResourceManager.Inst.InstantiateAsync(
+            CommonHitVfxAddress);
+
+        if (vfxObject == null)
+        {
+            return;
+        }
+
+        PrepareOneShotParticleVfx(vfxObject);
+        
+        vfxObject.transform.SetPositionAndRotation(
+            vfxPoint.position,
+            vfxPoint.rotation);
+
+        float playDuration = GetParticlePlayDuration(vfxObject);
+
+        try
+        {
+            await UniTask.Delay(
+                System.TimeSpan.FromSeconds(playDuration),
+                cancellationToken: this.GetCancellationTokenOnDestroy())
+                .SuppressCancellationThrow();
+        }
+        finally
+        {
+            if (vfxObject != null)
+            {
+                Addressables.ReleaseInstance(vfxObject);
+            }
+        }
+    }
+
+    private void PrepareOneShotParticleVfx(GameObject vfxObject)
+    {
+        ParticleSystem[] particleSystems =
+            vfxObject.GetComponentsInChildren<ParticleSystem>(true);
+
+        foreach (ParticleSystem particleSystem in particleSystems)
+        {
+            ParticleSystem.MainModule main = particleSystem.main;
+            main.loop = false;
+
+            particleSystem.Stop(
+                true,
+                ParticleSystemStopBehavior.StopEmittingAndClear);
+
+            particleSystem.Play(true);
+        }
+    }
+
+    private float GetParticlePlayDuration(GameObject vfxObject)
+    {
+        const float MinimumDuration = 0.1f;
+
+        float maxDuration = MinimumDuration;
+
+        ParticleSystem[] particleSystems =
+            vfxObject.GetComponentsInChildren<ParticleSystem>(true);
+
+        foreach (ParticleSystem particleSystem in particleSystems)
+        {
+            ParticleSystem.MainModule main = particleSystem.main;
+            float duration = main.duration + main.startLifetime.constantMax;
+
+            if (duration > maxDuration)
+            {
+                maxDuration = duration;
+            }
+        }
+
+        return maxDuration;
+    }
+
     private void OnUnitDied(BattleUnitModel unit)
     {
         if (unit == null)
@@ -274,6 +374,7 @@ public class BattleMainUI : UIBase
             _viewModel.UnitAttackStarted -= OnUnitAttackStarted;
             _viewModel.UnitHit -= OnUnitHit;
             _viewModel.UnitDied -= OnUnitDied;
+            _viewModel.UnitHitVfxRequested -= OnUnitHitVfxRequested;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
