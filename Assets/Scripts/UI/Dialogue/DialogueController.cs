@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DialogueController : MonoBehaviour
 {
+    [SerializeField] private Image Image_Background;
     [SerializeField] private Transform Transform_Background;
     [SerializeField] private Transform Transform_Speaker;
 
@@ -23,6 +25,11 @@ public class DialogueController : MonoBehaviour
     private void Awake()
     {
         _camera = Camera.main;
+    }
+
+    private void OnEnable()
+    {
+        Image_Background.gameObject.SetActive(false);
     }
 
     public void Init(DialogueViewModel dialgoueVM)
@@ -76,7 +83,18 @@ public class DialogueController : MonoBehaviour
         if (_currentBackground != null)
         {
             _currentBackground.SetActive(false);
+            Image_Background.gameObject.SetActive(false);
         }
+
+        if (!name.Contains("Room"))
+        {
+            Image_Background.gameObject.SetActive(true);
+            Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/{name}");
+
+            return;
+        }
+
+        Debug.Log(name);
 
         if (!_backgrounds.ContainsKey(name))
         {
@@ -95,12 +113,12 @@ public class DialogueController : MonoBehaviour
 
     private async UniTask ChangeCharacter(string speaker)
     {
-        if (_currentSpeakerName == speaker || string.IsNullOrEmpty(speaker))
+        if (_currentSpeakerName == speaker)
         {
             return;
         }
 
-        if (_currentSpeaker != null)
+        if (string.IsNullOrEmpty(speaker) || _currentSpeaker != null)
         {
             _currentSpeaker.SetActive(false);
         }
@@ -114,6 +132,7 @@ public class DialogueController : MonoBehaviour
             {
                 prefab = await ResourceManager.Inst.InstantiateAsync(path, Transform_Speaker);
                 prefab.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                prefab.transform.localPosition = new Vector3(0f, 0.2f, 0f);
             }
             else
             {

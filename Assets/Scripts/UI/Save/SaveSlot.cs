@@ -12,6 +12,7 @@ public class SaveSlot : ViewBase
     [SerializeField] private TextMeshProUGUI Text_PlayerName;
     [SerializeField] private TextMeshProUGUI Text_Day;
     [SerializeField] private TextMeshProUGUI Text_Gold;
+    [SerializeField] private TextMeshProUGUI Text_Ending;
 
     private int _slotIndex;
     private SaveViewModel _saveVM;
@@ -21,6 +22,11 @@ public class SaveSlot : ViewBase
     {
         Button_Delete.onClick.AddListener(OnClickDelete);
         Button_Confirm.onClick.AddListener(OnClickConfirm);
+    }
+
+    private void OnEnable()
+    {
+        Text_Ending.gameObject.SetActive(false);
     }
 
     public void BindSlot(int slotIndex)
@@ -38,6 +44,25 @@ public class SaveSlot : ViewBase
         Text_PlayerName.text = _playerModel.PlayerName;
         Text_Day.text = $"Day: {_playerModel.Day}";
         Text_Gold.text = $"Gold: {_playerModel.Gold}";
+        
+        if (_playerModel.EndingType != EndingType.None)
+        {
+            Text_Ending.gameObject.SetActive(true);
+
+            if (_playerModel.EndingType == EndingType.GameOver)
+            {
+                Text_Ending.text = "Game Over";
+                Button_Confirm.gameObject.SetActive(false);
+            }
+            else if (_playerModel.EndingType == EndingType.Happy)
+            {
+                Text_Ending.text = "Happy";
+            }
+            else if (_playerModel.EndingType == EndingType.Bad)
+            {
+                Text_Ending.text = "Bad";
+            }
+        }
     }
 
     private void OnClickDelete()
@@ -48,6 +73,23 @@ public class SaveSlot : ViewBase
     private void OnClickConfirm()
     {
         _saveVM.RequestConfirmSlot(_slotIndex);
+
+        if (_playerModel.EndingType != EndingType.None)
+        {
+            if (_playerModel.EndingType == EndingType.Happy)
+            {
+                GameManager.Inst.SetDialogueID("Ending_Happy_01");
+            }
+            else if (_playerModel.EndingType == EndingType.Bad)
+            {
+                GameManager.Inst.SetDialogueID("Ending_Bad_01");
+            }
+
+            UIManager.Inst.OpenDialogueUI();
+            UIManager.Inst.CloseTitleUI();
+            UIManager.Inst.CloseSaveUI();
+            return;
+        }
 
         UIManager.Inst.OpenTycoonMainUI();
         UIManager.Inst.OpenLoadingUI();

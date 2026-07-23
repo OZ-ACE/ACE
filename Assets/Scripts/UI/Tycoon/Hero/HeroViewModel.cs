@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HeroViewModel : ViewModelBase
@@ -23,6 +24,37 @@ public class HeroViewModel : ViewModelBase
 
     private string _skill;
     public string Skill => _skill;
+
+    public string PrimeLevel
+    {
+        get
+        {
+            PlayerModel playerModel = SaveManager.Inst?.CurrentPlayerModel;
+            int participateCount = 0;
+
+            if (playerModel != null && playerModel.HeroProgressList != null)
+            {
+                for (int i = 0; i < playerModel.HeroProgressList.Count; i++)
+                {
+                    HeroProgressModel heroProgress = playerModel.HeroProgressList[i];
+
+                    if (heroProgress != null && string.Equals(heroProgress.HeroId, _heroID, StringComparison.OrdinalIgnoreCase))
+                    {
+                        participateCount = heroProgress.BattleParticipateCount;
+                        break;
+                    }
+                }
+            }
+
+            if (BattleManager.Inst != null)
+            {
+                int level = BattleManager.Inst.CalculatePrimeLevel(participateCount);
+                return level.ToString();
+            }
+
+            return "0";
+        }
+    }
 
     public int Affection
     {
@@ -100,6 +132,7 @@ public class HeroViewModel : ViewModelBase
         OnPropertyChanged(nameof(Skill));
         OnPropertyChanged(nameof(Satisfaction));
         OnPropertyChanged(nameof(Affection));
+        OnPropertyChanged(nameof(PrimeLevel));
         OnPropertyChanged(nameof(IsSelect));
     }
 }

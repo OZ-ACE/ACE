@@ -143,7 +143,7 @@ public class SettlementView : ViewBase
         {
             UIManager.Inst.CloseWeeklyEvaluationUI();
             UIManager.Inst.CloseTycoonMainUI();
-            UIManager.Inst.OpenGameOver();
+            UIManager.Inst.OpenGameOver(EndingType.GameOver);
             return;
         }
         if (weeklyDue == true)
@@ -197,7 +197,7 @@ public class SettlementView : ViewBase
         {
             UIManager.Inst.CloseWeeklyEvaluationUI();
             UIManager.Inst.CloseTycoonMainUI();
-            UIManager.Inst.OpenGameOver();
+            UIManager.Inst.OpenGameOver(EndingType.GameOver);
         }
     }
 }

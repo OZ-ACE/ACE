@@ -6,6 +6,6 @@
     "HalfBonusPercent": 150,
     "DoubleBonusRoundThreshold": 2,
     "HalfBonusRoundThreshold": 3,
-    "ParticipateCountPerLevel": 5
+    "ParticipateCountPerLevel": 2
   }
 ]

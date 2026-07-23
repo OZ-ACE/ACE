@@ -226,5 +226,17 @@
     "RewardAmount": 300,
     "RequiredQuestID": "Quest_03_04",
     "DialogueID": "Quest_03_01"
+  },
+  {
+    "ID": "Quest_04_01",
+    "QuestName": "테스트",
+    "Description": "엔딩 테스트용 퀘스트",
+    "ConditionType": "BuildRoom",
+    "ConditionTargetID": null,
+    "ConditionCount": null,
+    "RewardType": null,
+    "RewardAmount": null,
+    "RequiredQuestID": null,
+    "DialogueID": "Ending"
   }
 ]
