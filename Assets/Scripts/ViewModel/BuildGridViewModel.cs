@@ -20,6 +20,8 @@ public class BuildGridViewModel : ViewModelBase
     public event Action OnClickOffice;
     public event Action OnClickBattle;
 
+
+
     public GridBounds Bounds { get { return _buildGridModel.Bounds; } }
 
     private List<string> _buildableRoomIds = new List<string>();
@@ -760,4 +762,47 @@ public class BuildGridViewModel : ViewModelBase
 
         OnRoomSelected?.Invoke(room.RoomInstanceId);
     }
+
+    // 방이 해금됐는지 (선행 방이 건설돼 있으면 해금)
+    public bool IsRoomUnlocked(string roomId)
+    {
+        RoomData room = GameDataManager.Inst.GetData<RoomData>(roomId);
+        if (room == null)
+        {
+            return false;
+        }
+        if (string.IsNullOrEmpty(room.RequiredRoomID) == true)
+        {
+            return true;   // 선행 없음 → 항상 해금
+        }
+        return IsRoomBuilt(room.RequiredRoomID);
+    }
+    // 해당 방 타입이 그리드에 하나라도 건설돼 있는지
+    private bool IsRoomBuilt(string roomId)
+    {
+        List<PlacedRoomData> rooms = _buildGridModel.GetAllRooms();
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            if (rooms[i] != null && rooms[i].RoomId == roomId)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    // 해금된 건설 가능 방 목록 (건설 메뉴가 이걸로 버튼 생성)
+    public List<string> GetUnlockedRoomIds()
+    {
+        List<string> result = new List<string>();
+        for (int i = 0; i < _buildableRoomIds.Count; i++)
+        {
+            if (IsRoomUnlocked(_buildableRoomIds[i]) == true)
+            {
+                result.Add(_buildableRoomIds[i]);
+            }
+        }
+        return result;
+    }
+
+
 }

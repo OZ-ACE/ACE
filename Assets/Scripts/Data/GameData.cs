@@ -111,6 +111,7 @@ public class RoomData : GameDataBase
     public string EffectDescription;
     public string PrefabPath;
     public int MaxCapacity;
+    public string RequiredRoomID;
 }
 
 [Serializable]
