@@ -174,7 +174,7 @@ public class SettlementViewModel : ViewModelBase
     // 마감정산 확정
     public bool TryConfirmSettlement()
     {
-        if (_dayService.IsAdvanceable() == false)
+        if(SaveManager.Inst.CurrentPlayerModel.Day != 1 && _dayService.IsAdvanceable() == false)
         {
             return false;
         }
