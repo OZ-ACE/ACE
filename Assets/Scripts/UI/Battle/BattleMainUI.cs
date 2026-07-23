@@ -47,9 +47,9 @@ public class BattleMainUI : UIBase
     [SerializeField] private Button Button_Help;
     [SerializeField] private HelpGuideUI Panel_HelpGuide;
 
-    private const int ReinforceEnergyCost = 1; //temp
-    private const int ChangeUnitEnergyCost = 2; //temp
-    private const int HealUnitEnergyCost = 2; //temp
+    private const int ReinforceEnergyCost = 1; 
+    private const int ChangeUnitEnergyCost = 2; 
+    private const int HealUnitEnergyCost = 2; 
 
     private string _selectedTargetUnitId;
     private BattleActionResult? _pendingActionResult;
