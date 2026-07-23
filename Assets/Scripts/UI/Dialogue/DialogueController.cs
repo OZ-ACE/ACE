@@ -94,6 +94,8 @@ public class DialogueController : MonoBehaviour
             return;
         }
 
+        Debug.Log(name);
+
         if (!_backgrounds.ContainsKey(name))
         {
             string path = $"Prefabs/Room/{GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).Background}";

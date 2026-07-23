@@ -28,16 +28,19 @@ public class GameOver : UIBase
         {
             Text_Ending.text = "Game Over";
             Text_Ending.color = Color.red;
+            SaveManager.Inst.CurrentPlayerModel.EndingType = EndingType.GameOver;
         }
         else if (EndingType == EndingType.Happy)
         {
             Text_Ending.text = "Happy End";
             Text_Ending.color = Color.cyan;
+            SaveManager.Inst.CurrentPlayerModel.EndingType = EndingType.Happy;
         }
         else
         {
             Text_Ending.text = "Bad End";
             Text_Ending.color = Color.red;
+            SaveManager.Inst.CurrentPlayerModel.EndingType = EndingType.Bad;
         }
     }
 
@@ -45,6 +48,7 @@ public class GameOver : UIBase
     {
         UIManager.Inst.InitStartUI();
 
+        SaveManager.Inst.RequestSaveData(SaveManager.Inst.CurrentPlayerModel);
         UIManager.Inst.CloseGameOver();
     }
 }

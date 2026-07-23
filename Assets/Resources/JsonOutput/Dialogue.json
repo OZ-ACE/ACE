@@ -704,7 +704,7 @@
     "NextID": "Ending_Bad_02",
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
-    "Content": "어서 오게, 김 보조사. 마침내 Day 7 최종 정산 및 초능력 추출 작업이 100% 완료되었네.",
+    "Content": "어서 오게, 보조사. 마침내 Day 7 최종 정산 및 초능력 추출 작업이 100% 완료되었네.",
     "Background": "Room_Battle",
     "BGM": "Bad",
     "SFX": null
