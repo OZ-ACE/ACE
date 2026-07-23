@@ -18,7 +18,7 @@ public class BattleViewModel : ViewModelBase
     public event Action<List<BattleUnitModel>> HeroListChanged;
 
     private const int AttackAnimationDelayMilliseconds = 800;
-    private const int HitAnimationDelayMilliseconds = 800;
+    private const int HitAnimationDelayMilliseconds = 400;
     private const int ActionQueueStackDelayMilliseconds = 120;
 
     private UniTaskCompletionSource _interventionCompletionSource;
