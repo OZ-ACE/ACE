@@ -287,11 +287,19 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
             {
                 continue;
             }
+
             if (_heroViewMap.TryGetValue(hero.ID, out EnemyUnitView view) == false || view == null)
             {
                 continue;
             }
+
             view.Initialize(GameUtil.GetUnitDisplayName(hero.ID), hero.CurrentHp, hero.MaxHp);
+            
+            if (hero.IsDefeated == true)
+            {
+                view.gameObject.SetActive(false);
+                PlayDeathAnimation(hero);
+            }
         }
     }
 
