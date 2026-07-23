@@ -1,14 +1,14 @@
 [
   {
     "ID": "enemy_01",
-    "EnemyName": "임시적01",
-    "EnemyNameEn": "TempEnemy01",
+    "EnemyName": "블랙가드 병사",
+    "EnemyNameEn": "Blackguard Soldier",
     "ProfileImage": "Image/Portrait_Enemy[enemy_01]"
   },
   {
     "ID": "enemy_02",
-    "EnemyName": "임시적02",
-    "EnemyNameEn": "TempEnemy02",
+    "EnemyName": "센티널",
+    "EnemyNameEn": "Sentinel",
     "ProfileImage": null
   },
   {

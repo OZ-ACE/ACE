@@ -625,6 +625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24adb7af9210efa4596963ca9c4d4069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyUnitView
+  Object_UnitInfoRoot: {fileID: 4887258089550840607}
   Text_Name: {fileID: 2740914823595362092}
   Text_Hp: {fileID: 6142489463513051401}
   Image_HpFill: {fileID: 2823780682728897456}

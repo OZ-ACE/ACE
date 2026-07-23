@@ -9671,6 +9671,9 @@ MonoBehaviour:
   Button_Help: {fileID: 4608871183006150661}
   Panel_HelpGuide: {fileID: 4516442565653341156}
   _testEnemyIdList:
+  - enemy_02
+  - enemy_01
+  - enemy_02
   - enemy_01
 --- !u!114 &7508893211830350805
 MonoBehaviour:
