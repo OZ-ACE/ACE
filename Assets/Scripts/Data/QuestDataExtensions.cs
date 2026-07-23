@@ -12,6 +12,7 @@
             case "AdmitHero": return QuestConditionType.AdmitHero;
             case "Schedule": return QuestConditionType.Schedule;
             case "Battle": return QuestConditionType.Battle;
+            case "Digging": return QuestConditionType.Digging;
         }
 
         return QuestConditionType.None;

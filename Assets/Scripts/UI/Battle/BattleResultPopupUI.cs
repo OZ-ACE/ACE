@@ -36,6 +36,7 @@ public class BattleResultPopupUI : UIBase
     private void OnClickConfirm()
     {
         ClosePopup();
+        GameManager.Inst.Services.QuestService.ReportProgress(QuestConditionType.Battle, "", 1);
         OnConfirmed?.Invoke();
     }
 }

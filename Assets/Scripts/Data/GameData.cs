@@ -173,4 +173,5 @@ public class QuestData : GameDataBase
     public string RewardType;         // enum 문자열
     public int RewardAmount;
     public string RequiredQuestID;    // 선행 퀘스트, 없으면 빈 문자열
+    public string DialogueID;
 }

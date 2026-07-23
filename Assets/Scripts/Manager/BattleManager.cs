@@ -26,9 +26,6 @@ public class BattleManager : SingletonBase<BattleManager>
         Executor_Enemy = enemyExecutor;
     }
 
-
-
-
     private Queue<BattleActionModel> _actionQueue = new Queue<BattleActionModel>();
     private int _energyGauge;
     private int _currentRound;

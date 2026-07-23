@@ -117,6 +117,7 @@ public static class UIExtension
         SoundManager.Inst.PlayBGM("Tycoon");
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
         ObjectManager.Inst.CreateBuildGridView();
+        ObjectManager.Inst.ShowGridView();
     }
 
     public static void CloseTycoonMainUI(this UIManager uIManager)
