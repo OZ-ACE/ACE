@@ -57,6 +57,10 @@ MonoBehaviour:
     Prefab: {fileID: 387497188889260216, guid: 6dd0074f4a9502f459dbf344bee96634, type: 3}
     BattleAnimatorController: {fileID: 22100000, guid: e8f3a6e6667b2fa42a558c74c4f50b2e, type: 2}
     Scale: 2.5
+  - HeroId: hero_04
+    Prefab: {fileID: 6294557203944253158, guid: cff7fec997672ae46b4d6d5e639e0630, type: 3}
+    BattleAnimatorController: {fileID: 22100000, guid: e0a371732598a014c9e238203ce98eeb, type: 2}
+    Scale: 2.5
   Transform_SpawnRoot: {fileID: 0}
   Camera_Raycast: {fileID: 0}
   Prefab_HeroHpBar: {fileID: 0}
