@@ -1,0 +1,58 @@
+[
+  {
+    "ID": "furniture_01",
+    "FurnitureName": "유머모음집",
+    "Description": "책은 단 한 권만 읽은 사람이 가장 무섭다...",
+    "HeroId": "hero_01",
+    "Price": 1000,
+    "InstallPointId": null
+  },
+  {
+    "ID": "furniture_02",
+    "FurnitureName": "전신 거울",
+    "Description": "랜딩 포즈 점검에 안성맞춤.",
+    "HeroId": "hero_02",
+    "Price": 900,
+    "InstallPointId": null
+  },
+  {
+    "ID": "furniture_03",
+    "FurnitureName": "풍경 그림",
+    "Description": "멀리 보는 연습을 하면 좋은 시력이 유지된다는 이야기가 있다.",
+    "HeroId": "hero_03",
+    "Price": 800,
+    "InstallPointId": null
+  },
+  {
+    "ID": "furniture_04",
+    "FurnitureName": "TV",
+    "Description": "모든 OTT 이용이 가능하며 오롯이 자신만의 세계에 빠져들 수 있다.",
+    "HeroId": "hero_04",
+    "Price": 700,
+    "InstallPointId": null
+  },
+  {
+    "ID": "furniture_05",
+    "FurnitureName": "트로피",
+    "Description": "맥주 빨리 먹기 대회' 라고 적혀 있다.",
+    "HeroId": "hero_05",
+    "Price": 600,
+    "InstallPointId": null
+  },
+  {
+    "ID": "furniture_06",
+    "FurnitureName": "식물재배기",
+    "Description": "햇빛이 부족한 실내에서도 잘 자라는 재배기.",
+    "HeroId": "hero_06",
+    "Price": 500,
+    "InstallPointId": null
+  },
+  {
+    "ID": "furniture_07",
+    "FurnitureName": "셀카조명",
+    "Description": "어떤 피부도 화사하게 비춰주는 인플루언서용 조명.",
+    "HeroId": "hero_07",
+    "Price": 400,
+    "InstallPointId": null
+  }
+]

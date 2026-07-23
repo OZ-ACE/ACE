@@ -43,16 +43,14 @@ public class FurnitureService
             return PurchaseResult.AlreadyPurchased;
         }
 
-        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
+        ICurrencyService currencyService = GameManager.Inst.Services.CurrencyService;
 
-        if (PlayerModel.Gold < furnitureData.Price)
+        if (currencyService.TrySpend(furnitureData.Price) == false)
         {
             return PurchaseResult.NotEnoughGold;
         }
 
-        PlayerModel.Gold -= furnitureData.Price;
-
-        PlayerModel.FurnitureProgressList.Add(new FurnitureProgressModel(){FurnitureDataId = furnitureId});
+        PlayerModel.FurnitureProgressList.Add(new FurnitureProgressModel() { FurnitureDataId = furnitureId });
 
         SaveManager.Inst.RequestSaveData(PlayerModel);
 
