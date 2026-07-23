@@ -1,17 +1,17 @@
-[
+﻿[
   {
     "ID": "enemy_01",
-    "MaxHp": 100,
-    "Speed": 30,
+    "MaxHp": 40,
+    "Speed": 50,
     "AttackPower": 12,
-    "DefensePower": 9
+    "DefensePower": 7
   },
   {
     "ID": "enemy_02",
-    "MaxHp": 90,
-    "Speed": 50,
-    "AttackPower": 8,
-    "DefensePower": 7
+    "MaxHp": 60,
+    "Speed": 30,
+    "AttackPower": 15,
+    "DefensePower": 9
   },
   {
     "ID": "enemy_03",
