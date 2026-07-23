@@ -2,24 +2,9 @@
   {
     "ID": "enemySkill_01_01",
     "EnemyId": "enemy_01",
-    "EnemyName": "임시적01",
-    "SkillName": "몸통박치기",
-    "SkillNameEn": "Untextured Slam",
-    "ActionType": "Attack",
-    "SkillType": "Attack",
-    "TargetSelectType": "RandomEnemy",
-    "TargetType": "Single",
-    "TargetCount": 1,
-    "CoolTime": 0,
-    "Power": 9,
-    "SkillDescription": "텍스처가 덜 입혀진 몸으로 그냥 부딪힘"
-  },
-  {
-    "ID": "enemySkill_02_01",
-    "EnemyId": "enemy_02",
-    "EnemyName": "임시적02",
-    "SkillName": "대충펀치",
-    "SkillNameEn": "Maybe Punch",
+    "EnemyName": "블랙가드 병사",
+    "SkillName": "블랙가드 사격",
+    "SkillNameEn": "Blackguard Shot",
     "ActionType": "Attack",
     "SkillType": "Attack",
     "TargetSelectType": "RandomEnemy",
@@ -27,7 +12,22 @@
     "TargetCount": 1,
     "CoolTime": 0,
     "Power": 8,
-    "SkillDescription": "대충 만든 슬라임이라 펀치도 흐물흐물함"
+    "SkillDescription": "블랙가드의 제식 소총으로 적을 조준해 사격함"
+  },
+  {
+    "ID": "enemySkill_02_01",
+    "EnemyId": "enemy_02",
+    "EnemyName": "센티널",
+    "SkillName": "펄스 사격",
+    "SkillNameEn": "Pulse Shot",
+    "ActionType": "Attack",
+    "SkillType": "Attack",
+    "TargetSelectType": "RandomEnemy",
+    "TargetType": "Single",
+    "TargetCount": 1,
+    "CoolTime": 0,
+    "Power": 10,
+    "SkillDescription": "팔에 장착된 펄스 건으로 에너지 탄환을 발사함"
   },
   {
     "ID": "enemySkill_03_01",

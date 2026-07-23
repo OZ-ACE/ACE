@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
 using System.ComponentModel;
+using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
-using Cysharp.Threading.Tasks;
+using UnityEngine.InputSystem;
 
 public class BuildGridView : ViewBase
 {
@@ -18,6 +19,11 @@ public class BuildGridView : ViewBase
     [SerializeField] private Color _ghostInvalidColor = new Color(1f, 0f, 0f, 0.5f); // 배치 불가(빨강)
     [SerializeField] private Color _placedColor = new Color(0.3f, 0.5f, 1f, 0.8f);   // 배치된 방(파랑)
     [SerializeField] private Color _roomSelectColor = new Color(0f, 0.8f, 1f, 0.5f);
+
+    [Header("층수 라벨")]
+    [SerializeField] private GameObject Prefab_FloorLabel;
+    [SerializeField] private Vector3 _floorLabelOffset = new Vector3(0f, 0.5f, 0f);
+    private Dictionary<GridCoord, GameObject> _floorLabels = new Dictionary<GridCoord, GameObject>();
 
     [Header("방 프리팹 캐시")]
     private Dictionary<string, GameObject> _roomPrefabCache = new Dictionary<string, GameObject>();
@@ -466,6 +472,12 @@ public class BuildGridView : ViewBase
 
         _placedRoomObjects[placed.Origin] = roomObj;
 
+        // 계단이면 층수 라벨 표시
+        if (Prefab_FloorLabel != null && (room.ID.Contains("Stair") || room.PrefabPath.Contains("Stair")))
+        {
+            SpawnFloorLabel(placed.Origin);
+        }
+
         NavMeshManager.Inst.UpdateNavMesh();
     }
 
@@ -518,8 +530,17 @@ public class BuildGridView : ViewBase
             }
         }
 
+        foreach (KeyValuePair<GridCoord, GameObject> pair in _floorLabels)
+        {
+            if (pair.Value != null)
+            {
+                Destroy(pair.Value.gameObject);
+            }
+        }
+
         _cellRenderers.Clear();
         _lockedCells.Clear();
+        _floorLabels.Clear();
         _isOverlayCreated = false;
 
         // 방 다시 그리기
@@ -753,5 +774,33 @@ public class BuildGridView : ViewBase
                 }
             }
         }
+    }
+
+    // 계단 위치에 층수 라벨 생성
+    private void SpawnFloorLabel(GridCoord origin)
+    {
+        if (_floorLabels.ContainsKey(origin) == true)
+        {
+            return;
+        }
+        GridSystem grid = _viewModel.GridSystem;
+        Vector3 worldPos = grid.GetWorldPosition(origin) + _floorLabelOffset;
+        GameObject label = Instantiate(Prefab_FloorLabel, worldPos, Quaternion.identity, this.transform);
+        label.name = $"FloorLabel_{origin.Floor}";
+        TextMeshPro tmp = label.GetComponentInChildren<TextMeshPro>();
+        if (tmp != null)
+        {
+            tmp.text = GetFloorLabelText(origin.Floor);
+        }
+        _floorLabels[origin] = label;
+    }
+    // 층 번호 -> 표시 문자 (0 이상 지상, 음수 지하)
+    private string GetFloorLabelText(int floor)
+    {
+        if (floor >= 0)
+        {
+            return $"{floor + 1}층";
+        }
+        return $"지하 {-floor}층";
     }
 }

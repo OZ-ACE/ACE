@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class EnemyUnitView : MonoBehaviour
 {
     [Header("Unit Info")]
+    [SerializeField] private GameObject Object_UnitInfoRoot;
     [SerializeField] private TMP_Text Text_Name;
     [SerializeField] private TMP_Text Text_Hp;
     [SerializeField] private Image Image_HpFill;
@@ -63,5 +64,15 @@ public class EnemyUnitView : MonoBehaviour
         {
             Image_HpFill.fillAmount = (float)safeCurrentHp / safeMaxHp;
         }
+    }
+
+    public void HideUnitInfo()
+    {
+        if (Object_UnitInfoRoot == null)
+        {
+            return;
+        }
+
+        Object_UnitInfoRoot.SetActive(false);
     }
 }
