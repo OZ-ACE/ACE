@@ -9413,6 +9413,7 @@ MonoBehaviour:
   Text_Round: {fileID: 5864252209531839442}
   ScrollRect_BattleLog: {fileID: 7333493230995692662}
   Transform_LogContent: {fileID: 5205851395069963914}
+  _logTypingIntervalMs: 10
   Image_EnergySlotList:
   - {fileID: 4370087061278418720}
   - {fileID: 2686565182942276840}
