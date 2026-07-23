@@ -1,14 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [Serializable]
+    private class EnemyPrefabEntry
+    {
+        public string EnemyId;
+        public GameObject EnemyPrefab;
+    }
+
     private static readonly int AttackTrigger = Animator.StringToHash("Attack");
     private static readonly int HitTrigger = Animator.StringToHash("Hit");
     private static readonly int DeathTrigger = Animator.StringToHash("Death");
 
     [Header("Spawn")]
-    [SerializeField] private GameObject EnemyPrefab;
+    [SerializeField] private List<EnemyPrefabEntry> EnemyPrefabEntryList;
     [SerializeField] private Transform EnemySpawnRoot;
     [SerializeField] private Transform[] SpawnPoints;
 
@@ -27,7 +35,8 @@ public class EnemySpawner : MonoBehaviour
             return false;
         }
         
-        if (EnemyPrefab == null ||
+        if (EnemyPrefabEntryList == null ||
+            EnemyPrefabEntryList.Count == 0 ||
             EnemySpawnRoot == null || 
             SpawnPoints == null ||
             SpawnPoints.Length == 0 ||
@@ -49,8 +58,15 @@ public class EnemySpawner : MonoBehaviour
                 continue;
             }
 
+            GameObject enemyPrefab = GetEnemyPrefab(enemyUnit.ID);
+
+            if (enemyPrefab == null)
+            {
+                continue;
+            }
+
             GameObject enemyObject = Instantiate(
-                EnemyPrefab,
+                enemyPrefab,
                 spawnPoint.position,
                 spawnPoint.rotation,
                 EnemySpawnRoot);
@@ -162,6 +178,31 @@ public class EnemySpawner : MonoBehaviour
 
         muzzlePoint = enemyView.muzzlePoint;
         return muzzlePoint != null;
+    }
+
+    private GameObject GetEnemyPrefab(string enemyId)
+    {
+        if (string.IsNullOrEmpty(enemyId))
+        {
+            return null;
+        }
+
+        foreach (EnemyPrefabEntry entry in EnemyPrefabEntryList)
+        {
+            if (entry == null)
+            {
+                continue;
+            }
+
+            if (entry.EnemyId != enemyId)
+            {
+                continue;
+            }
+
+            return entry.EnemyPrefab;
+        }
+
+        return null;
     }
 
     private bool SetAnimationTrigger(BattleUnitModel enemyUnit, int triggerHash)
