@@ -18,6 +18,14 @@ public class BattleMainUI : UIBase
     [SerializeField] private ScrollRect ScrollRect_BattleLog;
     [SerializeField] private Transform Transform_LogContent;
 
+    [Header("배틀 로그 타자기 연출")]
+    [SerializeField] private int _logTypingIntervalMs = 10; //글자 사이 간격(ms)
+
+    private readonly Queue<string> _pendingLogQueue = new Queue<string>();
+    private int _enqueuedLogCount;
+    private bool _isLogTyping;
+    private CancellationTokenSource _logTypingToken;
+
     [Header("에너지 게이지")]
     [SerializeField] private Image[] Image_EnergySlotList;
 
@@ -131,6 +139,8 @@ public class BattleMainUI : UIBase
     //배틀 로그 슬롯을 전부 지운다
     private void ClearLogSlots()
     {
+        CancelLogTyping();
+
         for (int i = Transform_LogContent.childCount - 1; i >= 0; i--)
         {
             Destroy(Transform_LogContent.GetChild(i).gameObject);
@@ -560,34 +570,91 @@ public class BattleMainUI : UIBase
         Instantiate(loadedObj, Transform_ActionQueueContent);
     }
 
-    // 이미 그려진 배틀로그 슬롯 개수 이후로 늘어난 로그만 추가 생성
+    // 새로 늘어난 로그를 대기 큐에 넣고, 타이핑 루프가 안 돌고 있으면 시작한다
     private void AppendNewLogSlots()
     {
-        int alreadyDrawnCount = Transform_LogContent.childCount;
-
-        for (int i = alreadyDrawnCount; i < _viewModel.BattleLogs.Count; i++)
+        for (int i = _enqueuedLogCount; i < _viewModel.BattleLogs.Count; i++)
         {
-            GameObject loadedObj = (GameObject)Resources.Load("Prefabs/UI/BattleLogSlot");
-            GameObject slot = Instantiate(loadedObj, Transform_LogContent);
-
-            TextMeshProUGUI logText = slot.GetComponent<TextMeshProUGUI>();
-
-            if (logText != null)
-            {
-                logText.text = _viewModel.BattleLogs[i];
-                logText.ForceMeshUpdate();
-            }
+            _pendingLogQueue.Enqueue(_viewModel.BattleLogs[i]);
         }
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(Transform_LogContent.GetComponent<RectTransform>());
+        _enqueuedLogCount = _viewModel.BattleLogs.Count;
 
-        ScrollToBottom();
+        if (_isLogTyping == false)
+        {
+            PlayLogTypingAsync().Forget();
+        }
     }
 
     private void ScrollToBottom()
     {
         Canvas.ForceUpdateCanvases();
         ScrollRect_BattleLog.verticalNormalizedPosition = 0f;
+    }
+
+    // 대기 큐를 순서대로 꺼내 한 줄씩 타자기 연출로 출력한다 (동시 실행 방지)
+    private async UniTask PlayLogTypingAsync()
+    {
+        _isLogTyping = true;
+        _logTypingToken = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+
+        CancellationToken token = _logTypingToken.Token;
+
+        while (_pendingLogQueue.Count > 0)
+        {
+            string line = _pendingLogQueue.Dequeue();
+            await TypeSingleLogLineAsync(line, token);
+        }
+
+        _isLogTyping = false;
+    }
+
+    // 로그 슬롯 하나를 만들고 maxVisibleCharacters로 한 글자씩 드러낸다 (DialogueUI.Typing 방식)
+    private async UniTask TypeSingleLogLineAsync(string line, CancellationToken token)
+    {
+        GameObject loadedObj = (GameObject)Resources.Load("Prefabs/UI/BattleLogSlot");
+        GameObject slot = Instantiate(loadedObj, Transform_LogContent);
+
+        TextMeshProUGUI logText = slot.GetComponent<TextMeshProUGUI>();
+
+        if (logText == null)
+        {
+            return;
+        }
+
+        logText.text = line;
+        logText.maxVisibleCharacters = 0;
+        logText.ForceMeshUpdate();
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(Transform_LogContent.GetComponent<RectTransform>());
+        ScrollToBottom();
+
+        if (_logTypingIntervalMs <= 0)
+        {
+            logText.maxVisibleCharacters = line.Length;
+            return;
+        }
+
+        for (int i = 0; i <= line.Length; i++)
+        {
+            logText.maxVisibleCharacters = i;
+            await UniTask.Delay(_logTypingIntervalMs, cancellationToken: token);
+        }
+    }
+
+    // 진행 중인 로그 타이핑을 취소하고 대기 상태를 초기화한다 (DialogueUI.CancelTyping 방식)
+    private void CancelLogTyping()
+    {
+        if (_logTypingToken != null)
+        {
+            _logTypingToken.Cancel();
+            _logTypingToken.Dispose();
+            _logTypingToken = null;
+        }
+
+        _pendingLogQueue.Clear();
+        _enqueuedLogCount = 0;
+        _isLogTyping = false;
     }
 
     // 테스트용 - 실제 전투 로직 연결 전까지 더미 로그 확인용, 이후 삭제 예정
