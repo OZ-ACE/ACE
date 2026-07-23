@@ -15,6 +15,7 @@ public class HeroSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Text_DiseaseName;
     [SerializeField] private TextMeshProUGUI Text_SkillName;
     [SerializeField] private TextMeshProUGUI Text_Age;
+    [SerializeField] private TextMeshProUGUI Text_PrimeLevel;
 
     [SerializeField] private TextMeshProUGUI Text_Affection;
     [SerializeField] private TextMeshProUGUI Text_Satisfaction;
@@ -118,6 +119,10 @@ public class HeroSlot : MonoBehaviour
 
             case nameof(_heroVM.IsSelect):
                 SetSlotBackground(_heroVM.IsSelect);
+                break;
+
+            case nameof(_heroVM.PrimeLevel):
+                Text_PrimeLevel.text = $"프라임 레벨 : {_heroVM.PrimeLevel}";
                 break;
         }
     }

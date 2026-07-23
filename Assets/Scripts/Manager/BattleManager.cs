@@ -220,8 +220,15 @@ public class BattleManager : SingletonBase<BattleManager>
     {
         BattleConfig config = GameDataManager.Inst.GetData<BattleConfig>(BattleConfigId);
 
-        if (config == null || config.ParticipateCountPerLevel <= 0)
+        if (config == null)
         {
+            Debug.LogError($"[BattleManager] BattleConfig 테이블 데이터('{BattleConfigId}')를 찾을 수 없습니다!");
+            return 0;
+        }
+
+        if (config.ParticipateCountPerLevel <= 0)
+        {
+            Debug.LogWarning($"[BattleManager] ParticipateCountPerLevel 값이 0 이하입니다: {config.ParticipateCountPerLevel}");
             return 0;
         }
 

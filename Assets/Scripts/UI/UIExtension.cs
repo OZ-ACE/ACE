@@ -295,11 +295,14 @@ public static class UIExtension
         view.ShowSnapshot(record);
     }
 
-
-
-    public static void OpenGameOver(this UIManager uiManager)
+    public static void OpenGameOver(this UIManager uiManager, EndingType ending)
     {
         UIBase uiBase = uiManager.OpenUI(UIRootType.Popup, UIType.GameOver);
+
+        if (uiBase is GameOver gameOver)
+        {
+            gameOver.EndingType = ending;
+        }
     }
 
     public static void CloseGameOver(this UIManager uiManager)

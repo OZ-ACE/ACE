@@ -176,7 +176,22 @@
         }
         else if (nextID == "Home")
         {
-            UIManager.Inst.OpenGameOver();
+            EndingType ending = EndingType.None;
+
+            if (CurrentDialogueID.Contains("Happy"))
+            {
+                ending = EndingType.Happy;
+            }
+            else if (CurrentDialogueID.Contains("Bad"))
+            {
+                ending = EndingType.Bad;
+            }
+            else
+            {
+                ending = EndingType.GameOver;
+            }
+
+            UIManager.Inst.OpenGameOver(ending);
             UIManager.Inst.CloseTycoonMainUI();
             UIManager.Inst.CloseDialogueUI();
             SoundManager.Inst.PlayBGM("Tycoon");

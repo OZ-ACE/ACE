@@ -308,3 +308,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameOver
   Button_Close: {fileID: 2633137014576006833}
+  Text_Ending: {fileID: 747534235165630355}
