@@ -230,29 +230,5 @@ public class SettlementViewModel : ViewModelBase
     }
 
 
-    public bool IsLowGrade()
-    {
-        return _evaluationResult.Overall >= EvaluationGrade.F;
-    }
 
-    public GameOverType CheckResult()
-    {
-        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-
-        if (IsLowGrade())
-        {
-            player.LowGrade++;
-        }
-        
-        if (player.LowGrade == 1)
-        {
-            return GameOverType.Warning;
-        }
-        else if (player.LowGrade == 2)
-        {
-            return GameOverType.GameOver;
-        }
-
-        return GameOverType.None;
-    }
 }

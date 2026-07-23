@@ -47,6 +47,8 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
 
     private readonly Dictionary<string, Animator> _heroAnimatorMap = new Dictionary<string, Animator>();
 
+    private readonly Dictionary<string, Transform> _heroVfxPointMap = new Dictionary<string, Transform>();
+
     private void OnEnable()
     {
         SpawnHeroes();
@@ -129,6 +131,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         }
         _heroViewMap.Clear();
         _heroAnimatorMap.Clear();
+        _heroVfxPointMap.Clear();
         _hoveredHandler = null;
     }
 
@@ -175,6 +178,9 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         if (animator != null)
         {
             _heroAnimatorMap[entry.HeroId] = animator;
+
+            Transform vfxPoint = GetHeroVfxPoint(animator, spawnedObj.transform);
+            _heroVfxPointMap[entry.HeroId] = vfxPoint;
         }
 
         BattleUnitClickHandler clickHandler = spawnedObj.GetComponent<BattleUnitClickHandler>();
@@ -322,6 +328,50 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     public bool PlayDeathAnimation(BattleUnitModel heroUnit)
     {
         return SetAnimationTrigger(heroUnit, DeathTrigger);
+    }
+
+    public bool TryGetVfxPoint(
+        BattleUnitModel heroUnit,
+        out Transform vfxPoint)
+    {
+        vfxPoint = null;
+
+        if (heroUnit == null)
+        {
+            return false;
+        }
+
+        bool hasVfxPoint = _heroVfxPointMap.TryGetValue(
+            heroUnit.ID,
+            out vfxPoint);
+
+        return hasVfxPoint && vfxPoint != null;
+    }
+
+    private Transform GetHeroVfxPoint(
+        Animator animator,
+        Transform fallbackTransform)
+    {
+        if (animator != null && animator.isHuman)
+        {
+            Transform chestTransform =
+                animator.GetBoneTransform(HumanBodyBones.Chest);
+
+            if (chestTransform != null)
+            {
+                return chestTransform;
+            }
+
+            Transform spineTransform =
+                animator.GetBoneTransform(HumanBodyBones.Spine);
+
+            if (spineTransform != null)
+            {
+                return spineTransform;
+            }
+        }
+
+        return fallbackTransform;
     }
 
     private bool SetAnimationTrigger(BattleUnitModel heroUnit, int triggerHash)

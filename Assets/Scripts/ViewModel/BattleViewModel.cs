@@ -14,11 +14,48 @@ public class BattleViewModel : ViewModelBase
     public event Action<BattleUnitModel> UnitAttackStarted;
     public event Action<BattleUnitModel> UnitHit;
     public event Action<BattleUnitModel> UnitDied;
+    public event Action<BattleUnitModel> UnitHitVfxRequested;
+    public event Action<List<BattleUnitModel>> HeroListChanged;
 
     private const int AttackAnimationDelayMilliseconds = 800;
     private const int HitAnimationDelayMilliseconds = 800;
 
     private UniTaskCompletionSource _interventionCompletionSource;
+
+    //교체는 라운드 종료 후 일괄 반영한다. 순회 중 리스트를 수정하면 예외가 나기 때문에 예약만 해둔다
+    private BattleUnitModel _pendingChangeOutUnit;
+    private string _pendingChangeInHeroId;
+
+    //영웅 ID로 전투용 BattleUnitModel을 만든다. 데이터가 없으면 null을 반환한다
+    private BattleUnitModel CreateHeroBattleUnit(string heroId)
+    {
+        HeroBattleData data = GameDataManager.Inst.GetData<HeroBattleData>(heroId);
+
+        if (data == null)
+        {
+            return null;
+        }
+
+        BattleUnitModel unit = new BattleUnitModel();
+        unit.ID = data.ID;
+        unit.IsHero = true;
+        unit.Speed = data.Speed;
+        unit.AttackPower = data.AttackPower;
+        unit.MaxHp = data.MaxHp;
+        unit.CurrentHp = data.MaxHp;
+
+        foreach (HeroSkill heroSkill in GameDataManager.Inst.GetDataList<HeroSkill>())
+        {
+            if (heroSkill.HeroId != unit.ID)
+            {
+                continue;
+            }
+
+            unit.SkillIdList.Add(heroSkill.ID);
+        }
+
+        return unit;
+    }
 
     public List<BattleUnitModel> GetBattleTurnOrder(List<string> heroIds, List<string> enemyIds)
     {
@@ -26,29 +63,11 @@ public class BattleViewModel : ViewModelBase
 
         foreach (string heroId in heroIds)
         {
-            HeroBattleData data = GameDataManager.Inst.GetData<HeroBattleData>(heroId);
+            BattleUnitModel unit = CreateHeroBattleUnit(heroId);
 
-            if (data == null)
+            if (unit == null)
             {
                 continue;
-            }
-
-            BattleUnitModel unit = new BattleUnitModel();
-            unit.ID = data.ID;
-            unit.IsHero = true;
-            unit.Speed = data.Speed;
-            unit.AttackPower = data.AttackPower;
-            unit.MaxHp = data.MaxHp;
-            unit.CurrentHp = data.MaxHp;
-
-            foreach (HeroSkill heroSkill in GameDataManager.Inst.GetDataList<HeroSkill>())
-            {
-                if (heroSkill.HeroId != unit.ID)
-                {
-                    continue;
-                }
-
-                unit.SkillIdList.Add(heroSkill.ID);
             }
 
             participats.Add(unit);
@@ -151,6 +170,8 @@ public class BattleViewModel : ViewModelBase
 
         await ResolveActionQueueAsync(heroList, enemyList, token);
 
+        ApplyPendingHeroChange(turnOrder, heroList);
+
         RefreshActionQueue();
     }
 
@@ -237,8 +258,8 @@ public class BattleViewModel : ViewModelBase
         return rewardAmount;
     }
 
-    //전투에 참여한 영웅들의 누적 참여 횟수를 증가시킨다 (승패 무관, 세이브 반영은 하루 경과 시 일괄 처리 정책을 따름)
-    public void UpdateHeroBattleParticipation(List<BattleUnitModel> heroList)
+    //전투에 참여한 영웅들의 누적 참여 횟수를 증가시킨다 (교체로 빠진 영웅 포함, 승패 무관, 세이브 반영은 하루 경과 시 일괄 처리 정책을 따름)
+    public void UpdateHeroBattleParticipation(List<string> heroIdList)
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
 
@@ -247,9 +268,9 @@ public class BattleViewModel : ViewModelBase
             return;
         }
 
-        foreach (BattleUnitModel hero in heroList)
+        foreach (string heroId in heroIdList)
         {
-            HeroProgressModel progress = FindOrCreateHeroProgress(player, hero.ID);
+            HeroProgressModel progress = FindOrCreateHeroProgress(player, heroId);
             progress.BattleParticipateCount++;
         }
     }
@@ -367,7 +388,14 @@ public class BattleViewModel : ViewModelBase
 
         if (action.Result == BattleActionResult.ChangeUnit)
         {
-            AddBattleLog($"{unitName} - {action.Result} 처리 (아직 미구현)");
+            if (action.Unit.IsHero == false)
+            {
+                AddBattleLog($"{unitName} - 적으로는 교체할 수 없습니다.");
+                return;
+            }
+
+            ReserveHeroChange(action.Unit, action.SelectedChangeHeroId);
+            AddBattleLog($"{unitName} - 교체 예약 완료 (이번 라운드 종료 후 반영)");
             return;
         }
 
@@ -394,6 +422,64 @@ public class BattleViewModel : ViewModelBase
         }
 
         AddBattleLog(BuildActionResolvedLogMessage(action));
+    }
+
+    //라운드 종료 후 일괄 반영하기 위해 교체 내용을 예약해둔다
+    private void ReserveHeroChange(BattleUnitModel outUnit, string changeInHeroId)
+    {
+        _pendingChangeOutUnit = outUnit;
+        _pendingChangeInHeroId = changeInHeroId;
+    }
+
+    private void ClearPendingHeroChange()
+    {
+        _pendingChangeOutUnit = null;
+        _pendingChangeInHeroId = null;
+    }
+
+    //예약된 교체를 실제 참가자 목록에 반영한다. 라운드가 완전히 끝난 뒤에만 호출해야 한다
+    private void ApplyPendingHeroChange(List<BattleUnitModel> turnOrder, List<BattleUnitModel> heroList)
+    {
+        if (_pendingChangeOutUnit == null || string.IsNullOrEmpty(_pendingChangeInHeroId))
+        {
+            return;
+        }
+
+        BattleUnitModel newHeroUnit = CreateHeroBattleUnit(_pendingChangeInHeroId);
+
+        if (newHeroUnit == null)
+        {
+            AddBattleLog("영웅 교체 실패: 투입할 영웅의 전투 데이터를 찾을 수 없습니다.");
+            ClearPendingHeroChange();
+            return;
+        }
+
+        string outHeroName = GameUtil.GetUnitDisplayName(_pendingChangeOutUnit.ID);
+        string inHeroName = GameUtil.GetUnitDisplayName(newHeroUnit.ID);
+
+        turnOrder.Remove(_pendingChangeOutUnit);
+        heroList.Remove(_pendingChangeOutUnit);
+
+        turnOrder.Add(newHeroUnit);
+        heroList.Add(newHeroUnit);
+
+        SortTurnOrderInPlace(turnOrder);
+
+        ClearPendingHeroChange();
+
+        AddBattleLog($"{outHeroName} 영웅이 물러나고 {inHeroName} 영웅이 투입되었습니다.");
+
+        HeroListChanged?.Invoke(heroList);
+    }
+
+    //TurnManager가 내부 리스트 하나를 재사용하는 구조라, 복사본을 거쳐야 원본이 비워지지 않는다
+    private void SortTurnOrderInPlace(List<BattleUnitModel> turnOrder)
+    {
+        List<BattleUnitModel> sourceCopy = new List<BattleUnitModel>(turnOrder);
+        List<BattleUnitModel> sortedCopy = new List<BattleUnitModel>(TurnManager.Inst.GetTurnOrder(sourceCopy));
+
+        turnOrder.Clear();
+        turnOrder.AddRange(sortedCopy);
     }
 
     //지원하기 개입 처리 - 페널티로 막혔던 원래 스킬을 되살려서 실제로 적용한다
@@ -648,12 +734,16 @@ public class BattleViewModel : ViewModelBase
         {
             return;
         }
+
         target.CurrentHp -= power;
+
         if (target.CurrentHp < 0)
         {
             target.CurrentHp = 0;
         }
-        UnitHpChanged?.Invoke(target); 
+        
+        UnitHpChanged?.Invoke(target);
+        UnitHitVfxRequested?.Invoke(target);
 
         if (target.CurrentHp <= 0)
         {

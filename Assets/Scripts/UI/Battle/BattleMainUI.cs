@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using UnityEngine.AddressableAssets;
 
 // 전투 메인 UI 전체를 관리하는 스크립트 (배틀 로그 표시도 담당)
 public class BattleMainUI : UIBase
@@ -21,6 +22,8 @@ public class BattleMainUI : UIBase
     [SerializeField] private Image[] Image_EnergySlotList;
 
     private const float DimmedEnergyAlpha = 0.2f;
+    private const string CommonHitVfxAddress = "BattleVFX_CommonHit"; //피격 VFX
+    private const string EnemyMuzzleVfxAddress = "BattleVFX_Enemy01Muzzle";
 
     [Header("액션 버튼")]
     [SerializeField] private Button Button_Reinforce;
@@ -37,13 +40,16 @@ public class BattleMainUI : UIBase
     [Header("전투 결과 팝업")]
     [SerializeField] private BattleResultPopupUI Panel_BattleResultPopup;
 
+    [Header("영웅 교체 팝업")]
+    [SerializeField] private ChangeUnitPopupUI Panel_ChangeUnitPopup;
+
     [Header("도움말")]
     [SerializeField] private Button Button_Help;
     [SerializeField] private HelpGuideUI Panel_HelpGuide;
 
-    private const int ReinforceEnergyCost = 1; //temp
-    private const int ChangeUnitEnergyCost = 2; //temp
-    private const int HealUnitEnergyCost = 2; //temp
+    private const int ReinforceEnergyCost = 1; 
+    private const int ChangeUnitEnergyCost = 2; 
+    private const int HealUnitEnergyCost = 2; 
 
     private string _selectedTargetUnitId;
     private BattleActionResult? _pendingActionResult;
@@ -64,6 +70,9 @@ public class BattleMainUI : UIBase
     private List<BattleUnitModel> _pendingTurnOrder;
     private List<BattleUnitModel> _pendingHeroList;
     private List<BattleUnitModel> _pendingEnemyList;
+
+    //이번 전투에 한 번이라도 출전한 영웅 목록. 교체 후보에서 제외한다
+    private readonly List<string> _excludedHeroIdList = new List<string>();
 
     private const int MaxRoundSafetyLimit = 15; //혹시 모를 무한루프 방지용 라운드 상한
 
@@ -97,6 +106,8 @@ public class BattleMainUI : UIBase
         CancelBattleLoop();
         Panel_BattleResultPopup.ClosePopup();
         Panel_HelpGuide.CloseGuideSilently();
+        Panel_ChangeUnitPopup.ClosePopup();
+        _excludedHeroIdList.Clear();
         _isBattleRunning = false;
         _selectedTargetUnitId = null;
         _pendingActionResult = null;
@@ -145,6 +156,8 @@ public class BattleMainUI : UIBase
         _viewModel.UnitAttackStarted += OnUnitAttackStarted;
         _viewModel.UnitHit += OnUnitHit;
         _viewModel.UnitDied += OnUnitDied;
+        _viewModel.UnitHitVfxRequested += OnUnitHitVfxRequested;
+        _viewModel.HeroListChanged += HandleHeroListChanged;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
         Button_HealUnit.onClick.AddListener(OnClickHealUnit);
@@ -153,6 +166,7 @@ public class BattleMainUI : UIBase
         Button_Help.onClick.AddListener(OnClickHelp);
 
         Panel_SupportItemPopup.OnItemApplied += HandleSupportItemApplied;
+        Panel_ChangeUnitPopup.OnHeroSelected += HandleChangeHeroSelected;
         Panel_BattleResultPopup.OnConfirmed += HandleBattleResultConfirmed;
     }
 
@@ -215,6 +229,7 @@ public class BattleMainUI : UIBase
         if (_enemySpawner != null)
         {
             _enemySpawner.PlayAttackAnimation(unit);
+            PlayEnemyMuzzleVfxAsync(unit).Forget();
         }
     }
 
@@ -240,6 +255,186 @@ public class BattleMainUI : UIBase
         {
             _enemySpawner.PlayHitAnimation(unit);
         }
+    }
+
+    private void OnUnitHitVfxRequested(BattleUnitModel unit)
+    {
+        PlayCommonHitVfxAsync(unit).Forget();
+    }
+
+    private bool TryGetUnitVfxPoint(
+        BattleUnitModel unit,
+        out Transform vfxPoint)
+    {
+        vfxPoint = null;
+
+        if (unit == null)
+        {
+            return false;
+        }
+
+        if (unit.IsHero)
+        {
+            if (BattleHeroSpawner.Inst == null)
+            {
+                return false;
+            }
+
+            return BattleHeroSpawner.Inst.TryGetVfxPoint(
+                unit,
+                out vfxPoint);
+        }
+
+        if (_enemySpawner == null)
+        {
+            return false;
+        }
+
+        return _enemySpawner.TryGetVfxPoint(
+            unit,
+            out vfxPoint);
+    }
+
+    private async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        bool hasVfxPoint = TryGetUnitVfxPoint(
+            unit,
+            out Transform vfxPoint);
+
+        if (hasVfxPoint == false || vfxPoint == null)
+        {
+            return;
+        }
+
+        GameObject vfxObject = await ResourceManager.Inst.InstantiateAsync(
+            CommonHitVfxAddress);
+
+        if (vfxObject == null)
+        {
+            return;
+        }
+
+        PrepareOneShotParticleVfx(vfxObject);
+        
+        vfxObject.transform.SetPositionAndRotation(
+            vfxPoint.position,
+            vfxPoint.rotation);
+
+        float playDuration = GetParticlePlayDuration(vfxObject);
+
+        try
+        {
+            await UniTask.Delay(
+                System.TimeSpan.FromSeconds(playDuration),
+                cancellationToken: this.GetCancellationTokenOnDestroy())
+                .SuppressCancellationThrow();
+        }
+        finally
+        {
+            if (vfxObject != null)
+            {
+                Addressables.ReleaseInstance(vfxObject);
+            }
+        }
+    }
+
+    private async UniTask PlayEnemyMuzzleVfxAsync(BattleUnitModel unit)
+    {
+        if (unit == null || unit.IsHero)
+        {
+            return;
+        }
+
+        if (_enemySpawner == null)
+        {
+            return;
+        }
+
+        bool hasMuzzlePoint = _enemySpawner.TryGetMuzzlePoint(
+            unit,
+            out Transform muzzlePoint);
+
+        if (hasMuzzlePoint == false || muzzlePoint == null)
+        {
+            return;
+        }
+
+        GameObject vfxObject = await ResourceManager.Inst.InstantiateAsync(
+            EnemyMuzzleVfxAddress,
+            muzzlePoint);
+
+        if (vfxObject == null)
+        {
+            return;
+        }
+
+        vfxObject.transform.localPosition = Vector3.zero;
+        vfxObject.transform.localRotation = Quaternion.identity;
+
+        PrepareOneShotParticleVfx(vfxObject);
+
+        float playDuration = GetParticlePlayDuration(vfxObject);
+
+        try
+        {
+            await UniTask.Delay(
+                System.TimeSpan.FromSeconds(playDuration),
+                cancellationToken: this.GetCancellationTokenOnDestroy())
+                .SuppressCancellationThrow();
+        }
+        finally
+        {
+            if (vfxObject != null)
+            {
+                Addressables.ReleaseInstance(vfxObject);
+            }
+        }
+    }
+
+    private void PrepareOneShotParticleVfx(GameObject vfxObject)
+    {
+        ParticleSystem[] particleSystems =
+            vfxObject.GetComponentsInChildren<ParticleSystem>(true);
+
+        foreach (ParticleSystem particleSystem in particleSystems)
+        {
+            ParticleSystem.MainModule main = particleSystem.main;
+            main.loop = false;
+
+            particleSystem.Stop(
+                true,
+                ParticleSystemStopBehavior.StopEmittingAndClear);
+
+            particleSystem.Play(true);
+        }
+    }
+
+    private float GetParticlePlayDuration(GameObject vfxObject)
+    {
+        const float MinimumDuration = 0.1f;
+
+        float maxDuration = MinimumDuration;
+
+        ParticleSystem[] particleSystems =
+            vfxObject.GetComponentsInChildren<ParticleSystem>(true);
+
+        foreach (ParticleSystem particleSystem in particleSystems)
+        {
+            ParticleSystem.MainModule main = particleSystem.main;
+            float duration = main.duration + main.startLifetime.constantMax;
+
+            if (duration > maxDuration)
+            {
+                maxDuration = duration;
+            }
+        }
+
+        return maxDuration;
     }
 
     private void OnUnitDied(BattleUnitModel unit)
@@ -274,6 +469,8 @@ public class BattleMainUI : UIBase
             _viewModel.UnitAttackStarted -= OnUnitAttackStarted;
             _viewModel.UnitHit -= OnUnitHit;
             _viewModel.UnitDied -= OnUnitDied;
+            _viewModel.UnitHitVfxRequested -= OnUnitHitVfxRequested;
+            _viewModel.HeroListChanged -= HandleHeroListChanged;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);
             Button_HealUnit.onClick.RemoveListener(OnClickHealUnit);
@@ -282,6 +479,7 @@ public class BattleMainUI : UIBase
             Button_Help.onClick.RemoveListener(OnClickHelp);
 
             Panel_SupportItemPopup.OnItemApplied -= HandleSupportItemApplied;
+            Panel_ChangeUnitPopup.OnHeroSelected -= HandleChangeHeroSelected;
             Panel_BattleResultPopup.OnConfirmed -= HandleBattleResultConfirmed;
         }
 
@@ -476,7 +674,61 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        ApplyInterventionAction(targetUnitId, result, _pendingEnergyCost, _pendingLogMessage, null);
+        if (result == BattleActionResult.ChangeUnit)
+        {
+            OpenChangeUnitPopup();
+            return;
+        }
+
+        ApplyInterventionAction(targetUnitId, result, _pendingEnergyCost, _pendingLogMessage, null, null);
+    }
+
+    //교체 후보가 있을 때만 팝업을 연다. 후보가 없으면 에너지를 소모하지 않고 안내만 한다
+    private void OpenChangeUnitPopup()
+    {
+        if (Panel_ChangeUnitPopup.HasWaitingHero(_excludedHeroIdList) == false)
+        {
+            _viewModel.AddBattleLog("실행 실패: 교체할 수 있는 대기 영웅이 없습니다.");
+            return;
+        }
+
+        Panel_ChangeUnitPopup.OpenPopup(_excludedHeroIdList);
+    }
+
+    //교체 팝업에서 영웅을 고르면 실제 교체 액션을 지정한다
+    private void HandleChangeHeroSelected(string heroId)
+    {
+        if (_pendingActionResult.HasValue == false || string.IsNullOrEmpty(_selectedTargetUnitId))
+        {
+            return;
+        }
+
+        ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, null, heroId);
+    }
+
+    //교체가 반영되면 현재 영웅 목록으로 전부 다시 스폰한다. 스포너에 개별 교체 API가 없어 전체 재스폰으로 처리
+    private void HandleHeroListChanged(List<BattleUnitModel> heroList)
+    {
+        if (heroList == null)
+        {
+            return;
+        }
+
+        List<string> heroIdList = new List<string>();
+
+        foreach (BattleUnitModel hero in heroList)
+        {
+            heroIdList.Add(hero.ID);
+
+            if (_excludedHeroIdList.Contains(hero.ID) == false)
+            {
+                _excludedHeroIdList.Add(hero.ID);
+            }
+        }
+
+        BattleHeroSpawner.Inst.SetSelectedHeroIdList(heroIdList);
+        BattleHeroSpawner.Inst.SpawnHeroes();
+        BattleHeroSpawner.Inst.InitializeHeroViews(heroList);
     }
 
     //개입 종류에 맞는 지원 아이템 팝업을 연다
@@ -507,7 +759,7 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, itemId);
+        ApplyInterventionAction(_selectedTargetUnitId, _pendingActionResult.Value, _pendingEnergyCost, _pendingLogMessage, itemId, null);
     }
 
     //결과 팝업 확인 버튼 클릭 시 타이쿤 화면으로 복귀한다
@@ -517,9 +769,9 @@ public class BattleMainUI : UIBase
     }
 
     //실제 대상에게 개입 액션을 적용한다
-    private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage, string itemId)
+    private void ApplyInterventionAction(string targetUnitId, BattleActionResult result, int energyCost, string logMessage, string itemId, string changeHeroId)
     {
-        ActionApplyResult applyResult = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost, itemId);
+        ActionApplyResult applyResult = BattleManager.Inst.SetActionResult(targetUnitId, result, energyCost, itemId, changeHeroId);
 
         if (applyResult == ActionApplyResult.InsufficientEnergy)
         {
@@ -638,23 +890,23 @@ public class BattleMainUI : UIBase
             this.GetCancellationTokenOnDestroy());
     }
 
-    //전투 시작 버튼 
-    private void OnClickStartBattle()
-    {
-        if (_isBattleRunning)
-        {
-            Debug.LogWarning("[BattleMainUI] 이미 전투가 진행 중입니다.");
-            return;
-        }
-        UIBase ui = UIManager.Inst.OpenRosterUI();
-        RosterUI rosterUI = ui as RosterUI;
-        if (rosterUI == null)
-        {
-            Debug.LogWarning("[BattleMainUI] RosterUI를 찾을 수 없습니다.");
-            return;
-        }
-        rosterUI.Initialize(OnRosterConfirmed);
-    }
+    ////전투 시작 버튼 
+    //private void OnClickStartBattle()
+    //{
+    //    if (_isBattleRunning)
+    //    {
+    //        Debug.LogWarning("[BattleMainUI] 이미 전투가 진행 중입니다.");
+    //        return;
+    //    }
+    //    UIBase ui = UIManager.Inst.OpenRosterUI();
+    //    RosterUI rosterUI = ui as RosterUI;
+    //    if (rosterUI == null)
+    //    {
+    //        Debug.LogWarning("[BattleMainUI] RosterUI를 찾을 수 없습니다.");
+    //        return;
+    //    }
+    //    rosterUI.Initialize(OnRosterConfirmed);
+    //}
 
     //로스터에서 3명을 확정하면 그 영웅들을 스폰시키고 전투 루프를 시작한다
     private void OnRosterConfirmed(List<string> selectedHeroIds)
@@ -669,6 +921,8 @@ public class BattleMainUI : UIBase
         BattleHeroSpawner.Inst.SpawnHeroes();
         //실제 스폰된 유닛 기준으로 턴 순서 구성 (프리팹 매핑 없는 영웅은 스폰에서 빠지므로 로직도 그에 맞춤)
         List<string> spawnedHeroIds = BattleHeroSpawner.Inst.GetHeroIdList();
+        _excludedHeroIdList.Clear();
+        _excludedHeroIdList.AddRange(spawnedHeroIds);
         List<string> enemyIds = new List<string>(_testEnemyIdList);
         List<BattleUnitModel> turnOrder = _viewModel.GetBattleTurnOrder(spawnedHeroIds, enemyIds);
         if (turnOrder == null || turnOrder.Count <= 0)
@@ -751,7 +1005,7 @@ public class BattleMainUI : UIBase
                 {
                     int roundCount = BattleManager.Inst.GetCurrentRound();
                     int rewardAmount = _viewModel.ApplyBattleReward(result, roundCount);
-                    _viewModel.UpdateHeroBattleParticipation(heroList);
+                    _viewModel.UpdateHeroBattleParticipation(_excludedHeroIdList);
                     GameManager.Inst.Services.DayService.MarkBattleDone();
                     _viewModel.AddBattleLog(result == BattleResult.Victory ? "전투 승리!" : "전투 패배...");
                     Panel_BattleResultPopup.OpenPopup(result, rewardAmount, roundCount);
@@ -775,13 +1029,17 @@ public class BattleMainUI : UIBase
         }
     }
 
-    //배틀메인UI 나가기
 
-    private void OnClickExit()
-    {
-        CancelBattleLoop();
-        ObjectManager.Inst.ExitBattle();
-    }
+
+
+
+    ////배틀메인UI 나가기
+
+    //private void OnClickExit()
+    //{
+    //    CancelBattleLoop();
+    //    ObjectManager.Inst.ExitBattle();
+    //}
 
     //배틀메인UI 진입시 로스터 자동 열기
     private void OpenRoster()

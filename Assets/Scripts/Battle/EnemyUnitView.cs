@@ -9,6 +9,36 @@ public class EnemyUnitView : MonoBehaviour
     [SerializeField] private TMP_Text Text_Hp;
     [SerializeField] private Image Image_HpFill;
 
+    [Header("VFX")]
+    [SerializeField] private Transform _vfxPoint;
+    [SerializeField] private Transform _muzzlePoint;
+
+    public Transform VfxPoint
+    {
+        get
+        {
+            if (_vfxPoint != null)
+            {
+                return _vfxPoint;
+            }
+
+            return transform;
+        }
+    }
+
+    public Transform muzzlePoint
+    {
+        get
+        {
+            if (_muzzlePoint != null)
+            {
+                return _muzzlePoint;
+            }
+
+            return transform;
+        }
+    }
+
     public void Initialize(string unitName, int currentHp, int maxHp)
     {
         if (Text_Name != null)
