@@ -19,6 +19,7 @@ public class BattleViewModel : ViewModelBase
 
     private const int AttackAnimationDelayMilliseconds = 800;
     private const int HitAnimationDelayMilliseconds = 800;
+    private const int ActionQueueStackDelayMilliseconds = 120;
 
     private UniTaskCompletionSource _interventionCompletionSource;
 
@@ -161,6 +162,8 @@ public class BattleViewModel : ViewModelBase
             }
 
             AddBattleLog(BuildUnitActionLogMessage(createdAction));
+            RefreshActionQueue();
+            await UniTask.Delay(ActionQueueStackDelayMilliseconds, cancellationToken: token);
         }
 
         BattleManager.Inst.EnqueuePlayerAction();
@@ -313,6 +316,7 @@ public class BattleViewModel : ViewModelBase
             token.ThrowIfCancellationRequested();
             
             BattleActionModel action = BattleManager.Inst.GetNextAction();
+            RefreshActionQueue();
 
             if (action.IsPlayerAction)
             {
