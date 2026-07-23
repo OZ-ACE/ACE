@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
@@ -41,6 +42,8 @@ public partial class SelectHeroSkillNode : Action
             return Status.Failure;
         }
 
+        List<string> availableSkillIdList = new List<string>();
+
         foreach (string skillId in unit.SkillIdList)
         {
             if (string.IsNullOrEmpty(skillId))
@@ -55,11 +58,50 @@ public partial class SelectHeroSkillNode : Action
                 continue;
             }
 
-            SkillId.Value = skillId;
+            if (Enum.TryParse(heroSkill.ActionType, out ActionType actionType) == false)
+            {
+                continue;
+            }
 
-            return Status.Success;
+            if (Enum.TryParse(
+                heroSkill.TargetSelectType,
+                out TargetSelectType targetSelectType) == false)
+            {
+                continue;
+            }
+
+            List<BattleUnitModel> targetList = BattleTargetSelector.SelectTargets(
+                unit,
+                context.HeroList,
+                context.EnemyList,
+                targetSelectType,
+                heroSkill.TargetCount);
+
+            bool canUseSkill = BattleSkillConditionChecker.CanUseSkill(
+                unit,
+                skillId,
+                actionType,
+                targetList);
+
+            if (canUseSkill == false)
+            {
+                continue;
+            }
+
+            availableSkillIdList.Add(skillId);
         }
 
-        return Status.Failure;
+        if (availableSkillIdList.Count <= 0)
+        {
+            return Status.Failure;
+        }
+
+        int selectedIndex = UnityEngine.Random.Range(
+            0,
+            availableSkillIdList.Count);
+
+        SkillId.Value = availableSkillIdList[selectedIndex];
+
+        return Status.Success;
     }
 }
