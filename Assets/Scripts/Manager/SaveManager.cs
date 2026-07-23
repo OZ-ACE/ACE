@@ -111,6 +111,7 @@ public class SaveManager : SingletonBase<SaveManager>
         newPlayer.Gold = 990;
         newPlayer.MemoryFragment = 0;
         newPlayer.LowGrade = 0;
+        newPlayer.EndingType = EndingType.None;
 
         newPlayer.Inventory = SetDefaultItem();
         newPlayer.HeroStats = new List<HeroStat>();
