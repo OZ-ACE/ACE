@@ -461,11 +461,19 @@ public class BattleViewModel : ViewModelBase
         string outHeroName = GameUtil.GetUnitDisplayName(_pendingChangeOutUnit.ID);
         string inHeroName = GameUtil.GetUnitDisplayName(newHeroUnit.ID);
 
-        turnOrder.Remove(_pendingChangeOutUnit);
-        heroList.Remove(_pendingChangeOutUnit);
+        int outHeroIndex = heroList.IndexOf(_pendingChangeOutUnit);
 
+        turnOrder.Remove(_pendingChangeOutUnit);
         turnOrder.Add(newHeroUnit);
-        heroList.Add(newHeroUnit);
+
+        if (outHeroIndex >= 0)
+        {
+            heroList[outHeroIndex] = newHeroUnit;
+        }
+        else
+        {
+            heroList.Add(newHeroUnit);
+        }
 
         SortTurnOrderInPlace(turnOrder);
 
