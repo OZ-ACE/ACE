@@ -8539,7 +8539,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[0].Scale
@@ -8566,6 +8566,14 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[6].Scale
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[7].Scale
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[3].HeroId
       value: hero_04
       objectReference: {fileID: 0}
@@ -8575,20 +8583,44 @@ PrefabInstance:
       objectReference: {fileID: 6294557203944253158, guid: cff7fec997672ae46b4d6d5e639e0630, type: 3}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[4].HeroId
-      value: hero_07
+      value: hero_05
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[4].Prefab
       value: 
-      objectReference: {fileID: 3791300385592474153, guid: f51d60bab3aada645a3178cba2551a5a, type: 3}
+      objectReference: {fileID: 4208516573430908336, guid: 7293ff4a36a3e4e49bea0acf9106c40d, type: 3}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[5].HeroId
-      value: hero_07
+      value: hero_06
       objectReference: {fileID: 0}
     - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: _heroSpawnEntryList.Array.data[5].Prefab
       value: 
+      objectReference: {fileID: 5778319254838076795, guid: 96d1ede75b4e6f540b7089573ddc0771, type: 3}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[6].HeroId
+      value: hero_07
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[6].Prefab
+      value: 
       objectReference: {fileID: 3791300385592474153, guid: f51d60bab3aada645a3178cba2551a5a, type: 3}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[7].HeroId
+      value: hero_05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[7].Prefab
+      value: 
+      objectReference: {fileID: 4208516573430908336, guid: 7293ff4a36a3e4e49bea0acf9106c40d, type: 3}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[5].BattleAnimatorController
+      value: 
+      objectReference: {fileID: 22100000, guid: 4291df536230974429ad1ffb45e64ae4, type: 2}
+    - target: {fileID: 4184506233567184342, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
+      propertyPath: _heroSpawnEntryList.Array.data[6].BattleAnimatorController
+      value: 
+      objectReference: {fileID: 22100000, guid: 11be89a1f162a9b4dbdb7432e8dac070, type: 2}
     - target: {fileID: 7711888709231574003, guid: 704e578419833d54ea7631a4b7cfab0c, type: 3}
       propertyPath: m_Name
       value: BattleHeroSpawner

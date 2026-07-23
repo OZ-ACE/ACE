@@ -135,20 +135,26 @@ public class SettlementView : ViewBase
             Debug.Log("[SettlementView] 정산 실패 - 다음날로 넘길 수 없음");
             return;
         }
+        // 일일 종합 등급으로 게임오버 판정 (D 이하 2일 연속)
+        GameOverType result = _viewModel.CheckDailyResult();
         bool weeklyDue = _viewModel.IsWeeklyReviewDue;
         UIManager.Inst.CloseSettlementUI();
+        if (result == GameOverType.GameOver)
+        {
+            UIManager.Inst.CloseWeeklyEvaluationUI();
+            UIManager.Inst.CloseTycoonMainUI();
+            UIManager.Inst.OpenGameOver();
+            return;
+        }
         if (weeklyDue == true)
         {
-            // 주간 평가 계산 + 게임오버 판정 (주 1회만)
             WeeklyEvaluationViewModel weeklyVm = GameManager.Inst.Services.WeeklyEvaluationService.GetWeeklyEvaluationViewModel();
             if (weeklyVm == null)
             {
                 weeklyVm = GameManager.Inst.Services.WeeklyEvaluationService.CreateWeeklyEvaluationViewModel();
             }
             weeklyVm.BuildWeekly();
-            GameOverType result = weeklyVm.CheckResult();
             UIManager.Inst.OpenWeeklyEvaluationUI();
-            HandleGameOverResult(result);
         }
     }
     private void OnClickClose()
