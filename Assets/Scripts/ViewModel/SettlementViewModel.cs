@@ -230,5 +230,30 @@ public class SettlementViewModel : ViewModelBase
     }
 
 
+    // 일일 종합 등급으로 게임오버 판정 (D 이하 2일 연속) (추후 삭제 필요)
+    public GameOverType CheckDailyResult()
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+        if (player == null || _evaluationResult == null)
+        {
+            return GameOverType.None;
+        }
+        if (_evaluationResult.Overall <= EvaluationGrade.D)
+        {
+            player.LowGrade++;
+        }
+        else
+        {
+            player.LowGrade = 0;   // 연속 끊기면 리셋
+        }
+        SaveManager.Inst.RequestSaveData(player);
+        if (player.LowGrade >= 2)
+        {
+            return GameOverType.GameOver;
+        }
+        return GameOverType.None;
+    }
+
+
 
 }
