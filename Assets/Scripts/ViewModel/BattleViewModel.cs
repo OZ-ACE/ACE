@@ -258,8 +258,8 @@ public class BattleViewModel : ViewModelBase
         return rewardAmount;
     }
 
-    //전투에 참여한 영웅들의 누적 참여 횟수를 증가시킨다 (승패 무관, 세이브 반영은 하루 경과 시 일괄 처리 정책을 따름)
-    public void UpdateHeroBattleParticipation(List<BattleUnitModel> heroList)
+    //전투에 참여한 영웅들의 누적 참여 횟수를 증가시킨다 (교체로 빠진 영웅 포함, 승패 무관, 세이브 반영은 하루 경과 시 일괄 처리 정책을 따름)
+    public void UpdateHeroBattleParticipation(List<string> heroIdList)
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
 
@@ -268,9 +268,9 @@ public class BattleViewModel : ViewModelBase
             return;
         }
 
-        foreach (BattleUnitModel hero in heroList)
+        foreach (string heroId in heroIdList)
         {
-            HeroProgressModel progress = FindOrCreateHeroProgress(player, hero.ID);
+            HeroProgressModel progress = FindOrCreateHeroProgress(player, heroId);
             progress.BattleParticipateCount++;
         }
     }
