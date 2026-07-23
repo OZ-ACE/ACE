@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -94,12 +95,61 @@ public class QuestSlot : MonoBehaviour
             if (!string.IsNullOrEmpty(dialogueID))
             {
                 GameManager.Inst.SetDialogueID(dialogueID);
+
+                if (dialogueID.Contains("Ending"))
+                {
+                    GameManager.Inst.SetDialogueID(GetEndingID());
+                }
+
                 UIManager.Inst.OpenDialogueUI();
                 UIManager.Inst.CloseTycoonMainUI();
                 ObjectManager.Inst.HideGridView();
             }
 
             this.gameObject.SetActive(false);
+        }
+    }
+
+    private string GetEndingID()
+    {
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
+
+        int totalPrimeLevel = 0;
+        int heroCount = playerModel.HeroStats.Count;
+
+        for (int i = 0; i < heroCount; i++)
+        {
+            string heroID = playerModel.HeroStats[i].HeroID;
+            int participateCount = 0;
+
+            if (playerModel.HeroProgressList != null)
+            {
+                for (int j = 0; j < playerModel.HeroProgressList.Count; j++)
+                {
+                    var progress = playerModel.HeroProgressList[j];
+                    if (progress != null && string.Equals(progress.HeroId, heroID, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        participateCount = progress.BattleParticipateCount;
+                        break;
+                    }
+                }
+            }
+
+            if (BattleManager.Inst != null)
+            {
+                totalPrimeLevel += BattleManager.Inst.CalculatePrimeLevel(participateCount);
+            }
+        }
+
+        float avgPrime = (float)totalPrimeLevel / heroCount;
+
+        if (avgPrime >= 1.5f)
+        {
+            return "Ending_Happy_01";
+        }
+        else
+        {
+            return "Ending_Bad_01";
         }
     }
 }
