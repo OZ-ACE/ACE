@@ -29,8 +29,6 @@ public class ObjectManager : SingletonBase<ObjectManager>
     private GameObject _battleRoot;
     private GameObject _backGround;
 
-
-
     public BuildGridView BuildGridView { get { return _buildGridView; } }
 
     private Dictionary<string, HeroMovingAgent> _spawnHero = new Dictionary<string, HeroMovingAgent>();
@@ -389,5 +387,15 @@ public class ObjectManager : SingletonBase<ObjectManager>
             Destroy(_buildGridView.gameObject);
             _buildGridView = null;
         }
+    }
+
+    public void ShowGridView()
+    {
+        _buildGridView.gameObject.SetActive(true);
+    }
+
+    public void HideGridView()
+    {
+        _buildGridView.gameObject.SetActive(false);
     }
 }

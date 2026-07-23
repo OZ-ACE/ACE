@@ -1011,7 +1011,6 @@ public class BattleMainUI : UIBase
                     Panel_BattleResultPopup.OpenPopup(result, rewardAmount, roundCount);
 
                     QuestViewModel questVM = GameManager.Inst.Services.QuestService?.GetQuestViewModel();
-                    questVM.ReportProgress(QuestConditionType.Battle, "", 1);
 
                     return;
                 }

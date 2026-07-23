@@ -237,6 +237,7 @@ public class BuildGridModel
         }
 
         _unlockedMinFloor = next;
+        GameManager.Inst.Services.QuestService.GetQuestViewModel().ReportProgress(QuestConditionType.Digging, "", 1);
         return true;
     }
 

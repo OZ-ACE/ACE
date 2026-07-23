@@ -7,7 +7,8 @@
     ReachGold,       // 보유 골드 달성 (상태)
     AdmitHero,
     Schedule,
-    Battle
+    Battle,
+    Digging
 }
 
 public enum QuestRewardType

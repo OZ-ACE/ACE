@@ -89,6 +89,16 @@ public class QuestSlot : MonoBehaviour
         else
         {
             SoundManager.Inst.PlaySFX("Success");
+
+            string dialogueID = GameDataManager.Inst.GetData<QuestData>(_questID).DialogueID;
+            if (!string.IsNullOrEmpty(dialogueID))
+            {
+                GameManager.Inst.SetDialogueID(dialogueID);
+                UIManager.Inst.OpenDialogueUI();
+                UIManager.Inst.CloseTycoonMainUI();
+                ObjectManager.Inst.HideGridView();
+            }
+
             this.gameObject.SetActive(false);
         }
     }

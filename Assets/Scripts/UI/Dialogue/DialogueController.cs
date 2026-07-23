@@ -108,7 +108,18 @@ public class DialogueController : MonoBehaviour
         if (!_characters.ContainsKey(speaker))
         {
             string path = GameDataManager.Inst.GetData<Dialogue>(GameManager.Inst.CurrentDialogueID).SpeakerPath;
-            GameObject prefab = await ResourceManager.Inst.InstantiateAsync(path, Transform_Speaker);
+            GameObject prefab;
+
+            if (path.Contains("hero"))
+            {
+                prefab = await ResourceManager.Inst.InstantiateAsync(path, Transform_Speaker);
+                prefab.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            }
+            else
+            {
+                prefab = await ResourceManager.Inst.InstantiateAsync(path, Transform_Speaker);
+            }
+
             _characters.Add(speaker, prefab);
         }
         else
