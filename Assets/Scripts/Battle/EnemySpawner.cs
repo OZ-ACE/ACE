@@ -99,6 +99,11 @@ public class EnemySpawner : MonoBehaviour
             enemyUnit.CurrentHp,
             enemyUnit.MaxHp);
 
+        if (enemyUnit.IsDefeated)
+        {
+            enemyView.HideUnitInfo();
+        }
+
         return true;
     }
 
