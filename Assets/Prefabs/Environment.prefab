@@ -251,6 +251,7 @@ Transform:
   - {fileID: 3483180786397676280}
   - {fileID: 6071036567734536447}
   - {fileID: 196748975716298889}
+  - {fileID: 3651671675899024420}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5477773085223387002
@@ -380,3 +381,69 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &9002932500590422946
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3651671675899024420}
+  - component: {fileID: 5503642910203765700}
+  m_Layer: 0
+  m_Name: TimeSkybox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3651671675899024420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9002932500590422946}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5383530845467613840}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5503642910203765700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9002932500590422946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 895ed32e76d50144dbfc9da5a289f52d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkyboxView
+  Settings:
+  - State: 1
+    Material: {fileID: 2100000, guid: fe4e130f9947345a2b213cb5038851a2, type: 2}
+    LightColor: {r: 1, g: 0.5330188, b: 0.5330188, a: 0}
+    LightIntensity: 1
+    LightRotation: {x: 0, y: 0, z: 0}
+  - State: 2
+    Material: {fileID: 2100000, guid: 7416536dbe0334cfd888dd1beb75a9fb, type: 2}
+    LightColor: {r: 1, g: 1, b: 1, a: 0}
+    LightIntensity: 1
+    LightRotation: {x: 0, y: 0, z: 0}
+  - State: 3
+    Material: {fileID: 2100000, guid: c82a334cf5a5e47978749c210cee72a7, type: 2}
+    LightColor: {r: 0.5, g: 0.2759434, b: 0.2759434, a: 0}
+    LightIntensity: 1
+    LightRotation: {x: 0, y: 0, z: 0}
+  - State: 4
+    Material: {fileID: 2100000, guid: c494c335823f54b52b2e87e1b7a63a23, type: 2}
+    LightColor: {r: 0.47613457, g: 0.43867922, b: 1, a: 0}
+    LightIntensity: 1
+    LightRotation: {x: 0, y: 0, z: 0}
+  Light_Main: {fileID: 6735920064067632102}

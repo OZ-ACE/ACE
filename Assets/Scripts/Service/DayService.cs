@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System;
 
-
 // 날짜 진행 담당
 public class DayService
 {
@@ -128,7 +127,7 @@ public class DayService
 
         if (_currentHour >= 24)
         {
-            _currentHour = 23;
+            _currentHour = 0;
             PauseTimer();
 
             return;
