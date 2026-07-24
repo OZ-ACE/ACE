@@ -20,6 +20,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     private static readonly int AttackTrigger = Animator.StringToHash("Attack");
     private static readonly int HitTrigger = Animator.StringToHash("Hit");
     private static readonly int DeathTrigger = Animator.StringToHash("Death");
+    private static readonly int DeathStateHash = Animator.StringToHash("Death");
 
     [Header("영웅 프리팹 매핑")]
     [SerializeField] private List<HeroSpawnEntry> _heroSpawnEntryList;
@@ -287,11 +288,19 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
             {
                 continue;
             }
+
             if (_heroViewMap.TryGetValue(hero.ID, out EnemyUnitView view) == false || view == null)
             {
                 continue;
             }
+
             view.Initialize(GameUtil.GetUnitDisplayName(hero.ID), hero.CurrentHp, hero.MaxHp);
+
+            if (hero.IsDefeated == true)
+            {
+                view.gameObject.SetActive(false);
+                SetHeroDeathPose(hero);
+            }
         }
     }
 
@@ -328,6 +337,25 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     public bool PlayDeathAnimation(BattleUnitModel heroUnit)
     {
         return SetAnimationTrigger(heroUnit, DeathTrigger);
+    }
+
+    //재스폰된 사망 영웅을 쓰러지는 모션 없이 사망 포즈(마지막 프레임)로 고정한다
+    public bool SetHeroDeathPose(BattleUnitModel heroUnit)
+    {
+        if (heroUnit == null)
+        {
+            return false;
+        }
+
+        if (_heroAnimatorMap.TryGetValue(heroUnit.ID, out Animator animator) == false || animator == null)
+        {
+            return false;
+        }
+
+        animator.Play(DeathStateHash, 0, 1f);
+        animator.Update(0f);
+
+        return true;
     }
 
     public bool TryGetVfxPoint(
