@@ -6,9 +6,9 @@
     "TriggerSkillId": "heroSkill_01_01",
     "TriggerSkillName": "뱃살튕기기",
     "TriggerCount": 2,
+    "DurationRounds": 3,
     "EffectType": "AttackPowerDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "뱃살 튕기다 허리 삐끗해서 공격력 감소"
   },
   {
@@ -18,9 +18,9 @@
     "TriggerSkillId": "heroSkill_01_02",
     "TriggerSkillName": "라떼는말이야",
     "TriggerCount": 2,
+    "DurationRounds": 2,
     "EffectType": "BuffPowerDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "라떼 이야기 너무 많이 해서 목 쉬어 버프 효과 감소"
   },
   {
@@ -30,9 +30,9 @@
     "TriggerSkillId": "heroSkill_01_03",
     "TriggerSkillName": "럭키방패",
     "TriggerCount": 2,
+    "DurationRounds": 2,
     "EffectType": "AccuracyDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "방패 던지다 손목 저려서 명중률 감소"
   },
   {
@@ -42,9 +42,9 @@
     "TriggerSkillId": "heroSkill_02_01",
     "TriggerSkillName": "오십견킥",
     "TriggerCount": 2,
+    "DurationRounds": 3,
     "EffectType": "SpeedDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "킥 반복하다 다리 저려서 속도 감소"
   },
   {
@@ -54,9 +54,9 @@
     "TriggerSkillId": "heroSkill_03_01",
     "TriggerSkillName": "감으로쏘기",
     "TriggerCount": 2,
+    "DurationRounds": 4,
     "EffectType": "AccuracyDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "눈 침침해져 명중률 감소"
   },
   {
@@ -66,9 +66,9 @@
     "TriggerSkillId": "heroSkill_04_01",
     "TriggerSkillName": "힘껏노려보기",
     "TriggerCount": 2,
+    "DurationRounds": 3,
     "EffectType": "DebuffPowerDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "노려보다 눈 떨려서 디버프 효과 감소"
   },
   {
@@ -78,9 +78,9 @@
     "TriggerSkillId": "heroSkill_05_01",
     "TriggerSkillName": "망치날라가유",
     "TriggerCount": 2,
+    "DurationRounds": 4,
     "EffectType": "AccuracyDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "망치 던지다 어지러워서 명중률 감소"
   },
   {
@@ -90,9 +90,9 @@
     "TriggerSkillId": "heroSkill_06_01",
     "TriggerSkillName": "뿌리감기",
     "TriggerCount": 2,
+    "DurationRounds": 2,
     "EffectType": "AttackPowerDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "뿌리감기 반복하다 관절염 와서 공격력 감소"
   },
   {
@@ -102,9 +102,9 @@
     "TriggerSkillId": "heroSkill_07_01",
     "TriggerSkillName": "아몬드가죽으면",
     "TriggerCount": 2,
+    "DurationRounds": 4,
     "EffectType": "AttackPowerDown",
     "EffectValue": 10,
-    "DurationRounds": 2,
     "Description": "변신 중 힘 딸려서 근력 저하"
   }
 ]
