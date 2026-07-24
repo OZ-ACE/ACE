@@ -415,6 +415,70 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[0].LightColor.b
+      value: 0.45603418
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[0].LightColor.g
+      value: 0.45603418
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[0].LightColor.r
+      value: 0.5283019
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[1].LightColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[1].LightColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[1].LightColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[2].LightColor.b
+      value: 0.6462264
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[2].LightColor.g
+      value: 0.6462264
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[2].LightColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[3].LightColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[3].LightColor.g
+      value: 0.504717
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[3].LightColor.r
+      value: 0.53754383
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[0].LightIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[1].LightIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[2].LightIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[3].LightIntensity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5702820383878516382, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_CameraType
       value: 0
