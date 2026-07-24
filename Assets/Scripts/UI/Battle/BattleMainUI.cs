@@ -167,6 +167,7 @@ public class BattleMainUI : UIBase
         _viewModel.UnitDied += OnUnitDied;
         _viewModel.UnitHitVfxRequested += OnUnitHitVfxRequested;
         _viewModel.UnitProjectileVfxRequested += OnUnitProjectileVfxRequested;
+        _viewModel.UnitHealVfxRequested += OnUnitHealVfxRequested;
         _viewModel.HeroListChanged += HandleHeroListChanged;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
@@ -291,6 +292,16 @@ public class BattleMainUI : UIBase
         _battleVfxController.PlayProjectileVfxAsync(action).Forget();
     }
 
+    private void OnUnitHealVfxRequested(BattleUnitModel unit)
+    {
+        if (_battleVfxController == null || unit == null)
+        {
+            return;
+        }
+
+        _battleVfxController.PlayHealVfxAsync(unit).Forget();
+    }
+
     private void OnUnitDied(BattleUnitModel unit)
     {
         if (unit == null)
@@ -325,6 +336,7 @@ public class BattleMainUI : UIBase
             _viewModel.UnitDied -= OnUnitDied;
             _viewModel.UnitHitVfxRequested -= OnUnitHitVfxRequested;
             _viewModel.UnitProjectileVfxRequested -= OnUnitProjectileVfxRequested;
+            _viewModel.UnitHealVfxRequested -= OnUnitHealVfxRequested;
             _viewModel.HeroListChanged -= HandleHeroListChanged;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);

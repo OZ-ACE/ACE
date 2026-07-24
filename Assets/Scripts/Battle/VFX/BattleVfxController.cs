@@ -19,6 +19,7 @@ public class BattleVfxController : MonoBehaviour
 
     private const string MagicArrowSkillId = "heroSkill_03_01";
     private const string FireBallSkillId = "heroSkill_04_01";
+    private const string HealingBuffVfxAddress = "BattleVFX_HealingBuff";
 
     public async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
     {
@@ -59,6 +60,18 @@ public class BattleVfxController : MonoBehaviour
             muzzlePoint);
     }
    
+    public async UniTask PlayHealVfxAsync(BattleUnitModel unit)
+    {
+        if (TryGetUnitVfxPoint(unit, out Transform vfxPoint) == false)
+        {
+            return;
+        }
+
+        await PlayChildParticleVfxAsync(
+            HealingBuffVfxAddress,
+            vfxPoint);
+    }
+
     public async UniTask PlayProjectileVfxAsync(BattleActionModel action)
     {
         if (action == null || action.Unit == null || action.Target == null)
