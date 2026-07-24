@@ -124,6 +124,9 @@ public class BattleViewModel : ViewModelBase
         OnPropertyChanged(nameof(BattleLogs));
     }
 
+    private const string RoundSeparatorLine = "<color=#00E5FF>====================================</color>";
+    private const string PhaseSeparatorLine = "<color=#00E5FF>-----------------------------------------------</color>";
+
     //턴 순서대로 유닛을 하나씩 BT에 넘기고, 결과가 올 때까지 기다렸다가 다음 유닛으로 진행한다
     public async UniTask RunRoundAsync(
         List<BattleUnitModel> turnOrder,
@@ -131,6 +134,7 @@ public class BattleViewModel : ViewModelBase
         List<BattleUnitModel> enemyList,
         CancellationToken token)
     {
+        AddBattleLog(RoundSeparatorLine);
         LogPenaltyReleases(turnOrder);
         BattleManager.Inst.BuildActionQueue(turnOrder);
 
@@ -168,6 +172,7 @@ public class BattleViewModel : ViewModelBase
             await UniTask.Delay(ActionQueueStackDelayMilliseconds, cancellationToken: token);
         }
 
+        AddBattleLog(PhaseSeparatorLine);
         BattleManager.Inst.EnqueuePlayerAction();
         RefreshActionQueue();
 
