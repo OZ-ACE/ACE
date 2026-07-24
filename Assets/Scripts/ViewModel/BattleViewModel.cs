@@ -816,7 +816,7 @@ public class BattleViewModel : ViewModelBase
         }
     }
 
-    //유닛 진영에 맞는 스킬 데이터에서 Power 값을 가져온다
+    //유닛 진영에 맞는 스킬 데이터에서 Power 값을 가져오고, 공격력 배율을 반영한다
     private int GetSkillPower(BattleUnitModel unit, string skillId)
     {
         if (unit == null || string.IsNullOrEmpty(skillId))
@@ -824,14 +824,20 @@ public class BattleViewModel : ViewModelBase
             return 0;
         }
 
+        int basePower = 0;
+
         if (unit.IsHero)
         {
             HeroSkill heroSkill = GameDataManager.Inst.GetData<HeroSkill>(skillId);
-            return heroSkill != null ? heroSkill.Power : 0;
+            basePower = heroSkill != null ? heroSkill.Power : 0;
+        }
+        else
+        {
+            EnemySkill enemySkill = GameDataManager.Inst.GetData<EnemySkill>(skillId);
+            basePower = enemySkill != null ? enemySkill.Power : 0;
         }
 
-        EnemySkill enemySkill = GameDataManager.Inst.GetData<EnemySkill>(skillId);
-        return enemySkill != null ? enemySkill.Power : 0;
+        return basePower * unit.AttackPowerModifierPercent / 100;
     }
 }
 
