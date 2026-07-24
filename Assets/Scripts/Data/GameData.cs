@@ -176,3 +176,16 @@ public class QuestData : GameDataBase
     public string RequiredQuestID;    // 선행 퀘스트, 없으면 빈 문자열
     public string DialogueID;
 }
+
+
+[Serializable]
+public class FurnitureData : GameDataBase
+{
+    public string FurnitureName;
+    public string Description;
+
+    public string HeroId;
+    public int Price;
+
+    public string InstallPointId;
+}
