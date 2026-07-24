@@ -11,7 +11,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 8,
+    "Power": 16,
     "SkillDescription": "블랙가드의 제식 소총으로 적을 조준해 사격함"
   },
   {
@@ -26,7 +26,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 10,
+    "Power": 20,
     "SkillDescription": "팔에 장착된 펄스 건으로 에너지 탄환을 발사함"
   },
   {
@@ -41,7 +41,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 10,
+    "Power": 20,
     "SkillDescription": "관절 렌더링이 덜 돼서 삐걱거리며 팔을 휘두름"
   },
   {
@@ -56,7 +56,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 9,
+    "Power": 18,
     "SkillDescription": "저예산 좀비라 이빨 모델링이 대충임"
   },
   {
@@ -71,7 +71,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 7,
+    "Power": 14,
     "SkillDescription": "다른 게임에서 가져온 듯한 효과음으로 괴성을 지름"
   },
   {
@@ -86,7 +86,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 11,
+    "Power": 22,
     "SkillDescription": "물리 연산이 이상해서 촉수가 제멋대로 흐느적거림"
   },
   {
@@ -101,7 +101,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 12,
+    "Power": 24,
     "SkillDescription": "눈에서 나가는 레이저인데 딱 봐도 이펙트가 싸구려임"
   }
 ]

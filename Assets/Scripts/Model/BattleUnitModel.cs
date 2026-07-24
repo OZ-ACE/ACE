@@ -23,6 +23,9 @@ public class BattleUnitModel
     public string ActivePenaltyId { get; set; } //현재 발동 중인 페널티 ID, 없으면 null
     public int PenaltyRemainingRounds { get; set; } //페널티 지속 남은 라운드 수
 
+    public int AttackPowerModifierPercent { get; set; } = 100; //공격력 배율(%), 100=기본 / 130=+30% / 70=-30%
+    public int ModifierRemainingRounds { get; set; } //공격력 배율 지속 남은 라운드 수
+
     //CurrentHp를 순간순간 자동 계산해줌
     public bool IsDefeated
     {

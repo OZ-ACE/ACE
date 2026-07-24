@@ -35,6 +35,7 @@ public class BattleManager : SingletonBase<BattleManager>
     {
         _currentRound++;
         UpdatePenaltyDuration(turnOrder);
+        UpdateModifierDuration(turnOrder);
 
         _actionQueue.Clear();
     }
@@ -316,6 +317,42 @@ public class BattleManager : SingletonBase<BattleManager>
             {
                 unit.ActivePenaltyId = null;
                 unit.PenaltyRemainingRounds = 0;
+            }
+        }
+    }
+
+    //공격력 배율 버프/디버프 증감 폭 & 지속 라운드
+    private const int BuffModifierDelta = 30;
+    private const int ModifierDurationRounds = 2;
+
+    //대상 유닛에 공격력 배율 적용
+    public void ApplyAttackPowerModifier(BattleUnitModel unit, bool isBuff)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        int delta = isBuff ? BuffModifierDelta : -BuffModifierDelta;
+        unit.AttackPowerModifierPercent = 100 + delta;
+        unit.ModifierRemainingRounds = ModifierDurationRounds;
+    }
+
+    //라운드마다 배율 지속을 1 줄이고 0이 되면 원래대로 되돌림
+    public void UpdateModifierDuration(List<BattleUnitModel> turnOrder)
+    {
+        foreach (BattleUnitModel unit in turnOrder)
+        {
+            if (unit == null || unit.ModifierRemainingRounds <= 0)
+            {
+                continue;
+            }
+
+            unit.ModifierRemainingRounds--;
+
+            if (unit.ModifierRemainingRounds <= 0)
+            {
+                unit.AttackPowerModifierPercent = 100;
             }
         }
     }
