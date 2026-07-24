@@ -11,7 +11,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 10,
+    "Power": 30,
     "SkillDescription": "물렁한 뱃살을 튕겨 거대한 진동을 줍니다."
   },
   {
@@ -26,7 +26,7 @@
     "TargetType": "Multi",
     "TargetCount": 3,
     "CoolTime": 2,
-    "Power": 6,
+    "Power": 18,
     "SkillDescription": "옛날 활약상을 늘어놓으며 팀 사기를 올리는데 본인은 그게 진짜 있었던 일인지 지어낸 건지도 헷갈려 합니다…"
   },
   {
@@ -41,7 +41,7 @@
     "TargetType": "Multi",
     "TargetCount": 2,
     "CoolTime": 2,
-    "Power": 7,
+    "Power": 21,
     "SkillDescription": "방패를 던지지만 손이 떨려서 정밀 조준이 안 되고, 대신 이리저리 튕기다 운 좋게 적 2명을 맞힙니다."
   },
   {
@@ -56,7 +56,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 9,
+    "Power": 27,
     "SkillDescription": "오십견 때문에 다리가 잘 안 올라가 낮게 걷어찹니다."
   },
   {
@@ -71,7 +71,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 11,
+    "Power": 33,
     "SkillDescription": "눈이 침침해져 감으로 활을 쏩니다."
   },
   {
@@ -86,7 +86,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 8,
+    "Power": 24,
     "SkillDescription": "부들부들 떨며 눈에 힘을 주면서 상대를 노려봅니다."
   },
   {
@@ -101,7 +101,7 @@
     "TargetType": "Multi",
     "TargetCount": 3,
     "CoolTime": 1,
-    "Power": 13,
+    "Power": 39,
     "SkillDescription": "망치를 던지려다 현기증이 나서 그만 망치가 미끄러져 날아갑니다."
   },
   {
@@ -116,7 +116,7 @@
     "TargetType": "Multi",
     "TargetCount": 3,
     "CoolTime": 2,
-    "Power": 7,
+    "Power": 21,
     "SkillDescription": "뿌리로 아군을 감싸 보호하는데, 관절이 뻣뻣해져 한번 감으면 안 풀리는 튼튼한 방어막이 됩니다."
   },
   {
@@ -131,7 +131,7 @@
     "TargetType": "Single",
     "TargetCount": 1,
     "CoolTime": 0,
-    "Power": 12,
+    "Power": 36,
     "SkillDescription": "다이아몬드 피부로 변신하려다 그만 힘이 딸려 아몬드 피부로 변해 공격합니다."
   }
 ]
