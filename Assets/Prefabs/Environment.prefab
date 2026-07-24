@@ -428,22 +428,18 @@ MonoBehaviour:
   Settings:
   - State: 1
     Material: {fileID: 2100000, guid: fe4e130f9947345a2b213cb5038851a2, type: 2}
-    LightColor: {r: 1, g: 0.5330188, b: 0.5330188, a: 0}
+    LightColor: {r: 1, g: 1, b: 1, a: 0}
     LightIntensity: 1
-    LightRotation: {x: 0, y: 0, z: 0}
   - State: 2
     Material: {fileID: 2100000, guid: 7416536dbe0334cfd888dd1beb75a9fb, type: 2}
     LightColor: {r: 1, g: 1, b: 1, a: 0}
     LightIntensity: 1
-    LightRotation: {x: 0, y: 0, z: 0}
   - State: 3
     Material: {fileID: 2100000, guid: c82a334cf5a5e47978749c210cee72a7, type: 2}
-    LightColor: {r: 0.5, g: 0.2759434, b: 0.2759434, a: 0}
+    LightColor: {r: 1, g: 1, b: 1, a: 0}
     LightIntensity: 1
-    LightRotation: {x: 0, y: 0, z: 0}
   - State: 4
     Material: {fileID: 2100000, guid: c494c335823f54b52b2e87e1b7a63a23, type: 2}
-    LightColor: {r: 0.47613457, g: 0.43867922, b: 1, a: 0}
+    LightColor: {r: 1, g: 1, b: 1, a: 0}
     LightIntensity: 1
-    LightRotation: {x: 0, y: 0, z: 0}
   Light_Main: {fileID: 6735920064067632102}
