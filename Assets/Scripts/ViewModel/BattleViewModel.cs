@@ -307,7 +307,14 @@ public class BattleViewModel : ViewModelBase
             return $"{unitName} - 대기 예정";
         }
 
-        return $"{unitName} - {action.ActionType} 예정";
+        string skillName = GetSkillName(action.Unit, action.SkillId);
+
+        if (string.IsNullOrEmpty(skillName))
+        {
+            return $"{unitName} - {action.ActionType} 예정";
+        }
+
+        return $"{unitName} - '{skillName}' 발동 예정";
     }
 
     //개입 턴이 끝난 뒤 큐를 순서대로 꺼내며 실제 효과를 적용한다
@@ -570,7 +577,14 @@ public class BattleViewModel : ViewModelBase
             return $"{unitName} - 대기";
         }
 
-        return $"{unitName} - {action.ActionType} 실행";
+        string skillName = GetSkillName(action.Unit, action.SkillId);
+
+        if (string.IsNullOrEmpty(skillName))
+        {
+            return $"{unitName} - {action.ActionType} 실행";
+        }
+
+        return $"{unitName} - '{skillName}' 스킬을 실행합니다.";
     }
 
     //액션 결과를 대상(들)의 HP에 실제로 반영한다. 공격 타입 스킬에만 적용
@@ -889,6 +903,24 @@ public class BattleViewModel : ViewModelBase
         }
 
         return basePower * unit.AttackPowerModifierPercent / 100;
+    }
+
+    //유닛 진영에 맞는 스킬 데이터에서 스킬 이름을 가져온다
+    private string GetSkillName(BattleUnitModel unit, string skillId)
+    {
+        if (unit == null || string.IsNullOrEmpty(skillId))
+        {
+            return string.Empty;
+        }
+
+        if (unit.IsHero)
+        {
+            HeroSkill heroSkill = GameDataManager.Inst.GetData<HeroSkill>(skillId);
+            return heroSkill != null ? heroSkill.SkillName : string.Empty;
+        }
+
+        EnemySkill enemySkill = GameDataManager.Inst.GetData<EnemySkill>(skillId);
+        return enemySkill != null ? enemySkill.SkillName : string.Empty;
     }
 }
 
