@@ -121,7 +121,7 @@
   },
   {
     "ID": "Quest_02_05",
-    "QuestName": "전설적인 서포터",
+    "QuestName": "전설적인 서포터1",
     "Description": "H.B 프로젝트는 영웅들이 주인공이지만 서포터는 당신입니다.\n사무실에서 당신이 사용할 무기들을 구매하세요!",
     "ConditionType": "PurchaseItem",
     "ConditionTargetID": null,
@@ -146,7 +146,7 @@
   {
     "ID": "Quest_02_07",
     "QuestName": "새로운 영웅들",
-    "Description": "이제 새로운 영웅들을 영입할 수 있습니다!\n내일 입소될 영웅들을 확인해봅시다.",
+    "Description": "이제 새로운 영웅들을 영입할 수 있습니다!\n위대한 영웅들을 만나봅시다.",
     "ConditionType": "AdmitHero",
     "ConditionTargetID": null,
     "ConditionCount": 1,
@@ -182,7 +182,7 @@
   {
     "ID": "Quest_03_02",
     "QuestName": "연이은 건설2",
-    "Description": "영웅들이 많아지면 방이 부족할 수 있습니다.\n방을 더 만들어봅시다!",
+    "Description": "방이 수용할 수 있는 인원 수는 정해져 있습니다.\n영웅의 이동과 겹치지 않도록 건물을 건설해봅시다!",
     "ConditionType": "BuildRoom",
     "ConditionTargetID": null,
     "ConditionCount": 3,
@@ -205,7 +205,7 @@
   },
   {
     "ID": "Quest_03_04",
-    "QuestName": "더 깊은 곳으로",
+    "QuestName": "더 깊은 곳으로1",
     "Description": "아무튼 탈인간 실버타운은 비밀이기에 높이 건물을 쌓을 수 없습니다.\n하지만 땅으로 들어갈 수는 있죠!\n굴착을 진행해 더 깊은 곳으로 들어가봅시다!",
     "ConditionType": "Digging",
     "ConditionTargetID": null,
@@ -229,14 +229,74 @@
   },
   {
     "ID": "Quest_04_01",
-    "QuestName": "테스트",
-    "Description": "엔딩 테스트용 퀘스트",
-    "ConditionType": "BuildRoom",
+    "QuestName": "전설적인 서포터2",
+    "Description": "슬슬 서포터용 아이템이 떨어져가지 않나요?\n아이템을 3개 구매하세요!",
+    "ConditionType": "PurchaseItem",
     "ConditionTargetID": null,
-    "ConditionCount": null,
-    "RewardType": null,
-    "RewardAmount": null,
-    "RequiredQuestID": null,
+    "ConditionCount": 3,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_03_05",
+    "DialogueID": null
+  },
+  {
+    "ID": "Quest_04_02",
+    "QuestName": "더 깊은 곳으로2",
+    "Description": "방을 건설하다보니 건물이 너무 좁게 느껴지지 않나요?\n이제 돈도 모였겠다 바닥까지 한 번 파봅시다!",
+    "ConditionType": "Digging",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_04_01",
+    "DialogueID": null
+  },
+  {
+    "ID": "Quest_04_03",
+    "QuestName": "하루의 끝4",
+    "Description": "오늘 하루도 굉장히 수고 많으셨습니다!\n내일을 위한 준비를 하도록 하죠. 마감하세요!",
+    "ConditionType": "AdvanceDay",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_04_02",
+    "DialogueID": null
+  },
+  {
+    "ID": "Quest_05_01",
+    "QuestName": "하루의 끝5",
+    "Description": "오늘 하루도 굉장히 수고 많으셨습니다!\n내일을 위한 준비를 하도록 하죠. 마감하세요!",
+    "ConditionType": "AdvanceDay",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_04_03",
+    "DialogueID": null
+  },
+  {
+    "ID": "Quest_06_01",
+    "QuestName": "하루의 끝6",
+    "Description": "오늘 하루도 굉장히 수고 많으셨습니다!\n내일을 위한 준비를 하도록 하죠. 마감하세요!",
+    "ConditionType": "AdvanceDay",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_05_01",
+    "DialogueID": "Quest_05_01"
+  },
+  {
+    "ID": "Quest_07_01",
+    "QuestName": "하루의 끝7",
+    "Description": "오늘 하루도 굉장히 수고 많으셨습니다!\n내일을 위한 준비를 하도록 하죠. 마감하세요!",
+    "ConditionType": "AdvanceDay",
+    "ConditionTargetID": null,
+    "ConditionCount": 1,
+    "RewardType": "Gold",
+    "RewardAmount": 300,
+    "RequiredQuestID": "Quest_06_01",
     "DialogueID": "Ending"
   }
 ]
