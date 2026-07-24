@@ -50,6 +50,8 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
 
     private readonly Dictionary<string, Transform> _heroVfxPointMap = new Dictionary<string, Transform>();
 
+    private readonly Dictionary<string, Transform> _heroTransformMap = new Dictionary<string, Transform>();
+
     private void OnEnable()
     {
         SpawnHeroes();
@@ -133,6 +135,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         _heroViewMap.Clear();
         _heroAnimatorMap.Clear();
         _heroVfxPointMap.Clear();
+        _heroTransformMap.Clear();
         _hoveredHandler = null;
     }
 
@@ -165,6 +168,8 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         }
         Vector3 spawnPosition = basePosition + spawnDirection * (index * SpawnPositionSpacingX);
         GameObject spawnedObj = Instantiate(entry.Prefab, spawnPosition, Quaternion.Euler(0f, 100f, 0f));
+
+        _heroTransformMap[entry.HeroId] = spawnedObj.transform;
         float scale = entry.Scale > 0f ? entry.Scale : 1f; //인스펙터 미입력(0)이면 원본 크기 유지
         spawnedObj.transform.localScale = new Vector3(scale, scale, scale);
 
@@ -374,6 +379,24 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
             out vfxPoint);
 
         return hasVfxPoint && vfxPoint != null;
+    }
+
+    public bool TryGetHeroTransform(
+        BattleUnitModel heroUnit,
+        out Transform heroTransform)
+    {
+        heroTransform = null;
+
+        if (heroUnit == null || heroUnit.IsHero == false)
+        {
+            return false;
+        }
+
+        bool hasTransform = _heroTransformMap.TryGetValue(
+            heroUnit.ID,
+            out heroTransform);
+
+        return hasTransform && heroTransform != null;
     }
 
     private Transform GetHeroVfxPoint(
