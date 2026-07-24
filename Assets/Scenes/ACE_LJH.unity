@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 4d0e0ffc7a6c1bf44b435e0b23260f8c, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -416,16 +416,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: Settings.Array.data[0].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 8b7dd0809c7c6498789fa32a61eaa6cb, type: 2}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[0].LightColor.b
-      value: 0.45603418
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[0].LightColor.g
-      value: 0.45603418
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[0].LightColor.r
-      value: 0.5283019
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[1].LightColor.b
@@ -441,11 +445,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[2].LightColor.b
-      value: 0.6462264
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[2].LightColor.g
-      value: 0.6462264
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[2].LightColor.r
@@ -457,11 +461,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[3].LightColor.g
-      value: 0.504717
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[3].LightColor.r
-      value: 0.53754383
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[0].LightIntensity
