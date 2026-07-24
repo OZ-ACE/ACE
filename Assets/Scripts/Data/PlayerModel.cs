@@ -25,6 +25,14 @@ public class PlayerModel
     public List<DailyEvaluationRecord> DailyEvaluations = new List<DailyEvaluationRecord>();
 
     public List<FurnitureProgressModel> FurnitureProgressList = new List<FurnitureProgressModel>();
+    public List<PendingHeroData> PendingHeroes = new List<PendingHeroData>();
+}
+
+[Serializable]
+public class PendingHeroData
+{
+    public string HeroID;
+    public long RoomInstanceID;
 }
 
 [Serializable]

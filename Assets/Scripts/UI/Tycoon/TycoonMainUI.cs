@@ -74,7 +74,6 @@ public class TycoonMainUI : UIBase
         Button_Home.onClick.AddListener(OnClickHome);
 
         OnCloseSetting += OnClickQuest;
-        GameManager.Inst.Services.DayService.OnEndDay += EndDay;
 
         Text_Time.text = "00 : 00";
     }
@@ -90,6 +89,7 @@ public class TycoonMainUI : UIBase
         GameManager.Inst.Services.CurrencyService.OnChangeCurrency += SetMemory;
         GameManager.Inst.Services.DayService.OnChangeDay += OnChangeDay;
         GameManager.Inst.Services.DayService.OnChangeHour += OnChangeHour;
+        GameManager.Inst.Services.DayService.OnEndDay += EndDay;
         SetGoldText();
         SetMemory();
         SetDayText();

@@ -141,7 +141,16 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
         QuestViewModel questVM = GameManager.Inst.Services.QuestService?.GetQuestViewModel();
         questVM.ReportProgress(QuestConditionType.AdmitHero, heroId, 1);
 
-        ObjectManager.Inst.SpawnHero(heroId, roomInstanceId).Forget();
+        int currentDay = _dayService != null ? _dayService.CurrentDay : 1;
+
+        if (currentDay == 1)
+        {
+            ObjectManager.Inst.SpawnHero(heroId, roomInstanceId).Forget();
+        }
+        else
+        {
+            ObjectManager.Inst.RegistWaitingHero(heroId, roomInstanceId);
+        }
 
         return true;
     }
