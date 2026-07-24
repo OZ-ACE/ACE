@@ -367,7 +367,11 @@ public class BattleViewModel : ViewModelBase
     }
 
     //액션 하나를 개입 결과에 따라 처리한다
-    private async UniTask ResolveActionAsync(BattleActionModel action, List<BattleUnitModel> heroList, List<BattleUnitModel> enemyList, CancellationToken token)
+    private async UniTask ResolveActionAsync(
+        BattleActionModel action, 
+        List<BattleUnitModel> heroList, 
+        List<BattleUnitModel> enemyList, 
+        CancellationToken token)
     {
         string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
 
@@ -411,9 +415,11 @@ public class BattleViewModel : ViewModelBase
 
         if (action.ActionType == ActionType.Attack && isDamageApplied == false)
         {
-            AddBattleLog($"{unitName} - 공격 가능한 대상이 없어 행동 불발");
+            AddBattleLog($"{unitName} - 공격 가능한 대상이 없어 행동이 불발됩니다.");
             return;
         }
+
+        ApplySkillModifier(action);
 
         if (action.ActionType != ActionType.Wait)
         {
@@ -769,6 +775,47 @@ public class BattleViewModel : ViewModelBase
         Debug.Log($"[BattleViewModel] {target.ID} 피격, 데미지 {power}, 남은 HP {target.CurrentHp}");
     }
 
+    //스킬 타입이 Buff/Debuff면 대상에 공격력 배율을 적용한다. 대상은 액션 생성 시 이미 선택돼 있다
+    private void ApplySkillModifier(BattleActionModel action)
+    {
+        if (action.SkillType != SkillType.Buff && action.SkillType != SkillType.Debuff)
+        {
+            return;
+        }
+
+        bool isBuff = action.SkillType == SkillType.Buff;
+
+        if (action.TargetType == TargetType.Single)
+        {
+            ApplyModifierToOne(action, action.Target, isBuff);
+            return;
+        }
+
+        if (action.TargetType == TargetType.Multi)
+        {
+            foreach (BattleUnitModel target in action.TargetList)
+            {
+                ApplyModifierToOne(action, target, isBuff);
+            }
+        }
+    }
+
+    //단일 대상에게 공격력 배율을 걸고 배틀로그를 남긴다
+    private void ApplyModifierToOne(BattleActionModel action, BattleUnitModel target, bool isBuff)
+    {
+        if (target == null || target.IsDefeated)
+        {
+            return;
+        }
+
+        BattleManager.Inst.ApplyAttackPowerModifier(target, isBuff);
+
+        string casterName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+        string targetName = GameUtil.GetUnitDisplayName(target.ID);
+        string effectText = isBuff ? "공격력이 상승했습니다!" : "공격력이 하락했습니다.";
+        AddBattleLog($"{casterName}의 스킬로 {targetName}의 {effectText}");
+    }
+
     //대상 유닛의 HP를 회복시킨다. MaxHp를 넘지 않도록 제한
     private void ApplyHealUnit(BattleUnitModel unit, string itemId)
     {
@@ -816,7 +863,7 @@ public class BattleViewModel : ViewModelBase
         }
     }
 
-    //유닛 진영에 맞는 스킬 데이터에서 Power 값을 가져온다
+    //유닛 진영에 맞는 스킬 데이터에서 Power 값을 가져오고, 공격력 배율을 반영한다
     private int GetSkillPower(BattleUnitModel unit, string skillId)
     {
         if (unit == null || string.IsNullOrEmpty(skillId))
@@ -824,14 +871,20 @@ public class BattleViewModel : ViewModelBase
             return 0;
         }
 
+        int basePower = 0;
+
         if (unit.IsHero)
         {
             HeroSkill heroSkill = GameDataManager.Inst.GetData<HeroSkill>(skillId);
-            return heroSkill != null ? heroSkill.Power : 0;
+            basePower = heroSkill != null ? heroSkill.Power : 0;
+        }
+        else
+        {
+            EnemySkill enemySkill = GameDataManager.Inst.GetData<EnemySkill>(skillId);
+            basePower = enemySkill != null ? enemySkill.Power : 0;
         }
 
-        EnemySkill enemySkill = GameDataManager.Inst.GetData<EnemySkill>(skillId);
-        return enemySkill != null ? enemySkill.Power : 0;
+        return basePower * unit.AttackPowerModifierPercent / 100;
     }
 }
 
