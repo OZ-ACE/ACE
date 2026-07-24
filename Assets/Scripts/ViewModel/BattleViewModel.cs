@@ -15,6 +15,7 @@ public class BattleViewModel : ViewModelBase
     public event Action<BattleUnitModel> UnitHit;
     public event Action<BattleUnitModel> UnitDied;
     public event Action<BattleUnitModel> UnitHitVfxRequested;
+    public event Action<BattleActionModel> UnitProjectileVfxRequested;
     public event Action<List<BattleUnitModel>> HeroListChanged;
 
     private const int AttackAnimationDelayMilliseconds = 800;
@@ -589,6 +590,7 @@ public class BattleViewModel : ViewModelBase
             }
 
             UnitAttackStarted?.Invoke(action.Unit);
+            UnitProjectileVfxRequested?.Invoke(action);
 
             await UniTask.Delay(
                 AttackAnimationDelayMilliseconds,

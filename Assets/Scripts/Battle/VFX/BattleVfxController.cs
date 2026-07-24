@@ -11,6 +11,15 @@ public class BattleVfxController : MonoBehaviour
     [Header("전투 유닛 참조")]
     [SerializeField] private EnemySpawner _enemySpawner;
 
+    [Header("투사체 VFX")]
+    [SerializeField] private string _magicArrowVfxAddress;
+    [SerializeField] private string _fireballVfxAddress;
+    [SerializeField] private float _projectileMoveDuration = 0.5f;
+    [SerializeField] private float _fireballLaunchDelay = 0.4f;
+
+    private const string MagicArrowSkillId = "heroSkill_03_01";
+    private const string FireBallSkillId = "heroSkill_04_01";
+
     public async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
     {
         if (TryGetUnitVfxPoint(unit, out Transform vfxPoint) == false)
@@ -50,6 +59,79 @@ public class BattleVfxController : MonoBehaviour
             muzzlePoint);
     }
    
+    public async UniTask PlayProjectileVfxAsync(BattleActionModel action)
+    {
+        if (action == null || action.Unit == null || action.Target == null)
+        {
+            return;
+        }
+
+        string vfxAddress = GetProjectileVfxAddress(action.SkillId);
+
+        if (string.IsNullOrEmpty(vfxAddress))
+        {
+            return;
+        }
+
+        float launchDelay = GetProjectileLaunchDelay(action.SkillId);
+
+        if (launchDelay > 0f)
+        {
+            await UniTask.Delay(
+                TimeSpan.FromSeconds(launchDelay),
+                cancellationToken: this.GetCancellationTokenOnDestroy())
+                .SuppressCancellationThrow();
+        }
+
+        bool hasStartPoint = TryGetUnitVfxPoint(
+            action.Unit,
+            out Transform startPoint);
+
+        bool hasTargetPoint = TryGetUnitVfxPoint(
+            action.Target,
+            out Transform targetPoint);
+
+        if (hasStartPoint == false ||
+            hasTargetPoint == false ||
+            startPoint == null ||
+            targetPoint == null)
+        {
+            return;
+        }
+
+        await PlayMovingProjectileVfxAsync(
+            vfxAddress,
+            startPoint.position,
+            targetPoint);
+    }
+
+    private string GetProjectileVfxAddress(string skillId)
+    {
+        switch (skillId)
+        {
+            case MagicArrowSkillId:
+                return _magicArrowVfxAddress;
+
+            case FireBallSkillId:
+                return _fireballVfxAddress;
+
+            default:
+                return null;
+        }
+    }
+
+    private float GetProjectileLaunchDelay(string skillId)
+    {
+        switch (skillId)
+        {
+            case FireBallSkillId:
+                return _fireballLaunchDelay;
+
+            default:
+                return 0f;
+        }
+    }
+
     private bool TryGetUnitVfxPoint(
         BattleUnitModel unit,
         out Transform vfxPoint)
@@ -132,6 +214,73 @@ public class BattleVfxController : MonoBehaviour
         await PlayAndReleaseParticleVfxAsync(vfxObject);
     }
     
+    private async UniTask PlayMovingProjectileVfxAsync(
+        string vfxAddress,
+        Vector3 startPosition,
+        Transform targetPoint)
+    {
+        if (string.IsNullOrEmpty(vfxAddress) || targetPoint == null)
+        {
+            return;
+        }
+
+        GameObject vfxObject = await ResourceManager.Inst.InstantiateAsync(vfxAddress);
+
+        if (vfxObject == null)
+        {
+            return;
+        }
+
+        vfxObject.transform.position = startPosition;
+        PrepareOneShotParticleVfx(vfxObject);
+
+        float moveDuration = Mathf.Max(
+            _projectileMoveDuration,
+            0.01f);
+
+        float elapsedTime = 0f;
+
+        try
+        {
+            while (elapsedTime < moveDuration)
+            {
+                if (targetPoint == null)
+                {
+                    return;
+                }
+
+                Vector3 targetPosition = targetPoint.position;
+                Vector3 direction = targetPosition - vfxObject.transform.position;
+
+                if (direction.sqrMagnitude > 0f)
+                {
+                    vfxObject.transform.rotation = Quaternion.LookRotation(direction);
+                }
+
+                elapsedTime += Time.deltaTime;
+
+                float moveRatio = Mathf.Clamp01(
+                    elapsedTime / moveDuration);
+
+                vfxObject.transform.position = Vector3.Lerp(
+                    startPosition,
+                    targetPosition,
+                    moveRatio);
+
+                await UniTask.Yield(
+                    PlayerLoopTiming.Update,
+                    this.GetCancellationTokenOnDestroy());
+            }
+        }
+        finally
+        {
+            if (vfxObject != null)
+            {
+                Addressables.ReleaseInstance(vfxObject);
+            }
+        }
+    }
+
     private async UniTask PlayAndReleaseParticleVfxAsync(GameObject vfxObject)
     {
         PrepareOneShotParticleVfx(vfxObject);
