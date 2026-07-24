@@ -812,7 +812,7 @@ public class BattleViewModel : ViewModelBase
 
         string casterName = GameUtil.GetUnitDisplayName(action.Unit.ID);
         string targetName = GameUtil.GetUnitDisplayName(target.ID);
-        string effectText = isBuff ? "공격력이 상승했습니다!" : "공격력이 하락했습니다...";
+        string effectText = isBuff ? "공격력이 상승했습니다!" : "공격력이 하락했습니다.";
         AddBattleLog($"{casterName}의 스킬로 {targetName}의 {effectText}");
     }
 
