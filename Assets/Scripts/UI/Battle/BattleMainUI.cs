@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using UnityEngine.AddressableAssets;
 
 // 전투 메인 UI 전체를 관리하는 스크립트 (배틀 로그 표시도 담당)
 public class BattleMainUI : UIBase
@@ -30,8 +29,6 @@ public class BattleMainUI : UIBase
     [SerializeField] private Image[] Image_EnergySlotList;
 
     private const float DimmedEnergyAlpha = 0.2f;
-    private const string CommonHitVfxAddress = "BattleVFX_CommonHit"; //피격 VFX
-    private const string EnemyMuzzleVfxAddress = "BattleVFX_Enemy01Muzzle";
 
     [Header("액션 버튼")]
     [SerializeField] private Button Button_Reinforce;
@@ -71,6 +68,7 @@ public class BattleMainUI : UIBase
     [SerializeField] private List<string> _testEnemyIdList = new List<string>();
 
     private EnemySpawner _enemySpawner;
+    private BattleVfxController _battleVfxController;
     private bool _isBattleRunning;
     private CancellationTokenSource _battleLoopCts;
 
@@ -87,6 +85,7 @@ public class BattleMainUI : UIBase
     private void Start()
     {
         _enemySpawner = FindFirstObjectByType<EnemySpawner>();
+        _battleVfxController = FindFirstObjectByType<BattleVfxController>();
 
         _viewModel = new BattleViewModel();
         BindViewModel(_viewModel);
@@ -239,7 +238,11 @@ public class BattleMainUI : UIBase
         if (_enemySpawner != null)
         {
             _enemySpawner.PlayAttackAnimation(unit);
-            PlayEnemyMuzzleVfxAsync(unit).Forget();
+        }
+
+        if (_battleVfxController != null)
+        {
+            _battleVfxController.PlayEnemyMuzzleVfxAsync(unit).Forget();
         }
     }
 
@@ -269,182 +272,12 @@ public class BattleMainUI : UIBase
 
     private void OnUnitHitVfxRequested(BattleUnitModel unit)
     {
-        PlayCommonHitVfxAsync(unit).Forget();
-    }
-
-    private bool TryGetUnitVfxPoint(
-        BattleUnitModel unit,
-        out Transform vfxPoint)
-    {
-        vfxPoint = null;
-
-        if (unit == null)
-        {
-            return false;
-        }
-
-        if (unit.IsHero)
-        {
-            if (BattleHeroSpawner.Inst == null)
-            {
-                return false;
-            }
-
-            return BattleHeroSpawner.Inst.TryGetVfxPoint(
-                unit,
-                out vfxPoint);
-        }
-
-        if (_enemySpawner == null)
-        {
-            return false;
-        }
-
-        return _enemySpawner.TryGetVfxPoint(
-            unit,
-            out vfxPoint);
-    }
-
-    private async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
-    {
-        if (unit == null)
+        if (_battleVfxController == null)
         {
             return;
         }
 
-        bool hasVfxPoint = TryGetUnitVfxPoint(
-            unit,
-            out Transform vfxPoint);
-
-        if (hasVfxPoint == false || vfxPoint == null)
-        {
-            return;
-        }
-
-        GameObject vfxObject = await ResourceManager.Inst.InstantiateAsync(
-            CommonHitVfxAddress);
-
-        if (vfxObject == null)
-        {
-            return;
-        }
-
-        PrepareOneShotParticleVfx(vfxObject);
-        
-        vfxObject.transform.SetPositionAndRotation(
-            vfxPoint.position,
-            vfxPoint.rotation);
-
-        float playDuration = GetParticlePlayDuration(vfxObject);
-
-        try
-        {
-            await UniTask.Delay(
-                System.TimeSpan.FromSeconds(playDuration),
-                cancellationToken: this.GetCancellationTokenOnDestroy())
-                .SuppressCancellationThrow();
-        }
-        finally
-        {
-            if (vfxObject != null)
-            {
-                Addressables.ReleaseInstance(vfxObject);
-            }
-        }
-    }
-
-    private async UniTask PlayEnemyMuzzleVfxAsync(BattleUnitModel unit)
-    {
-        if (unit == null || unit.IsHero)
-        {
-            return;
-        }
-
-        if (_enemySpawner == null)
-        {
-            return;
-        }
-
-        bool hasMuzzlePoint = _enemySpawner.TryGetMuzzlePoint(
-            unit,
-            out Transform muzzlePoint);
-
-        if (hasMuzzlePoint == false || muzzlePoint == null)
-        {
-            return;
-        }
-
-        GameObject vfxObject = await ResourceManager.Inst.InstantiateAsync(
-            EnemyMuzzleVfxAddress,
-            muzzlePoint);
-
-        if (vfxObject == null)
-        {
-            return;
-        }
-
-        vfxObject.transform.localPosition = Vector3.zero;
-        vfxObject.transform.localRotation = Quaternion.identity;
-
-        PrepareOneShotParticleVfx(vfxObject);
-
-        float playDuration = GetParticlePlayDuration(vfxObject);
-
-        try
-        {
-            await UniTask.Delay(
-                System.TimeSpan.FromSeconds(playDuration),
-                cancellationToken: this.GetCancellationTokenOnDestroy())
-                .SuppressCancellationThrow();
-        }
-        finally
-        {
-            if (vfxObject != null)
-            {
-                Addressables.ReleaseInstance(vfxObject);
-            }
-        }
-    }
-
-    private void PrepareOneShotParticleVfx(GameObject vfxObject)
-    {
-        ParticleSystem[] particleSystems =
-            vfxObject.GetComponentsInChildren<ParticleSystem>(true);
-
-        foreach (ParticleSystem particleSystem in particleSystems)
-        {
-            ParticleSystem.MainModule main = particleSystem.main;
-            main.loop = false;
-
-            particleSystem.Stop(
-                true,
-                ParticleSystemStopBehavior.StopEmittingAndClear);
-
-            particleSystem.Play(true);
-        }
-    }
-
-    private float GetParticlePlayDuration(GameObject vfxObject)
-    {
-        const float MinimumDuration = 0.1f;
-
-        float maxDuration = MinimumDuration;
-
-        ParticleSystem[] particleSystems =
-            vfxObject.GetComponentsInChildren<ParticleSystem>(true);
-
-        foreach (ParticleSystem particleSystem in particleSystems)
-        {
-            ParticleSystem.MainModule main = particleSystem.main;
-            float duration = main.duration + main.startLifetime.constantMax;
-
-            if (duration > maxDuration)
-            {
-                maxDuration = duration;
-            }
-        }
-
-        return maxDuration;
+        _battleVfxController.PlayCommonHitVfxAsync(unit).Forget();
     }
 
     private void OnUnitDied(BattleUnitModel unit)
