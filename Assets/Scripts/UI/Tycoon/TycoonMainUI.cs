@@ -75,6 +75,8 @@ public class TycoonMainUI : UIBase
 
         OnCloseSetting += OnClickQuest;
         GameManager.Inst.Services.DayService.OnEndDay += EndDay;
+
+        Text_Time.text = "00 : 00";
     }
 
     private void OnDestroy()

@@ -65,7 +65,7 @@
     "Remarks": "천둥 소리보다 관절 소리가 먼저 남. 망치를 자주 놓침.",
     "MainSkillId": "heroSkill_05_01",
     "CandidateWeight": 100,
-    "ProfileImage": null,
+    "ProfileImage": "Image/Portrait[hero_05]",
     "PenaltyID": [
       "penalty_05"
     ]
@@ -78,7 +78,7 @@
     "Remarks": "햇빛 좋은 곳을 선호함. 대화 중에도 가끔 잎이 떨어짐.",
     "MainSkillId": "heroSkill_06_01",
     "CandidateWeight": 100,
-    "ProfileImage": null,
+    "ProfileImage": "Image/Portrait[hero_06]",
     "PenaltyID": [
       "penalty_06"
     ]

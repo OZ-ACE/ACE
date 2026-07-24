@@ -135,17 +135,12 @@ public class SettlementView : ViewBase
             Debug.Log("[SettlementView] 정산 실패 - 다음날로 넘길 수 없음");
             return;
         }
+
         // 일일 종합 등급으로 게임오버 판정 (D 이하 2일 연속)
         GameOverType result = _viewModel.CheckDailyResult();
         bool weeklyDue = _viewModel.IsWeeklyReviewDue;
         UIManager.Inst.CloseSettlementUI();
-        if (result == GameOverType.GameOver)
-        {
-            UIManager.Inst.CloseWeeklyEvaluationUI();
-            UIManager.Inst.CloseTycoonMainUI();
-            UIManager.Inst.OpenGameOver(EndingType.GameOver);
-            return;
-        }
+
         if (weeklyDue == true)
         {
             WeeklyEvaluationViewModel weeklyVm = GameManager.Inst.Services.WeeklyEvaluationService.GetWeeklyEvaluationViewModel();
@@ -155,6 +150,26 @@ public class SettlementView : ViewBase
             }
             weeklyVm.BuildWeekly();
             UIManager.Inst.OpenWeeklyEvaluationUI();
+        }
+
+        switch (result)
+        {
+            case GameOverType.GameOver:
+                GameManager.Inst.SetDialogueID("GameOver_2_01");
+                ObjectManager.Inst.ExitOffice();
+                UIManager.Inst.CloseTycoonMainUI();
+                UIManager.Inst.OpenDialogueUI();
+                break;
+
+            case GameOverType.Warning:
+                GameManager.Inst.SetDialogueID("GameOver_1_01");
+                ObjectManager.Inst.ExitOffice();
+                UIManager.Inst.CloseTycoonMainUI(); 
+                UIManager.Inst.OpenDialogueUI();
+                break;
+
+            case GameOverType.None:
+                break;
         }
     }
     private void OnClickClose()
