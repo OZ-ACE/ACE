@@ -436,7 +436,7 @@ public class BattleViewModel : ViewModelBase
 
             if (triggeredPenalty != null)
             {
-                AddBattleLog($"{unitName} - {triggeredPenalty.PenaltyName} 발동");
+                AddBattleLog($"{unitName} - '{triggeredPenalty.TriggerSkillName}' 반복 사용! {triggeredPenalty.PenaltyName} 발동으로 ({triggeredPenalty.DurationRounds}라운드 동안 스킬이 봉인됩니다.)");
             }
         }
 
