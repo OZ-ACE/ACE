@@ -28,6 +28,7 @@ public class GameDataManager : SingletonBase<GameDataManager>
         LoadData<HeroSkill>("HeroSkill");
         LoadData<EnemySkill>("EnemySkill");
         LoadData<RoomData>("Room");
+        LoadData<FurnitureData>("Furniture");
         LoadData<SupportItem>("SupportItem");
         LoadData<Penalty>("Penalty");
         LoadData<Loading>("Loading");
