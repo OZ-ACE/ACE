@@ -371,7 +371,7 @@ public class BattleViewModel : ViewModelBase
             }
 
             string unitName = GameUtil.GetUnitDisplayName(unit.ID);
-            AddBattleLog($"{unitName} - {penalty.PenaltyName} 자연 해제");
+            AddBattleLog($"{unitName} - {penalty.PenaltyName} 회복! {penalty.TriggerSkillName} 다시 사용 가능");
         }
     }
 
