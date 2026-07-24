@@ -124,6 +124,9 @@ public class BattleViewModel : ViewModelBase
         OnPropertyChanged(nameof(BattleLogs));
     }
 
+    private const string RoundSeparatorLine = "<color=#00E5FF>====================================</color>";
+    private const string PhaseSeparatorLine = "<color=#00E5FF>-----------------------------------------------</color>";
+
     //턴 순서대로 유닛을 하나씩 BT에 넘기고, 결과가 올 때까지 기다렸다가 다음 유닛으로 진행한다
     public async UniTask RunRoundAsync(
         List<BattleUnitModel> turnOrder,
@@ -131,6 +134,7 @@ public class BattleViewModel : ViewModelBase
         List<BattleUnitModel> enemyList,
         CancellationToken token)
     {
+        AddBattleLog(RoundSeparatorLine);
         LogPenaltyReleases(turnOrder);
         BattleManager.Inst.BuildActionQueue(turnOrder);
 
@@ -168,6 +172,7 @@ public class BattleViewModel : ViewModelBase
             await UniTask.Delay(ActionQueueStackDelayMilliseconds, cancellationToken: token);
         }
 
+        AddBattleLog(PhaseSeparatorLine);
         BattleManager.Inst.EnqueuePlayerAction();
         RefreshActionQueue();
 
@@ -307,7 +312,14 @@ public class BattleViewModel : ViewModelBase
             return $"{unitName} - 대기 예정";
         }
 
-        return $"{unitName} - {action.ActionType} 예정";
+        string skillName = GetSkillName(action.Unit, action.SkillId);
+
+        if (string.IsNullOrEmpty(skillName))
+        {
+            return $"{unitName} - {action.ActionType} 예정";
+        }
+
+        return $"{unitName} - '{skillName}' 발동 예정";
     }
 
     //개입 턴이 끝난 뒤 큐를 순서대로 꺼내며 실제 효과를 적용한다
@@ -364,7 +376,7 @@ public class BattleViewModel : ViewModelBase
             }
 
             string unitName = GameUtil.GetUnitDisplayName(unit.ID);
-            AddBattleLog($"{unitName} - {penalty.PenaltyName} 자연 해제");
+            AddBattleLog($"{unitName} - {penalty.PenaltyName} 회복! {penalty.TriggerSkillName} 다시 사용 가능");
         }
     }
 
@@ -429,11 +441,14 @@ public class BattleViewModel : ViewModelBase
 
             if (triggeredPenalty != null)
             {
-                AddBattleLog($"{unitName} - {triggeredPenalty.PenaltyName} 발동");
+                AddBattleLog($"{unitName} - '{triggeredPenalty.TriggerSkillName}' 반복 사용! {triggeredPenalty.PenaltyName} 발동 ({triggeredPenalty.DurationRounds}라운드 동안 스킬이 봉인됩니다.)");
             }
         }
 
-        AddBattleLog(BuildActionResolvedLogMessage(action));
+        if (action.ActionType == ActionType.Wait)
+        {
+            AddBattleLog($"{unitName} - 대기 전환");
+        }
     }
 
     //라운드 종료 후 일괄 반영하기 위해 교체 내용을 예약해둔다
@@ -560,19 +575,6 @@ public class BattleViewModel : ViewModelBase
         AddBattleLog($"{unitName} - '{itemName}' 사용해 '{penalty.PenaltyName}' 페널티 해제 성공, {revivedAction.ActionType} 성공");
     }
 
-    //액션이 실제로 처리된 결과를 배틀 로그 문구로 변환한다
-    private string BuildActionResolvedLogMessage(BattleActionModel action)
-    {
-        string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
-
-        if (action.ActionType == ActionType.Wait)
-        {
-            return $"{unitName} - 대기";
-        }
-
-        return $"{unitName} - {action.ActionType} 실행";
-    }
-
     //액션 결과를 대상(들)의 HP에 실제로 반영한다. 공격 타입 스킬에만 적용
     private async UniTask<bool> ApplyActionDamageAsync(
         BattleActionModel action,
@@ -586,6 +588,8 @@ public class BattleViewModel : ViewModelBase
         }
 
         int power = GetSkillPower(action.Unit, action.SkillId);
+        string attackerName = GameUtil.GetUnitDisplayName(action.Unit.ID);
+        string skillName = GetSkillName(action.Unit, action.SkillId);
 
         if (action.TargetType == TargetType.Single)
         {
@@ -604,6 +608,7 @@ public class BattleViewModel : ViewModelBase
                 cancellationToken: token);
                 
             ApplyDamageToUnit(action.Target, power);
+            AddBattleLog($"{attackerName} - {skillName} 시전! {GameUtil.GetUnitDisplayName(action.Target.ID)}에게 {power} 데미지");
 
             await UniTask.Delay(
                 HitAnimationDelayMilliseconds,
@@ -630,6 +635,7 @@ public class BattleViewModel : ViewModelBase
             foreach (BattleUnitModel target in action.TargetList)
             {
                 ApplyDamageToUnit(target, power);
+                AddBattleLog($"{attackerName} - {skillName} 시전! {GameUtil.GetUnitDisplayName(target.ID)}에게 {power} 데미지");
             }
 
             await UniTask.Delay(
@@ -889,6 +895,24 @@ public class BattleViewModel : ViewModelBase
         }
 
         return basePower * unit.AttackPowerModifierPercent / 100;
+    }
+
+    //유닛 진영에 맞는 스킬 데이터에서 스킬 이름을 가져온다
+    private string GetSkillName(BattleUnitModel unit, string skillId)
+    {
+        if (unit == null || string.IsNullOrEmpty(skillId))
+        {
+            return string.Empty;
+        }
+
+        if (unit.IsHero)
+        {
+            HeroSkill heroSkill = GameDataManager.Inst.GetData<HeroSkill>(skillId);
+            return heroSkill != null ? heroSkill.SkillName : string.Empty;
+        }
+
+        EnemySkill enemySkill = GameDataManager.Inst.GetData<EnemySkill>(skillId);
+        return enemySkill != null ? enemySkill.SkillName : string.Empty;
     }
 }
 
