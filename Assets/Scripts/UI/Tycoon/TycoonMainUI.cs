@@ -74,6 +74,7 @@ public class TycoonMainUI : UIBase
         Button_Home.onClick.AddListener(OnClickHome);
 
         OnCloseSetting += OnClickQuest;
+        GameManager.Inst.Services.DayService.OnEndDay += EndDay;
     }
 
     private void OnDestroy()
@@ -104,6 +105,7 @@ public class TycoonMainUI : UIBase
             GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetMemory;
             GameManager.Inst.Services.DayService.OnChangeDay -= OnChangeDay;
             GameManager.Inst.Services.DayService.OnChangeHour -= OnChangeHour;
+            GameManager.Inst.Services.DayService.OnEndDay -= EndDay;
         }
     }
 
@@ -115,6 +117,8 @@ public class TycoonMainUI : UIBase
     private void OnChangeDay(int day)
     {
         SetDayText();
+
+        SetButtonInteractable(true);
     }
 
     private void OnChangeHour(int hour)
@@ -191,7 +195,8 @@ public class TycoonMainUI : UIBase
 
     private void OnClickHome()
     {
-        ObjectManager.Inst.DestroyHeroAndMap();         // 테스트
+        GameManager.Inst.Services.DayService.CurrentHour = 0;
+        ObjectManager.Inst.DestroyHeroAndMap();
 
         UIManager.Inst.OpenTitleUI();
         UIManager.Inst.CloseTycoonMainUI();
@@ -237,5 +242,26 @@ public class TycoonMainUI : UIBase
         {
             Panel_Warning.SetActive(true);
         }
+    }
+
+    private void EndDay()
+    {
+        Text_Time.text = "마감";
+
+        ChangePanel(TycoonPanelType.Construct);
+
+        SetButtonInteractable(false);
+    }
+
+    private void SetButtonInteractable(bool isInteractable)
+    {
+        Button_Quest.interactable = isInteractable;
+        Button_Inventory.interactable = isInteractable;
+        Button_Hero.interactable = isInteractable;
+        Button_Furniture.interactable = isInteractable;
+
+        Button_Construct.interactable = true;
+        Button_Setting.interactable = true;
+        Button_Home.interactable = true;
     }
 }

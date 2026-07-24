@@ -188,6 +188,9 @@ public class HeroMovingAgent : MonoBehaviour
             case ScheduleState.Shower: return "샤워";
             case ScheduleState.Rest: return "휴식";
             case ScheduleState.Gym: return "운동";
+            case ScheduleState.Counsel: return "상담";
+            case ScheduleState.Cure: return "휴식";
+            case ScheduleState.Meal: return "식사";
             default: return "활동";
         }
     }

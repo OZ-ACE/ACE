@@ -3936,7 +3936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ScrollRect
   m_Content: {fileID: 5240260438018880545}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -7575,6 +7575,10 @@ PrefabInstance:
     - target: {fileID: 8452054073505864180, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_Name
       value: Quest Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452054073505864180, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
