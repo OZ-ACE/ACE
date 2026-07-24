@@ -62,4 +62,14 @@ public class RoomFurniturePoints : MonoBehaviour
 
         return false;
     }
+
+    public Transform GetPoint(string pointId)
+    {
+        if (TryGetPoint(pointId, out Transform point))
+        {
+            return point;
+        }
+
+        return null;
+    }
 }

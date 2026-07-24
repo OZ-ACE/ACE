@@ -33,6 +33,7 @@ public class BuildGridView : ViewBase
 
     private Dictionary<GridCoord, SpriteRenderer> _cellRenderers = new Dictionary<GridCoord, SpriteRenderer>();
     private Dictionary<GridCoord, GameObject> _placedRoomObjects = new Dictionary<GridCoord, GameObject>();
+    private Dictionary<long, GameObject> _roomObjectsByInstanceId = new Dictionary<long, GameObject>();
     private bool _isOverlayCreated;
 
     private GridCoord _lastHoverCoord;
@@ -471,6 +472,7 @@ public class BuildGridView : ViewBase
         roomObj.name = $"Room_{placed.RoomId}_{placed.Origin}";
 
         _placedRoomObjects[placed.Origin] = roomObj;
+        _roomObjectsByInstanceId[placed.RoomInstanceId] = roomObj;
 
         // 계단이면 층수 라벨 표시
         if (Prefab_FloorLabel != null && (room.ID.Contains("Stair") || room.PrefabPath.Contains("Stair")))
@@ -503,6 +505,7 @@ public class BuildGridView : ViewBase
             roomObj.gameObject.SetActive(false);
             Destroy(roomObj);
             _placedRoomObjects.Remove(removed.Origin);
+            _roomObjectsByInstanceId.Remove(removed.RoomInstanceId);
 
             NavMeshManager.Inst.UpdateNavMesh();
             SoundManager.Inst.PlaySFX("Construct");
@@ -521,6 +524,7 @@ public class BuildGridView : ViewBase
         }
 
         _placedRoomObjects.Clear();
+        _roomObjectsByInstanceId.Clear();
 
         foreach (KeyValuePair<GridCoord, SpriteRenderer> pair in _cellRenderers)
         {
@@ -802,5 +806,10 @@ public class BuildGridView : ViewBase
             return $"{floor + 1}층";
         }
         return $"지하 {-floor}층";
+    }
+
+    public bool TryGetRoomObject(long roomInstanceId, out GameObject roomObject)
+    {
+        return _roomObjectsByInstanceId.TryGetValue(roomInstanceId, out roomObject);
     }
 }

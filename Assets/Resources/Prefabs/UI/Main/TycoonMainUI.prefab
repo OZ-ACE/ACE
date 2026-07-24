@@ -915,6 +915,10 @@ MonoBehaviour:
   _zoomSpeed: 2
   _minZoom: 2
   _maxZoom: 12
+  _furnitureFocusZoom: 0.7
+  _furnitureFocusDuration: 0.5
+  _furnitureShowDuration: 0.4
+  _furnitureRestoreDuration: 1
   _cinemachineCamera: {fileID: 1863255570178840309}
 --- !u!1 &1489784017734347544
 GameObject:

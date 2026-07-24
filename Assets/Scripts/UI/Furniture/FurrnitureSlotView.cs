@@ -45,6 +45,13 @@ public class FurnitureSlotView : MonoBehaviour
         if (result == PurchaseResult.Success)
         {
             Button_Buy.interactable = false;
+
+            FurnitureSpawner furnitureSpawner = FindFirstObjectByType<FurnitureSpawner>();
+
+            if (furnitureSpawner != null)
+            {
+                furnitureSpawner.SpawnFurniture(_furnitureData.ID).Forget();
+            }
         }
     }
 
