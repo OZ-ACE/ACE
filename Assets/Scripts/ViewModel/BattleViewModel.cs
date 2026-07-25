@@ -450,11 +450,17 @@ public class BattleViewModel : ViewModelBase
 
         if (action.ActionType != ActionType.Wait)
         {
+            bool wasPenalizedBefore = !string.IsNullOrEmpty(action.Unit.ActivePenaltyId);
             Penalty triggeredPenalty = BattleManager.Inst.UpdatePenaltyGauge(action.Unit, action.SkillId);
 
             if (triggeredPenalty != null)
             {
                 AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - '{triggeredPenalty.TriggerSkillName}' 반복 사용! {triggeredPenalty.PenaltyName} 발동 ({triggeredPenalty.DurationRounds}라운드 동안 스킬이 봉인됩니다.)"));
+            }
+            else if (wasPenalizedBefore == false)
+            {
+                string usedSkillName = GetSkillName(action.Unit, action.SkillId);
+                AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - '{usedSkillName}' 연속 {action.Unit.RepeatSkillCount}회째"));
             }
         }
 
