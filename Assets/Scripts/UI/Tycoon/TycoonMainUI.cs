@@ -75,7 +75,8 @@ public class TycoonMainUI : UIBase
 
         OnCloseSetting += OnClickQuest;
 
-        Text_Time.text = "00 : 00";
+        int currentHour = GameManager.Inst.Services.DayService.CurrentHour;
+        Text_Time.text = $"{currentHour:D2} : 00";
     }
 
     private void OnDestroy()
@@ -119,6 +120,7 @@ public class TycoonMainUI : UIBase
     private void OnChangeDay(int day)
     {
         SetDayText();
+        Text_Time.text = "00 : 00";
 
         SetButtonInteractable(true);
     }
@@ -130,7 +132,10 @@ public class TycoonMainUI : UIBase
 
     private void OnClickQuest()
     {
-        ChangePanel(TycoonPanelType.Quest);
+        if (GameManager.Inst.Services.DayService.CurrentHour < 24)
+        {
+            ChangePanel(TycoonPanelType.Quest);
+        }
     }
 
     private void OnClickInventory()
