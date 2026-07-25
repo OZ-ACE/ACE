@@ -27,6 +27,7 @@ public class BattleViewModel : ViewModelBase
     private const int AttackAnimationDelayMilliseconds = 800;
     private const int HitAnimationDelayMilliseconds = 400;
     private const int ActionQueueStackDelayMilliseconds = 120;
+    private const int MultiTargetHitIntervalMilliseconds = 500;
 
     private UniTaskCompletionSource _interventionCompletionSource;
 
@@ -696,10 +697,21 @@ public class BattleViewModel : ViewModelBase
                 AttackAnimationDelayMilliseconds,
                 cancellationToken: token);
 
-            foreach (BattleUnitModel target in action.TargetList)
+            for (int i = 0; i < action.TargetList.Count; i++)
             {
+                BattleUnitModel target = action.TargetList[i];
+
                 ApplyDamageToUnit(target, power);
                 AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{attackerName} - {skillName} 시전! {GameUtil.GetUnitDisplayName(target.ID)}에게 {power} 데미지"));
+
+                bool hasNextTarget = i < action.TargetList.Count - 1;
+
+                if (hasNextTarget)
+                {
+                    await UniTask.Delay(
+                        MultiTargetHitIntervalMilliseconds,
+                        cancellationToken: token);
+                }
             }
 
             await UniTask.Delay(

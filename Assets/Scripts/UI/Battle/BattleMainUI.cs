@@ -261,7 +261,7 @@ public class BattleMainUI : UIBase
 
         if (SoundManager.Inst != null)
         {
-            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_GunShoot");
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_GunShoot", 0.4f);
         }
 
         if (_battleVfxController != null)

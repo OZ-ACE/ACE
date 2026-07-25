@@ -130,8 +130,6 @@ public class BattleVfxController : MonoBehaviour
                 .SuppressCancellationThrow();
         }
 
-        PlayProjectileSfx(action.SkillId);
-
         bool hasStartPoint = TryGetUnitVfxPoint(
             action.Unit,
             out Transform startPoint);
@@ -159,6 +157,8 @@ public class BattleVfxController : MonoBehaviour
                     continue;
                 }
 
+                PlayProjectileSfx(action.SkillId);
+
                 await PlayMovingProjectileVfxAsync(
                     vfxAddress,
                     startPoint.position,
@@ -181,6 +181,8 @@ public class BattleVfxController : MonoBehaviour
         {
             return;
         }
+
+        PlayProjectileSfx(action.SkillId);
 
         await PlayMovingProjectileVfxAsync(
             vfxAddress,
