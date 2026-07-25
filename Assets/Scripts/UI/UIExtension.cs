@@ -31,7 +31,8 @@ public enum UIType
     RosterUI,
     InfoText,
     WeeklyEvaluationUI,
-    GameOver
+    GameOver,
+    TutorialUI
 }
 
 public static class UIExtension
@@ -304,9 +305,24 @@ public static class UIExtension
             gameOver.EndingType = ending;
         }
     }
-
     public static void CloseGameOver(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.GameOver);
     }
+
+    public static void OpenTutorialUI(this UIManager uiManager)
+    {
+        UIBase ui = uiManager.OpenUI(UIRootType.Popup, UIType.TutorialUI);
+        if (ui != null)
+        {
+            ui.transform.SetAsLastSibling();   // 항상 맨 앞
+        }
+    }
+    public static void CloseTutorialUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIType.TutorialUI);
+    }
+
+
+
 }

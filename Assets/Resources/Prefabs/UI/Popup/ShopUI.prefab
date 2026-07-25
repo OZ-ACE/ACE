@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &425358571362462824
 GameObject:
@@ -362,7 +362,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 334.99976, y: -461.99844}
+  m_AnchoredPosition: {x: 334.99976, y: -461.9997}
   m_SizeDelta: {x: 670, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6390724901871400527
@@ -574,6 +574,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 969012475962946828}
+  - {fileID: 1522134299452379072}
   m_Father: {fileID: 7905738062601341043}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

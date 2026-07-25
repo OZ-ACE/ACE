@@ -189,3 +189,13 @@ public class FurnitureData : GameDataBase
 
     public string InstallPointId;
 }
+
+[Serializable]
+public class Tutorial : GameDataBase
+{
+    public string TriggerType;    // "TycoonEnter" | "QuestReward"
+    public string TriggerValue;   // QuestReward면 퀘스트 ID
+    public int Order;             // 같은 트리거 안에서 페이지 순서
+    public string ImagePath;
+    public string Text;
+}
