@@ -137,7 +137,11 @@ public class BattleViewModel : ViewModelBase
         return message;
     }
 
-    private const string RoundSeparatorLine = "<color=#00E5FF>==================================</color>";
+    //라운드 구분선에 현재 라운드 번호 표시
+    private string BuildRoundSeparatorLine(int round)
+    {
+        return $"<color=#00E5FF>============== 라운드 {round} ==============</color>";
+    }
     private const string PhaseSeparatorLine = "<color=#00E5FF>-----------------------------------------------</color>";
 
     //턴 순서대로 유닛을 하나씩 BT에 넘기고, 결과가 올 때까지 기다렸다가 다음 유닛으로 진행한다
@@ -147,7 +151,8 @@ public class BattleViewModel : ViewModelBase
         List<BattleUnitModel> enemyList,
         CancellationToken token)
     {
-        AddBattleLog(RoundSeparatorLine);
+        int currentRound = BattleManager.Inst.GetCurrentRound() + 1;
+        AddBattleLog(BuildRoundSeparatorLine(currentRound));
         LogPenaltyReleases(turnOrder);
         BattleManager.Inst.BuildActionQueue(turnOrder);
 
