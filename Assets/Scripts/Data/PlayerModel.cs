@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PlayerModel
 {
     public string PlayerName;
+    public string HeroRequestScheduledRequestId;
     public int Day;
     public int Gold;
     public int MemoryFragment;
@@ -12,6 +13,11 @@ public class PlayerModel
     public bool IsBattleDoneToday;
     public int LowGrade;
     public EndingType EndingType;
+    public int LastHeroRequestDay;
+    public string LastHeroRequestHeroId;
+    public HeroRequestModel CurrentHeroRequest;
+    public int HeroRequestScheduledDay;
+    public int HeroRequestScheduledHour;
     public bool IsTutorialDisabled; // 이미 본 튜토리얼
 
     public BuildGridData BuildGridData = new BuildGridData();

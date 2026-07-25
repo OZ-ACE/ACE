@@ -8,8 +8,13 @@ public class QuestView : ViewBase
     [SerializeField] private GameObject Prefab_QuestSlot;
     [SerializeField] private Transform Transform_SlotParent;
 
+    [SerializeField] private GameObject GameObject_HeroRequestRoot;
+    [SerializeField] private HeroRequestSlot HeroRequestSlot;
+
     private QuestViewModel _viewModel;
+    private HeroRequestService _heroRequestService;
     private List<QuestSlot> _activeSlots = new List<QuestSlot>();
+    private PlayerModel _playerModel = SaveManager.Inst.CurrentPlayerModel;
 
     // 뷰모델 바인딩
     public void Bind(QuestViewModel viewModel)
@@ -41,6 +46,23 @@ public class QuestView : ViewBase
         else
         {
             _viewModel.InvokeOnceOnInit();
+        }
+
+        _heroRequestService = GameManager.Inst.Services.HeroRequestService;
+
+        if (_heroRequestService != null)
+        {
+            _heroRequestService.OnHeroRequestChanged += RefreshHeroRequest;
+        }
+
+        RefreshHeroRequest();
+    }
+
+    private void OnDisable()
+    {
+        if (_heroRequestService != null)
+        {
+            _heroRequestService.OnHeroRequestChanged -= RefreshHeroRequest;
         }
     }
 
@@ -117,5 +139,33 @@ public class QuestView : ViewBase
 
             slot.UpdateState();
         }
+    }
+
+    private void RefreshHeroRequest()
+    {
+        HeroRequestService service = GameManager.Inst.Services.HeroRequestService;
+
+        if (service == null)
+        {
+            GameObject_HeroRequestRoot.SetActive(false);
+            return;
+        }
+
+        HeroRequestModel requestModel = service.GetCurrentRequest();
+        HeroRequestData requestData = service.GetCurrentRequestData();
+
+        Debug.Log($"QuestView - 영웅 요청 갱신 Model : {requestModel?.RequestId} / Data : {requestData?.ID}");
+
+        bool hasRequest = requestModel != null && requestData != null;
+
+        GameObject_HeroRequestRoot.SetActive(hasRequest);
+
+        if (hasRequest == false)
+        {
+            return;
+        }
+
+        GameObject_HeroRequestRoot.transform.SetAsFirstSibling();
+        HeroRequestSlot.SetData(requestModel, requestData, service.CurrentHour);
     }
 }
