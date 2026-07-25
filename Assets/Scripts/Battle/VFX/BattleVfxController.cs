@@ -30,6 +30,8 @@ public class BattleVfxController : MonoBehaviour
     private const string LuckyShieldSkillId = "heroSkill_01_03";
     private const string HammerThrowSkillId = "heroSkill_05_01";
     private const string AlmondThrowSkillId = "heroSkill_07_02";
+
+    private const string ArrowShootSfxClip = "Battle/SFX_Battle_ArrowShoot";
     private const string HealingBuffVfxAddress = "BattleVFX_HealingBuff";
 
     public async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
@@ -128,6 +130,8 @@ public class BattleVfxController : MonoBehaviour
                 .SuppressCancellationThrow();
         }
 
+        PlayProjectileSfx(action.SkillId);
+
         bool hasStartPoint = TryGetUnitVfxPoint(
             action.Unit,
             out Transform startPoint);
@@ -182,6 +186,30 @@ public class BattleVfxController : MonoBehaviour
             vfxAddress,
             startPoint.position,
             singleTargetPoint);
+    }
+
+    private void PlayProjectileSfx(string skillId)
+    {
+        if (SoundManager.Inst == null)
+        {
+            return;
+        }
+
+        switch (skillId)
+        {
+            case MagicArrowSkillId:
+            case SquintBarrageSkillId:
+                SoundManager.Inst.PlaySFX(ArrowShootSfxClip);
+                break;
+
+            case FireBallSkillId:
+            case RealityPunchSkillId:
+            case LuckyShieldSkillId:
+            case HammerThrowSkillId:
+            case AlmondThrowSkillId:
+                SoundManager.Inst.PlaySFX("Battle/SFX_Battle_MagicShoot");
+                break;
+        }
     }
 
     private string GetProjectileVfxAddress(string skillId)

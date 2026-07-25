@@ -259,6 +259,11 @@ public class BattleMainUI : UIBase
             _enemySpawner.PlayAttackAnimation(unit);
         }
 
+        if (SoundManager.Inst != null)
+        {
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_GunShoot");
+        }
+
         if (_battleVfxController != null)
         {
             _battleVfxController.PlayEnemyMuzzleVfxAsync(unit).Forget();
@@ -303,6 +308,16 @@ public class BattleMainUI : UIBase
 
     private void OnUnitHitVfxRequested(BattleUnitModel unit)
     {
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (SoundManager.Inst != null)
+        {
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_Hit");
+        }
+
         if (_battleVfxController == null)
         {
             return;
@@ -323,7 +338,17 @@ public class BattleMainUI : UIBase
 
     private void OnUnitHealVfxRequested(BattleUnitModel unit)
     {
-        if (_battleVfxController == null || unit == null)
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (SoundManager.Inst != null)
+        {
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_Heal");
+        }
+
+        if (_battleVfxController == null)
         {
             return;
         }
@@ -333,7 +358,17 @@ public class BattleMainUI : UIBase
 
     private void OnUnitSupportVfxRequested(BattleUnitModel unit)
     {
-        if (_battleVfxController == null || unit == null)
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (SoundManager.Inst != null)
+        {
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_Support");
+        }
+
+        if (_battleVfxController == null)
         {
             return;
         }
