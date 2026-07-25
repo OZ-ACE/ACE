@@ -382,6 +382,7 @@ Transform:
   - {fileID: 8833375714997812123}
   - {fileID: 1128377930456941763}
   - {fileID: 5467414470861247025}
+  - {fileID: 3367777374116501675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &520273237164214492
@@ -398,6 +399,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BattleRootRefs
   Executor_Hero: {fileID: 5776763411966466380}
   Executor_Enemy: {fileID: 3015761769524086179}
+--- !u!1 &1979396070409786167
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3367777374116501675}
+  - component: {fileID: 2788730660026471665}
+  m_Layer: 0
+  m_Name: BattleMeleeContoller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3367777374116501675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979396070409786167}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7751817152220707542}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2788730660026471665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979396070409786167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be07f34d592dfb43a4d08368cd808a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleMeleeController
+  _enemySpawner: {fileID: 6544233496226948705}
+  _approachDuration: 0.2
+  _returnDuration: 0.25
+  _targetStopDistance: 1.2
 --- !u!1 &2726920251301734801
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,6 +758,7 @@ MonoBehaviour:
   _magicArrowVfxAddress: BattleVFX_MagicArrow
   _fireballVfxAddress: BattleVFX_Fireball
   _projectileMoveDuration: 0.5
+  _fireballLaunchDelay: 0.4
 --- !u!1001 &731156228390100
 PrefabInstance:
   m_ObjectHideFlags: 0
