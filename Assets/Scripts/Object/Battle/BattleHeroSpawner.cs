@@ -21,6 +21,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     private static readonly int HitTrigger = Animator.StringToHash("Hit");
     private static readonly int DeathTrigger = Animator.StringToHash("Death");
     private static readonly int DeathStateHash = Animator.StringToHash("Death");
+    private static readonly int IsMovingHash = Animator.StringToHash("IsMoving");
 
     [Header("영웅 프리팹 매핑")]
     [SerializeField] private List<HeroSpawnEntry> _heroSpawnEntryList;
@@ -342,6 +343,27 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     public bool PlayDeathAnimation(BattleUnitModel heroUnit)
     {
         return SetAnimationTrigger(heroUnit, DeathTrigger);
+    }
+
+    public void SetMoveAnimation(
+        BattleUnitModel heroUnit,
+        bool isMoving)
+    {
+        if (heroUnit == null || heroUnit.IsHero == false)
+        {
+            return;
+        }
+
+        bool hasAnimator = _heroAnimatorMap.TryGetValue(
+            heroUnit.ID,
+            out Animator animator);
+
+        if (hasAnimator == false || animator == null)
+        {
+            return;
+        }
+
+        animator.SetBool(IsMovingHash, isMoving);
     }
 
     //재스폰된 사망 영웅을 쓰러지는 모션 없이 사망 포즈(마지막 프레임)로 고정한다

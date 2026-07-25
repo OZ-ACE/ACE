@@ -47,12 +47,25 @@ public class BattleMeleeController : MonoBehaviour
             targetTransform.position,
             heroTransform.rotation);
 
-        await MoveTransformAsync(
-            heroTransform,
-            approachPosition,
-            approachRotation,
-            _approachDuration,
-            token);
+        BattleHeroSpawner.Inst.SetMoveAnimation(
+            action.Unit,
+            true);
+
+        try
+        {
+            await MoveTransformAsync(
+                heroTransform,
+                approachPosition,
+                approachRotation,
+                _approachDuration,
+                token);
+        }
+        finally
+        {
+            BattleHeroSpawner.Inst.SetMoveAnimation(
+                action.Unit,
+                false);
+        }
     }
 
     //근접 공격이 끝난 영웅을 기존 위치와 방향으로 복귀시킨다
@@ -86,14 +99,27 @@ public class BattleMeleeController : MonoBehaviour
             return;
         }
 
-        await MoveTransformAsync(
-            heroTransform,
-            originalPose.Position,
-            originalPose.Rotation,
-            _returnDuration,
-            token);
+        BattleHeroSpawner.Inst.SetMoveAnimation(
+            action.Unit,
+            true);
 
-        _originalPoseMap.Remove(action.Unit);
+        try
+        {
+            await MoveTransformAsync(
+                heroTransform,
+                originalPose.Position,
+                originalPose.Rotation,
+                _returnDuration,
+                token);
+
+            _originalPoseMap.Remove(action.Unit);
+        }
+        finally
+        {
+            BattleHeroSpawner.Inst.SetMoveAnimation(
+                action.Unit,
+                false);
+        }
     }
 
     //전투 종료나 재진입 시 이동 중이던 영웅을 즉시 원래 자리로 돌린다
@@ -119,6 +145,10 @@ public class BattleMeleeController : MonoBehaviour
             heroTransform.SetPositionAndRotation(
                 pair.Value.Position,
                 pair.Value.Rotation);
+
+            BattleHeroSpawner.Inst.SetMoveAnimation(
+                pair.Key,
+                false);
         }
 
         _originalPoseMap.Clear();
