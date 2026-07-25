@@ -18,6 +18,14 @@ public enum SkillType
     Debuff
 }
 
+//공격 스킬의 근접, 원거리 방식
+public enum AttackRangeType
+{ 
+    None = 0,
+    Melee,
+    Range
+}
+
 //타겟의 범위
 public enum TargetType
 {
