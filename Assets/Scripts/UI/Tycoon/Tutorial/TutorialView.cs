@@ -67,14 +67,26 @@ public class TutorialView : ViewBase
     }
     private async UniTask SetImage(string path)
     {
-        if (Image_Tutorial == null || string.IsNullOrEmpty(path) == true)
+        if (Image_Tutorial == null)
         {
             return;
         }
-        Sprite sprite = await ResourceManager.Inst.LoadSprite(path);
+        // 경로 없으면 이미지 숨김 (이전 페이지 사진이 남지 않게)
+        if (string.IsNullOrEmpty(path) == true)
+        {
+            Image_Tutorial.enabled = false;
+            return;
+        }
+        Sprite sprite = await ResourceManager.Inst.LoadAsset<Sprite>(path);
         if (sprite != null)
         {
             Image_Tutorial.sprite = sprite;
+            Image_Tutorial.enabled = true;
+        }
+        else
+        {
+            Image_Tutorial.enabled = false;
+            Debug.LogWarning($"[TutorialView] 이미지 로드 실패: {path}");
         }
     }
     private void OnToggleIgnore(bool isOn)
