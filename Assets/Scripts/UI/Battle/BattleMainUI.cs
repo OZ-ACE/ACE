@@ -73,6 +73,7 @@ public class BattleMainUI : UIBase
 
     private EnemySpawner _enemySpawner;
     private BattleVfxController _battleVfxController;
+    private BattleMeleeController _battleMeleeController;
     private bool _isBattleRunning;
     private CancellationTokenSource _battleLoopCts;
 
@@ -90,6 +91,7 @@ public class BattleMainUI : UIBase
     {
         _enemySpawner = FindFirstObjectByType<EnemySpawner>();
         _battleVfxController = FindFirstObjectByType<BattleVfxController>();
+        _battleMeleeController = FindFirstObjectByType<BattleMeleeController>();
 
         _viewModel = new BattleViewModel();
         BindViewModel(_viewModel);
@@ -115,6 +117,13 @@ public class BattleMainUI : UIBase
     private void ResetBattleView()
     {
         CancelBattleLoop();
+
+        //전투 초기화 시 이동 상태 복구
+        if (_battleMeleeController != null)
+        {
+            _battleMeleeController.RestoreAllImmediately();
+        }
+
         Panel_BattleResultPopup.ClosePopup();
         Panel_HelpGuide.CloseGuideSilently();
         Panel_ChangeUnitPopup.ClosePopup();
@@ -172,6 +181,8 @@ public class BattleMainUI : UIBase
         _viewModel.UnitHitVfxRequested += OnUnitHitVfxRequested;
         _viewModel.UnitProjectileVfxRequested += OnUnitProjectileVfxRequested;
         _viewModel.UnitHealVfxRequested += OnUnitHealVfxRequested;
+        _viewModel.UnitMeleeApproachRequested += OnUnitMeleeApproachRequested;
+        _viewModel.UnitMeleeReturnRequested += OnUnitMeleeReturnRequested;
         _viewModel.HeroListChanged += HandleHeroListChanged;
 
         Button_Reinforce.onClick.AddListener(OnClickReinforce);
@@ -306,6 +317,34 @@ public class BattleMainUI : UIBase
         _battleVfxController.PlayHealVfxAsync(unit).Forget();
     }
 
+    private async UniTask OnUnitMeleeApproachRequested(
+        BattleActionModel action,
+        CancellationToken token)
+    {
+        if (_battleMeleeController == null || action == null)
+        {
+            return;
+        }
+
+        await _battleMeleeController.PlayApproachAsync(
+            action,
+            token);
+    }
+
+    private async UniTask OnUnitMeleeReturnRequested(
+        BattleActionModel action,
+        CancellationToken token)
+    {
+        if (_battleMeleeController == null || action == null)
+        {
+            return;
+        }
+
+        await _battleMeleeController.PlayReturnAsync(
+            action,
+            token);
+    }
+
     private void OnUnitDied(BattleUnitModel unit)
     {
         if (unit == null)
@@ -341,6 +380,8 @@ public class BattleMainUI : UIBase
             _viewModel.UnitHitVfxRequested -= OnUnitHitVfxRequested;
             _viewModel.UnitProjectileVfxRequested -= OnUnitProjectileVfxRequested;
             _viewModel.UnitHealVfxRequested -= OnUnitHealVfxRequested;
+            _viewModel.UnitMeleeApproachRequested -= OnUnitMeleeApproachRequested;
+            _viewModel.UnitMeleeReturnRequested -= OnUnitMeleeReturnRequested;
             _viewModel.HeroListChanged -= HandleHeroListChanged;
 
             Button_Reinforce.onClick.RemoveListener(OnClickReinforce);

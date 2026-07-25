@@ -21,6 +21,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     private static readonly int HitTrigger = Animator.StringToHash("Hit");
     private static readonly int DeathTrigger = Animator.StringToHash("Death");
     private static readonly int DeathStateHash = Animator.StringToHash("Death");
+    private static readonly int IsMovingHash = Animator.StringToHash("IsMoving");
 
     [Header("영웅 프리팹 매핑")]
     [SerializeField] private List<HeroSpawnEntry> _heroSpawnEntryList;
@@ -49,6 +50,8 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     private readonly Dictionary<string, Animator> _heroAnimatorMap = new Dictionary<string, Animator>();
 
     private readonly Dictionary<string, Transform> _heroVfxPointMap = new Dictionary<string, Transform>();
+
+    private readonly Dictionary<string, Transform> _heroTransformMap = new Dictionary<string, Transform>();
 
     private void OnEnable()
     {
@@ -133,6 +136,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         _heroViewMap.Clear();
         _heroAnimatorMap.Clear();
         _heroVfxPointMap.Clear();
+        _heroTransformMap.Clear();
         _hoveredHandler = null;
     }
 
@@ -165,6 +169,8 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         }
         Vector3 spawnPosition = basePosition + spawnDirection * (index * SpawnPositionSpacingX);
         GameObject spawnedObj = Instantiate(entry.Prefab, spawnPosition, Quaternion.Euler(0f, 100f, 0f));
+
+        _heroTransformMap[entry.HeroId] = spawnedObj.transform;
         float scale = entry.Scale > 0f ? entry.Scale : 1f; //인스펙터 미입력(0)이면 원본 크기 유지
         spawnedObj.transform.localScale = new Vector3(scale, scale, scale);
 
@@ -339,6 +345,27 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
         return SetAnimationTrigger(heroUnit, DeathTrigger);
     }
 
+    public void SetMoveAnimation(
+        BattleUnitModel heroUnit,
+        bool isMoving)
+    {
+        if (heroUnit == null || heroUnit.IsHero == false)
+        {
+            return;
+        }
+
+        bool hasAnimator = _heroAnimatorMap.TryGetValue(
+            heroUnit.ID,
+            out Animator animator);
+
+        if (hasAnimator == false || animator == null)
+        {
+            return;
+        }
+
+        animator.SetBool(IsMovingHash, isMoving);
+    }
+
     //재스폰된 사망 영웅을 쓰러지는 모션 없이 사망 포즈(마지막 프레임)로 고정한다
     public bool SetHeroDeathPose(BattleUnitModel heroUnit)
     {
@@ -374,6 +401,24 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
             out vfxPoint);
 
         return hasVfxPoint && vfxPoint != null;
+    }
+
+    public bool TryGetHeroTransform(
+        BattleUnitModel heroUnit,
+        out Transform heroTransform)
+    {
+        heroTransform = null;
+
+        if (heroUnit == null || heroUnit.IsHero == false)
+        {
+            return false;
+        }
+
+        bool hasTransform = _heroTransformMap.TryGetValue(
+            heroUnit.ID,
+            out heroTransform);
+
+        return hasTransform && heroTransform != null;
     }
 
     private Transform GetHeroVfxPoint(

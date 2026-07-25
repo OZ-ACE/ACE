@@ -158,6 +158,30 @@ public class EnemySpawner : MonoBehaviour
         return vfxPoint != null;
     }
 
+    public bool TryGetEnemyTransform(
+        BattleUnitModel enemyUnit,
+        out Transform enemyTransform)
+    {
+        enemyTransform = null;
+
+        if (enemyUnit == null || enemyUnit.IsHero)
+        {
+            return false;
+        }
+
+        bool hasView = _enemyViewMap.TryGetValue(
+            enemyUnit,
+            out EnemyUnitView enemyView);
+
+        if (hasView == false || enemyView == null)
+        {
+            return false;
+        }
+
+        enemyTransform = enemyView.transform;
+        return true;
+    }
+
     public bool TryGetMuzzlePoint(BattleUnitModel enemyUnit, out Transform muzzlePoint)
     {
         muzzlePoint = null;
