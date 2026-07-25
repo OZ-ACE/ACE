@@ -118,16 +118,25 @@ public class HeroMovingAgent : MonoBehaviour
     {
         ScheduleState state = _heroModel.HourlyStates[hour];
 
+        CancelMoving();
+        CancelReservation();
+        LeaveCurrentRoom();
+
         Vector3 targetPos = GetRoomPosition(state, out PlacedRoomData targetRoomData);
 
         TycoonState nextState = TycoonState.Idle;
-        if (state == ScheduleState.Rest) nextState = TycoonState.Rest;
-        else if (state == ScheduleState.Gym) nextState = TycoonState.Gym;
+        if (state == ScheduleState.Rest)
+        {
+            nextState = TycoonState.Rest;
+        }
+        else if (state == ScheduleState.Gym)
+        {
+            nextState = TycoonState.Gym;
+        }
 
         if (targetPos == Vector3.zero || targetRoomData == null)
         {
-            Debug.Log($"방 없음 {_heroModel.Name}");
-            CancelReservation();
+            Debug.Log($"방 없음 {_heroModel.Name} (요청 스케줄: {state})");
             ApplyPenalty(state, 3, 0);
             ChangeState(TycoonState.Idle);
             return;
@@ -270,18 +279,29 @@ public class HeroMovingAgent : MonoBehaviour
                     {
                         Vector2 size = roomData.GetSize();
                         float totalWidth = size.x * _gridSystem.CellWidth;
-                        float offsetX = _gridSystem.CellWidth * 0.4f;
-                        float randomX = Random.Range(offsetX, totalWidth - offsetX);
+
+                        float minX = totalWidth * 0.3f;
+                        float maxX = totalWidth * 0.7f;
+                        float randomX = Random.Range(minX, maxX);
 
                         Vector3 calculatedPos = new Vector3(originWorld.x + randomX, originWorld.y, originWorld.z);
 
-                        if (NavMesh.SamplePosition(calculatedPos, out NavMeshHit hit, 0.5f, NavMesh.AllAreas))
+                        if (NavMesh.SamplePosition(calculatedPos, out NavMeshHit hit, 1.5f, NavMesh.AllAreas))
                         {
                             targetPos = hit.position;
                         }
                         else
                         {
-                            targetPos = calculatedPos;
+                            Vector3 centerPos = new Vector3(originWorld.x + (totalWidth * 0.5f), originWorld.y, originWorld.z);
+
+                            if (NavMesh.SamplePosition(centerPos, out NavMeshHit centerHit, 2.0f, NavMesh.AllAreas))
+                            {
+                                targetPos = centerHit.position;
+                            }
+                            else
+                            {
+                                targetPos = originWorld;
+                            }
                         }
                     }
 
@@ -309,16 +329,22 @@ public class HeroMovingAgent : MonoBehaviour
 
     private bool IsPathInvalid(Vector3 targetPos)
     {
-        NavMeshPath path = new NavMeshPath();
-
-        Agent_Hero.CalculatePath(targetPos, path);
-
-        if (path.status == NavMeshPathStatus.PathPartial || path.status == NavMeshPathStatus.PathInvalid)
+        if (!Agent_Hero.isOnNavMesh)
         {
-            return true;
+            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.5f, NavMesh.AllAreas))
+            {
+                Agent_Hero.Warp(hit.position);
+            }
+            else
+            {
+                return true;
+            }
         }
 
-        return false;
+        NavMeshPath path = new NavMeshPath();
+        Agent_Hero.CalculatePath(targetPos, path);
+
+        return (path.status == NavMeshPathStatus.PathPartial || path.status == NavMeshPathStatus.PathInvalid);
     }
 
     private void CancelMoving()
