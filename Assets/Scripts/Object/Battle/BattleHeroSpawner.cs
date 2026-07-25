@@ -18,6 +18,7 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     private const float SpawnPositionSpacingX = 2f;
 
     private static readonly int AttackTrigger = Animator.StringToHash("Attack");
+    private static readonly int SkillTrigger = Animator.StringToHash("Skill");
     private static readonly int HitTrigger = Animator.StringToHash("Hit");
     private static readonly int DeathTrigger = Animator.StringToHash("Death");
     private static readonly int DeathStateHash = Animator.StringToHash("Death");
@@ -333,6 +334,11 @@ public class BattleHeroSpawner : SingletonBase<BattleHeroSpawner>
     public bool PlayAttackAnimation(BattleUnitModel heroUnit)
     {
         return SetAnimationTrigger(heroUnit, AttackTrigger);
+    }
+
+    public bool PlaySkillAnimation(BattleUnitModel heroUnit)
+    {
+        return SetAnimationTrigger(heroUnit, SkillTrigger);
     }
 
     public bool PlayHitAnimation(BattleUnitModel heroUnit)
