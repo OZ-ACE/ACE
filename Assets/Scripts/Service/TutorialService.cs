@@ -81,4 +81,27 @@ public class TutorialService
     {
         return a.Order.CompareTo(b.Order);
     }
+
+    // 튜토리얼 다시보기 — 전체를 순서대로 표시 (트리거·이미 봤음 무시)
+    public void ShowAllTutorials()
+    {
+        List<Tutorial> all = GameDataManager.Inst.GetDataList<Tutorial>();
+        if (all == null || all.Count == 0)
+        {
+            return;
+        }
+        List<Tutorial> pages = new List<Tutorial>(all);
+        pages.Sort(CompareAllOrder);   // 그룹 → 페이지 순서
+        GetTutorialViewModel().SetTutorial(pages);
+        UIManager.Inst.OpenTutorialUI();
+    }
+    private static int CompareAllOrder(Tutorial a, Tutorial b)
+    {
+        int groupCompare = string.CompareOrdinal(a.GroupID, b.GroupID);
+        if (groupCompare != 0)
+        {
+            return groupCompare;
+        }
+        return a.Order.CompareTo(b.Order);
+    }
 }
