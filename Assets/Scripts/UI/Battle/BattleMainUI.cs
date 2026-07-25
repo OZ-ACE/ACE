@@ -182,6 +182,7 @@ public class BattleMainUI : UIBase
         _viewModel.UnitHitVfxRequested += OnUnitHitVfxRequested;
         _viewModel.UnitProjectileVfxRequested += OnUnitProjectileVfxRequested;
         _viewModel.UnitHealVfxRequested += OnUnitHealVfxRequested;
+        _viewModel.UnitSupportVfxRequested += OnUnitSupportVfxRequested;
         _viewModel.UnitMeleeApproachRequested += OnUnitMeleeApproachRequested;
         _viewModel.UnitMeleeReturnRequested += OnUnitMeleeReturnRequested;
         _viewModel.HeroListChanged += HandleHeroListChanged;
@@ -258,6 +259,11 @@ public class BattleMainUI : UIBase
             _enemySpawner.PlayAttackAnimation(unit);
         }
 
+        if (SoundManager.Inst != null)
+        {
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_GunShoot", 0.4f);
+        }
+
         if (_battleVfxController != null)
         {
             _battleVfxController.PlayEnemyMuzzleVfxAsync(unit).Forget();
@@ -302,6 +308,16 @@ public class BattleMainUI : UIBase
 
     private void OnUnitHitVfxRequested(BattleUnitModel unit)
     {
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (SoundManager.Inst != null)
+        {
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_Hit");
+        }
+
         if (_battleVfxController == null)
         {
             return;
@@ -322,12 +338,42 @@ public class BattleMainUI : UIBase
 
     private void OnUnitHealVfxRequested(BattleUnitModel unit)
     {
-        if (_battleVfxController == null || unit == null)
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (SoundManager.Inst != null)
+        {
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_Heal");
+        }
+
+        if (_battleVfxController == null)
         {
             return;
         }
 
         _battleVfxController.PlayHealVfxAsync(unit).Forget();
+    }
+
+    private void OnUnitSupportVfxRequested(BattleUnitModel unit)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        if (SoundManager.Inst != null)
+        {
+            SoundManager.Inst.PlaySFX("Battle/SFX_Battle_Support");
+        }
+
+        if (_battleVfxController == null)
+        {
+            return;
+        }
+
+        _battleVfxController.PlaySupportVfxAsync(unit).Forget();
     }
 
     private async UniTask OnUnitMeleeApproachRequested(
@@ -394,6 +440,7 @@ public class BattleMainUI : UIBase
             _viewModel.UnitHitVfxRequested -= OnUnitHitVfxRequested;
             _viewModel.UnitProjectileVfxRequested -= OnUnitProjectileVfxRequested;
             _viewModel.UnitHealVfxRequested -= OnUnitHealVfxRequested;
+            _viewModel.UnitSupportVfxRequested -= OnUnitSupportVfxRequested;
             _viewModel.UnitMeleeApproachRequested -= OnUnitMeleeApproachRequested;
             _viewModel.UnitMeleeReturnRequested -= OnUnitMeleeReturnRequested;
             _viewModel.HeroListChanged -= HandleHeroListChanged;

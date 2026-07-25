@@ -9,9 +9,18 @@ public class SoundManager : SingletonBase<SoundManager>
     [SerializeField] private AudioSource Audio_BGM;
     [SerializeField] private AudioSource Audio_SFX;
 
-    public async UniTaskVoid LoadAndPlayAudioClip(AudioSource audioSource, string audioPath, bool isLoop = false)
+    public async UniTaskVoid LoadAndPlayAudioClip(
+        AudioSource audioSource,
+        string audioPath,
+        bool isLoop = false,
+        float volumeScale = 1f)
     {
         AudioClip clip = await ResourceManager.Inst.LoadAsset<AudioClip>(audioPath);
+
+        if (clip == null || audioSource == null)
+        {
+            return;
+        }
 
         if (isLoop == true)
         {
@@ -21,7 +30,7 @@ public class SoundManager : SingletonBase<SoundManager>
         }
         else
         {
-            audioSource.PlayOneShot(clip);
+            audioSource.PlayOneShot(clip, volumeScale);
         }
     }
 
@@ -43,6 +52,11 @@ public class SoundManager : SingletonBase<SoundManager>
     public void PlaySFX(string clip)
     {
         LoadAndPlayAudioClip(Audio_SFX, GetSFXPath(clip)).Forget();
+    }
+
+    public void PlaySFX(string clip, float volumeScale)
+    {
+        LoadAndPlayAudioClip(Audio_SFX, GetSFXPath(clip), false, volumeScale).Forget();
     }
 
     public void PlayTypingSound()

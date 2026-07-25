@@ -18,6 +18,7 @@ public class BattleViewModel : ViewModelBase
     public event Action<BattleUnitModel> UnitHitVfxRequested;
     public event Action<BattleActionModel> UnitProjectileVfxRequested;
     public event Action<BattleUnitModel> UnitHealVfxRequested;
+    public event Action<BattleUnitModel> UnitSupportVfxRequested;
     public event Action<List<BattleUnitModel>> HeroListChanged;
 
     public event Func<BattleActionModel, CancellationToken, UniTask> UnitMeleeApproachRequested;
@@ -26,6 +27,7 @@ public class BattleViewModel : ViewModelBase
     private const int AttackAnimationDelayMilliseconds = 800;
     private const int HitAnimationDelayMilliseconds = 400;
     private const int ActionQueueStackDelayMilliseconds = 120;
+    private const int MultiTargetHitIntervalMilliseconds = 500;
 
     private UniTaskCompletionSource _interventionCompletionSource;
 
@@ -460,6 +462,7 @@ public class BattleViewModel : ViewModelBase
             action.ActionType == ActionType.Defend))
         {
             UnitSkillStarted?.Invoke(action.Unit);
+            RequestSupportVfx(action);
 
             await UniTask.Delay(
                 AttackAnimationDelayMilliseconds,
@@ -688,15 +691,27 @@ public class BattleViewModel : ViewModelBase
             }
 
             UnitAttackStarted?.Invoke(action.Unit);
+            UnitProjectileVfxRequested?.Invoke(action);
 
             await UniTask.Delay(
                 AttackAnimationDelayMilliseconds,
                 cancellationToken: token);
 
-            foreach (BattleUnitModel target in action.TargetList)
+            for (int i = 0; i < action.TargetList.Count; i++)
             {
+                BattleUnitModel target = action.TargetList[i];
+
                 ApplyDamageToUnit(target, power);
                 AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{attackerName} - {skillName} 시전! {GameUtil.GetUnitDisplayName(target.ID)}에게 {power} 데미지"));
+
+                bool hasNextTarget = i < action.TargetList.Count - 1;
+
+                if (hasNextTarget)
+                {
+                    await UniTask.Delay(
+                        MultiTargetHitIntervalMilliseconds,
+                        cancellationToken: token);
+                }
             }
 
             await UniTask.Delay(
@@ -843,6 +858,38 @@ public class BattleViewModel : ViewModelBase
         }
 
         Debug.Log($"[BattleViewModel] {target.ID} 피격, 데미지 {power}, 남은 HP {target.CurrentHp}");
+    }
+
+    //지원 스킬 대상별 Vfx 요청 메서드
+    private void RequestSupportVfx(BattleActionModel action)
+    {
+        if (action == null)
+        {
+            return;
+        }
+
+        if (action.TargetType == TargetType.Single)
+        {
+            if (action.Target != null && action.Target.IsDefeated == false)
+            {
+                UnitSupportVfxRequested?.Invoke(action.Target);
+            }
+
+            return;
+        }
+
+        if (action.TargetType == TargetType.Multi)
+        {
+            foreach (BattleUnitModel target in action.TargetList)
+            {
+                if (target == null || target.IsDefeated)
+                {
+                    continue;
+                }
+
+                UnitSupportVfxRequested?.Invoke(target);
+            }
+        }
     }
 
     //스킬 타입이 Buff/Debuff면 대상에 공격력 배율을 적용한다. 대상은 액션 생성 시 이미 선택돼 있다
