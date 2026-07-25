@@ -15,6 +15,8 @@ public class UIManager : SingletonBase<UIManager>
     private Dictionary<UIType, UIBase> _createdUI = new Dictionary<UIType, UIBase>();
     private HashSet<UIType> _openedUI = new HashSet<UIType>();
 
+    public CameraController CameraController { get; private set; }
+
     private void Update()
     {
         if (Keyboard.current == null)
@@ -129,6 +131,11 @@ public class UIManager : SingletonBase<UIManager>
         }
 
         GameObject createdObject = Instantiate(loadedObj, rootTransform);
+
+        if (type == UIType.TycoonMainUI)
+        {
+            CameraController = createdObject.GetComponentInChildren<CameraController>(true);
+        }
 
         UIBase uiBase = createdObject.GetComponent<UIBase>();
 

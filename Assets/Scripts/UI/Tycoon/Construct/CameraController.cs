@@ -1,4 +1,6 @@
-﻿using Unity.Cinemachine;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -23,7 +25,24 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _minZoom = 3f;
     [SerializeField] private float _maxZoom = 12f;
 
+    [Header("가구 설치 연출")]
+    [SerializeField] private float _furnitureFocusZoom = 4f;
+    [SerializeField] private float _furnitureFocusDuration = 0.5f;
+    [SerializeField] private float _furnitureShowDuration = 0.4f;
+    [SerializeField] private float _furnitureRestoreDuration = 0.5f;
+
     [SerializeField] private CinemachineCamera _cinemachineCamera;
+
+    private bool _isFurnitureFocusPlaying;
+
+    private Vector3 _previousCameraPosition;
+    private float _previousCameraZoom;
+
+    private bool _isFocusPlaying;
+
+    private Transform _focusCameraTransform;
+    private Vector3 _previousPosition;
+    private float _previousZoom;
 
     private Camera _camera;
     private bool _isDragging = false;
@@ -36,10 +55,15 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current == null || EventSystem.current.IsPointerOverGameObject())
-        { 
+        if (_isFurnitureFocusPlaying == true)
+        {
+            return;
+        }
+
+        if (Keyboard.current == null || EventSystem.current == null || EventSystem.current.IsPointerOverGameObject())
+        {
             _isDragging = false;
-            return; 
+            return;
         }
 
         float x = 0f;
@@ -144,6 +168,105 @@ public class CameraController : MonoBehaviour
             float size = _camera.orthographicSize;
             size -= Mathf.Sign(scroll) * _zoomSpeed;
             _camera.orthographicSize = Mathf.Clamp(size, _minZoom, _maxZoom);
+        }
+    }
+
+    public async UniTask FocusFurnitureAsync(Vector3 targetPosition)
+    {
+        if (_isFurnitureFocusPlaying == true)
+        {
+            return;
+        }
+
+        _isFurnitureFocusPlaying = true;
+
+        Transform cameraTransform = GetControlledCameraTransform();
+
+        if (cameraTransform == null)
+        {
+            Debug.LogWarning("CameraController - 제어할 카메라가 없습니다.");
+            _isFurnitureFocusPlaying = false;
+            return;
+        }
+
+        _previousCameraPosition = cameraTransform.position;
+        _previousCameraZoom = GetCurrentZoom();
+
+        Vector3 focusPosition = new Vector3(targetPosition.x, targetPosition.y, _previousCameraPosition.z);
+
+        cameraTransform.DOKill();
+
+        cameraTransform.DOMove(focusPosition, _furnitureFocusDuration).SetEase(Ease.InOutQuad);
+
+        DOTween.To(GetCurrentZoom, SetCurrentZoom, _furnitureFocusZoom, _furnitureFocusDuration).SetEase(Ease.InOutQuad);
+
+        await UniTask.Delay(Mathf.CeilToInt(_furnitureFocusDuration * 1000f));
+    }
+
+    public async UniTask RestoreFurnitureFocusAsync()
+    {
+        Transform cameraTransform = GetControlledCameraTransform();
+
+        if (cameraTransform == null)
+        {
+            _isFurnitureFocusPlaying = false;
+            return;
+        }
+
+        cameraTransform.DOKill();
+
+        cameraTransform.DOMove(_previousCameraPosition, _furnitureRestoreDuration).SetEase(Ease.InOutQuad);
+
+        DOTween.To(GetCurrentZoom, SetCurrentZoom, _previousCameraZoom, _furnitureRestoreDuration). SetEase(Ease.InOutQuad);
+
+        await UniTask.Delay(Mathf.CeilToInt(_furnitureRestoreDuration * 1000f));
+
+        _isFurnitureFocusPlaying = false;
+    }
+
+    public int GetFurnitureShowDurationMilliseconds()
+    {
+        return Mathf.CeilToInt(_furnitureShowDuration * 1000f);
+    }
+
+    private Transform GetControlledCameraTransform()
+    {
+        if (_cinemachineCamera != null)
+        {
+            return _cinemachineCamera.transform;
+        }
+
+        return transform;
+    }
+
+    private float GetCurrentZoom()
+    {
+        if (_cinemachineCamera != null)
+        {
+            return _cinemachineCamera.Lens.OrthographicSize;
+        }
+
+        if (_camera != null && _camera.orthographic == true)
+        {
+            return _camera.orthographicSize;
+        }
+
+        return _furnitureFocusZoom;
+    }
+
+    private void SetCurrentZoom(float zoom)
+    {
+        if (_cinemachineCamera != null)
+        {
+            LensSettings lens = _cinemachineCamera.Lens;
+            lens.OrthographicSize = zoom;
+            _cinemachineCamera.Lens = lens;
+            return;
+        }
+
+        if (_camera != null && _camera.orthographic == true)
+        {
+            _camera.orthographicSize = zoom;
         }
     }
 }

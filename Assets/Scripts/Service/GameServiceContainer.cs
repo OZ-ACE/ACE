@@ -8,6 +8,7 @@
 
     // 건설 뷰모델 보관 서비스
     public BuildService BuildService { get; private set; }
+    public FurnitureService FurnitureService { get; private set; }
     public EpisodeService EpisodeService { get; private set; }
 
     // 날짜진행 뷰모델 보관 서비스
@@ -33,6 +34,7 @@
         CurrencyService = new CurrencyService();
         ShopService = new ShopService(CurrencyService);
         BuildService = new BuildService(CurrencyService);
+        FurnitureService = new FurnitureService();
         EpisodeService = new EpisodeService();
         DayService = new DayService();
         SettlementService = new SettlementService(CurrencyService, DayService);

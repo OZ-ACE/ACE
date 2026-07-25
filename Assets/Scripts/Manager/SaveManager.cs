@@ -244,6 +244,12 @@ public class SaveManager : SingletonBase<SaveManager>
             }
         }
 
+        if (data.FurnitureProgressList == null)
+        {
+            data.FurnitureProgressList = new List<FurnitureProgressModel>();
+            isOldData = true;
+        }
+
         if (isOldData == true)
         {
             RequestSaveData(data);
