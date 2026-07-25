@@ -688,6 +688,7 @@ public class BattleViewModel : ViewModelBase
             }
 
             UnitAttackStarted?.Invoke(action.Unit);
+            UnitProjectileVfxRequested?.Invoke(action);
 
             await UniTask.Delay(
                 AttackAnimationDelayMilliseconds,

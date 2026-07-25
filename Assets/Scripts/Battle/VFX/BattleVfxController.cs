@@ -14,11 +14,21 @@ public class BattleVfxController : MonoBehaviour
     [Header("투사체 VFX")]
     [SerializeField] private string _magicArrowVfxAddress;
     [SerializeField] private string _fireballVfxAddress;
+    [SerializeField] private string _realityPunchVfxAddress;
+    [SerializeField] private string _shieldProjectileVfxAddress;
+    [SerializeField] private string _hammerProjectileVfxAddress;
+    [SerializeField] private string _almondProjectileVfxAddress;
     [SerializeField] private float _projectileMoveDuration = 0.5f;
     [SerializeField] private float _fireballLaunchDelay = 0.4f;
+    [SerializeField] private float _realityPunchLaunchDelay = 0.4f;
 
     private const string MagicArrowSkillId = "heroSkill_03_01";
+    private const string SquintBarrageSkillId = "heroSkill_03_02";
     private const string FireBallSkillId = "heroSkill_04_01";
+    private const string RealityPunchSkillId = "heroSkill_04_02";
+    private const string LuckyShieldSkillId = "heroSkill_01_03";
+    private const string HammerThrowSkillId = "heroSkill_05_01";
+    private const string AlmondThrowSkillId = "heroSkill_07_02";
     private const string HealingBuffVfxAddress = "BattleVFX_HealingBuff";
 
     public async UniTask PlayCommonHitVfxAsync(BattleUnitModel unit)
@@ -74,7 +84,7 @@ public class BattleVfxController : MonoBehaviour
 
     public async UniTask PlayProjectileVfxAsync(BattleActionModel action)
     {
-        if (action == null || action.Unit == null || action.Target == null)
+        if (action == null || action.Unit == null)
         {
             return;
         }
@@ -100,14 +110,48 @@ public class BattleVfxController : MonoBehaviour
             action.Unit,
             out Transform startPoint);
 
-        bool hasTargetPoint = TryGetUnitVfxPoint(
-            action.Target,
-            out Transform targetPoint);
+        if (hasStartPoint == false || startPoint == null)
+        {
+            return;
+        }
 
-        if (hasStartPoint == false ||
-            hasTargetPoint == false ||
-            startPoint == null ||
-            targetPoint == null)
+        if (action.TargetType == TargetType.Multi)
+        {
+            if (action.TargetList == null || action.TargetList.Count == 0)
+            {
+                return;
+            }
+
+            foreach (BattleUnitModel target in action.TargetList)
+            {
+                bool hasTargetPoint = TryGetUnitVfxPoint(
+                    target,
+                    out Transform targetPoint);
+
+                if (hasTargetPoint == false || targetPoint == null)
+                {
+                    continue;
+                }
+
+                await PlayMovingProjectileVfxAsync(
+                    vfxAddress,
+                    startPoint.position,
+                    targetPoint);
+            }
+
+            return;
+        }
+
+        if (action.Target == null)
+        {
+            return;
+        }
+
+        bool hasSingleTargetPoint = TryGetUnitVfxPoint(
+            action.Target,
+            out Transform singleTargetPoint);
+
+        if (hasSingleTargetPoint == false || singleTargetPoint == null)
         {
             return;
         }
@@ -115,7 +159,7 @@ public class BattleVfxController : MonoBehaviour
         await PlayMovingProjectileVfxAsync(
             vfxAddress,
             startPoint.position,
-            targetPoint);
+            singleTargetPoint);
     }
 
     private string GetProjectileVfxAddress(string skillId)
@@ -123,10 +167,23 @@ public class BattleVfxController : MonoBehaviour
         switch (skillId)
         {
             case MagicArrowSkillId:
+            case SquintBarrageSkillId:
                 return _magicArrowVfxAddress;
 
             case FireBallSkillId:
                 return _fireballVfxAddress;
+               
+            case RealityPunchSkillId:
+                return _realityPunchVfxAddress;
+
+            case LuckyShieldSkillId:
+                return _shieldProjectileVfxAddress;
+
+            case HammerThrowSkillId:
+                return _hammerProjectileVfxAddress;
+
+            case AlmondThrowSkillId:
+                return _almondProjectileVfxAddress;
 
             default:
                 return null;
@@ -139,6 +196,9 @@ public class BattleVfxController : MonoBehaviour
         {
             case FireBallSkillId:
                 return _fireballLaunchDelay;
+
+            case RealityPunchSkillId:
+                return _realityPunchLaunchDelay;
 
             default:
                 return 0f;
