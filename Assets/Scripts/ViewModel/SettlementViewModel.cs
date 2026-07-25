@@ -238,6 +238,7 @@ public class SettlementViewModel : ViewModelBase
         {
             return GameOverType.None;
         }
+
         if (_evaluationResult.Overall <= EvaluationGrade.D)
         {
             player.LowGrade++;
@@ -246,14 +247,18 @@ public class SettlementViewModel : ViewModelBase
         {
             player.LowGrade = 0;   // 연속 끊기면 리셋
         }
+        
         SaveManager.Inst.RequestSaveData(player);
+        
         if (player.LowGrade >= 2)
         {
             return GameOverType.GameOver;
         }
+        else if (player.LowGrade == 1)
+        {
+            return GameOverType.Warning;
+        }
+
         return GameOverType.None;
     }
-
-
-
 }

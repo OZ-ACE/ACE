@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEngine.AI;
 
 public class ObjectManager : SingletonBase<ObjectManager>
@@ -38,7 +37,24 @@ public class ObjectManager : SingletonBase<ObjectManager>
         _mainCamera = Camera.main;
         CreateOfficeRoot();
         CreateBattleRoot();
-        CreateBackGround(); 
+        CreateBackGround();
+
+        BindDayService();
+    }
+
+    private void BindDayService()
+    {
+        DayService dayService = GameManager.Inst.Services.DayService;
+        if (dayService != null)
+        {
+            dayService.OnChangeDay -= OnDayChanged;
+            dayService.OnChangeDay += OnDayChanged;
+        }
+    }
+
+    private void OnDayChanged(int newDay)
+    {
+        SpawnWaitingHeroes().Forget();
     }
 
     public void CreateBuildGridView()
@@ -302,6 +318,36 @@ public class ObjectManager : SingletonBase<ObjectManager>
         Debug.Log("[ObjectManager] 배경 생성 완료");
     }
 
+    public void RegistWaitingHero(string heroID, long roomInstanceID)
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+
+        if (player.PendingHeroes == null)
+        {
+            player.PendingHeroes = new List<PendingHeroData>();
+        }
+
+        bool isExist = false;
+
+        foreach (PendingHeroData hero in player.PendingHeroes)
+        {
+            if (hero.HeroID == heroID)
+            {
+                isExist = true;
+                break;
+            }
+        }
+
+        if (!isExist)
+        {
+            PendingHeroData hero = new PendingHeroData();
+            hero.HeroID = heroID;
+            hero.RoomInstanceID = roomInstanceID;
+
+            player.PendingHeroes.Add(hero);
+        }
+    }
+
     public async UniTask SpawnHero(string heroId, long roomInstanceId)
     {
         var buildService = GameManager.Inst.Services.BuildService;
@@ -357,6 +403,25 @@ public class ObjectManager : SingletonBase<ObjectManager>
         movingAgent.InitHero(heroModel);
 
         _spawnHero[heroId] = movingAgent;
+    }
+
+    public async UniTaskVoid SpawnWaitingHeroes()
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+        if (player == null || player.PendingHeroes == null || player.PendingHeroes.Count == 0)
+        {
+            return;
+        }
+
+        List<PendingHeroData> targets = new List<PendingHeroData>(player.PendingHeroes);
+
+        foreach (PendingHeroData target in targets)
+        {
+            await SpawnHero(target.HeroID, target.RoomInstanceID);
+        }
+
+        player.PendingHeroes.Clear();
+        SaveManager.Inst.RequestSaveData(player);
     }
 
     public HeroMovingAgent GetSpawnAgent(string heroID)
