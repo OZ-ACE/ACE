@@ -13,6 +13,7 @@ public class ConstructSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Text_RoomName;
     [SerializeField] private TextMeshProUGUI Text_Description;
     [SerializeField] private TextMeshProUGUI Text_Cost;
+    [SerializeField] private TextMeshProUGUI Text_Person;
 
     private BuildGridViewModel _viewModel;
     private string _roomId;
@@ -33,6 +34,7 @@ public class ConstructSlot : MonoBehaviour
 
         Text_RoomName.text = roomData.Name;
         Text_Description.text = roomData.Description;
+        Text_Person.text = $"{roomData.MaxCapacity}명";
         Text_Cost.text = $"{roomData.BuildCost} G";
 
         // 비활성 부모에서 Instantiate되면 Awake가 안 도니 여기서 등록

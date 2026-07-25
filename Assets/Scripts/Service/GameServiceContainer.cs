@@ -29,6 +29,10 @@
     // 영웅로스터 뷰모델 보관 서비스
     public RosterService RosterService { get; private set; }
 
+    // 튜토리얼 뷰모델 보관 서비스
+
+    public TutorialService TutorialService { get; private set; }
+
     public void Initialize()
     {
         CurrencyService = new CurrencyService();
@@ -42,10 +46,12 @@
         RoomAssignmentService = new RoomAssignmentService();
         RosterService = new RosterService();
         WeeklyEvaluationService = new WeeklyEvaluationService(DayService);
+        TutorialService = new TutorialService();
     }
 
     public void Release()
     {
         //EpisodeService?.Release();
     }
+
 }

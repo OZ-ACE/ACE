@@ -10,6 +10,9 @@ public class PlacedRoomData
     public GridCoord Origin; // 방의 좌하단 기준 좌표 (어디에)
 
     private HashSet<string> _currentUsers = new HashSet<string>();
+    public int CurrentCount => _currentUsers.Count;
+
+    public event Action OnUserCountChanged;
 
     public int MaxCapacity
     {
@@ -33,12 +36,16 @@ public class PlacedRoomData
         }
 
         _currentUsers.Add(heroID);
+
+        OnUserCountChanged?.Invoke();
         return true;
     }
 
     public void UnregisterUser(string heroID)
     {
         _currentUsers.Remove(heroID);
+
+        OnUserCountChanged?.Invoke();
     }
 }
 

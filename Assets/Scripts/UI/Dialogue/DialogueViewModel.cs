@@ -176,6 +176,9 @@
         }
         else if (nextID == "Home")
         {
+            GameManager.Inst.Services.DayService.CurrentHour = 0;
+            ObjectManager.Inst.DestroyHeroAndMap();
+
             EndingType ending = EndingType.None;
 
             if (CurrentDialogueID.Contains("Happy"))

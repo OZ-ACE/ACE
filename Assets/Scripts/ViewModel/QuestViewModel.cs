@@ -269,6 +269,7 @@ public class QuestViewModel : ViewModelBase
         NotifyProgress();
 
         Debug.Log($"[QuestViewModel] 보상 수령: {quest.QuestName} (+{quest.RewardAmount})");
+        GameManager.Inst.Services.TutorialService.TryShowTutorial(TutorialTriggerType.QuestReward, questID);// 이 퀘스트 보상 수령을 조건으로 하는 튜토리얼 표시
         return true;
     }
 

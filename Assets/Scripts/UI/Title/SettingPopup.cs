@@ -11,6 +11,8 @@ public class SettingPopup : UIBase
     [SerializeField] private Button Button_Close;
     [SerializeField] private Button Button_Confirm;
     [SerializeField] private Button Button_Reset;
+    [SerializeField] private Button Button_ShowAllTutorials;
+
 
     [Header("사운드")]
     [SerializeField] private AudioMixer AudioMixer_Sound;
@@ -31,6 +33,7 @@ public class SettingPopup : UIBase
         Button_Close.onClick.AddListener(OnClickClose);
         Button_Confirm.onClick.AddListener(OnClickConfirm);
         Button_Reset.onClick.AddListener(OnClickReset);
+        Button_ShowAllTutorials.onClick.AddListener(OnClickShowAllTutorials);
 
         Slider_BGM.onValueChanged.AddListener(OnBGMChanged);
         Slider_SFX.onValueChanged.AddListener(OnSFXChanged);
@@ -161,6 +164,11 @@ public class SettingPopup : UIBase
     private void OnClickReset()
     {
         _settingVM.ResetSetting();
+    }
+
+    private void OnClickShowAllTutorials()
+    {
+        GameManager.Inst.Services.TutorialService.ShowAllTutorials();
     }
 
     private void ApplyBGMVolume(float value)

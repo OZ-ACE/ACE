@@ -26,14 +26,14 @@ public class BuildGridView : ViewBase
     private Dictionary<GridCoord, GameObject> _floorLabels = new Dictionary<GridCoord, GameObject>();
 
     [Header("방 프리팹 캐시")]
-    private Dictionary<string, GameObject> _roomPrefabCache = new Dictionary<string, GameObject>();
+    private Dictionary<string, RoomView> _roomPrefabCache = new Dictionary<string, RoomView>();
 
     private BuildGridViewModel _viewModel;
     private Camera _mainCamera;
 
     private Dictionary<GridCoord, SpriteRenderer> _cellRenderers = new Dictionary<GridCoord, SpriteRenderer>();
-    private Dictionary<GridCoord, GameObject> _placedRoomObjects = new Dictionary<GridCoord, GameObject>();
-    private Dictionary<long, GameObject> _roomObjectsByInstanceId = new Dictionary<long, GameObject>();
+    private Dictionary<GridCoord, RoomView> _placedRoomObjects = new Dictionary<GridCoord, RoomView>();
+    private Dictionary<long, RoomView> _roomObjectsByInstanceId = new Dictionary<long, RoomView>();
     private bool _isOverlayCreated;
 
     private GridCoord _lastHoverCoord;
@@ -459,7 +459,7 @@ public class BuildGridView : ViewBase
             }
         }
 
-        GameObject prefab = await LoadRoomPrefab(room.ID, finalPrefabPath);
+        RoomView prefab = await LoadRoomPrefab(room.ID, finalPrefabPath);
 
         if (prefab == null)
         {
@@ -468,11 +468,13 @@ public class BuildGridView : ViewBase
 
         Vector3 worldPos = GetRoomCenterPosition(placed.Origin, room.GetSize());
 
-        GameObject roomObj = Instantiate(prefab, worldPos, Quaternion.identity, this.transform);
-        roomObj.name = $"Room_{placed.RoomId}_{placed.Origin}";
+        RoomView roomView = Instantiate(prefab, worldPos, Quaternion.identity, this.transform);
+        roomView.name = $"Room_{placed.RoomId}_{placed.Origin}";
 
-        _placedRoomObjects[placed.Origin] = roomObj;
-        _roomObjectsByInstanceId[placed.RoomInstanceId] = roomObj;
+        roomView.Bind(placed);
+
+        _placedRoomObjects[placed.Origin] = roomView;
+        _roomObjectsByInstanceId[placed.RoomInstanceId] = roomView;
 
         // 계단이면 층수 라벨 표시
         if (Prefab_FloorLabel != null && (room.ID.Contains("Stair") || room.PrefabPath.Contains("Stair")))
@@ -503,7 +505,7 @@ public class BuildGridView : ViewBase
             RoomData room = GameDataManager.Inst.GetData<RoomData>(removed.RoomId);
 
             roomObj.gameObject.SetActive(false);
-            Destroy(roomObj);
+            Destroy(roomObj.gameObject);
             _placedRoomObjects.Remove(removed.Origin);
             _roomObjectsByInstanceId.Remove(removed.RoomInstanceId);
 
@@ -515,11 +517,11 @@ public class BuildGridView : ViewBase
     // 방 생성
     private void RefreshAllRooms()
     {
-        foreach (KeyValuePair<GridCoord, GameObject> pair in _placedRoomObjects)
+        foreach (KeyValuePair<GridCoord, RoomView> pair in _placedRoomObjects)
         {
             if (pair.Value != null)
             {
-                Destroy(pair.Value);
+                Destroy(pair.Value.gameObject);
             }
         }
 
@@ -721,11 +723,11 @@ public class BuildGridView : ViewBase
     }
 
     // RoomData.PrefabPath로 방 프리팹을 로드
-    private async UniTask<GameObject> LoadRoomPrefab(string roomId, string prefabPath)
+    private async UniTask<RoomView> LoadRoomPrefab(string roomId, string prefabPath)
     {
         string cacheKey = $"{roomId}_{prefabPath}";
 
-        if (_roomPrefabCache.TryGetValue(cacheKey, out GameObject cached))
+        if (_roomPrefabCache.TryGetValue(cacheKey, out RoomView cached))
         {
             return cached;
         }
@@ -738,8 +740,13 @@ public class BuildGridView : ViewBase
             return null;
         }
 
-        _roomPrefabCache[cacheKey] = prefab;
-        return prefab;
+        if (prefab.TryGetComponent(out RoomView roomView))
+        {
+            _roomPrefabCache[cacheKey] = roomView;
+            return roomView;
+        }
+
+        return null;
     }
 
     private void RefreshRoomSelectionHighlight()
@@ -810,6 +817,13 @@ public class BuildGridView : ViewBase
 
     public bool TryGetRoomObject(long roomInstanceId, out GameObject roomObject)
     {
-        return _roomObjectsByInstanceId.TryGetValue(roomInstanceId, out roomObject);
+        if (_roomObjectsByInstanceId.TryGetValue(roomInstanceId, out RoomView roomView))
+        {
+            roomObject = roomView.gameObject;
+            return true;
+        }
+
+        roomObject = null;
+        return false;
     }
 }

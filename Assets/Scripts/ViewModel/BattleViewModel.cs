@@ -127,7 +127,24 @@ public class BattleViewModel : ViewModelBase
         OnPropertyChanged(nameof(BattleLogs));
     }
 
-    private const string RoundSeparatorLine = "<color=#00E5FF>====================================</color>";
+    private const string EnemyLogColor = "#FF6B6B";
+
+    //적 진영 로그는 색을 입혀 아군 로그와 구분한다
+    private string ApplyEnemyLogColor(BattleUnitModel unit, string message)
+    {
+        if (unit != null && unit.IsHero == false)
+        {
+            return $"<color={EnemyLogColor}>{message}</color>";
+        }
+
+        return message;
+    }
+
+    //라운드 구분선에 현재 라운드 번호 표시
+    private string BuildRoundSeparatorLine(int round)
+    {
+        return $"<color=#00E5FF>============== 라운드 {round} ==============</color>";
+    }
     private const string PhaseSeparatorLine = "<color=#00E5FF>-----------------------------------------------</color>";
 
     //턴 순서대로 유닛을 하나씩 BT에 넘기고, 결과가 올 때까지 기다렸다가 다음 유닛으로 진행한다
@@ -137,7 +154,8 @@ public class BattleViewModel : ViewModelBase
         List<BattleUnitModel> enemyList,
         CancellationToken token)
     {
-        AddBattleLog(RoundSeparatorLine);
+        int currentRound = BattleManager.Inst.GetCurrentRound() + 1;
+        AddBattleLog(BuildRoundSeparatorLine(currentRound));
         LogPenaltyReleases(turnOrder);
         BattleManager.Inst.BuildActionQueue(turnOrder);
 
@@ -170,7 +188,7 @@ public class BattleViewModel : ViewModelBase
                 continue;
             }
 
-            AddBattleLog(BuildUnitActionLogMessage(createdAction));
+            AddBattleLog(ApplyEnemyLogColor(createdAction.Unit, BuildUnitActionLogMessage(createdAction)));
             RefreshActionQueue();
             await UniTask.Delay(ActionQueueStackDelayMilliseconds, cancellationToken: token);
         }
@@ -346,7 +364,7 @@ public class BattleViewModel : ViewModelBase
                 if (action.Unit != null)
                 {
                     string unitName = GameUtil.GetUnitDisplayName(action.Unit.ID);
-                    AddBattleLog($"{unitName} - 전투 불능으로 행동 취소");
+                    AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - 전투 불능으로 행동 취소"));
                 }
 
                 continue;
@@ -379,7 +397,7 @@ public class BattleViewModel : ViewModelBase
             }
 
             string unitName = GameUtil.GetUnitDisplayName(unit.ID);
-            AddBattleLog($"{unitName} - {penalty.PenaltyName} 회복! {penalty.TriggerSkillName} 다시 사용 가능");
+            AddBattleLog(ApplyEnemyLogColor(unit, $"{unitName} - {penalty.PenaltyName} 회복! {penalty.TriggerSkillName} 다시 사용 가능"));
         }
     }
 
@@ -432,7 +450,7 @@ public class BattleViewModel : ViewModelBase
 
         if (action.ActionType == ActionType.Attack && isDamageApplied == false)
         {
-            AddBattleLog($"{unitName} - 공격 가능한 대상이 없어 행동이 불발됩니다.");
+            AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - 공격 가능한 대상이 없어 행동이 불발됩니다."));
             return;
         }
 
@@ -440,17 +458,23 @@ public class BattleViewModel : ViewModelBase
 
         if (action.ActionType != ActionType.Wait)
         {
+            bool wasPenalizedBefore = !string.IsNullOrEmpty(action.Unit.ActivePenaltyId);
             Penalty triggeredPenalty = BattleManager.Inst.UpdatePenaltyGauge(action.Unit, action.SkillId);
 
             if (triggeredPenalty != null)
             {
-                AddBattleLog($"{unitName} - '{triggeredPenalty.TriggerSkillName}' 반복 사용! {triggeredPenalty.PenaltyName} 발동 ({triggeredPenalty.DurationRounds}라운드 동안 스킬이 봉인됩니다.)");
+                AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - '{triggeredPenalty.TriggerSkillName}' 반복 사용! {triggeredPenalty.PenaltyName} 발동 ({triggeredPenalty.DurationRounds}라운드 동안 스킬이 봉인됩니다.)"));
+            }
+            else if (wasPenalizedBefore == false && action.Unit.IsHero)
+            {
+                string usedSkillName = GetSkillName(action.Unit, action.SkillId);
+                AddBattleLog($"{unitName} - '{usedSkillName}' 연속 {action.Unit.RepeatSkillCount}회째");
             }
         }
 
         if (action.ActionType == ActionType.Wait)
         {
-            AddBattleLog($"{unitName} - 대기 전환");
+            AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - 대기 전환"));
         }
     }
 
@@ -625,7 +649,7 @@ public class BattleViewModel : ViewModelBase
                 cancellationToken: token);
                 
             ApplyDamageToUnit(action.Target, power);
-            AddBattleLog($"{attackerName} - {skillName} 시전! {GameUtil.GetUnitDisplayName(action.Target.ID)}에게 {power} 데미지");
+            AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{attackerName} - {skillName} 시전! {GameUtil.GetUnitDisplayName(action.Target.ID)}에게 {power} 데미지"));
 
             await UniTask.Delay(
                 HitAnimationDelayMilliseconds,
@@ -660,7 +684,7 @@ public class BattleViewModel : ViewModelBase
             foreach (BattleUnitModel target in action.TargetList)
             {
                 ApplyDamageToUnit(target, power);
-                AddBattleLog($"{attackerName} - {skillName} 시전! {GameUtil.GetUnitDisplayName(target.ID)}에게 {power} 데미지");
+                AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{attackerName} - {skillName} 시전! {GameUtil.GetUnitDisplayName(target.ID)}에게 {power} 데미지"));
             }
 
             await UniTask.Delay(
@@ -847,7 +871,7 @@ public class BattleViewModel : ViewModelBase
         string casterName = GameUtil.GetUnitDisplayName(action.Unit.ID);
         string targetName = GameUtil.GetUnitDisplayName(target.ID);
         string effectText = isBuff ? "공격력이 상승했습니다!" : "공격력이 하락했습니다.";
-        AddBattleLog($"{casterName}의 스킬로 {targetName}의 {effectText}");
+        AddBattleLog($"{casterName}의 스킬로 {targetName}의 {effectText} (공격력 {target.AttackPowerModifierPercent}%)");
     }
 
     //대상 유닛의 HP를 회복시킨다. MaxHp를 넘지 않도록 제한

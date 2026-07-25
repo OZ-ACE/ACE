@@ -24,6 +24,7 @@ public class BattleMainUI : UIBase
     private int _enqueuedLogCount;
     private bool _isLogTyping;
     private CancellationTokenSource _logTypingToken;
+    private TextMeshProUGUI _currentTypingLogText;
 
     [Header("에너지 게이지")]
     [SerializeField] private Image[] Image_EnergySlotList;
@@ -51,6 +52,9 @@ public class BattleMainUI : UIBase
     [Header("도움말")]
     [SerializeField] private Button Button_Help;
     [SerializeField] private HelpGuideUI Panel_HelpGuide;
+
+    private const string HeroActionSlotPrefabPath = "Prefabs/UI/BattleActionSlot";
+    private const string EnemyActionSlotPrefabPath = "Prefabs/UI/BattleActionSlot_Enemy";
 
     private const int ReinforceEnergyCost = 1; 
     private const int ChangeUnitEnergyCost = 2; 
@@ -450,7 +454,8 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        GameObject loadedObj = (GameObject)Resources.Load("Prefabs/UI/BattleActionSlot");
+        string prefabPath = action.Unit.IsHero ? HeroActionSlotPrefabPath : EnemyActionSlotPrefabPath;
+        GameObject loadedObj = (GameObject)Resources.Load(prefabPath);
         GameObject slotObj = Instantiate(loadedObj, Transform_ActionQueueContent);
 
         BattleActionSlot slot = slotObj.GetComponent<BattleActionSlot>();
@@ -507,8 +512,8 @@ public class BattleMainUI : UIBase
         _isLogTyping = false;
     }
 
-    // 로그 슬롯 하나를 만들고 maxVisibleCharacters로 한 글자씩 드러낸다 (DialogueUI.Typing 방식)
-    private async UniTask TypeSingleLogLineAsync(string line, CancellationToken token)
+    // 로그 슬롯 하나를 만들고 텍스트를 세팅한다 (글자는 아직 숨긴 상태)
+    private TextMeshProUGUI CreateLogSlot(string line)
     {
         GameObject loadedObj = (GameObject)Resources.Load("Prefabs/UI/BattleLogSlot");
         GameObject slot = Instantiate(loadedObj, Transform_LogContent);
@@ -517,7 +522,7 @@ public class BattleMainUI : UIBase
 
         if (logText == null)
         {
-            return;
+            return null;
         }
 
         logText.text = line;
@@ -527,9 +532,25 @@ public class BattleMainUI : UIBase
         LayoutRebuilder.ForceRebuildLayoutImmediate(Transform_LogContent.GetComponent<RectTransform>());
         ScrollToBottom();
 
+        return logText;
+    }
+
+    // 로그 슬롯 하나를 만들고 maxVisibleCharacters로 한 글자씩 드러낸다 (DialogueUI.Typing 방식)
+    private async UniTask TypeSingleLogLineAsync(string line, CancellationToken token)
+    {
+        TextMeshProUGUI logText = CreateLogSlot(line);
+
+        if (logText == null)
+        {
+            return;
+        }
+
+        _currentTypingLogText = logText;
+
         if (_logTypingIntervalMs <= 0)
         {
             logText.maxVisibleCharacters = line.Length;
+            _currentTypingLogText = null;
             return;
         }
 
@@ -538,6 +559,8 @@ public class BattleMainUI : UIBase
             logText.maxVisibleCharacters = i;
             await UniTask.Delay(_logTypingIntervalMs, cancellationToken: token);
         }
+
+        _currentTypingLogText = null;
     }
 
     // 진행 중인 로그 타이핑을 취소하고 대기 상태를 초기화한다 (DialogueUI.CancelTyping 방식)
@@ -553,6 +576,44 @@ public class BattleMainUI : UIBase
         _pendingLogQueue.Clear();
         _enqueuedLogCount = 0;
         _isLogTyping = false;
+    }
+
+    // 타자기 연출을 즉시 끝내고 남은 로그를 전부 한 번에 출력한다 (성급한 유저용)
+    private void SkipLogTyping()
+    {
+        if (_isLogTyping == false)
+        {
+            return;
+        }
+
+        if (_logTypingToken != null)
+        {
+            _logTypingToken.Cancel();
+            _logTypingToken.Dispose();
+            _logTypingToken = null;
+        }
+
+        if (_currentTypingLogText != null)
+        {
+            _currentTypingLogText.maxVisibleCharacters = _currentTypingLogText.text.Length;
+            _currentTypingLogText = null;
+        }
+
+        while (_pendingLogQueue.Count > 0)
+        {
+            string line = _pendingLogQueue.Dequeue();
+            TextMeshProUGUI logText = CreateLogSlot(line);
+
+            if (logText != null)
+            {
+                logText.maxVisibleCharacters = line.Length;
+            }
+        }
+
+        _isLogTyping = false;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(Transform_LogContent.GetComponent<RectTransform>());
+        ScrollToBottom();
     }
 
     // 테스트용 - 실제 전투 로직 연결 전까지 더미 로그 확인용, 이후 삭제 예정
@@ -618,6 +679,12 @@ public class BattleMainUI : UIBase
     //개입 턴을 마치고 다음 단계(큐 실행)로 넘어가겠다는 신호를 ViewModel에 전달
     private void OnClickEndTurn()
     {
+        if (_isLogTyping)
+        {
+            SkipLogTyping();
+            return;
+        }
+
         _viewModel.NotifyInterventionEnded();
     }
 

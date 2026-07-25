@@ -6,6 +6,7 @@ public class DayService
 {
     public event Action<int> OnChangeDay;
     public event Action<int> OnChangeHour;
+    public event Action OnEndDay;
 
     private const float _realTime = 5f;
     private float _time = 0f;
@@ -15,6 +16,13 @@ public class DayService
     public int CurrentHour
     {
         get => _currentHour;
+        set
+        {
+            if (_currentHour != value)
+            {
+                _currentHour = value;
+            }
+        }
     }
 
     // 프로퍼티
@@ -112,6 +120,11 @@ public class DayService
 
     public void UpdateTimer(float deltaTime)
     {
+        if (_isTimerPlaying == false)
+        {
+            return;
+        }
+
         _time += deltaTime;
 
         if (_time >= _realTime)
@@ -130,6 +143,7 @@ public class DayService
             _currentHour = 0;
             PauseTimer();
 
+            OnEndDay.Invoke();
             return;
         }
 

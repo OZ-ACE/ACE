@@ -11,8 +11,6 @@ public class HeroHotBar : MonoBehaviour
     private void Awake()
     {
         Button_Schedule.onClick.AddListener(OnClickSchedule);
-    
-        gameObject.SetActive(false);
     }
 
     private void OnDestroy()
