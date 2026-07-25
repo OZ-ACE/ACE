@@ -11,7 +11,7 @@
     "EffectType": null,
     "EffectDescription": "사무실 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Office",
-    "MaxCapacity": 1,
+    "MaxCapacity": 100,
     "RequiredRoomID": "Room_Sleep"
   },
   {
@@ -131,7 +131,7 @@
     "EffectType": "Battle",
     "EffectDescription": "휴게실 효과 설명문",
     "PrefabPath": "Prefabs/Room/Room_Battle",
-    "MaxCapacity": 1,
+    "MaxCapacity": 100,
     "RequiredRoomID": "Room_Office"
   },
   {

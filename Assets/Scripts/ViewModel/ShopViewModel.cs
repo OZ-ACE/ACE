@@ -167,24 +167,10 @@ public class ShopViewModel : ViewModelBase
 
 
         GameManager.Inst.Services.QuestService.ReportProgress(QuestConditionType.PurchaseItem, itemID, 1);
-        //SaveShop();
 
         Debug.Log($"[ShopViewModel] 구매 성공: {item.ItemName} ({item.Price}G) → 잔여 재고 {GetRemainStock(itemID)}");
         return PurchaseResult.Success;
     }
-
-    //// 상점 상태 저장
-    //private void SaveShop()
-    //{
-    //    PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-
-    //    if (player == null)
-    //    {
-    //        return;
-    //    }
-
-    //    SaveManager.Inst.RequestSaveData(player);
-    //}
 
     // ── 판매 ──
     // 아이템의 판매 가격 (구매가의 일정 비율)
