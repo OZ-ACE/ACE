@@ -7,7 +7,7 @@
     Night
 }
 
-public class SkyboxViewModel : ViewModelBase
+public class SkyViewModel : ViewModelBase
 {
     private SkyTime _currentState;
     public SkyTime CurrentState

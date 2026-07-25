@@ -34,8 +34,17 @@ public class ConstructSlot : MonoBehaviour
 
         Text_RoomName.text = roomData.Name;
         Text_Description.text = roomData.Description;
-        Text_Person.text = $"{roomData.MaxCapacity}명";
         Text_Cost.text = $"{roomData.BuildCost} G";
+
+        if (roomData.MaxCapacity >= 100)
+        {
+            Text_Person.gameObject.SetActive(false);
+        }
+        else
+        {
+            Text_Person.gameObject.SetActive(true);
+            Text_Person.text = $"{roomData.MaxCapacity}명";
+        }
 
         // 비활성 부모에서 Instantiate되면 Awake가 안 도니 여기서 등록
         Button_Select.onClick.RemoveListener(OnClickSelect);
