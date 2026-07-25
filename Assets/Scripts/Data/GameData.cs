@@ -71,6 +71,7 @@ public class HeroSkill : GameDataBase
     public string SkillNameEn;
     public string ActionType;
     public string SkillType;
+    public string AttackRangeType;
     public string TargetSelectType;
     public string TargetType;
     public int TargetCount;

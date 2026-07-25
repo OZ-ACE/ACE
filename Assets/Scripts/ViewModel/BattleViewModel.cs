@@ -19,6 +19,9 @@ public class BattleViewModel : ViewModelBase
     public event Action<BattleUnitModel> UnitHealVfxRequested;
     public event Action<List<BattleUnitModel>> HeroListChanged;
 
+    public event Func<BattleActionModel, CancellationToken, UniTask> UnitMeleeApproachRequested;
+    public event Func<BattleActionModel, CancellationToken, UniTask> UnitMeleeReturnRequested;
+
     private const int AttackAnimationDelayMilliseconds = 800;
     private const int HitAnimationDelayMilliseconds = 400;
     private const int ActionQueueStackDelayMilliseconds = 120;
@@ -600,8 +603,22 @@ public class BattleViewModel : ViewModelBase
                 return false;
             }
 
+            bool isMeleeAttack = IsMeleeAttack(action);
+
+            if (isMeleeAttack)
+            {
+                await InvokeMeleeMotionAsync(
+                    UnitMeleeApproachRequested,
+                    action,
+                    token);
+            }
+
             UnitAttackStarted?.Invoke(action.Unit);
-            UnitProjectileVfxRequested?.Invoke(action);
+
+            if (isMeleeAttack == false)
+            {
+                UnitProjectileVfxRequested?.Invoke(action);
+            }
 
             await UniTask.Delay(
                 AttackAnimationDelayMilliseconds,
@@ -613,6 +630,14 @@ public class BattleViewModel : ViewModelBase
             await UniTask.Delay(
                 HitAnimationDelayMilliseconds,
                 cancellationToken: token);
+
+            if (isMeleeAttack)
+            {
+                await InvokeMeleeMotionAsync(
+                    UnitMeleeReturnRequested,
+                    action,
+                    token);
+            }
 
             return true;
         }
@@ -895,6 +920,58 @@ public class BattleViewModel : ViewModelBase
         }
 
         return basePower * unit.AttackPowerModifierPercent / 100;
+    }
+
+    private bool IsMeleeAttack(BattleActionModel action)
+    {
+        if (action == null ||
+            action.Unit == null ||
+            action.Unit.IsHero == false ||
+            string.IsNullOrEmpty(action.SkillId))
+        {
+            return false;
+        }
+
+        HeroSkill heroSkill =
+            GameDataManager.Inst.GetData<HeroSkill>(action.SkillId);
+
+        if (heroSkill == null)
+        {
+            return false;
+        }
+
+        bool isParsed = Enum.TryParse(
+            heroSkill.AttackRangeType,
+            out AttackRangeType attackRangeType);
+
+        return isParsed &&
+            attackRangeType == AttackRangeType.Melee;
+    }
+
+    private async UniTask InvokeMeleeMotionAsync(
+        Func<BattleActionModel, CancellationToken, UniTask> motionHandler,
+        BattleActionModel action,
+        CancellationToken token)
+    {
+        if (motionHandler == null)
+        {
+            return;
+        }
+
+        Delegate[] handlerList = motionHandler.GetInvocationList();
+
+        foreach (Delegate handler in handlerList)
+        {
+            Func<BattleActionModel, CancellationToken, UniTask> motionCallback =
+                handler as Func<BattleActionModel, CancellationToken, UniTask>;
+
+            if (motionCallback == null)
+            {
+                continue;
+            }
+
+            await motionCallback(action, token);
+        }
     }
 
     //유닛 진영에 맞는 스킬 데이터에서 스킬 이름을 가져온다
