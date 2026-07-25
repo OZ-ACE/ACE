@@ -18,7 +18,7 @@ public class SkyView : MonoBehaviour
 
     [SerializeField] private SkySetting[] SkySettings;
 
-    private float _transitionDuration = 2f;
+    private float _transitionDuration = 3.5f;
     private SkyViewModel _skyVM;
     private CancellationTokenSource _skyCancel;
 
@@ -43,7 +43,7 @@ public class SkyView : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.Inst.Services.DayService.OnChangeDay -= OnHourChanged;
+        GameManager.Inst.Services.DayService.OnChangeHour -= OnHourChanged;
     }
 
     private void OnDestroy()
@@ -89,10 +89,10 @@ public class SkyView : MonoBehaviour
         CancelSky();
         _skyCancel = new CancellationTokenSource();
 
-        AnimateSkybox(targetSetting.SkySprite, _skyCancel).Forget();
+        AnimateSky(targetSetting.SkySprite, _skyCancel).Forget();
     }
 
-    private async UniTaskVoid AnimateSkybox(Sprite target, CancellationTokenSource cancel)
+    private async UniTaskVoid AnimateSky(Sprite target, CancellationTokenSource cancel)
     {
         SpriteRenderer_Fade.sprite = target;
         SpriteRenderer_Fade.color = new Color(1f, 1f, 1f, 0f);
@@ -104,7 +104,7 @@ public class SkyView : MonoBehaviour
             elapsedTime += Time.deltaTime;
 
             float t = Mathf.Clamp01(elapsedTime / _transitionDuration);
-            float alpha = Mathf.SmoothStep(0f, 1f, t);
+            float alpha = Mathf.Sin(t * Mathf.PI * 0.5f);
 
             SpriteRenderer_Fade.color = new Color(1f, 1f, 1f, alpha);
 
@@ -114,7 +114,6 @@ public class SkyView : MonoBehaviour
         SpriteRenderer_Sky.sprite = target;
         SpriteRenderer_Fade.color = new Color(1f, 1f, 1f, 0f);
     }
-
 
     private void CancelSky()
     {

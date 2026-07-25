@@ -1,4 +1,6 @@
-﻿public enum SkyTime
+﻿using UnityEngine;
+
+public enum SkyTime
 {
     None,
     Morning,
@@ -18,9 +20,8 @@ public class SkyViewModel : ViewModelBase
             if (_currentState != value)
             {
                 _currentState = value;
+                OnPropertyChanged(nameof(CurrentState));
             }
-
-            OnPropertyChanged(nameof(CurrentState));
         }
     }
 

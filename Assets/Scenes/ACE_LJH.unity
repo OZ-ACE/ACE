@@ -327,6 +327,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 28319404630115430, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 28319404630115430, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 28319404630115430, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 28319404630115430, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.9
+      objectReference: {fileID: 0}
     - target: {fileID: 3483180786397676280, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -374,6 +390,22 @@ PrefabInstance:
     - target: {fileID: 4123984109736246086, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_Name
       value: Environment
+      objectReference: {fileID: 0}
+    - target: {fileID: 4733882419165312113, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4733882419165312113, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4733882419165312113, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4733882419165312113, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.9
       objectReference: {fileID: 0}
     - target: {fileID: 5383530845467613840, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -440,6 +472,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: SkySettings.Array.data[4].State
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[0].LightColor.b
       value: 1
       objectReference: {fileID: 0}
@@ -492,6 +528,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 772a63d3fbea27249813204222dd5885, type: 3}
     - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: SkySettings.Array.data[4].SkySprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 772a63d3fbea27249813204222dd5885, type: 3}
+    - target: {fileID: 5503642910203765700, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: Settings.Array.data[0].LightIntensity
       value: 1
       objectReference: {fileID: 0}
@@ -510,6 +550,10 @@ PrefabInstance:
     - target: {fileID: 5702820383878516382, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_CameraType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8327554973431093767, guid: e5551d76a55055145b5cc197c092860b, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8723681498635524471, guid: e5551d76a55055145b5cc197c092860b, type: 3}
       propertyPath: m_ClearFlags
