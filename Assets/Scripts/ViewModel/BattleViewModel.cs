@@ -12,6 +12,7 @@ public class BattleViewModel : ViewModelBase
 
     public event Action<BattleUnitModel> UnitHpChanged;
     public event Action<BattleUnitModel> UnitAttackStarted;
+    public event Action<BattleUnitModel> UnitSkillStarted;
     public event Action<BattleUnitModel> UnitHit;
     public event Action<BattleUnitModel> UnitDied;
     public event Action<BattleUnitModel> UnitHitVfxRequested;
@@ -452,6 +453,17 @@ public class BattleViewModel : ViewModelBase
         {
             AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - 공격 가능한 대상이 없어 행동이 불발됩니다."));
             return;
+        }
+
+        if (action.Unit.IsHero &&
+            (action.ActionType == ActionType.Support ||
+            action.ActionType == ActionType.Defend))
+        {
+            UnitSkillStarted?.Invoke(action.Unit);
+
+            await UniTask.Delay(
+                AttackAnimationDelayMilliseconds,
+                cancellationToken: token);
         }
 
         ApplySkillModifier(action);
