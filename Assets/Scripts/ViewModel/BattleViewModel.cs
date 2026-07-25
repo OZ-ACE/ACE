@@ -457,10 +457,10 @@ public class BattleViewModel : ViewModelBase
             {
                 AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - '{triggeredPenalty.TriggerSkillName}' 반복 사용! {triggeredPenalty.PenaltyName} 발동 ({triggeredPenalty.DurationRounds}라운드 동안 스킬이 봉인됩니다.)"));
             }
-            else if (wasPenalizedBefore == false)
+            else if (wasPenalizedBefore == false && action.Unit.IsHero)
             {
                 string usedSkillName = GetSkillName(action.Unit, action.SkillId);
-                AddBattleLog(ApplyEnemyLogColor(action.Unit, $"{unitName} - '{usedSkillName}' 연속 {action.Unit.RepeatSkillCount}회째"));
+                AddBattleLog($"{unitName} - '{usedSkillName}' 연속 {action.Unit.RepeatSkillCount}회째");
             }
         }
 
