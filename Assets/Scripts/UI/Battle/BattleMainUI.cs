@@ -182,6 +182,7 @@ public class BattleMainUI : UIBase
         _viewModel.UnitHitVfxRequested += OnUnitHitVfxRequested;
         _viewModel.UnitProjectileVfxRequested += OnUnitProjectileVfxRequested;
         _viewModel.UnitHealVfxRequested += OnUnitHealVfxRequested;
+        _viewModel.UnitSupportVfxRequested += OnUnitSupportVfxRequested;
         _viewModel.UnitMeleeApproachRequested += OnUnitMeleeApproachRequested;
         _viewModel.UnitMeleeReturnRequested += OnUnitMeleeReturnRequested;
         _viewModel.HeroListChanged += HandleHeroListChanged;
@@ -330,6 +331,16 @@ public class BattleMainUI : UIBase
         _battleVfxController.PlayHealVfxAsync(unit).Forget();
     }
 
+    private void OnUnitSupportVfxRequested(BattleUnitModel unit)
+    {
+        if (_battleVfxController == null || unit == null)
+        {
+            return;
+        }
+
+        _battleVfxController.PlaySupportVfxAsync(unit).Forget();
+    }
+
     private async UniTask OnUnitMeleeApproachRequested(
         BattleActionModel action,
         CancellationToken token)
@@ -394,6 +405,7 @@ public class BattleMainUI : UIBase
             _viewModel.UnitHitVfxRequested -= OnUnitHitVfxRequested;
             _viewModel.UnitProjectileVfxRequested -= OnUnitProjectileVfxRequested;
             _viewModel.UnitHealVfxRequested -= OnUnitHealVfxRequested;
+            _viewModel.UnitSupportVfxRequested -= OnUnitSupportVfxRequested;
             _viewModel.UnitMeleeApproachRequested -= OnUnitMeleeApproachRequested;
             _viewModel.UnitMeleeReturnRequested -= OnUnitMeleeReturnRequested;
             _viewModel.HeroListChanged -= HandleHeroListChanged;

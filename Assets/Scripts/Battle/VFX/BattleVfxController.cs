@@ -7,6 +7,7 @@ public class BattleVfxController : MonoBehaviour
 {
     private const string CommonHitVfxAddress = "BattleVFX_CommonHit";
     private const string EnemyMuzzleVfxAddress = "BattleVFX_Enemy01Muzzle";
+    private const string SupportBuffVfxAddress = "BattleVFX_SupportBuff";
 
     [Header("전투 유닛 참조")]
     [SerializeField] private EnemySpawner _enemySpawner;
@@ -79,6 +80,27 @@ public class BattleVfxController : MonoBehaviour
 
         await PlayChildParticleVfxAsync(
             HealingBuffVfxAddress,
+            vfxPoint);
+    }
+
+    public async UniTask PlaySupportVfxAsync(BattleUnitModel unit)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        bool hasVfxPoint = TryGetUnitVfxPoint(
+            unit,
+            out Transform vfxPoint);
+
+        if (hasVfxPoint == false || vfxPoint == null)
+        {
+            return;
+        }
+
+        await PlayChildParticleVfxAsync(
+            SupportBuffVfxAddress,
             vfxPoint);
     }
 
