@@ -1,0 +1,272 @@
+[
+  {
+    "ID": "Tutorial_01_01",
+    "GroupID": "Tutorial_01",
+    "TutorialName": "화면 이동",
+    "Text": "화면 이동은 WASD로 상하좌우 이동 가능하며 마우스 휠 클릭 드래그 로도 이동 가능합니다",
+    "TriggerType": "TycoonEnter",
+    "TriggerValue": null,
+    "Order": 1,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_01_02",
+    "GroupID": "Tutorial_01",
+    "TutorialName": "오늘의 업무 확인",
+    "Text": "화면 우측 최상단 버튼으로 오늘의 업무(퀘스트)를 확인할 수 있습니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 2,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_01_03",
+    "GroupID": "Tutorial_01",
+    "TutorialName": "방의 설치 1",
+    "Text": "방의 설치는 화면 우측 상단부터 4번째 버튼으로 건설모드로 진입이 가능합니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 3,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_01_04",
+    "GroupID": "Tutorial_01",
+    "TutorialName": "방의 설치 2",
+    "Text": "원하는 방을 클릭하면 커서를 흰색 건축영역으로 이동하면 방이 차지하는 공간만큼 청사진이 나타납니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 4,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_01_05",
+    "GroupID": "Tutorial_01",
+    "TutorialName": "방의 설치 3",
+    "Text": "원하는 위치에 클릭을 하여 금액을 지불하고 건설합니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 5,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_03_01",
+    "GroupID": "Tutorial_03",
+    "TutorialName": "사무실 설명 1",
+    "Text": "타이쿤 화면 상 사무실을 클릭하면 사무실 방으로 화면을 이동합니다.",
+    "TriggerType": "QuestReward",
+    "TriggerValue": "Quest_01_02",
+    "Order": 1,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_03_02",
+    "GroupID": "Tutorial_03",
+    "TutorialName": "사무실 설명 2",
+    "Text": "사무실 내에는 여러가지 상호작용이 가능합니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 2,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_03_03",
+    "GroupID": "Tutorial_03",
+    "TutorialName": "사무실 설명(상점)",
+    "Text": "사무실 내 쇼핑카트를 클릭하면 상점 창으로 이동합니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 3,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_03_04",
+    "GroupID": "Tutorial_03",
+    "TutorialName": "사무실 설명(영입하기)",
+    "Text": "사무실 내 서류를 클릭하면 영입 가능한 영웅의 목록을 볼 수 있으며 영입하기를 통해 시설 입소가 가능합니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 4,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_03_05",
+    "GroupID": "Tutorial_03",
+    "TutorialName": "사무실 설명(턴 넘기기)",
+    "Text": "사무실 내 모래시계를 클릭하면 하루가 지나가며 정산을 합니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 5,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_03_06",
+    "GroupID": "Tutorial_03",
+    "TutorialName": "사무실 설명(나가기)",
+    "Text": "사무실 내 문을 클릭하면 타이쿤 화면으로 나갑니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 6,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_03_07",
+    "GroupID": "Tutorial_03",
+    "TutorialName": "영웅 영입하기 1",
+    "Text": "우선은 영웅을 먼저 영입합시다.\n사무실 내 서류를 클릭하고, 원하는 영웅을 클릭합니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 7,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_03_08",
+    "GroupID": "Tutorial_03",
+    "TutorialName": "영웅 영입하기 2",
+    "Text": "타이쿤 화면에서 푸른색으로 활성화된 비어있는 침실에 배치합니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 8,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_05_01",
+    "GroupID": "Tutorial_05",
+    "TutorialName": "일정 수정하기 1",
+    "Text": "화면 우측 상단으로 부터 3번째 버튼(하트모양)으로 환자의 일정 수정이 가능합니다",
+    "TriggerType": "QuestReward",
+    "TriggerValue": "Quest_01_03",
+    "Order": 1,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_05_02",
+    "GroupID": "Tutorial_05",
+    "TutorialName": "일정 수정하기 2",
+    "Text": "휴식, 수면, 운동 등 원하는 활동을 클릭하고 좌측 시간을 클릭하면 일정을 배정할 수 있습니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 2,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_05_03",
+    "GroupID": "Tutorial_05",
+    "TutorialName": "일정 수정하기 3",
+    "Text": "배정된 일정을 수행하려면 알맞은 방의 설치가 필요합니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 3,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_05_04",
+    "GroupID": "Tutorial_05",
+    "TutorialName": "일정 수정하기 4",
+    "Text": "일정에 맞는 방이 없을 경우 환자의 만족도가 하락합니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 4,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_06_01",
+    "GroupID": "Tutorial_06",
+    "TutorialName": "하루 마감 1",
+    "Text": "하루에 한번 전투를 완료하면 사무실 방 내 모래시계를 눌러 마감 정산을 통해 다음날로 넘어갈 수 있습니다.",
+    "TriggerType": "QuestReward",
+    "TriggerValue": "Quest_01_04",
+    "Order": 1,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_06_02",
+    "GroupID": "Tutorial_06",
+    "TutorialName": "하루 마감 2",
+    "Text": "전체 평가 등급 D를 2일 이상 받으면 게임오버가 됩니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 2,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_07_01",
+    "GroupID": "Tutorial_07",
+    "TutorialName": "전투 설명 1",
+    "Text": "타이쿤 화면 상 VR 방을 클릭하면 전투화면으로 이동합니다.",
+    "TriggerType": "QuestReward",
+    "TriggerValue": "Quest_01_05",
+    "Order": 1,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_07_02",
+    "GroupID": "Tutorial_07",
+    "TutorialName": "전투 설명 2",
+    "Text": "입소한 환자들의 명단 중 가상 전투에 내보내길 원하는 3명을 클릭하고 확인 합니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 2,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_07_03",
+    "GroupID": "Tutorial_07",
+    "TutorialName": "전투 설명 3",
+    "Text": "전투는 자동으로 진행되며 속도 수치에 따라 행동 순서가 결정됩니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 3,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_07_04",
+    "GroupID": "Tutorial_07",
+    "TutorialName": "전투 설명 4",
+    "Text": "플레이어는 전투 훈련 중에 개입을 할 수 있습니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 4,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_07_05",
+    "GroupID": "Tutorial_07",
+    "TutorialName": "전투 설명 5",
+    "Text": "지원하기 – 도구를 사용하여 지원하여 상태이상을 제거합니다. 에너지를 1 소모합니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 5,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_07_06",
+    "GroupID": "Tutorial_07",
+    "TutorialName": "전투 설명 6",
+    "Text": "회복하기 – 아이템를 사용하여 체력을 회복합니다. 에너지를 2 소모합니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 6,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_07_07",
+    "GroupID": "Tutorial_07",
+    "TutorialName": "전투 설명 7",
+    "Text": "영웅변경 – 대기중인 다른 영웅으로 교체할 수 있습니다.에너지를 2을 소모합니다",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 7,
+    "ImagePath": null
+  },
+  {
+    "ID": "Tutorial_07_08",
+    "GroupID": "Tutorial_07",
+    "TutorialName": "전투 설명 8",
+    "Text": "턴 종료 – 턴을 넘기려면 턴 종료 버튼을 누릅니다. 대기열에 따라 자동 전투가 진행됩니다.",
+    "TriggerType": null,
+    "TriggerValue": null,
+    "Order": 8,
+    "ImagePath": null
+  }
+]

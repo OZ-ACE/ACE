@@ -40,6 +40,14 @@ public class TutorialViewModel : ViewModelBase
             }
         }
     }
+    public string CurrentTitle
+    {
+        get
+        {
+            if (_pages == null || _pageIndex >= _pages.Count) { return string.Empty; }
+            return _pages[_pageIndex].TutorialName;
+        }
+    }
     public void SetTutorial(List<Tutorial> pages)
     {
         _pages = pages;
@@ -48,6 +56,7 @@ public class TutorialViewModel : ViewModelBase
         OnPropertyChanged(nameof(CurrentImagePath));
         OnPropertyChanged(nameof(CurrentText));
         OnPropertyChanged(nameof(IsIgnoreChecked));
+        OnPropertyChanged(nameof(CurrentTitle));
     }
     public bool GoNextPage()
     {
@@ -90,4 +99,6 @@ public class TutorialViewModel : ViewModelBase
         OnPropertyChanged(nameof(CurrentText));
         return true;
     }
+
+
 }

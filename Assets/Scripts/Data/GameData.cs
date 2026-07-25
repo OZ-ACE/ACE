@@ -193,9 +193,11 @@ public class FurnitureData : GameDataBase
 [Serializable]
 public class Tutorial : GameDataBase
 {
-    public string TriggerType;    // "TycoonEnter" | "QuestReward"
-    public string TriggerValue;   // QuestReward면 퀘스트 ID
-    public int Order;             // 같은 트리거 안에서 페이지 순서
-    public string ImagePath;
+    public string GroupID;       // 같은 튜토리얼 묶음 (여러 장)
+    public string TutorialName;  // 페이지 제목
     public string Text;
+    public string TriggerType;   // 그룹의 첫 장에만 채우면 됨
+    public string TriggerValue;  // QuestReward면 퀘스트 ID
+    public int Order;            // 그룹 내 페이지 순서
+    public string ImagePath;
 }

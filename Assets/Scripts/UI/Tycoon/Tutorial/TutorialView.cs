@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class TutorialView : ViewBase
 {
     [Header("내용")]
+    [SerializeField] private TextMeshProUGUI Text_Title;
     [SerializeField] private Image Image_Tutorial;
     [SerializeField] private TextMeshProUGUI Text_Description;
     [Header("버튼/체크박스")]
@@ -58,6 +59,10 @@ public class TutorialView : ViewBase
         if (Toggle_Ignore != null)
         {
             Toggle_Ignore.SetIsOnWithoutNotify(_viewModel.IsIgnoreChecked);
+        }
+        if (Text_Title != null)
+        {
+            Text_Title.text = _viewModel.CurrentTitle;
         }
     }
     private async UniTask SetImage(string path)

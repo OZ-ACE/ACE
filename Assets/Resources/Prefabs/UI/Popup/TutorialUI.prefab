@@ -959,9 +959,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de289c19777e16246bf39d5e2840043b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialView
+  Text_Title: {fileID: 287498758865192211}
   Image_Tutorial: {fileID: 3961230742701175328}
   Text_Description: {fileID: 2422434105113910696}
   Button_Next: {fileID: 4618814207529206712}
+  Button_Prev: {fileID: 7180217759992181002}
   Toggle_Ignore: {fileID: 2234347979222057662}
 --- !u!1 &7667793339209643691
 GameObject:
@@ -1403,13 +1405,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8452054073505864180, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_Name
-      value: Reset Button
+      value: prev Button
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
+--- !u!114 &7180217759992181002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3778551679632774493, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
+  m_PrefabInstance: {fileID: 6329069000131044439}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!224 &8393091428650399370 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2571307544323183325, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}

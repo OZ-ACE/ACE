@@ -71,6 +71,8 @@ public static class UIExtension
     public static void CloseLoadingUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIType.LoadingUI);
+        GameManager.Inst.Services.TutorialService.TryShowTutorial(TutorialTriggerType.TycoonEnter, string.Empty);
+
     }
 
     public static void OpenNamePopup(this UIManager uIManager)
@@ -119,6 +121,8 @@ public static class UIExtension
         uIManager.OpenUI(UIRootType.Main, UIType.TycoonMainUI);
         ObjectManager.Inst.CreateBuildGridView();
         ObjectManager.Inst.ShowGridView();
+
+
     }
 
     public static void CloseTycoonMainUI(this UIManager uIManager)
