@@ -20,6 +20,7 @@ public class HeroMovingAgent : MonoBehaviour
 
     private GridSystem _gridSystem;
     private BuildGridViewModel _buildVM;
+    private PlacedRoomData _reservedRoom;
     private PlacedRoomData _currentRoom;
 
     private CancellationTokenSource _movingToken;
@@ -117,29 +118,17 @@ public class HeroMovingAgent : MonoBehaviour
     {
         ScheduleState state = _heroModel.HourlyStates[hour];
 
-        LeaveCurrentRoom();
-
-        Vector3 targetPos = GetRoomPosition(state);
+        Vector3 targetPos = GetRoomPosition(state, out PlacedRoomData targetRoomData);
 
         TycoonState nextState = TycoonState.Idle;
-        if (state == ScheduleState.Rest)
-        {
-            nextState = TycoonState.Rest;
-        }
-        else if (state == ScheduleState.Gym)
-        {
-            nextState = TycoonState.Gym;
-        }
-        else if (state == ScheduleState.Sleep)
-        {
-            nextState = TycoonState.Idle;
-        }
+        if (state == ScheduleState.Rest) nextState = TycoonState.Rest;
+        else if (state == ScheduleState.Gym) nextState = TycoonState.Gym;
 
-        if (targetPos == Vector3.zero)
+        if (targetPos == Vector3.zero || targetRoomData == null)
         {
             Debug.Log($"방 없음 {_heroModel.Name}");
+            CancelReservation();
             ApplyPenalty(state, 3, 0);
-
             ChangeState(TycoonState.Idle);
             return;
         }
@@ -147,20 +136,19 @@ public class HeroMovingAgent : MonoBehaviour
         if (IsPathInvalid(targetPos))
         {
             Debug.Log($"끊어진 길 {_heroModel.Name}");
-            ApplyPenalty(state,0, 3);
+            CancelReservation();
+            ApplyPenalty(state, 0, 3);
 
             if (Agent_Hero.isOnNavMesh)
             {
                 Agent_Hero.ResetPath();
             }
 
-            LeaveCurrentRoom();
-
             ChangeState(TycoonState.Idle);
             return;
         }
 
-        StartMoving(targetPos, nextState).Forget();
+        StartMoving(targetPos, targetRoomData, nextState).Forget();
     }
 
     private void ApplyPenalty(ScheduleState state, int penaltyAffection, int penaltySatisfaction)
@@ -199,24 +187,31 @@ public class HeroMovingAgent : MonoBehaviour
     {
         if (_currentRoom != null)
         {
-            _currentRoom.UnregisterUser(_heroModel.HeroID);
+            _currentRoom.LeaveRoom(_heroModel.HeroID);
             _currentRoom = null;
         }
     }
 
-    private async UniTask StartMoving(Vector3 targetPos, TycoonState targetState)
+    private async UniTask StartMoving(Vector3 targetPos, PlacedRoomData targetRoomData, TycoonState targetState)
     {
-        if (_movingToken != null)
-        {
-            CancelMoving();
-        }
-
+        CancelMoving();
         _movingToken = new CancellationTokenSource();
 
         ChangeState(TycoonState.Walking);
         SetDestination(targetPos);
 
-        await UniTask.WaitUntil(IsArrived, cancellationToken: _movingToken.Token);
+        bool isCanceled = await UniTask.WaitUntil(IsArrived, cancellationToken: _movingToken.Token).SuppressCancellationThrow();
+
+        if (isCanceled)
+        {
+            return;
+        }
+
+        LeaveCurrentRoom();
+
+        _currentRoom = targetRoomData;
+        _currentRoom.EnterRoom(_heroModel.HeroID);
+        _reservedRoom = null;
 
         ChangeState(targetState);
     }
@@ -229,8 +224,9 @@ public class HeroMovingAgent : MonoBehaviour
         }
     }
 
-    public Vector3 GetRoomPosition(ScheduleState state)
+    public Vector3 GetRoomPosition(ScheduleState state, out PlacedRoomData selectedRoom)
     {
+        selectedRoom = null;
         RefreshBuildViewModel();
 
         if (_buildVM == null)
@@ -261,35 +257,36 @@ public class HeroMovingAgent : MonoBehaviour
 
             if (isTargetRoom)
             {
-                Vector3 originWorld = _gridSystem.GetWorldPosition(data.Origin);
-                RoomData roomData = GameDataManager.Inst.GetData<RoomData>(data.RoomId);
-
-                Vector3 targetPos = originWorld;
-
-                if (roomData != null)
+                if (data.ReserveSpot(_heroModel.HeroID))
                 {
-                    Vector2 size = roomData.GetSize();
-                    float totalWidth = size.x * _gridSystem.CellWidth;
+                    _reservedRoom = data;
+                    selectedRoom = data;
 
-                    float offsetX = _gridSystem.CellWidth * 0.4f;
-                    float randomX = Random.Range(offsetX, totalWidth - offsetX);
+                    Vector3 originWorld = _gridSystem.GetWorldPosition(data.Origin);
+                    RoomData roomData = GameDataManager.Inst.GetData<RoomData>(data.RoomId);
+                    Vector3 targetPos = originWorld;
 
-                    Vector3 calculatedPos = new Vector3(originWorld.x + randomX, originWorld.y, originWorld.z);
-
-                    if (NavMesh.SamplePosition(calculatedPos, out NavMeshHit hit, 0.5f, NavMesh.AllAreas))
+                    if (roomData != null)
                     {
-                        targetPos = hit.position;
+                        Vector2 size = roomData.GetSize();
+                        float totalWidth = size.x * _gridSystem.CellWidth;
+                        float offsetX = _gridSystem.CellWidth * 0.4f;
+                        float randomX = Random.Range(offsetX, totalWidth - offsetX);
+
+                        Vector3 calculatedPos = new Vector3(originWorld.x + randomX, originWorld.y, originWorld.z);
+
+                        if (NavMesh.SamplePosition(calculatedPos, out NavMeshHit hit, 0.5f, NavMesh.AllAreas))
+                        {
+                            targetPos = hit.position;
+                        }
+                        else
+                        {
+                            targetPos = calculatedPos;
+                        }
                     }
-                    else
-                    {
-                        targetPos = calculatedPos;
-                    }
+
+                    return targetPos;
                 }
-
-                data.RegisterUser(_heroModel.HeroID);
-                _currentRoom = data;
-
-                return targetPos;
             }
         }
 
@@ -331,6 +328,15 @@ public class HeroMovingAgent : MonoBehaviour
             _movingToken.Cancel();
             _movingToken.Dispose();
             _movingToken = null;
+        }
+    }
+
+    private void CancelReservation()
+    {
+        if (_reservedRoom != null)
+        {
+            _reservedRoom.CancelReservation(_heroModel.HeroID);
+            _reservedRoom = null;
         }
     }
 

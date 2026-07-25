@@ -9,8 +9,10 @@ public class PlacedRoomData
     public string RoomId;    // RoomData.ID (어떤 방인지)
     public GridCoord Origin; // 방의 좌하단 기준 좌표 (어디에)
 
-    private HashSet<string> _currentUsers = new HashSet<string>();
-    public int CurrentCount => _currentUsers.Count;
+    private HashSet<string> _reserveHero = new HashSet<string>();
+    private HashSet<string> _currentHero = new HashSet<string>();
+
+    public int CurrentCount => _currentHero.Count;
 
     public event Action OnUserCountChanged;
 
@@ -25,27 +27,46 @@ public class PlacedRoomData
 
     public bool CanUse()
     {
-        return _currentUsers.Count < MaxCapacity;
+        return (_reserveHero.Count + _currentHero.Count) < MaxCapacity;
     }
 
-    public bool RegisterUser(string heroID)
+    public bool ReserveSpot(string heroID)
     {
-        if (!CanUse() && !_currentUsers.Contains(heroID))
+        if (!CanUse())
         {
             return false;
         }
 
-        _currentUsers.Add(heroID);
-
-        OnUserCountChanged?.Invoke();
+        _reserveHero.Add(heroID);
         return true;
     }
 
-    public void UnregisterUser(string heroID)
+    public void CancelReservation(string heroID)
     {
-        _currentUsers.Remove(heroID);
+        _reserveHero.Remove(heroID);
+    }
 
-        OnUserCountChanged?.Invoke();
+    public bool EnterRoom(string heroID)
+    {
+        _reserveHero.Remove(heroID);
+
+        bool added = _currentHero.Add(heroID);
+        if (added)
+        {
+            OnUserCountChanged?.Invoke();
+        }
+        return added;
+    }
+
+    public void LeaveRoom(string heroID)
+    {
+        _reserveHero.Remove(heroID);
+
+        bool removed = _currentHero.Remove(heroID);
+        if (removed)
+        {
+            OnUserCountChanged?.Invoke();
+        }
     }
 }
 
