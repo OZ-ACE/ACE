@@ -12,6 +12,7 @@ public class PlayerModel
     public bool IsBattleDoneToday;
     public int LowGrade;
     public EndingType EndingType;
+    public bool IsTutorialDisabled; // 이미 본 튜토리얼
 
     public BuildGridData BuildGridData = new BuildGridData();
     public List<ItemModel> Inventory = new List<ItemModel>();
@@ -25,6 +26,8 @@ public class PlayerModel
     public List<DailyEvaluationRecord> DailyEvaluations = new List<DailyEvaluationRecord>();
 
     public List<FurnitureProgressModel> FurnitureProgressList = new List<FurnitureProgressModel>();
+    public List<string> ShownTutorialIds = new List<string>();
+
     public List<PendingHeroData> PendingHeroes = new List<PendingHeroData>();
 }
 
