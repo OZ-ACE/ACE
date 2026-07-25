@@ -757,8 +757,13 @@ MonoBehaviour:
   _enemySpawner: {fileID: 6544233496226948705}
   _magicArrowVfxAddress: BattleVFX_MagicArrow
   _fireballVfxAddress: BattleVFX_Fireball
+  _realityPunchVfxAddress: BattleVFX_RealityPunch
+  _shieldProjectileVfxAddress: BattleVFX_ShieldProjectile
+  _hammerProjectileVfxAddress: BattleVFX_HammerProjectile
+  _almondProjectileVfxAddress: BattleVFX_AlmondProjectile
   _projectileMoveDuration: 0.5
   _fireballLaunchDelay: 0.4
+  _realityPunchLaunchDelay: 0.4
 --- !u!1001 &731156228390100
 PrefabInstance:
   m_ObjectHideFlags: 0
