@@ -52,6 +52,9 @@ public class BattleMainUI : UIBase
     [SerializeField] private Button Button_Help;
     [SerializeField] private HelpGuideUI Panel_HelpGuide;
 
+    private const string HeroActionSlotPrefabPath = "Prefabs/UI/BattleActionSlot";
+    private const string EnemyActionSlotPrefabPath = "Prefabs/UI/BattleActionSlot_Enemy";
+
     private const int ReinforceEnergyCost = 1; 
     private const int ChangeUnitEnergyCost = 2; 
     private const int HealUnitEnergyCost = 2; 
@@ -409,7 +412,8 @@ public class BattleMainUI : UIBase
             return;
         }
 
-        GameObject loadedObj = (GameObject)Resources.Load("Prefabs/UI/BattleActionSlot");
+        string prefabPath = action.Unit.IsHero ? HeroActionSlotPrefabPath : EnemyActionSlotPrefabPath;
+        GameObject loadedObj = (GameObject)Resources.Load(prefabPath);
         GameObject slotObj = Instantiate(loadedObj, Transform_ActionQueueContent);
 
         BattleActionSlot slot = slotObj.GetComponent<BattleActionSlot>();
