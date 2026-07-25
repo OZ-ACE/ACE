@@ -176,6 +176,7 @@ public class BattleMainUI : UIBase
         _viewModel.PropertyChanged += OnPropertyChanged_View;
         _viewModel.UnitHpChanged += OnUnitHpChanged;
         _viewModel.UnitAttackStarted += OnUnitAttackStarted;
+        _viewModel.UnitSkillStarted += OnUnitSkillStarted;
         _viewModel.UnitHit += OnUnitHit;
         _viewModel.UnitDied += OnUnitDied;
         _viewModel.UnitHitVfxRequested += OnUnitHitVfxRequested;
@@ -263,6 +264,18 @@ public class BattleMainUI : UIBase
         }
     }
 
+    private void OnUnitSkillStarted(BattleUnitModel unit)
+    {
+        if (unit == null || unit.IsHero == false)
+        {
+            return;
+        }
+
+        if (BattleHeroSpawner.Inst != null)
+        {
+            BattleHeroSpawner.Inst.PlaySkillAnimation(unit);
+        }
+    }
 
     private void OnUnitHit(BattleUnitModel unit)
     {
@@ -375,6 +388,7 @@ public class BattleMainUI : UIBase
             _viewModel.PropertyChanged -= OnPropertyChanged_View;
             _viewModel.UnitHpChanged -= OnUnitHpChanged;
             _viewModel.UnitAttackStarted -= OnUnitAttackStarted;
+            _viewModel.UnitSkillStarted -= OnUnitSkillStarted;
             _viewModel.UnitHit -= OnUnitHit;
             _viewModel.UnitDied -= OnUnitDied;
             _viewModel.UnitHitVfxRequested -= OnUnitHitVfxRequested;
