@@ -1,4 +1,6 @@
 ﻿// 퀘스트 뷰모델을 생성 및 보관, 진행도 보고
+using System;
+
 public class QuestService
 {
     private QuestViewModel _questViewModel;

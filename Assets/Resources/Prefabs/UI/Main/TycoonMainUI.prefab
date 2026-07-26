@@ -5857,6 +5857,7 @@ MonoBehaviour:
   Text_Memory: {fileID: 6139886496297560485}
   Sprite_Select: {fileID: -1327821776, guid: 3965c42e7356a0346b9344c32c7f1f99, type: 3}
   Sprite_Unselect: {fileID: 102820231, guid: 8a47cb1cbaf86f14e8e9c43666cb735a, type: 3}
+  Badge_Quest: {fileID: 1909668158508241900}
 --- !u!1 &8806214983761165976
 GameObject:
   m_ObjectHideFlags: 0
@@ -7841,6 +7842,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!114 &1909668158508241900 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7995673646420302634, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
+  m_PrefabInstance: {fileID: 8392132188305852614}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02a2af9bbd40bcc4fa73fd868876f7fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotificationBadge
 --- !u!114 &4613598587461311899 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3778551679632774493, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}

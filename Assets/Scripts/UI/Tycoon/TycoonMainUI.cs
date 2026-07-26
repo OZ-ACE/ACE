@@ -32,6 +32,8 @@ public class TycoonMainUI : UIBase
         public Image BackgroundImage;
     }
 
+    [SerializeField] private NotificationBadge Badge_Quest;
+
     [Header("버튼")]
     [SerializeField] Button Button_Quest;
     [SerializeField] Button Button_Inventory;
@@ -61,6 +63,11 @@ public class TycoonMainUI : UIBase
     [Header("이미지")]
     [SerializeField] private Sprite Sprite_Select;
     [SerializeField] private Sprite Sprite_Unselect;
+
+
+    private bool _hasNewQuest;
+    private bool _hasHeroRequest;
+    private HeroRequestService _heroRequestService;
 
     public Action OnCloseSetting;
 
@@ -93,11 +100,22 @@ public class TycoonMainUI : UIBase
         GameManager.Inst.Services.DayService.OnChangeDay += OnChangeDay;
         GameManager.Inst.Services.DayService.OnChangeHour += OnChangeHour;
         GameManager.Inst.Services.DayService.OnEndDay += EndDay;
+        GameManager.Inst.Services.QuestService.GetQuestViewModel().OnChangeQuestProgress += OnQuestCompleted;
+
+        _heroRequestService = GameManager.Inst.Services.HeroRequestService;
+
+        if (_heroRequestService != null)
+        {
+            _heroRequestService.OnHeroRequestChanged += OnHeroRequestChanged;
+        }
+
         SetGoldText();
         SetMemory();
         SetDayText();
         ChangePanel(TycoonPanelType.Quest);
         SetWarning();
+
+        OnHeroRequestChanged();
 
         GameManager.Inst.Services.DayService.StartTimer();
     }
@@ -108,9 +126,16 @@ public class TycoonMainUI : UIBase
         {
             GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetGoldText;
             GameManager.Inst.Services.CurrencyService.OnChangeCurrency -= SetMemory;
+
             GameManager.Inst.Services.DayService.OnChangeDay -= OnChangeDay;
             GameManager.Inst.Services.DayService.OnChangeHour -= OnChangeHour;
             GameManager.Inst.Services.DayService.OnEndDay -= EndDay;
+            GameManager.Inst.Services.QuestService.GetQuestViewModel().OnChangeQuestProgress -= OnQuestCompleted;
+        }
+
+        if (_heroRequestService != null)
+        {
+            _heroRequestService.OnHeroRequestChanged -= OnHeroRequestChanged;
         }
     }
 
@@ -136,6 +161,8 @@ public class TycoonMainUI : UIBase
     {
         if (GameManager.Inst.Services.DayService.CurrentHour < 24)
         {
+            SetNewQuestNotification(false);
+
             ChangePanel(TycoonPanelType.Quest);
         }
     }
@@ -285,5 +312,58 @@ public class TycoonMainUI : UIBase
 
         HeroUI heroUI = Panel_Hero.GetComponent<HeroUI>();
         heroUI.OpenHeroSchedule(heroId);
+    }
+
+    private void OnHeroRequestChanged()
+    {
+        HeroRequestModel request = _heroRequestService?.CurrentRequest;
+
+        _hasHeroRequest = request != null && (HeroRequestState)request.State == HeroRequestState.InProgress;
+
+        RefreshQuestBadge();
+    }
+
+    public void SetNewQuestNotification(bool hasNewQuest)
+    {
+        _hasNewQuest = hasNewQuest;
+        RefreshQuestBadge();
+    }
+
+    private void RefreshQuestBadge()
+    {
+        if (Badge_Quest == null)
+        {
+            return;
+        }
+
+        if (_hasHeroRequest)
+        {
+            Badge_Quest.SetNotification(NotificationType.HeroRequest);
+            return;
+        }
+
+        if (_hasNewQuest)
+        {
+            Badge_Quest.SetNotification(NotificationType.New);
+            return;
+        }
+
+        Badge_Quest.SetNotification(NotificationType.None);
+    }
+
+    private void OnQuestCompleted()
+    {
+        QuestViewModel viewmodel = GameManager.Inst.Services.QuestService.GetQuestViewModel();
+
+        foreach (QuestData quest in viewmodel.GetVisibleQuestList())
+        {
+            if (viewmodel.IsClaimable(quest.ID))
+            {
+                SetNewQuestNotification(true);
+                return;
+            }
+        }
+
+        SetNewQuestNotification(false);
     }
 }
