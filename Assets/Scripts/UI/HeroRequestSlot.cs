@@ -22,6 +22,8 @@ public class HeroRequestSlot : MonoBehaviour
 
     public Action OnClickShortcut;
 
+    private const string EVENT_LABEL = "[돌발 이벤트]";
+
     public void SetData(HeroRequestModel requestModel, HeroRequestData requestData, int currentHour)
     {
         if (requestModel == null || requestData == null)
@@ -48,7 +50,7 @@ public class HeroRequestSlot : MonoBehaviour
             Text_Reward.text = string.Empty;
         }
 
-        Text_RequestName.text = requestData.RequestName;
+        Text_RequestName.text = $"{EVENT_LABEL} {requestData.RequestName}";
         Text_Description.text = requestData.Description;
 
         Text_Progress.text = $"{requestModel.CurrentProgress}h / {requestData.RequiredHour}h";
