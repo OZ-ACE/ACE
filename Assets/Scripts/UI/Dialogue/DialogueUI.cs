@@ -179,7 +179,7 @@ public class DialogueUI : UIBase
         }
         else
         {
-            for (int i = 0; i < content.Length; i++)
+            for (int i = 0; i <= content.Length; i++)
             {
                 Text_Content.maxVisibleCharacters = i;
 
@@ -240,7 +240,7 @@ public class DialogueUI : UIBase
 
     private void SetSFX(string sfx)
     {
-        if (string.IsNullOrEmpty(sfx) || _currentBGM == sfx)
+        if (string.IsNullOrEmpty(sfx) || _currentSFX == sfx)
         {
             return;
         }
