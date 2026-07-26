@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 //보유(입소) 영웅 중 3명을 골라 전투로 넘기는 로스터 팝업. 기존 HeroSlot/HeroViewModel 재사용
 public class RosterUI : UIBase
 {
@@ -31,6 +32,7 @@ public class RosterUI : UIBase
         BuildSlots();
         RefreshSelectionView();
     }
+
     private void BuildSlots()
     {
         ClearSlots();
@@ -48,6 +50,7 @@ public class RosterUI : UIBase
             _slots.Add(slot);
         }
     }
+
     //로스터 전용 HeroViewModel 생성 (HeroUI와 동일 방식, 인스턴스는 분리해 선택 상태 오염 방지)
     private HeroViewModel GetOrCreateHeroVM(string heroId)
     {
@@ -84,12 +87,14 @@ public class RosterUI : UIBase
         }
         _slots.Clear();
     }
+
     //슬롯 클릭 시 3명 규칙으로 토글하고, 모든 카드의 IsSelect를 실제 선택 상태에 맞춘다
     private void OnClickSlot(HeroViewModel heroVM)
     {
         _viewModel.ToggleSelect(heroVM.HeroID);
         RefreshSelectionView();
     }
+
     private void RefreshSelectionView()
     {
         foreach (KeyValuePair<string, HeroViewModel> pair in _heroVMs)
