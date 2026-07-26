@@ -89,6 +89,66 @@ public class BuildGridModel
         return null;
     }
 
+    // 지정한 방이 상하좌우로 같은 종류의 다른 방과 맞닿아 있는지 검사
+    public bool HasAdjacentSameTypeRoom(PlacedRoomData targetRoom)
+    {
+        if (targetRoom == null)
+        {
+            return false;
+        }
+
+        RoomData roomData = GameDataManager.Inst.GetData<RoomData>(targetRoom.RoomId);
+        int width = roomData.SizeW;
+        int height = roomData.SizeH;
+
+        int[] floorDir = { 1, -1, 0, 0 };
+        int[] columnDir = { 0, 0, 1, -1 };
+
+        for (int floorOffset = 0; floorOffset < height; floorOffset++)
+        {
+            for (int columnOffset = 0; columnOffset < width; columnOffset++)
+            {
+                int cellFloor = targetRoom.Origin.Floor + floorOffset;
+                int cellColumn = targetRoom.Origin.Column + columnOffset;
+
+                for (int i = 0; i < floorDir.Length; i++)
+                {
+                    GridCoord neighbor = new GridCoord(cellFloor + floorDir[i], cellColumn + columnDir[i]);
+                    PlacedRoomData neighborRoom = GetRoomAt(neighbor);
+
+                    if (neighborRoom == null)
+                    {
+                        continue;
+                    }
+
+                    if (neighborRoom.RoomInstanceId == targetRoom.RoomInstanceId)
+                    {
+                        continue;
+                    }
+
+                    if (neighborRoom.RoomId == targetRoom.RoomId)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    // 인스턴스 ID로 배치된 방을 찾는다
+    public PlacedRoomData GetRoomByInstanceId(long instanceId)
+    {
+        foreach (PlacedRoomData room in GetAllRooms())
+        {
+            if (room.RoomInstanceId == instanceId)
+            {
+                return room;
+            }
+        }
+        return null;
+    }
 
     //방을 그리드에 등록
     public void AddRoom(PlacedRoomData room, List<GridCoord> occupiedCoords)

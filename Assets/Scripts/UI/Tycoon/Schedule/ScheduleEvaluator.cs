@@ -5,8 +5,9 @@ public class ScheduleEvaluator
     private const int SCORE_SUN = 5;
     private const int SCORE_SLEEP = 10;
     private const int SCORE_SHOWER = 5;
+    private const int SCORE_BEDROOM_ADJACENT = 5;
 
-    public static void EvaluateDailySchedule(HeroModel heroModel)
+    public static void EvaluateDailySchedule(HeroModel heroModel, bool isBedroomAdjacent)
     {
         ScheduleState[] states = heroModel.HourlyStates;
 
@@ -68,12 +69,17 @@ public class ScheduleEvaluator
             deltaAffection -= SCORE_SHOWER;
         }
 
+        if (isBedroomAdjacent == true)
+        {
+            deltaSatisfaction += SCORE_BEDROOM_ADJACENT;
+        }
+
         heroModel.Satisfaction = Mathf.Clamp(heroModel.Satisfaction + deltaSatisfaction, 0, 100);
         heroModel.Affection = Mathf.Clamp(heroModel.Affection + deltaAffection, 0, 100);
 
         heroModel.SaveHeroProgress();
 
-        Debug.Log($"햇빛:{sunCount}, 수면:{sleepCount}, 샤워:{showerCount} 만족:{deltaSatisfaction}, 호감:{deltaAffection}");
+        Debug.Log($"[{heroModel.HeroID}] 햇빛:{sunCount}, 수면:{sleepCount}, 샤워:{showerCount}, 침실인접:{isBedroomAdjacent} → 만족델타:{deltaSatisfaction}, 최종만족:{heroModel.Satisfaction}");
 
         heroModel.ResetSchedule();
     }
