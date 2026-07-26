@@ -10,6 +10,7 @@ public class ShopSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Text_Name;
     [SerializeField] private TextMeshProUGUI Text_Price;
     [SerializeField] private TextMeshProUGUI Text_Stock;
+    [SerializeField] private TextMeshProUGUI Text_Item_Description;
     [SerializeField] private Button Button_Buy;
 
     private string _itemID;
@@ -27,6 +28,7 @@ public class ShopSlot : MonoBehaviour
 
         Text_Name.text = item.ItemName;
         Text_Price.text = $"{item.Price} G";
+        Text_Item_Description.text = item.Description;
 
         UpdateState();
 
