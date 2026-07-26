@@ -8,6 +8,9 @@ public class DayService
     public event Action<int> OnChangeHour;
     public event Action OnEndDay;
 
+    private const string DINING_ROOM_ID = "Room_Meal";
+    private const string COUNSEL_ROOM_ID = "Room_Counsel";
+
     private const float _realTime = 5f;
     private float _time = 0f;
     private bool _isTimerPlaying = false;
@@ -157,6 +160,9 @@ public class DayService
         RoomAssignmentService roomService = GameManager.Inst.Services.RoomAssignmentService;
         BuildGridModel gridModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel().BuildGridModel;
 
+        bool hasDiningRoom = gridModel.HasRoom(DINING_ROOM_ID);
+        bool hasCounselRoom = gridModel.HasRoom(COUNSEL_ROOM_ID);
+
         foreach (HeroStat heroStat in player.HeroStats)
         {
             HeroModel heroModel = new HeroModel();
@@ -175,7 +181,7 @@ public class DayService
                 }
             }
 
-            ScheduleEvaluator.EvaluateDailySchedule(heroModel, isBedroomAdjacent);
+            ScheduleEvaluator.EvaluateDailySchedule(heroModel, isBedroomAdjacent, hasDiningRoom, hasCounselRoom);
         }
     }
 }
