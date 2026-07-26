@@ -9,7 +9,7 @@
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": null,
-    "EffectDescription": "사무실 효과 설명문",
+    "EffectDescription": null,
     "PrefabPath": "Prefabs/Room/Room_Office",
     "MaxCapacity": 100,
     "RequiredRoomID": "Room_Sleep"
@@ -24,7 +24,7 @@
     "RequiredCellType": "Sky",
     "RequiredFloor": 0,
     "EffectType": "Sunlight",
-    "EffectDescription": "정원 효과 설명문",
+    "EffectDescription": null,
     "PrefabPath": "Prefabs/Room/Room_Garden",
     "MaxCapacity": 2,
     "RequiredRoomID": "Room_Office"
@@ -39,7 +39,7 @@
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": "UsingRestroom",
-    "EffectDescription": "화장실 효과 설명문",
+    "EffectDescription": null,
     "PrefabPath": "Prefabs/Room/Room_Shower",
     "MaxCapacity": 1,
     "RequiredRoomID": "Room_Office"
@@ -47,14 +47,14 @@
   {
     "ID": "Room_Counsel",
     "Name": "상담실",
-    "Description": "전성기를 점차 잊어가며 트라우마를 겪고 있는 요양원의 영웅들에게 상담 시간은 매우 중요합니다.",
+    "Description": "전성기를 점차 잊어가며 트라우마를 겪고 있는 요양원의 영웅들에게 상담 시간은 매우 중요합니다.\n영웅들의 이야기를 계속 들어주느라 고막이 터질 것 같지만, 손주들이 더 이상 영웅들을 상대해주지 않으니 우리라도 들어줘야 하지 않을까요?",
     "SizeW": 2,
     "SizeH": 1,
     "BuildCost": 150,
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": "UsingCounselingRoom",
-    "EffectDescription": "상담실 효과 설명문",
+    "EffectDescription": "상담실을 지으면 영웅들의 호감도가 올라갑니다.",
     "PrefabPath": "Prefabs/Room/Room_Counsel",
     "MaxCapacity": 1,
     "RequiredRoomID": "Room_Office"
@@ -69,7 +69,7 @@
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": "UsingConsultationRoom",
-    "EffectDescription": "진료실 효과 설명문",
+    "EffectDescription": null,
     "PrefabPath": "Prefabs/Room/Room_Cure",
     "MaxCapacity": 1,
     "RequiredRoomID": "Room_Office"
@@ -84,7 +84,7 @@
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": "UsingDiningRoom",
-    "EffectDescription": "식당 효과 설명문",
+    "EffectDescription": "식당을 지으면 영웅들의 호감도가 올라갑니다.",
     "PrefabPath": "Prefabs/Room/Room_Meal",
     "MaxCapacity": 2,
     "RequiredRoomID": "Room_Office"
@@ -99,7 +99,7 @@
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": "UsingGymnasium",
-    "EffectDescription": "체육관 효과 설명문",
+    "EffectDescription": "체육관을 지으면 전투에서 영웅 공격력이 올라갑니다.",
     "PrefabPath": "Prefabs/Room/Room_Gym",
     "MaxCapacity": 2,
     "RequiredRoomID": "Room_Office"
@@ -114,7 +114,7 @@
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": "UsingLounge",
-    "EffectDescription": "휴게실 효과 설명문",
+    "EffectDescription": null,
     "PrefabPath": "Prefabs/Room/Room_Rest",
     "MaxCapacity": 2,
     "RequiredRoomID": "Room_Office"
@@ -129,7 +129,7 @@
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": "Battle",
-    "EffectDescription": "휴게실 효과 설명문",
+    "EffectDescription": null,
     "PrefabPath": "Prefabs/Room/Room_Battle",
     "MaxCapacity": 100,
     "RequiredRoomID": "Room_Office"
@@ -144,7 +144,7 @@
     "RequiredCellType": "Any",
     "RequiredFloor": -999,
     "EffectType": "UsingStairs",
-    "EffectDescription": "계단 효과 설명문",
+    "EffectDescription": null,
     "PrefabPath": "Prefabs/Room/Room_Stairs",
     "MaxCapacity": 100,
     "RequiredRoomID": null
@@ -159,7 +159,7 @@
     "RequiredCellType": "Earth",
     "RequiredFloor": -999,
     "EffectType": "Sleep",
-    "EffectDescription": "침실1 효과 설명문",
+    "EffectDescription": "침실을 서로 붙여 지으면 영웅들의 만족도가 올라갑니다.\n우리 영웅들 수다쟁이야~",
     "PrefabPath": "Prefabs/Room/Room_Sleep",
     "MaxCapacity": 1,
     "RequiredRoomID": null
