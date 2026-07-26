@@ -484,6 +484,7 @@ MonoBehaviour:
   Text_Name: {fileID: 564543727230684972}
   Text_Price: {fileID: 7227392406951086213}
   Text_Stock: {fileID: 5444351219294676677}
+  Text_Item_Description: {fileID: 5886841994340997415}
   Button_Buy: {fileID: 2480973457153405282}
 --- !u!1 &3594726711168936908
 GameObject:
