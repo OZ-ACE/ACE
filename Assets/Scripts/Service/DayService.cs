@@ -119,12 +119,19 @@ public class DayService
     public void PauseTimer()
     {
         _isTimerPlaying = false;
+        _time = 0f;
     }
 
     public void UpdateTimer(float deltaTime)
     {
         if (_isTimerPlaying == false)
         {
+            return;
+        }
+
+        if (_currentHour >= 24)
+        {
+            PauseTimer();
             return;
         }
 
@@ -143,10 +150,10 @@ public class DayService
 
         if (_currentHour >= 24)
         {
-            _currentHour = 0;
+            _currentHour = 24;
             PauseTimer();
 
-            OnEndDay.Invoke();
+            OnEndDay?.Invoke();
             return;
         }
 

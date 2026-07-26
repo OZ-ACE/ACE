@@ -16,8 +16,6 @@ public class ShopSlot : MonoBehaviour
     private string _itemID;
     private ShopViewModel _shopVM;
 
-
-
     public async UniTask SetSlotData(SupportItem item, ShopViewModel vm)
     {
         _itemID = item.ID;

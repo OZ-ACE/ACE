@@ -105,10 +105,14 @@ public class TycoonMainUI : UIBase
         int currentHour = GameManager.Inst.Services.DayService.CurrentHour;
         if (currentHour < 24)
         {
+            Text_Time.text = $"{currentHour:D2} : 00";
             SetButtonInteractable(true);
+
+            GameManager.Inst.Services.DayService.StartTimer();
         }
         else
         {
+            Text_Time.text = "마감";
             SetButtonInteractable(false);
         }
 
@@ -119,8 +123,6 @@ public class TycoonMainUI : UIBase
         SetWarning();
 
         OnHeroRequestChanged();
-
-        GameManager.Inst.Services.DayService.StartTimer();
     }
 
     private void OnDisable()
@@ -162,12 +164,9 @@ public class TycoonMainUI : UIBase
 
     private void OnClickQuest()
     {
-        if (GameManager.Inst.Services.DayService.CurrentHour < 24)
-        {
-            SetNewQuestNotification(false);
+        SetNewQuestNotification(false);
 
-            ChangePanel(TycoonPanelType.Quest);
-        }
+        ChangePanel(TycoonPanelType.Quest);
     }
 
     private void OnClickInventory()
@@ -311,15 +310,12 @@ public class TycoonMainUI : UIBase
 
     public void OpenHeroSchedule(string heroId)
     {
-        Debug.Log($"[TycoonMainUI] 영웅 일정 열기: {heroId}");
-
         ChangePanel(TycoonPanelType.Hero);
 
         HeroUI heroUI = Panel_Hero.GetComponent<HeroUI>();
 
         if (heroUI == null)
         {
-            Debug.LogError("[TycoonMainUI] Panel_Hero에서 HeroUI를 찾지 못했습니다.");
             return;
         }
 
