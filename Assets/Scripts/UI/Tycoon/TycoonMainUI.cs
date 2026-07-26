@@ -50,6 +50,7 @@ public class TycoonMainUI : UIBase
     [SerializeField] GameObject Panel_Furniture;
     [SerializeField] List<PanelStruct> PanelList;
     [SerializeField] private GameObject Panel_Warning;
+    [SerializeField] private Button Button_Warning;
 
     [Header("텍스트")]
     [SerializeField] TextMeshProUGUI Text_Day;
@@ -72,6 +73,7 @@ public class TycoonMainUI : UIBase
         Button_Furniture.onClick.AddListener(OnClickFurniture);
         Button_Setting.onClick.AddListener(OnClickSetting);
         Button_Home.onClick.AddListener(OnClickHome);
+        Button_Warning.onClick.AddListener(OnClickWarning);
 
         OnCloseSetting += OnClickQuest;
 
@@ -207,6 +209,11 @@ public class TycoonMainUI : UIBase
 
         UIManager.Inst.OpenTitleUI();
         UIManager.Inst.CloseTycoonMainUI();
+    }
+
+    private void OnClickWarning()
+    {
+        UIManager.Inst.OpenNoticePopup("[해고 경고]\n\n평가 등급 D 이하가 2회 연속되면\n해고되어 게임오버 됩니다.\n\n다음 평가를 D보다 높게 받아\n해고를 피하세요.");
     }
 
     private void SetDayText()
