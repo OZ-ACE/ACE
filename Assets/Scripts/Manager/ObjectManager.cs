@@ -348,6 +348,41 @@ public class ObjectManager : SingletonBase<ObjectManager>
         }
     }
 
+    public async UniTask RestoreActiveHeroes()
+    {
+        await UniTask.Yield();
+
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
+        if (playerModel == null || playerModel.HeroStats == null)
+        {
+            return;
+        }
+
+        RoomAssignmentService roomService = GameManager.Inst.Services.RoomAssignmentService;
+        if (roomService == null)
+        {
+            return;
+        }
+
+        foreach (var heroStat in playerModel.HeroStats)
+        {
+            string heroId = heroStat.HeroID;
+
+            if (GetSpawnAgent(heroId) != null)
+            {
+                continue;
+            }
+
+            long roomInstanceId = roomService.GetAssignedRoomInstanceId(heroId);
+            if (roomInstanceId == -1)
+            {
+                continue;
+            }
+
+            await SpawnHero(heroId, roomInstanceId);
+        }
+    }
+
     public async UniTask SpawnHero(string heroId, long roomInstanceId)
     {
         var buildService = GameManager.Inst.Services.BuildService;

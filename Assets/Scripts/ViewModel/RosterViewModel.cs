@@ -64,6 +64,7 @@ public class RosterViewModel : ViewModelBase
             OnPropertyChanged(nameof(SelectedHeroIds));
             return;
         }
+
         List<string> ownedHeroIds = GetOwnedHeroIds();
         foreach (string heroId in player.SelectedHeroIds)
         {
@@ -77,12 +78,15 @@ public class RosterViewModel : ViewModelBase
             }
             _selectedHeroIds.Add(heroId);
         }
+
         OnPropertyChanged(nameof(SelectedHeroIds));
     }
+
     public bool IsSelected(string heroId)
     {
         return _selectedHeroIds.Contains(heroId);
     }
+
     //이미 선택된 영웅이면 해제, 아니면 (3명 미만일 때) 선택한다
     public void ToggleSelect(string heroId)
     {
@@ -92,13 +96,16 @@ public class RosterViewModel : ViewModelBase
             OnPropertyChanged(nameof(SelectedHeroIds));
             return;
         }
+
         if (_selectedHeroIds.Count >= MaxSelectableCount)
         {
             return;
         }
+
         _selectedHeroIds.Add(heroId);
         OnPropertyChanged(nameof(SelectedHeroIds));
     }
+
     //정확히 3명을 골랐을 때만 전투 시작 가능
     public bool CanStartBattle()
     {
@@ -112,8 +119,8 @@ public class RosterViewModel : ViewModelBase
         if (player != null)
         {
             player.SelectedHeroIds = new List<string>(_selectedHeroIds);
-            //SaveManager.Inst.RequestSaveData(player);
         }
+
         return new List<string>(_selectedHeroIds);
     }
 }

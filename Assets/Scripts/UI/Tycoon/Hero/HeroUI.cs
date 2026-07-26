@@ -46,11 +46,31 @@ public class HeroUI : UIBase
         PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
         RoomAssignmentService roomService = GameManager.Inst.Services.RoomAssignmentService;
 
+        HashSet<string> pendingHeroIds = new HashSet<string>();
+
+        if (playerModel != null && playerModel.PendingHeroes != null)
+        {
+            for (int i = 0; i < playerModel.PendingHeroes.Count; i++)
+            {
+                var pending = playerModel.PendingHeroes[i];
+
+                if (pending != null && !string.IsNullOrEmpty(pending.HeroID))
+                {
+                    pendingHeroIds.Add(pending.HeroID);
+                }
+            }
+        }
+
         foreach (var hero in playerModel.HeroStats)
         {
             string currentHero = hero.HeroID;
 
             if (roomService != null && roomService.IsHeroAssigned(currentHero) == false)
+            {
+                continue;
+            }
+
+            if (pendingHeroIds.Contains(currentHero))
             {
                 continue;
             }

@@ -22,7 +22,7 @@ public class FurnitureSlotView : MonoBehaviour
         Button_Buy.onClick.AddListener(OnClickBuy);
     }
 
-    public void SetData(FurnitureData furnitureData, FurnitureViewModel viewModel, bool canPurchase)
+    public void SetData(FurnitureData furnitureData, FurnitureViewModel viewModel)
     {
         _furnitureData = furnitureData;
         _viewModel = viewModel;
@@ -33,7 +33,7 @@ public class FurnitureSlotView : MonoBehaviour
 
         bool isPurchased = _viewModel.IsPurchased(_furnitureData.ID);
 
-        Button_Buy.interactable = canPurchase && !isPurchased;
+        Button_Buy.interactable = !isPurchased;
 
         LoadFurnitureImage().Forget();
     }
