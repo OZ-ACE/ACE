@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8068966120689380591}
   - component: {fileID: 8921732259261920766}
   m_Layer: 0
-  m_Name: "Text (TMP) (\uD638\uAC10\uB3C4) (1)"
+  m_Name: Text (TMP) Affection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 1349802626410118306}
   - component: {fileID: 6335977954397612555}
   m_Layer: 0
-  m_Name: "Text (TMP) (\uB9CC\uC871\uB3C4) (2)"
+  m_Name: Text (TMP) Satisfaction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
