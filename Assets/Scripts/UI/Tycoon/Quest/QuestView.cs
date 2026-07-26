@@ -14,7 +14,6 @@ public class QuestView : ViewBase
     private QuestViewModel _viewModel;
     private HeroRequestService _heroRequestService;
     private List<QuestSlot> _activeSlots = new List<QuestSlot>();
-    private PlayerModel _playerModel = SaveManager.Inst.CurrentPlayerModel;
 
     // 뷰모델 바인딩
     public void Bind(QuestViewModel viewModel)

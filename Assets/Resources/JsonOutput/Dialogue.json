@@ -5,7 +5,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "축하하네. 우리 H.A.V.E.N.(Heroes Aftercare & Vitality Extension Network) 재단의 신입 요양보조사로 합격한 것을.",
-    "Background": "Room_Office",
+    "Background": "Dialogue_01",
     "BGM": null,
     "SFX": null
   },
@@ -45,7 +45,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "나이 앞에는 장사 없지 않나. 치매, 관절염, 골다공증...",
-    "Background": null,
+    "Background": "Dialogue_02",
     "BGM": null,
     "SFX": null
   },
@@ -85,7 +85,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "자네의 임무는 단순해. 우리가 전폭적인 예산과 자재를 쥐여줄 테니, 어르신들의 특성에 맞춘 안락한 방을 만들고 시설을 키우게.",
-    "Background": null,
+    "Background": "Dialogue_03",
     "BGM": null,
     "SFX": null
   },
@@ -145,7 +145,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "어르신들의 뇌세포 자극과 치매 예방을 위해 가상현실 VR 전투 프로그램인 'H.B. 프로젝트'를 정기적으로 가동해야 하네.",
-    "Background": null,
+    "Background": "Dialogue_04",
     "BGM": null,
     "SFX": null
   },
@@ -215,7 +215,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "오늘 정산 보고서 봤네. 등급이 'D'라니, 지금 제정신인가?",
-    "Background": "Room_Office",
+    "Background": "Dialogue_05",
     "BGM": "GameOver",
     "SFX": null
   },
@@ -235,7 +235,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "핑계는 됐고. 자네도 우리 조직 방침 알지? ‘D 등급 이하 2회 기록 시 즉시 계약 해지’야.",
-    "Background": null,
+    "Background": "Dialogue_06",
     "BGM": null,
     "SFX": null
   },
@@ -255,7 +255,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "...결국 또 D 등급이군. 지난번 경고가 가벼웠던 모양이지?",
-    "Background": null,
+    "Background": "Dialogue_05",
     "BGM": "GameOver",
     "SFX": null
   },
@@ -265,7 +265,7 @@
     "Speaker": "{PlayerName}",
     "SpeakerPath": "Prefabs/Character/NPC/Player",
     "Content": "지, 지부장님! 한 번만 더 기회를 주십시오!",
-    "Background": "Room_Office",
+    "Background": null,
     "BGM": null,
     "SFX": null
   },
@@ -295,7 +295,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "말단 요양보조사 하나 교체하는 건 일도 아니지.",
-    "Background": null,
+    "Background": "Dialogue_07",
     "BGM": null,
     "SFX": null
   },
@@ -335,7 +335,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "3일 차 보고서 잘 봤네. 근데 지출 내역에 '한방 총명탕 팩'이랑 '초강력 한방 파스 500장'은 뭔가?",
-    "Background": "Room_Office",
+    "Background": "Dialogue_08",
     "BGM": "Main1",
     "SFX": null
   },
@@ -375,7 +375,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "어르신들 멘탈을 억지로라도 끌어올려서 '기억의 파편'을 쥐어짜 내야 하는 '재고 관리실'이라고!",
-    "Background": null,
+    "Background": "Dialogue_09",
     "BGM": null,
     "SFX": null
   },
@@ -415,7 +415,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "5일 차가 되면 지하 4층 추출 장치 전원이 켜질 테니, 어르신들 초능력이나 팍팍 추출할 준비나 하게.",
-    "Background": null,
+    "Background": "Dialogue_10",
     "BGM": null,
     "SFX": null
   },
@@ -445,7 +445,7 @@
     "Speaker": "캡틴물렁카",
     "SpeakerPath": "Prefabs/Character/Hero/hero_01",
     "Content": "이봐, 샤워실 물 온도가 너무 차잖아! 허리가 하나도 안 지져져!",
-    "Background": null,
+    "Background": "Dialogue_11",
     "BGM": null,
     "SFX": null
   },
@@ -475,7 +475,7 @@
     "Speaker": "{PlayerName}",
     "SpeakerPath": "Prefabs/Character/NPC/Player",
     "Content": "지부장이 말한 지하 4층 특별 구역이 여길 말한 건가...? 먼지 냄새에... 기계 소리만 웅웅거리는데...",
-    "Background": "Room_Battle",
+    "Background": "Dialogue_12",
     "BGM": "Main2",
     "SFX": null
   },
@@ -495,7 +495,7 @@
     "Speaker": "{PlayerName}",
     "SpeakerPath": "Prefabs/Character/NPC/Player",
     "Content": "[프로젝트: 늙은 사자 / 초능력 추출 및 배터리 가공 매뉴얼]...?",
-    "Background": null,
+    "Background": "Dialogue_13",
     "BGM": null,
     "SFX": null
   },
@@ -535,7 +535,7 @@
     "Speaker": "{PlayerName}",
     "SpeakerPath": "Prefabs/Character/NPC/Player",
     "Content": "기계 옆에 친절하게 [초능력 추출 중 - 접근 금지] 스티커까지 붙여놨잖아?!",
-    "Background": null,
+    "Background": "Dialogue_14",
     "BGM": null,
     "SFX": null
   },
@@ -585,7 +585,7 @@
     "Speaker": "캡틴물렁카",
     "SpeakerPath": "Prefabs/Character/Hero/hero_01",
     "Content": "아니... 왠지 이 기계 앞에만 오면 머리가 핑 돌고, 옛날에 마왕 잡을 때 쓰던 메테오 마나가 쪽쪽 빨려 나가는 느낌이라 온 건데...",
-    "Background": null,
+    "Background": "Dialogue_15",
     "BGM": null,
     "SFX": null
   },
@@ -705,7 +705,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "어서 오게, 보조사. 마침내 Day 7 최종 정산 및 초능력 추출 작업이 100% 완료되었네.",
-    "Background": "Room_Battle",
+    "Background": "Dialogue_16",
     "BGM": "Bad",
     "SFX": null
   },
@@ -894,8 +894,8 @@
     "NextID": "Ending_Bad_21",
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
-    "Content": " 보안요원! 이 친구 짐 챙겨서 정문 밖으로 던져버리게.",
-    "Background": null,
+    "Content": "보안요원! 이 친구 짐 챙겨서 정문 밖으로 던져버리게.",
+    "Background": "Dialogue_07",
     "BGM": null,
     "SFX": null
   },
@@ -915,7 +915,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "영웅은 죽지 않는다. 그저 전력으로 소모될 뿐.",
-    "Background": "Bad",
+    "Background": null,
     "BGM": null,
     "SFX": null
   },
@@ -975,7 +975,7 @@
     "Speaker": "지부장",
     "SpeakerPath": "Prefabs/Character/NPC/Boss",
     "Content": "보조사! 이게 무슨 짓인가! 감히 지하 4층 추출 장치 전원을 끄고 메인 차단기를 내려?!",
-    "Background": "Room_Battle",
+    "Background": "Dialogue_17",
     "BGM": "Happy",
     "SFX": null
   },
@@ -1035,7 +1035,7 @@
     "Speaker": "오십위도우",
     "SpeakerPath": "Prefabs/Character/Hero/hero_02",
     "Content": "어이, 지부장 나부랭이! 누구 집 보조사를 제압하겠다는 거냐!",
-    "Background": null,
+    "Background": "Dialogue_18",
     "BGM": null,
     "SFX": null
   },
@@ -1255,7 +1255,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "고목 영감은 방 한구석에 멍하니 앉아 자신의 쩍쩍 갈라지고 딱딱하게 변해버린 손을 바라보고 있다.",
-    "Background": "Room_Sleep",
+    "Background": "Dialogue_19",
     "BGM": "Character",
     "SFX": null
   },
@@ -1275,7 +1275,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "선물로 작고 보잘것없는 '작은 화분 하나'를 건넨다.",
-    "Background": null,
+    "Background": "Dialogue_20",
     "BGM": null,
     "SFX": null
   },
@@ -1335,7 +1335,7 @@
     "Speaker": "고목 영감",
     "SpeakerPath": "Prefabs/Character/Hero/hero_06",
     "Content": "내가 전성기 땐 말이야, 사하라 사막에 단숨에 자작나무 숲을 피웠어.",
-    "Background": "Room_Sleep",
+    "Background": "Dialogue_21",
     "BGM": "Character",
     "SFX": null
   },
@@ -1375,7 +1375,7 @@
     "Speaker": "고목 영감",
     "SpeakerPath": "Prefabs/Character/Hero/hero_06",
     "Content": "내가 요양원에 들어올 땐 다 끝난 줄 알았어. 줄기는 말라죽고, 뿌리는 썩어서 버려질 일만 남은 밑동인 줄 알았지.",
-    "Background": "Room_Sleep",
+    "Background": "Hero6",
     "BGM": "Character",
     "SFX": null
   },
@@ -1395,7 +1395,7 @@
     "Speaker": "고목 영감",
     "SpeakerPath": "Prefabs/Character/Hero/hero_06",
     "Content": "나무라는 건 말이야... 늙고 비틀어질수록 껍질이 단단해지는 법이거든.",
-    "Background": "Hero6",
+    "Background": null,
     "BGM": null,
     "SFX": null
   },
@@ -1435,7 +1435,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "침대에 뱃살을 드러내고 누워 팝콘을 씹던 캡틴 물렁카.",
-    "Background": "Room_Sleep",
+    "Background": "Dialogue_22",
     "BGM": "Character",
     "SFX": null
   },
@@ -1535,7 +1535,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "캡틴 물렁카가 휴게실에서 다른 사람들을 붙잡고 느끼한 아재개그를 던지고 있다.",
-    "Background": "Room_Rest",
+    "Background": "Dialogue_23",
     "BGM": "Character",
     "SFX": null
   },
@@ -1645,7 +1645,7 @@
     "Speaker": "캡틴 물렁카",
     "SpeakerPath": "Prefabs/Character/Hero/hero_01",
     "Content": "어이, 보조사. 퇴근길에 팝콘 냄새 쏠려서 들어왔지?",
-    "Background": "Room_Meal",
+    "Background": "Dialogue_24",
     "BGM": "Character",
     "SFX": null
   },
@@ -1765,7 +1765,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "오십위도우가 한쪽 어깨를 틀어쥐고 거울 속 자신의 눈가를 뚫어지게 노려보고 있다.",
-    "Background": "Room_Sleep",
+    "Background": "Dialogue_25",
     "BGM": "Character",
     "SFX": null
   },
@@ -1905,7 +1905,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "침대에서 배를 두드리며 팝콘을 씹던 캡틴 물렁카와 옆에서 차를 마시는 오십위도우가 대화를 하고 있다.",
-    "Background": "Room_Rest",
+    "Background": "Dialogue_26",
     "BGM": "Character",
     "SFX": null
   },
@@ -2005,7 +2005,7 @@
     "Speaker": "오십위도우",
     "SpeakerPath": "Prefabs/Character/Hero/hero_02",
     "Content": "어서 오게, 보조사.",
-    "Background": "Room_Sleep",
+    "Background": "Hero2",
     "BGM": "Character",
     "SFX": null
   },
@@ -2065,7 +2065,7 @@
     "Speaker": "오십위도우",
     "SpeakerPath": "Prefabs/Character/Hero/hero_02",
     "Content": "내가 굳어버린 건 내 잘못이나 부끄러움이 아니라, 이 몸으로 세상의 온갖 풍파를 다 받아내며 끝까지 살아남았다는 '훈장'이라는 걸.",
-    "Background": "Hero2",
+    "Background": null,
     "BGM": null,
     "SFX": null
   },
@@ -2125,7 +2125,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "또르르가 구석에 놓인 거대한 망치를 들어올리다 손을 놓치고 만다.",
-    "Background": "Room_Sleep",
+    "Background": "Dialogue_27",
     "BGM": "Character",
     "SFX": null
   },
@@ -2215,7 +2215,7 @@
     "Speaker": "{PlayerName}",
     "SpeakerPath": "Prefabs/Character/NPC/Player",
     "Content": "또르르가 트로피 잔을 한 손으로 번쩍 들며 껄껄 웃고 있다.",
-    "Background": "Room_Meal",
+    "Background": "Dialogue_28",
     "BGM": "Character",
     "SFX": null
   },
@@ -2243,7 +2243,7 @@
     "ID": "Hero5_02_04",
     "NextID": "Hero5_02_05",
     "Speaker": "오십위도우",
-    "SpeakerPath": "Prefabs/Character/Hero/hero_02",
+    "SpeakerPath": "Image/Character[hero_02]",
     "Content": "에그그, 시끄러워 죽겠네.",
     "Background": null,
     "BGM": null,
@@ -2315,7 +2315,7 @@
     "Speaker": "또르르",
     "SpeakerPath": "Prefabs/Character/Hero/hero_05",
     "Content": "어이, 보조사. 퇴근 직전에 들렀나? 앉게나. 방금 막 끓여낸 따뜻한 보리 차가 있거든.",
-    "Background": "Room_Sleep",
+    "Background": "Hero5",
     "BGM": "Character",
     "SFX": null
   },
@@ -2385,7 +2385,7 @@
     "Speaker": "또르르",
     "SpeakerPath": "Prefabs/Character/Hero/hero_05",
     "Content": "자네가 건네준 이 멍청한 맥주 잔 트로피 덕분에 깨달았어.",
-    "Background": "Hero5",
+    "Background": null,
     "BGM": null,
     "SFX": null
   },
@@ -2425,7 +2425,7 @@
     "Speaker": null,
     "SpeakerPath": null,
     "Content": "호크아이고가 활시위를 팽팽하게 당긴 채 눈을 가늘게 뜨고 벽을 노려보고 있다.",
-    "Background": "Room_Sleep",
+    "Background": "Dialogue_29",
     "BGM": "Character",
     "SFX": null
   },
@@ -2515,7 +2515,7 @@
     "Speaker": "호크아이고",
     "SpeakerPath": "Prefabs/Character/Hero/hero_03",
     "Content": "1시 방향 캡틴 물렁카, 팝콘을 세 개 연속으로 입에 집어넣음. 당뇨 수치 위험.",
-    "Background": "Room_Meal",
+    "Background": "Dialogue_30",
     "BGM": "Character",
     "SFX": null
   },
@@ -2605,7 +2605,7 @@
     "Speaker": "호크아이고",
     "SpeakerPath": "Prefabs/Character/Hero/hero_03",
     "Content": "왔는가, 보조사 양반. 앉게나. 방금 막 안경 렌즈를 깨끗하게 닦아둔 참이라네.",
-    "Background": "Room_Sleep",
+    "Background": "Hero3",
     "BGM": "Character",
     "SFX": null
   },
@@ -2665,7 +2665,7 @@
     "Speaker": "호크아이고",
     "SpeakerPath": "Prefabs/Character/Hero/hero_03",
     "Content": "배 나온 물렁카 영감의 뻔뻔한 미소, 통풍 때문에 쩔쩔매는 또르르의 잔망스러움, 그리고...",
-    "Background": "Hero3",
+    "Background": null,
     "BGM": null,
     "SFX": null
   },
@@ -2705,7 +2705,7 @@
     "Speaker": "스칼렛트위치",
     "SpeakerPath": "Prefabs/Character/Hero/hero_04",
     "Content": "스칼렛트위치가 보행용 지팡이를 꼭 쥔 채, 방 한가운데서 까치발을 들고 부들부들 떨고 있다.",
-    "Background": "Room_Sleep",
+    "Background": "Dialogue_31",
     "BGM": "Character",
     "SFX": null
   },
@@ -2804,8 +2804,8 @@
     "NextID": "Hero4_02_02",
     "Speaker": "스칼렛트위치",
     "SpeakerPath": "Prefabs/Character/Hero/hero_04",
-    "Content": "보아라! 나의 마법 지팡이가 보여주는 '동물 차원(동물농장)'과 '트롯 차원'이다!",
-    "Background": "Room_Rest",
+    "Content": "보아라! 나의 마법 지팡이가 보여주는 '동물 차원'과 '트롯 차원'이다!",
+    "Background": "Dialogue_32",
     "BGM": "Character",
     "SFX": null
   },
@@ -2875,7 +2875,7 @@
     "Speaker": "{PlayerName}",
     "SpeakerPath": "Prefabs/Character/NPC/Player",
     "Content": "어르신... 방금 그거 진짜 마법이었습니까? 그 지팡이 진짜였어요?!",
-    "Background": null,
+    "Background": "Dialogue_33",
     "BGM": null,
     "SFX": null
   },
@@ -2915,7 +2915,7 @@
     "Speaker": "스칼렛트위치",
     "SpeakerPath": "Prefabs/Character/Hero/hero_04",
     "Content": "어서 오게, 보조사 양반. 문 잠그고 들어오게나. 보다시피 지금은 지팡이 점검 시간이라 말이지.",
-    "Background": "Room_Sleep",
+    "Background": "Hero4",
     "BGM": "Character",
     "SFX": null
   },
@@ -2955,7 +2955,7 @@
     "Speaker": "스칼렛트위치",
     "SpeakerPath": "Prefabs/Character/Hero/hero_04",
     "Content": "내가 진짜 마법 지팡이를 짚고도 보행용 지팡이처럼 터덜터덜 걸어 다니는 이유가 뭔지 아나?",
-    "Background": "Hero4",
+    "Background": null,
     "BGM": null,
     "SFX": null
   },
@@ -3015,7 +3015,7 @@
     "Speaker": "할매 프로스트",
     "SpeakerPath": "Prefabs/Character/Hero/hero_07",
     "Content": "아니, 이놈의 기계는 왜 매번 '3분 안에 입력하지 않으면 처음부터 다시'라는 게냐!",
-    "Background": "Room_Sleep",
+    "Background": "Dialogue_34",
     "BGM": "Character",
     "SFX": null
   },
@@ -3135,7 +3135,7 @@
     "Speaker": "할매 프로스트",
     "SpeakerPath": "Prefabs/Character/Hero/hero_07",
     "Content": "듣게, 영감들! 요즘 세상 악당들은 도시를 파괴하지 않아.",
-    "Background": "Room_Rest",
+    "Background": "Dialogue_35",
     "BGM": "Character",
     "SFX": null
   },
@@ -3235,7 +3235,7 @@
     "Speaker": "할매 프로스트",
     "SpeakerPath": "Prefabs/Character/Hero/hero_07",
     "Content": "왔는가, 보조사. 방금 자네가 가르쳐 준 대로 인터넷으로 따뜻한 티백 세트를 주문해 봤다네.",
-    "Background": "Room_Sleep",
+    "Background": "Hero7",
     "BGM": "Character",
     "SFX": null
   },
@@ -3305,7 +3305,7 @@
     "Speaker": "할매 프로스트",
     "SpeakerPath": "Prefabs/Character/Hero/hero_07",
     "Content": "이 링 라이트는 단순히 글씨를 밝혀주는 전등이 아니야.",
-    "Background": "Hero7",
+    "Background": null,
     "BGM": null,
     "SFX": null
   },

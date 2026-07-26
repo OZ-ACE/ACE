@@ -139,6 +139,7 @@
         if (string.IsNullOrEmpty(data.Speaker))
         {
             IsSpeakerActive = false;
+            Speaker = string.Empty;
         }
         else
         {

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DialogueController : MonoBehaviour
 {
-    [SerializeField] private Image Image_Background;
-    [SerializeField] private Transform Transform_Background;
+    [SerializeField] private SpriteRenderer SpriteRenderer_Background;
     [SerializeField] private Transform Transform_Speaker;
+    [SerializeField] private Transform Transform_Background;
 
     private DialogueViewModel _dialogueVM;
 
@@ -25,11 +24,6 @@ public class DialogueController : MonoBehaviour
     private void Awake()
     {
         _camera = Camera.main;
-    }
-
-    private void OnEnable()
-    {
-        Image_Background.gameObject.SetActive(false);
     }
 
     public void Init(DialogueViewModel dialgoueVM)
@@ -83,18 +77,16 @@ public class DialogueController : MonoBehaviour
         if (_currentBackground != null)
         {
             _currentBackground.SetActive(false);
-            Image_Background.gameObject.SetActive(false);
+            SpriteRenderer_Background.gameObject.SetActive(false);
         }
 
         if (!name.Contains("Room"))
         {
-            Image_Background.gameObject.SetActive(true);
-            Image_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/{name}");
+            SpriteRenderer_Background.gameObject.SetActive(true);
+            SpriteRenderer_Background.sprite = await ResourceManager.Inst.LoadSprite($"Image/{name}");
 
             return;
         }
-
-        Debug.Log(name);
 
         if (!_backgrounds.ContainsKey(name))
         {
@@ -113,14 +105,27 @@ public class DialogueController : MonoBehaviour
 
     private async UniTask ChangeCharacter(string speaker)
     {
+        if (string.IsNullOrEmpty(speaker))
+        {
+            if (_currentSpeaker != null)
+            {
+                _currentSpeaker.SetActive(false);
+                _currentSpeaker = null;
+            }
+
+            _currentSpeakerName = string.Empty;
+            return;
+        }
+
         if (_currentSpeakerName == speaker)
         {
             return;
         }
 
-        if (string.IsNullOrEmpty(speaker) || _currentSpeaker != null)
+        if (_currentSpeaker != null)
         {
             _currentSpeaker.SetActive(false);
+            _currentSpeaker = null;
         }
 
         if (!_characters.ContainsKey(speaker))

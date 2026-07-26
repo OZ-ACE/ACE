@@ -262,11 +262,11 @@ public class TycoonMainUI : UIBase
 
     private void SetButtonInteractable(bool isInteractable)
     {
-        Button_Quest.interactable = isInteractable;
         Button_Inventory.interactable = isInteractable;
         Button_Hero.interactable = isInteractable;
         Button_Furniture.interactable = isInteractable;
 
+        Button_Quest.interactable = true;
         Button_Construct.interactable = true;
         Button_Setting.interactable = true;
         Button_Home.interactable = true;
