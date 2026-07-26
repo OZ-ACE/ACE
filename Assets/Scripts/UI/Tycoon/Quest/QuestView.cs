@@ -154,8 +154,6 @@ public class QuestView : ViewBase
         HeroRequestModel requestModel = service.GetCurrentRequest();
         HeroRequestData requestData = service.GetCurrentRequestData();
 
-        Debug.Log($"QuestView - 영웅 요청 갱신 Model : {requestModel?.RequestId} / Data : {requestData?.ID}");
-
         bool hasRequest = requestModel != null && requestData != null;
 
         GameObject_HeroRequestRoot.SetActive(hasRequest);
@@ -167,5 +165,24 @@ public class QuestView : ViewBase
 
         GameObject_HeroRequestRoot.transform.SetAsFirstSibling();
         HeroRequestSlot.SetData(requestModel, requestData, service.CurrentHour);
+
+        HeroRequestSlot.OnClickShortcut = OnClickHeroRequestShortcut;
+    }
+
+    private void OnClickHeroRequestShortcut()
+    {
+        HeroRequestModel request = _heroRequestService.GetCurrentRequest();
+
+        if (request == null)
+        {
+            return;
+        }
+
+        UIBase ui = UIManager.Inst.GetOpenedUI(UIRootType.Main, UIType.TycoonMainUI);
+
+        if (ui is TycoonMainUI tycoonUI)
+        {
+            tycoonUI.OpenHeroSchedule(request.HeroId);
+        }
     }
 }

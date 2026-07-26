@@ -1,4 +1,6 @@
-﻿public class GameServiceContainer
+﻿using UnityEngine;
+
+public class GameServiceContainer
 {
     // 전역 재화 서비스
     public ICurrencyService CurrencyService { get; private set; }
@@ -52,6 +54,7 @@
 
         DayService.OnChangeDay += HeroRequestService.OnChangeDay;
         DayService.OnChangeHour += HeroRequestService.OnChangeHour;
+        Debug.Log("[GameServiceContainer] HeroRequestService 날짜/시간 이벤트 연결 완료");
     }
 
     public void Release()

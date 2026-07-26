@@ -271,4 +271,12 @@ public class TycoonMainUI : UIBase
         Button_Setting.interactable = true;
         Button_Home.interactable = true;
     }
+
+    public void OpenHeroSchedule(string heroId)
+    {
+        ChangePanel(TycoonPanelType.Hero);
+
+        HeroUI heroUI = Panel_Hero.GetComponent<HeroUI>();
+        heroUI.OpenHeroSchedule(heroId);
+    }
 }

@@ -19,7 +19,6 @@ public class HeroRequestModel
     public int CreatedHour;
 
     public int ExpireHour;
-    //public int ExpireMinute;
 
     public int CurrentProgress;
     public int State;

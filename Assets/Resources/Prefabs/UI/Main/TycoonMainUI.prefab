@@ -4312,7 +4312,7 @@ MonoBehaviour:
   Prefab_QuestSlot: {fileID: 4459215269654278119, guid: ea39867ea92353840b0f24cf721c3c80, type: 3}
   Transform_SlotParent: {fileID: 6689881291028360094}
   GameObject_HeroRequestRoot: {fileID: 6878041923276889008}
-  HeroRequestSlot: {fileID: 4742555875018482392, guid: 2f610028acaf2444ebe21f01f5781d9c, type: 3}
+  HeroRequestSlot: {fileID: 346301509144296834}
 --- !u!1 &6270205004415979268
 GameObject:
   m_ObjectHideFlags: 0
@@ -6911,6 +6911,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f610028acaf2444ebe21f01f5781d9c, type: 3}
+--- !u!114 &346301509144296834 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4742555875018482392, guid: 2f610028acaf2444ebe21f01f5781d9c, type: 3}
+  m_PrefabInstance: {fileID: 4980627229757218650}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fd361684ef81974687a93d54ae5731b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeroRequestSlot
 --- !u!224 &8796333412636150640 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4543116839613551658, guid: 2f610028acaf2444ebe21f01f5781d9c, type: 3}

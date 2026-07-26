@@ -21,11 +21,8 @@ public class HeroRequestService
             return;
         }
 
-        Debug.Log($"HeroRequestService - HeroRequest 생성 시도 / Day {currentDay}");
-
         if (PlayerModel.LastHeroRequestDay == currentDay)
         {
-            Debug.Log("HeroRequestService - HeroRequest 오늘 이미 생성됨");
             return;
         }
 
@@ -33,7 +30,6 @@ public class HeroRequestService
 
         if (selectedRequest == null)
         {
-            Debug.LogWarning("HeroRequestService - 예약된 요청 데이터 없음");
             return;
         }
 
@@ -91,6 +87,7 @@ public class HeroRequestService
         }
 
         List<string> admittedHeroIds = player.HeroStats.Select(hero => hero.HeroID).ToList();
+
         List<HeroRequestData> candidates = allRequests.Where(request => admittedHeroIds.Contains(request.HeroId)).ToList();
 
         if (candidates.Count > 1)
@@ -108,7 +105,6 @@ public class HeroRequestService
         int latestStartHour = 24 - selectedRequest.RequiredHour - 2;
 
         player.HeroRequestScheduledRequestId = selectedRequest.ID;
-
         player.HeroRequestScheduledHour = UnityEngine.Random.Range(8, latestStartHour + 1);
 
         SaveManager.Inst.RequestSaveData(player);
@@ -124,6 +120,11 @@ public class HeroRequestService
 
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
 
+        if (player == null)
+        {
+            return;
+        }
+
         if (player.CurrentHeroRequest != null)
         {
             HeroRequestModel request = player.CurrentHeroRequest;
@@ -133,7 +134,6 @@ public class HeroRequestService
                 request.State = (int)HeroRequestState.Failed;
 
                 SaveManager.Inst.RequestSaveData(player);
-
                 OnHeroRequestChanged?.Invoke();
 
                 Debug.Log("HeroRequest 실패");
@@ -142,17 +142,12 @@ public class HeroRequestService
             return;
         }
 
-        if (player == null)
-        {
-            return;
-        }
-
-        if (player.CurrentHeroRequest != null)
-        {
-            return;
-        }
-
         if (player.HeroRequestScheduledDay != player.Day)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(player.HeroRequestScheduledRequestId))
         {
             return;
         }
@@ -262,6 +257,6 @@ public class HeroRequestService
 
         OnHeroRequestChanged?.Invoke();
 
-        Debug.Log($"HeroRequest 완료 - {request.HeroId} / " + $"호감도 +{data.RewardAffection}, " + $"만족도 +{data.RewardSatisfaction}");
+        Debug.Log($"HeroRequest 완료 - {request.HeroId} / " + $"호감도 + {data.RewardAffection}, " + $"만족도 + {data.RewardSatisfaction}");
     }
 }
