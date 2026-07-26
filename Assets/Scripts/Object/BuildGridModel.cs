@@ -150,6 +150,19 @@ public class BuildGridModel
         return null;
     }
 
+    // 특정 종류의 방을 하나라도 보유하고 있는지
+    public bool HasRoom(string roomId)
+    {
+        foreach (PlacedRoomData room in GetAllRooms())
+        {
+            if (room.RoomId == roomId)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //방을 그리드에 등록
     public void AddRoom(PlacedRoomData room, List<GridCoord> occupiedCoords)
     {
