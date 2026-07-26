@@ -191,6 +191,11 @@ public class BuildGridViewModel : ViewModelBase
             return result;
         }
 
+        if (_gridSystem.IsConnect(originCoord, room.GetSize(), GetPlacedRooms()) == false)
+        {
+            return PlacementResult.WrongCellType;
+        }
+
         // 돈 부족도 배치 불가로 (고스트 빨강)
         if (_currencyService.IsAffordable(room.BuildCost) == false)
         {
@@ -295,6 +300,12 @@ public class BuildGridViewModel : ViewModelBase
             return result;
         }
 
+        if (_gridSystem.IsConnect(originCoord, size, GetPlacedRooms()) == false)
+        {
+            UIManager.Inst.OpenInfoText("다른 방이나 계단에 연결되도록 배치해야 합니다!");
+            return PlacementResult.WrongCellType;
+        }
+
         if (_currencyService.IsAffordable(roomData.BuildCost) == false)
         {
             return PlacementResult.NotEnoughGold;
@@ -337,6 +348,11 @@ public class BuildGridViewModel : ViewModelBase
             return false;
         }
 
+        if (!_gridSystem.CanDemolishRoom(target, GetPlacedRooms()))
+        {
+            UIManager.Inst.OpenInfoText("이 방을 철거하면 다른 방으로 이동할 수 없습니다!");
+            return false;
+        }
 
         PlacedRoomData removed = _buildGridModel.RemoveRoomAt(coord, _gridSystem);
 
@@ -380,27 +396,35 @@ public class BuildGridViewModel : ViewModelBase
     {
         if (_pickedRoom != null)
         {
-            return false;   
+            return false;
         }
 
         PlacedRoomData target = _buildGridModel.GetRoomAt(coord);
-
-        if (target != null && IsStair(target.RoomId) == true)
+        if (target == null)
         {
-            Debug.Log("[BuildGridViewModel] 계단은 이동할 수 없음");
+            return false;
+        }
+
+        if (IsStair(target.RoomId))
+        {
+            UIManager.Inst.OpenInfoText("계단은 이동할 수 없습니다.");
+            return false;
+        }
+
+        if (!_gridSystem.CanDemolishRoom(target, GetPlacedRooms()))
+        {
+            UIManager.Inst.OpenInfoText("이 방을 옮기면 다른 방으로 이동할 수 없습니다!");
             return false;
         }
 
         PlacedRoomData room = _buildGridModel.RemoveRoomAt(coord, _gridSystem);
-
         if (room == null)
         {
-            return false;   
+            return false;
         }
 
         _pickedRoom = room;
 
-        // 뷰가 원래 방 오브젝트를 치우도록 철거 이벤트 재활용
         if (OnRemoveRoom != null)
         {
             OnRemoveRoom.Invoke(room);
@@ -437,7 +461,13 @@ public class BuildGridViewModel : ViewModelBase
 
         if (result != PlacementResult.Success)
         {
-            return false;   
+            return false;
+        }
+
+        if (_gridSystem.IsConnect(newOrigin, size, GetPlacedRooms()) == false)
+        {
+            UIManager.Inst.OpenInfoText("다른 방이나 계단에 연결되도록 배치해야 합니다!");
+            return false;
         }
 
         PlacedRoomData moved = new PlacedRoomData();
@@ -481,7 +511,19 @@ public class BuildGridViewModel : ViewModelBase
             return PlacementResult.WrongCellType;
         }
 
-        return _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem, roomData.IsAnyCellType());
+        PlacementResult result = _buildGridModel.CheckPlaceable(newOrigin, roomData.GetSize(), roomData.GetRequiredCellType(), _gridSystem, roomData.IsAnyCellType());
+
+        if (result != PlacementResult.Success)
+        {
+            return result;
+        }
+
+        if (_gridSystem.IsConnect(newOrigin, roomData.GetSize(), GetPlacedRooms()) == false)
+        {
+            return PlacementResult.WrongCellType;
+        }
+
+        return PlacementResult.Success;
     }
 
     //집고 있던 방 환불
@@ -638,8 +680,6 @@ public class BuildGridViewModel : ViewModelBase
         return roomId == STAIR_ROOM_ID;
     }
 
-
-
     // 평소(비건설) 상태에서 그리드를 클릭했을 때 처리
     public void HandleNormalClick(GridCoord coord)
     {
@@ -689,7 +729,6 @@ public class BuildGridViewModel : ViewModelBase
         }
 
         player.BuildGridData = _buildGridModel.GetSaveData();
-        //SaveManager.Inst.RequestSaveData(player);
     }
 
     //그리드 불러오기
@@ -777,6 +816,7 @@ public class BuildGridViewModel : ViewModelBase
         }
         return IsRoomBuilt(room.RequiredRoomID);
     }
+
     // 해당 방 타입이 그리드에 하나라도 건설돼 있는지
     private bool IsRoomBuilt(string roomId)
     {
@@ -790,6 +830,7 @@ public class BuildGridViewModel : ViewModelBase
         }
         return false;
     }
+
     // 해금된 건설 가능 방 목록 (건설 메뉴가 이걸로 버튼 생성)
     public List<string> GetUnlockedRoomIds()
     {
@@ -803,6 +844,4 @@ public class BuildGridViewModel : ViewModelBase
         }
         return result;
     }
-
-
 }
