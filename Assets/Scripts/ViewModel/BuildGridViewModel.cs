@@ -55,6 +55,8 @@ public class BuildGridViewModel : ViewModelBase
     private string _selectedRoomId;
     private bool _isRoomSelectMode;
 
+    private HashSet<string> _shownEffectRoomIds = new HashSet<string>();
+
     public bool IsBuildMode
     {
         get => _isBuildMode;
@@ -256,6 +258,7 @@ public class BuildGridViewModel : ViewModelBase
     public void EnterBuildMode()
     {
         IsBuildMode = true;
+        _shownEffectRoomIds.Clear();
     }
 
     //건설모드 종료
@@ -334,6 +337,13 @@ public class BuildGridViewModel : ViewModelBase
         SaveGrid();
         Debug.Log($"[BuildGridViewModel] 방 배치 성공: {roomId} @ {originCoord} (-{roomData.BuildCost}G)");
         SoundManager.Inst.PlaySFX("Construct");
+
+        if (_shownEffectRoomIds.Contains(roomId) == false && string.IsNullOrEmpty(roomData.EffectDescription) == false)
+        {
+            UIManager.Inst.OpenInfoText(roomData.EffectDescription);
+            _shownEffectRoomIds.Add(roomId);
+        }
+
         return PlacementResult.Success;
     }
 
