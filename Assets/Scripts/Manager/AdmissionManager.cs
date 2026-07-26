@@ -195,6 +195,7 @@ public class AdmissionManager : SingletonBase<AdmissionManager>
         HeroStat heroStat = new HeroStat {HeroID = heroId, Affection = 50, Satisfaction = 50};
 
         playerModel.HeroStats.Add(heroStat);
+
         return true;
     }
 

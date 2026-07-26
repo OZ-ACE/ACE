@@ -5,6 +5,7 @@ public class ScheduleEvaluator
     private const int SCORE_SUN = 5;
     private const int SCORE_SLEEP = 10;
     private const int SCORE_SHOWER = 5;
+    
 
     public static void EvaluateDailySchedule(HeroModel heroModel)
     {
@@ -13,6 +14,7 @@ public class ScheduleEvaluator
         int sunCount = 0;
         int sleepCount = 0;
         int showerCount = 0;
+        int restCount = 0;
 
         for (int i = 0; i < states.Length; i++)
         {
@@ -28,6 +30,10 @@ public class ScheduleEvaluator
 
                 case ScheduleState.Shower:
                     showerCount++;
+                    break;
+
+                case ScheduleState.Rest:
+                    restCount++;
                     break;
             }
         }
@@ -71,6 +77,7 @@ public class ScheduleEvaluator
         heroModel.Satisfaction = Mathf.Clamp(heroModel.Satisfaction + deltaSatisfaction, 0, 100);
         heroModel.Affection = Mathf.Clamp(heroModel.Affection + deltaAffection, 0, 100);
 
+        GameManager.Inst.Services.HeroRequestService.EvaluateScheduleRequest(heroModel, sunCount, sleepCount, showerCount, restCount);
         heroModel.SaveHeroProgress();
 
         Debug.Log($"햇빛:{sunCount}, 수면:{sleepCount}, 샤워:{showerCount} 만족:{deltaSatisfaction}, 호감:{deltaAffection}");
