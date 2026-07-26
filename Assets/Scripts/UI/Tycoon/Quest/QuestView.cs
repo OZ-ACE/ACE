@@ -171,7 +171,7 @@ public class QuestView : ViewBase
     private void OnClickHeroRequestShortcut()
     {
         HeroRequestModel request = _heroRequestService.GetCurrentRequest();
-
+        Debug.Log($"[QuestView] 일정 바로가기 실행: {request.HeroId}");
         if (request == null)
         {
             return;

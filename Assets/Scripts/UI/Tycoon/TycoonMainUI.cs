@@ -308,9 +308,18 @@ public class TycoonMainUI : UIBase
 
     public void OpenHeroSchedule(string heroId)
     {
+        Debug.Log($"[TycoonMainUI] 영웅 일정 열기: {heroId}");
+
         ChangePanel(TycoonPanelType.Hero);
 
         HeroUI heroUI = Panel_Hero.GetComponent<HeroUI>();
+
+        if (heroUI == null)
+        {
+            Debug.LogError("[TycoonMainUI] Panel_Hero에서 HeroUI를 찾지 못했습니다.");
+            return;
+        }
+
         heroUI.OpenHeroSchedule(heroId);
     }
 

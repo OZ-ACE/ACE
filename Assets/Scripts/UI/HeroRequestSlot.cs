@@ -20,9 +20,28 @@ public class HeroRequestSlot : MonoBehaviour
     [SerializeField] private Image Image_Progress;
     [SerializeField] private Image Image_Profile;
 
+    [SerializeField] private Button Button_Shortcut;
+
     public Action OnClickShortcut;
 
     private const string EVENT_LABEL = "[돌발 이벤트]";
+
+    private void Awake()
+    {
+        Button_Shortcut.onClick.AddListener(OnClickGoToSchedule);
+    }
+
+    private void OnDestroy()
+    {
+        Button_Shortcut.onClick.RemoveListener(OnClickGoToSchedule);
+    }
+
+    public void OnClickGoToSchedule()
+    {
+        Debug.Log("HeroRequestSlot - 일정 바로가기 클릭");
+
+        OnClickShortcut?.Invoke();
+    }
 
     public void SetData(HeroRequestModel requestModel, HeroRequestData requestData, int currentHour)
     {
@@ -109,11 +128,6 @@ public class HeroRequestSlot : MonoBehaviour
             Image_Profile.sprite = sprite;
             Image_Profile.enabled = true;
         });
-    }
-
-    public void OnClickGoToSchedule()
-    {
-        OnClickShortcut?.Invoke();
     }
 
     public void Clear()
