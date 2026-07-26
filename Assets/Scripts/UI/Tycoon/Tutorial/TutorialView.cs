@@ -13,6 +13,7 @@ public class TutorialView : ViewBase
     [SerializeField] private Button Button_Next;
     [SerializeField] private Button Button_Prev;
     [SerializeField] private Toggle Toggle_Ignore;
+    [SerializeField] private Button Button_Close;
     private TutorialViewModel _viewModel;
     public void Bind(TutorialViewModel viewModel)
     {
@@ -32,6 +33,9 @@ public class TutorialView : ViewBase
         Button_Prev.onClick.AddListener(OnClickPrev);
         Toggle_Ignore.onValueChanged.RemoveListener(OnToggleIgnore);
         Toggle_Ignore.onValueChanged.AddListener(OnToggleIgnore);
+        Button_Close.onClick.RemoveListener(OnClickClose);
+        Button_Close.onClick.AddListener(OnClickClose);
+
         Bind(GameManager.Inst.Services.TutorialService.GetTutorialViewModel());
     }
     private void OnDestroy()
@@ -102,10 +106,16 @@ public class TutorialView : ViewBase
             UIManager.Inst.CloseTutorialUI();
         }
     }
-
     private void OnClickPrev()
     {
         _viewModel.GoPrevPage();   // 첫 장이면 무시됨
+    }
+
+    // 어느 페이지든 즉시 닫기 (다시 보지 않기 체크 반영)
+    private void OnClickClose()
+    {
+        _viewModel.ApplyIgnore();
+        UIManager.Inst.CloseTutorialUI();
     }
 
 
