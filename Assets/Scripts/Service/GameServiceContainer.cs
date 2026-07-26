@@ -1,4 +1,6 @@
-﻿public class GameServiceContainer
+﻿using UnityEngine;
+
+public class GameServiceContainer
 {
     // 전역 재화 서비스
     public ICurrencyService CurrencyService { get; private set; }
@@ -24,6 +26,7 @@
     // 퀘스트 뷰모델 보관 서비스
     public QuestService QuestService { get; private set; }
     public RoomAssignmentService RoomAssignmentService { get; private set; }
+    public HeroRequestService HeroRequestService { get; private set; }
 
 
     // 영웅로스터 뷰모델 보관 서비스
@@ -47,11 +50,15 @@
         RosterService = new RosterService();
         WeeklyEvaluationService = new WeeklyEvaluationService(DayService);
         TutorialService = new TutorialService();
+        HeroRequestService = new HeroRequestService();
+
+        DayService.OnChangeDay += HeroRequestService.OnChangeDay;
+        DayService.OnChangeHour += HeroRequestService.OnChangeHour;
+        Debug.Log("[GameServiceContainer] HeroRequestService 날짜/시간 이벤트 연결 완료");
     }
 
     public void Release()
     {
         //EpisodeService?.Release();
     }
-
 }

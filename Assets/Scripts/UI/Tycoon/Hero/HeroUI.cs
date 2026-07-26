@@ -109,4 +109,24 @@ public class HeroUI : UIBase
 
         HeroHotBar.OpenHotBar(_currentVM);
     }
+
+    public HeroViewModel GetHeroViewModel(string heroId)
+    {
+        if (_heroVMs.TryGetValue(heroId, out HeroViewModel vm))
+        {
+            return vm;
+        }
+
+        return null;
+    }
+
+    public void OpenHeroSchedule(string heroId)
+    {
+        if (_heroVMs.TryGetValue(heroId, out HeroViewModel heroVM) == false)
+        {
+            return;
+        }
+
+        SelectHeroSlot(heroVM);
+    }
 }

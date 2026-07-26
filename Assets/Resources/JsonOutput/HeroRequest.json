@@ -1,0 +1,82 @@
+[
+  {
+    "ID": "hero_request_001",
+    "HeroId": "hero_01",
+    "RequestName": "왕년엔 말이야",
+    "Description": "운동은 이제 지겨운데 바깥 공기는 쐬고 싶어. 산책만 살짝 해볼까?",
+    "RequiredSchedule": "Sun",
+    "RequiredHour": 2,
+    "RewardAffection": 20,
+    "RewardSatisfaction": 0
+  },
+  {
+    "ID": "hero_request_002",
+    "HeroId": "hero_01",
+    "RequestName": "휴식이 필요해",
+    "Description": "오늘은 쉬고 싶어! 몰라 그냥 쉬고 싶어!",
+    "RequiredSchedule": "Rest",
+    "RequiredHour": 2,
+    "RewardAffection": 0,
+    "RewardSatisfaction": 15
+  },
+  {
+    "ID": "hero_request_003",
+    "HeroId": "hero_02",
+    "RequestName": "혼자만의 시간",
+    "Description": "나 오늘 파업이야~ 거울이 있다면 랜딩 포즈나 연습할래.",
+    "RequiredSchedule": "Sleep",
+    "RequiredHour": 2,
+    "RewardAffection": 20,
+    "RewardSatisfaction": 0
+  },
+  {
+    "ID": "hero_request_004",
+    "HeroId": "hero_03",
+    "RequestName": "444",
+    "Description": "설명4",
+    "RequiredSchedule": "Rest",
+    "RequiredHour": 2,
+    "RewardAffection": 20,
+    "RewardSatisfaction": 0
+  },
+  {
+    "ID": "hero_request_005",
+    "HeroId": "hero_04",
+    "RequestName": "깔끔함이 생명",
+    "Description": "기분 전환이 필요하군. 깨끗하게 씻고 나면 좀 나아질 것 같아.",
+    "RequiredSchedule": "Shower",
+    "RequiredHour": 1,
+    "RewardAffection": 0,
+    "RewardSatisfaction": 15
+  },
+  {
+    "ID": "hero_request_006",
+    "HeroId": "hero_05",
+    "RequestName": "광합성 충전",
+    "Description": "오늘따라 몸이 축축 처지네. 햇빛을 받으면 기운이 날 것 같아!",
+    "RequiredSchedule": "Sun",
+    "RequiredHour": 2,
+    "RewardAffection": 20,
+    "RewardSatisfaction": 0
+  },
+  {
+    "ID": "hero_request_007",
+    "HeroId": "hero_06",
+    "RequestName": "잠깐만 쉬어갈게",
+    "Description": "계속 움직였더니 지쳤어. 잠시 편하게 쉬고 싶어.",
+    "RequiredSchedule": "Rest",
+    "RequiredHour": 3,
+    "RewardAffection": 20,
+    "RewardSatisfaction": 0
+  },
+  {
+    "ID": "hero_request_008",
+    "HeroId": "hero_07",
+    "RequestName": "아무도 깨우지 마",
+    "Description": "오늘은 유난히 피곤하군. 충분히 잘 수 있도록 해줘.",
+    "RequiredSchedule": "Sleep",
+    "RequiredHour": 3,
+    "RewardAffection": 0,
+    "RewardSatisfaction": 15
+  }
+]

@@ -34,6 +34,7 @@ public class GameDataManager : SingletonBase<GameDataManager>
         LoadData<Loading>("Loading");
         LoadData<BattleConfig>("BattleConfig");
         LoadData<QuestData>("Quest");
+        LoadData<HeroRequestData>("HeroRequest");
         LoadData<Tutorial>("Tutorial");
     }
 
