@@ -411,6 +411,7 @@ MonoBehaviour:
   Text_Description: {fileID: 5886841994340997415}
   Text_Cost: {fileID: 7227392406951086213}
   Text_Person: {fileID: 667739427885941376}
+  Text_Effect: {fileID: 935751438819317144}
 --- !u!1 &3594726711168936908
 GameObject:
   m_ObjectHideFlags: 0

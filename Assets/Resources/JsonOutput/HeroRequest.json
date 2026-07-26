@@ -32,8 +32,8 @@
   {
     "ID": "hero_request_004",
     "HeroId": "hero_03",
-    "RequestName": "444",
-    "Description": "설명4",
+    "RequestName": "눈감고 잘 시간",
+    "Description": "눈도 좀 쉬어줘야 건강을 유지한다고.. 특히 요즘같은 현대사회에는 말야!",
     "RequiredSchedule": "Rest",
     "RequiredHour": 2,
     "RewardAffection": 20,

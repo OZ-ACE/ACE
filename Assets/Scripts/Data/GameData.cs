@@ -109,6 +109,7 @@ public class RoomData : GameDataBase
     public string RequiredCellType;
     public int RequiredFloor;       
     public string EffectType;
+    public string SimpleDescription;
     public string EffectDescription;
     public string PrefabPath;
     public int MaxCapacity;

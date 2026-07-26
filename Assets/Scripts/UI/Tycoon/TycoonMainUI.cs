@@ -102,11 +102,14 @@ public class TycoonMainUI : UIBase
         GameManager.Inst.Services.DayService.OnEndDay += EndDay;
         GameManager.Inst.Services.QuestService.GetQuestViewModel().OnChangeQuestProgress += OnQuestCompleted;
 
-        _heroRequestService = GameManager.Inst.Services.HeroRequestService;
-
-        if (_heroRequestService != null)
+        int currentHour = GameManager.Inst.Services.DayService.CurrentHour;
+        if (currentHour < 24)
         {
-            _heroRequestService.OnHeroRequestChanged += OnHeroRequestChanged;
+            SetButtonInteractable(true);
+        }
+        else
+        {
+            SetButtonInteractable(false);
         }
 
         SetGoldText();

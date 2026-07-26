@@ -14,6 +14,7 @@ public class ConstructSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Text_Description;
     [SerializeField] private TextMeshProUGUI Text_Cost;
     [SerializeField] private TextMeshProUGUI Text_Person;
+    [SerializeField] private TextMeshProUGUI Text_Effect;
 
     private BuildGridViewModel _viewModel;
     private string _roomId;
@@ -44,6 +45,16 @@ public class ConstructSlot : MonoBehaviour
         {
             Text_Person.gameObject.SetActive(true);
             Text_Person.text = $"{roomData.MaxCapacity}명";
+        }
+
+        if (string.IsNullOrEmpty(roomData.SimpleDescription))
+        {
+            Text_Effect.gameObject.SetActive(false);
+        }
+        else
+        {
+            Text_Effect.gameObject.SetActive(true);
+            Text_Effect.text = $"- {roomData.SimpleDescription}";
         }
 
         // 비활성 부모에서 Instantiate되면 Awake가 안 도니 여기서 등록
