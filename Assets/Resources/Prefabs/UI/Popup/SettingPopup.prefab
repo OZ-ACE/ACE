@@ -4212,7 +4212,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1259793787578362517, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_text
-      value: "\uD29C\uD1A0\uB9AC\uC5BC \n\uB2E4\uC2DC\uBCF4\uAE30"
+      value: "\uD29C\uD1A0\uB9AC\uC5BC"
       objectReference: {fileID: 0}
     - target: {fileID: 2571307544323183325, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_Pivot.x
