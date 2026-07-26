@@ -156,7 +156,6 @@ public class DayService
     private void EvaluateHeroSchedule()
     {
         PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
-
         RoomAssignmentService roomService = GameManager.Inst.Services.RoomAssignmentService;
         BuildGridModel gridModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel().BuildGridModel;
 
@@ -165,8 +164,18 @@ public class DayService
 
         foreach (HeroStat heroStat in player.HeroStats)
         {
-            HeroModel heroModel = new HeroModel();
-            heroModel.LoadHeroData(heroStat.HeroID);
+            HeroModel heroModel = null;
+            var agent = ObjectManager.Inst.GetSpawnAgent(heroStat.HeroID);
+
+            if (agent != null && agent.HeroModel != null)
+            {
+                heroModel = agent.HeroModel;
+            }
+            else
+            {
+                heroModel = new HeroModel();
+                heroModel.LoadHeroData(heroStat.HeroID);
+            }
 
             bool isBedroomAdjacent = false;
             long bedroomInstanceId = roomService.GetAssignedRoomInstanceId(heroStat.HeroID);
@@ -174,7 +183,6 @@ public class DayService
             if (bedroomInstanceId > 0)
             {
                 PlacedRoomData bedroom = gridModel.GetRoomByInstanceId(bedroomInstanceId);
-
                 if (bedroom != null)
                 {
                     isBedroomAdjacent = gridModel.HasAdjacentSameTypeRoom(bedroom);
