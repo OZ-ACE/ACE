@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class SettlementView : ViewBase
 {
     [Header("텍스트")]
@@ -10,21 +11,24 @@ public class SettlementView : ViewBase
     [SerializeField] private TextMeshProUGUI Text_TodayFragment;
     [SerializeField] private TextMeshProUGUI Text_TotalFragment;
     [SerializeField] private TextMeshProUGUI Text_Gold;
+
     [Header("버튼")]
     [SerializeField] private Button Button_Confirm;
     [SerializeField] private Button Button_Close;
+
     [Header("업무평가")]
     [SerializeField] private WorkEvaluationConfig Config_Evaluation;
     [SerializeField] private TextMeshProUGUI Text_OverallGrade;
     [SerializeField] private TextMeshProUGUI Text_HeroManageGrade;
     [SerializeField] private TextMeshProUGUI Text_GoldGrade;
     [SerializeField] private TextMeshProUGUI Text_FragmentGrade;
+
     [Header("영웅별 평가 슬롯")]
     [SerializeField] private SettlementHeroSlot Prefab_HeroSlot;
     [SerializeField] private Transform Transform_HeroSlotParent;
     private List<SettlementHeroSlot> _heroSlots = new List<SettlementHeroSlot>();
     private SettlementViewModel _viewModel;
-    /// <summary> 뷰모델 바인딩 </summary>
+
     public void Bind(SettlementViewModel viewModel)
     {
         if (_viewModel != null)
@@ -152,9 +156,12 @@ public class SettlementView : ViewBase
             UIManager.Inst.OpenWeeklyEvaluationUI();
         }
 
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
+
         switch (result)
         {
             case GameOverType.GameOver:
+                playerModel.EndingType = EndingType.GameOver;
                 GameManager.Inst.SetDialogueID("GameOver_2_01");
                 ObjectManager.Inst.ExitOffice();
                 UIManager.Inst.CloseTycoonMainUI();
@@ -171,11 +178,15 @@ public class SettlementView : ViewBase
             case GameOverType.None:
                 break;
         }
+
+        SaveManager.Inst.RequestSaveData(SaveManager.Inst.CurrentPlayerModel);
     }
+
     private void OnClickClose()
     {
         UIManager.Inst.CloseSettlementUI();
     }
+
     // 영웅 수만큼 슬롯을 복제해 채운다
     private void RefreshHeroSlots()
     {

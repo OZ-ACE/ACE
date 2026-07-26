@@ -48,7 +48,6 @@ public class GameOver : UIBase
     {
         UIManager.Inst.InitStartUI();
 
-        SaveManager.Inst.RequestSaveData(SaveManager.Inst.CurrentPlayerModel);
         UIManager.Inst.CloseGameOver();
     }
 }
