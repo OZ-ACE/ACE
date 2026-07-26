@@ -103,16 +103,19 @@ public class QuestViewModel : ViewModelBase
         foreach (QuestData quest in QuestList)
         {
             QuestProgressModel progress = FindProgress(quest.ID);
+
             if (progress == null)
             {
                 continue;
             }
-            if (progress.State == (int)QuestState.Completed || progress.State == (int)QuestState.Rewarded)
+
+            if (progress.State == (int)QuestState.Completed ||
+                progress.State == (int)QuestState.Rewarded)
             {
                 continue;
             }
 
-            if (IsUnlocked(quest) == true)
+            if (IsUnlocked(quest))
             {
                 progress.State = (int)QuestState.InProgress;
             }
@@ -122,7 +125,6 @@ public class QuestViewModel : ViewModelBase
             }
         }
     }
-
     private bool IsUnlocked(QuestData quest)
     {
         if (quest.HasRequiredQuest() == false)
@@ -185,6 +187,8 @@ public class QuestViewModel : ViewModelBase
             {
                 progress.CurrentCount = quest.ConditionCount;
                 progress.State = (int)QuestState.Completed;
+                NotifyProgress();
+
                 Debug.Log($"[QuestViewModel] 퀘스트 달성: {quest.QuestName}");
             }
             isChanged = true;

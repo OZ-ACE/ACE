@@ -13,7 +13,6 @@ public class HeroRequestService
 
     public event Action OnHeroRequestChanged;
 
-
     public void TryCreateDailyRequest(int currentDay)
     {
         if (PlayerModel == null)
