@@ -111,13 +111,45 @@ public class ScheduleViewModel : ViewModelBase
         GameManager.Inst.Services.QuestService.GetQuestViewModel().ReportProgress(QuestConditionType.Schedule, state.ToString(), 1);
     }
 
-    public void SaveAndApply()
+    public void SaveAndApplyOne()
+    {
+        if (_hero == null)
+        {
+            return;
+        }
+
+        ApplyHeroModel(_hero);
+    }
+
+    public void SaveAndApplyAll(List<HeroModel> targetHeroes)
+    {
+        if (targetHeroes == null || targetHeroes.Count == 0)
+        {
+            return;
+        }
+
+        foreach (HeroModel hero in targetHeroes)
+        {
+            if (hero == null)
+            {
+                continue;
+            }
+
+            ApplyHeroModel(hero);
+        }
+    }
+
+    private void ApplyHeroModel(HeroModel heroModel)
     {
         for (int i = 0; i < 24; i++)
         {
-            _hero.HourlyStates[i] = _editingStates[i];
+            if (IsEditable(i))
+            {
+                heroModel.HourlyStates[i] = _editingStates[i];
+            }
         }
 
-        _hero.OnUpdateSchedule?.Invoke();
+        heroModel.OnUpdateSchedule?.Invoke();
+        heroModel.SaveHeroProgress();
     }
 }

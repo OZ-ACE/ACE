@@ -60,7 +60,8 @@ MonoBehaviour:
   Button_Cure: {fileID: 5713341348593492792}
   Button_Sleep: {fileID: 7524875242840095147}
   Button_Gym: {fileID: 7190925164296902210}
-  Button_Confirm: {fileID: 6739525290030033603}
+  Button_One: {fileID: 6739525290030033603}
+  Button_All: {fileID: 7649111988514941624}
   Button_Close: {fileID: 1397537179782759889}
   Color_Shower: {r: 0.93, g: 0.93, b: 0.88, a: 1}
   Color_Sun: {r: 0.6, g: 0.85, b: 0.6, a: 1}
@@ -2173,13 +2174,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8452054073505864180, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_Name
-      value: Confirm Button (1)
+      value: All Button
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
+--- !u!114 &7649111988514941624 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3778551679632774493, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
+  m_PrefabInstance: {fileID: 6797909206544089061}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!224 &9077032530795867448 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2571307544323183325, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
@@ -2455,7 +2467,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8452054073505864180, guid: e287641613a576a4a8dcb7b41506c07e, type: 3}
       propertyPath: m_Name
-      value: Confirm Button
+      value: One Button
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
