@@ -7,7 +7,7 @@
     "ConditionTargetID": "Room_Sleep",
     "ConditionCount": 3,
     "RewardType": "Gold",
-    "RewardAmount": 500,
+    "RewardAmount": 800,
     "RequiredQuestID": null,
     "DialogueID": null
   },
@@ -19,7 +19,7 @@
     "ConditionTargetID": "Room_Office",
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 1000,
+    "RewardAmount": 1300,
     "RequiredQuestID": "Quest_01_01",
     "DialogueID": null
   },
@@ -31,7 +31,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 3,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_01_02",
     "DialogueID": null
   },
@@ -43,7 +43,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_01_03",
     "DialogueID": null
   },
@@ -55,7 +55,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 1000,
     "RequiredQuestID": "Quest_01_04",
     "DialogueID": null
   },
@@ -67,7 +67,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 800,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_01_05",
     "DialogueID": null
   },
@@ -79,7 +79,7 @@
     "ConditionTargetID": "Sleep",
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 800,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_01_06",
     "DialogueID": null
   },
@@ -91,7 +91,7 @@
     "ConditionTargetID": "Sun",
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 800,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_01_06",
     "DialogueID": null
   },
@@ -103,7 +103,7 @@
     "ConditionTargetID": "Shower",
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 800,
+    "RewardAmount": 900,
     "RequiredQuestID": "Quest_01_06",
     "DialogueID": null
   },
@@ -115,7 +115,7 @@
     "ConditionTargetID": "Room_Battle",
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 800,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_02_03",
     "DialogueID": null
   },
@@ -139,7 +139,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 800,
+    "RewardAmount": 1000,
     "RequiredQuestID": "Quest_02_05",
     "DialogueID": null
   },
@@ -175,7 +175,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 550,
     "RequiredQuestID": "Quest_02_08",
     "DialogueID": null
   },
@@ -199,7 +199,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_02_08",
     "DialogueID": null
   },
@@ -223,7 +223,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 500,
     "RequiredQuestID": "Quest_03_04",
     "DialogueID": "Quest_03_01"
   },
@@ -235,7 +235,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 3,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_03_05",
     "DialogueID": null
   },
@@ -271,7 +271,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 600,
     "RequiredQuestID": "Quest_04_03",
     "DialogueID": null
   },
@@ -283,7 +283,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 400,
     "RequiredQuestID": "Quest_05_01",
     "DialogueID": "Quest_05_01"
   },
@@ -295,7 +295,7 @@
     "ConditionTargetID": null,
     "ConditionCount": 1,
     "RewardType": "Gold",
-    "RewardAmount": 300,
+    "RewardAmount": 400,
     "RequiredQuestID": "Quest_06_01",
     "DialogueID": "Ending"
   },
