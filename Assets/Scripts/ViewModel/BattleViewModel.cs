@@ -10,6 +10,9 @@ public class BattleViewModel : ViewModelBase
     public List<string> BattleLogs = new List<string>();
     public List<BattleActionModel> ActionQueue = new List<BattleActionModel>();
 
+    private const float GYM_ATTACK_MULTIPLIER = 1.1f;
+    private const string GYM_ROOM_ID = "Room_Gym";
+
     public event Action<BattleUnitModel> UnitHpChanged;
     public event Action<BattleUnitModel> UnitAttackStarted;
     public event Action<BattleUnitModel> UnitSkillStarted;
@@ -49,7 +52,18 @@ public class BattleViewModel : ViewModelBase
         unit.ID = data.ID;
         unit.IsHero = true;
         unit.Speed = data.Speed;
-        unit.AttackPower = data.AttackPower;
+      
+        BuildGridModel gridModel = GameManager.Inst.Services.BuildService.GetBuildGridViewModel().BuildGridModel;
+
+        if (gridModel.HasRoom(GYM_ROOM_ID) == true)
+        {
+            unit.AttackPower = Mathf.RoundToInt(data.AttackPower * GYM_ATTACK_MULTIPLIER);
+        }
+        else
+        {
+            unit.AttackPower = data.AttackPower;
+        }
+
         unit.MaxHp = data.MaxHp;
         unit.CurrentHp = data.MaxHp;
 
@@ -63,6 +77,7 @@ public class BattleViewModel : ViewModelBase
             unit.SkillIdList.Add(heroSkill.ID);
         }
 
+        Debug.Log($"[전투유닛] {unit.ID} 공격력:{unit.AttackPower} (체육관보유:{gridModel.HasRoom(GYM_ROOM_ID)})");
         return unit;
     }
 
