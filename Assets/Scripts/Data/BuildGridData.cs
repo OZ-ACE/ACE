@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 //배치된 방 1개의 저장 정보
 [Serializable]
@@ -68,6 +69,18 @@ public class PlacedRoomData
             OnUserCountChanged?.Invoke();
         }
     }
+
+    public Vector2Int GetSize()
+    {
+        var roomData = GameDataManager.Inst.GetData<RoomData>(RoomId);
+        if (roomData == null)
+        {
+            return Vector2Int.one;
+        }
+
+        Vector2 rawSize = roomData.GetSize();
+        return new Vector2Int(Mathf.RoundToInt(rawSize.x), Mathf.RoundToInt(rawSize.y));
+    }
 }
 
 //기본값과 다른 칸의 상태만 저장
@@ -86,5 +99,3 @@ public class BuildGridData
     public List<CellStateData> ChangedCells = new List<CellStateData>();
     public int UnlockedMinFloor;  
 }
-
-
