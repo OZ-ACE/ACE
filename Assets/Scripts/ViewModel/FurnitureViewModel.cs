@@ -44,6 +44,33 @@ public class FurnitureViewModel : ViewModelBase
         return false;
     }
 
+    public bool CanShowFurniture(string heroId)
+    {
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
+        if (playerModel == null)
+        {
+            return false;
+        }
+
+        if (playerModel.PendingHeroes != null)
+        {
+            for (int i = 0; i < playerModel.PendingHeroes.Count; i++)
+            {
+                PendingHeroData pending = playerModel.PendingHeroes[i];
+
+                if (pending != null && pending.HeroID == heroId)
+                {
+                    return false;
+                }
+            }
+        }
+
+        bool isAdmitted = IsHeroAdmitted(heroId);
+        bool isWaiting = IsHeroWaitingAdmission(heroId);
+
+        return isAdmitted || isWaiting;
+    }
+
     public bool IsHeroWaitingAdmission(string heroId)
     {
         PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
@@ -57,7 +84,7 @@ public class FurnitureViewModel : ViewModelBase
         {
             AdmissionCandidateSaveData candidate = playerModel.AdmissionCandidates[i];
 
-            if (candidate.HeroId == heroId && candidate.IsAdmitted == true)
+            if (candidate.HeroId == heroId && candidate.IsAdmitted)
             {
                 return true;
             }

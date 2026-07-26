@@ -17,7 +17,8 @@ public class ScheduleUI : UIBase
     [SerializeField] private Button Button_Sleep;
     [SerializeField] private Button Button_Gym;
 
-    [SerializeField] private Button Button_Confirm;
+    [SerializeField] private Button Button_One;
+    [SerializeField] private Button Button_All;
     [SerializeField] private Button Button_Close;
 
     [Header("버튼 색")]
@@ -44,7 +45,8 @@ public class ScheduleUI : UIBase
     {
         _scheduleVM = new ScheduleViewModel();
 
-        Button_Confirm.onClick.AddListener(OnClickConfirm);
+        Button_One.onClick.AddListener(OnClickApplyOne);
+        Button_All.onClick.AddListener(OnClickApplyAll);
         Button_Close.onClick.AddListener(OnClickClose);
 
         Button_Shower.onClick.AddListener(OnClickShower);
@@ -143,16 +145,78 @@ public class ScheduleUI : UIBase
         UpdateButtonColor(state);
     }
 
-    private void OnClickConfirm()
+    private void OnClickApplyOne()
     {
-        _scheduleVM.SaveAndApply();
+        _scheduleVM.SaveAndApplyOne();
+        UIManager.Inst.CloseScheduleUI();
+    }
 
+    private void OnClickApplyAll()
+    {
+        List<HeroModel> activeHeroes = GetActiveHeroModels();
+
+        if (activeHeroes.Count == 0)
+        {
+            return;
+        }
+
+        _scheduleVM.SaveAndApplyAll(activeHeroes);
         UIManager.Inst.CloseScheduleUI();
     }
 
     private void OnClickClose()
     {
         UIManager.Inst.CloseScheduleUI();
+    }
+
+    private List<HeroModel> GetActiveHeroModels()
+    {
+        List<HeroModel> heroModels = new List<HeroModel>();
+        PlayerModel playerModel = SaveManager.Inst.CurrentPlayerModel;
+        RoomAssignmentService roomService = GameManager.Inst.Services.RoomAssignmentService;
+
+        if (playerModel == null || playerModel.HeroStats == null)
+        {
+            return heroModels;
+        }
+
+        HashSet<string> pendingHeroIds = new HashSet<string>();
+        if (playerModel.PendingHeroes != null)
+        {
+            for (int i = 0; i < playerModel.PendingHeroes.Count; i++)
+            {
+                var pending = playerModel.PendingHeroes[i];
+
+                if (pending != null && !string.IsNullOrEmpty(pending.HeroID))
+                {
+                    pendingHeroIds.Add(pending.HeroID);
+                }
+            }
+        }
+
+        foreach (var heroStat in playerModel.HeroStats)
+        {
+            string heroId = heroStat.HeroID;
+
+            if (roomService != null && roomService.IsHeroAssigned(heroId) == false)
+            {
+                continue;
+            }
+
+            if (pendingHeroIds.Contains(heroId))
+            {
+                continue;
+            }
+
+            var spawnedAgent = ObjectManager.Inst.GetSpawnAgent(heroId);
+
+            if (spawnedAgent != null && spawnedAgent.HeroModel != null)
+            {
+                heroModels.Add(spawnedAgent.HeroModel);
+            }
+        }
+
+        return heroModels;
     }
 
     private void OnClickShower() => SetSelectedState(ScheduleState.Shower);

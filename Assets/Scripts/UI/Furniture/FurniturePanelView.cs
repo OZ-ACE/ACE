@@ -28,15 +28,10 @@ public class FurniturePanelView : MonoBehaviour
 
         foreach (FurnitureData furnitureData in furnitureList)
         {
-            bool isAdmitted = _viewModel.IsHeroAdmitted(furnitureData.HeroId);
-            bool isWaiting = _viewModel.IsHeroWaitingAdmission(furnitureData.HeroId);
-
-            if (!isAdmitted && !isWaiting)
+            if (_viewModel.CanShowFurniture(furnitureData.HeroId) == false)
             {
                 continue;
             }
-
-            bool canPurchase = isAdmitted && !isWaiting;
 
             GameObject slotObject = Instantiate(Prefab_FurnitureSlot, Transform_SlotParent);
 
@@ -53,7 +48,7 @@ public class FurniturePanelView : MonoBehaviour
             }
 
             _activeSlots.Add(slotView);
-            slotView.SetData(furnitureData, _viewModel, canPurchase);
+            slotView.SetData(furnitureData, _viewModel);
         }
     }
 

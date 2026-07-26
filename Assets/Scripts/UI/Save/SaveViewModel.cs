@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class SaveViewModel : ViewModelBase
 {
@@ -76,6 +77,7 @@ public class SaveViewModel : ViewModelBase
         AdmissionManager.Inst.Reload();
 
         GameManager.Inst.Services.BuildService.GetBuildGridViewModel().ReloadGrid();
+        ObjectManager.Inst.RestoreActiveHeroes().Forget();
         GameManager.Inst.Services.QuestService.ReloadQuest();
     }
 }
