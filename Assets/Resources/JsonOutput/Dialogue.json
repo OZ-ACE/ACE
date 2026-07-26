@@ -814,7 +814,7 @@
     "NextID": "Ending_Bad_13",
     "Speaker": "{PlayerName}",
     "SpeakerPath": "Prefabs/Character/NPC/Player",
-    "Content": "어, 어르신들...! 오즈 할아버지, 저에요! 매일 총명탕 달여드리던 보조사라고요! 저 기억 안 나세요?!",
+    "Content": "어, 어르신들...! 캡틴 물렁카 할아버지, 저에요! 매일 총명탕 달여드리던 보조사라고요! 저 기억 안 나세요?!",
     "Background": null,
     "BGM": null,
     "SFX": null
@@ -822,8 +822,8 @@
   {
     "ID": "Ending_Bad_13",
     "NextID": "Ending_Bad_14",
-    "Speaker": "{PlayerName}",
-    "SpeakerPath": "Prefabs/Character/NPC/Player",
+    "Speaker": "캡틴물렁카",
+    "SpeakerPath": "Prefabs/Character/Hero/hero_01",
     "Content": "보조사...? 글쎄... 잘 모르겠는데... 나한테 파스나 붙여주던 모르는 청년인가...",
     "Background": null,
     "BGM": null,
