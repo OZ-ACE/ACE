@@ -52,11 +52,22 @@ public class HeroHotBar : MonoBehaviour
 
     private void OnClickSchedule()
     {
+        OpenSchedule();
+    }
+
+    public void OpenSchedule()
+    {
         UIBase uiBase = UIManager.Inst.OpenScheduleUI();
 
         if (uiBase is ScheduleUI scheduleUI)
         {
             scheduleUI.OpenSchedule(_targetVM, GameManager.Inst.Services.DayService.CurrentHour);
         }
+    }
+
+    public void OpenSchedule(HeroViewModel heroVM)
+    {
+        OpenHotBar(heroVM);
+        OpenSchedule();
     }
 }

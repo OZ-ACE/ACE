@@ -202,3 +202,17 @@ public class Tutorial : GameDataBase
     public int Order;            // 그룹 내 페이지 순서
     public string ImagePath;
 }
+
+[Serializable]
+public class HeroRequestData : GameDataBase
+{
+    public string HeroId;
+    public string RequestName;
+    public string Description;
+
+    public ScheduleState RequiredSchedule;
+    public int RequiredHour;
+
+    public int RewardAffection;
+    public int RewardSatisfaction;
+}
