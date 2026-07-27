@@ -15,6 +15,7 @@ public class SkyView : MonoBehaviour
 
     [SerializeField] private SpriteRenderer SpriteRenderer_Sky;
     [SerializeField] private SpriteRenderer SpriteRenderer_Fade;
+    [SerializeField] private DNSkyBoxSwitcher SkyBoxSwitcher;
 
     [SerializeField] private SkySetting[] SkySettings;
 
@@ -68,6 +69,12 @@ public class SkyView : MonoBehaviour
 
     private void StartTransition(SkyTime targetState)
     {
+        if (SkyBoxSwitcher != null)
+        {
+            DNSkyboxType skyboxType = ConvertSkyboxType(targetState);
+            SkyBoxSwitcher.ChangeSkybox(skyboxType);
+        }
+
         SkySetting targetSetting = default;
         bool isFind = false;
 
@@ -90,6 +97,28 @@ public class SkyView : MonoBehaviour
         _skyCancel = new CancellationTokenSource();
 
         AnimateSky(targetSetting.SkySprite, _skyCancel).Forget();
+    }
+
+    private DNSkyboxType ConvertSkyboxType(SkyTime skyTime)
+    {
+        if (SkyBoxSwitcher == null)
+        {
+            return DNSkyboxType.Morning;
+        }
+
+        switch (skyTime)
+        {
+            case SkyTime.Morning:
+                return DNSkyboxType.Morning;
+            case SkyTime.Afternoon:
+                return DNSkyboxType.Day;
+            case SkyTime.Evening:
+                return DNSkyboxType.Dusk;
+            case SkyTime.Night:
+                return DNSkyboxType.Night;
+            default:
+                return DNSkyboxType.Day;
+        }
     }
 
     private async UniTaskVoid AnimateSky(Sprite target, CancellationTokenSource cancel)
