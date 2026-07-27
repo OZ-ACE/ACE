@@ -235,4 +235,24 @@ public class ShopViewModel : ViewModelBase
         Debug.Log($"[ShopViewModel] 판매 성공: {itemID} (+{sellPrice}G)");
         return SellResult.Success;
     }
+
+    // 모든 재고 1개로 초기화
+    public void ResetDailyStocks()
+    {
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+        if (player == null)
+        {
+            return;
+        }
+
+        foreach (ShopStockData stock in player.ShopStocks)
+        {
+            stock.RemainStock = 1;
+        }
+
+        if (OnPurchaseItem != null)
+        {
+            OnPurchaseItem.Invoke(string.Empty);
+        }
+    }
 }
