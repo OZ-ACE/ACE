@@ -179,6 +179,13 @@ public class SettlementView : ViewBase
                 break;
         }
 
+        ShopViewModel shopVM = GameManager.Inst.Services.ShopService.GetShopViewModel();
+
+        if (shopVM != null)
+        {
+            shopVM.ResetDailyStocks();
+        }
+
         SaveManager.Inst.RequestSaveData(SaveManager.Inst.CurrentPlayerModel);
     }
 
