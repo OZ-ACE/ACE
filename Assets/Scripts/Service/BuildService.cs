@@ -31,6 +31,10 @@ public class BuildService
         InitBuildSystem();
     }
 
+    public void ResetBuildSystem()
+    {
+        InitBuildSystem();
+    }
 
     //  그리드·모델·뷰모델 조립 후 저장 데이터 복원
     private void InitBuildSystem()

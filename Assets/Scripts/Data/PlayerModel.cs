@@ -19,6 +19,7 @@ public class PlayerModel
     public int HeroRequestScheduledDay;
     public int HeroRequestScheduledHour;
     public bool IsTutorialDisabled; // 이미 본 튜토리얼
+    public bool IsBattleTutorialDisabled;
 
     public BuildGridData BuildGridData = new BuildGridData();
     public List<ItemModel> Inventory = new List<ItemModel>();

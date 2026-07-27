@@ -97,6 +97,12 @@ public class HeroMovingAgent : MonoBehaviour
     private void UpdateSchedule()
     {
         int currentHour = GameManager.Inst.Services.DayService.CurrentHour;
+
+        if (currentHour >= 24)
+        {
+            currentHour = 23;
+        }
+
         ChangeTargetRoom(currentHour);
     }
 
@@ -116,6 +122,16 @@ public class HeroMovingAgent : MonoBehaviour
 
     private void ChangeTargetRoom(int hour)
     {
+        if (_heroModel == null || _heroModel.HourlyStates == null)
+        {
+            return;
+        }
+
+        if (hour < 0 || hour >= _heroModel.HourlyStates.Length)
+        {
+            return;
+        }
+
         ScheduleState state = _heroModel.HourlyStates[hour];
 
         CancelMoving();
