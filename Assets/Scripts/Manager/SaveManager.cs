@@ -117,6 +117,7 @@ public class SaveManager : SingletonBase<SaveManager>
         newPlayer.HeroStats = new List<HeroStat>();
 
         newPlayer.BuildGridData = new BuildGridData();
+
         newPlayer.QuestProgressList = SetDefaultQuest();
 
         CurrentPlayerModel = newPlayer;
@@ -294,12 +295,13 @@ public class SaveManager : SingletonBase<SaveManager>
     {
         if (IsInitialized == false)
         {
-            Debug.LogError("SaveManager 초기화 전에 슬롯을 불러올 수 없음.");
             return;
         }
 
         CurrentSlotIndex = slotIndex;
         CurrentPlayerModel = RequestLoadData(CurrentSlotIndex);
         IsPlayerDataLoaded = true;
+
+        GameManager.Inst.Services.BuildService.ResetBuildSystem();
     }
 }
