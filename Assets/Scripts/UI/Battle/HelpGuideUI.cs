@@ -12,12 +12,10 @@ public class HelpGuideUI : MonoBehaviour
     [SerializeField] private Toggle Toggle_DontShowAgain;
     [SerializeField] private Button Button_CloseGuide;
 
-    private const string DontShowAgainKey = "BattleHelpDontShowAgain";
-    private const int DontShowAgainOnValue = 1;
-    private const int DontShowAgainOffValue = 0;
-
     private RectTransform _rectTransform;
     private Action _onGuideClosed;
+
+    private bool _isDisabled = false;
 
     private void Awake()
     {
@@ -27,6 +25,11 @@ public class HelpGuideUI : MonoBehaviour
         {
             Button_CloseGuide.onClick.AddListener(OnClickCloseGuide);
         }
+    }
+
+    private void Start()
+    {
+        _isDisabled = SaveManager.Inst.CurrentPlayerModel.IsBattleTutorialDisabled;
     }
 
     private void OnDestroy()
@@ -89,7 +92,7 @@ public class HelpGuideUI : MonoBehaviour
 
         if (Toggle_DontShowAgain != null)
         {
-            Toggle_DontShowAgain.isOn = IsDontShowAgainOn();
+            Toggle_DontShowAgain.SetIsOnWithoutNotify(IsDontShowAgainOn());
         }
     }
 
@@ -121,7 +124,13 @@ public class HelpGuideUI : MonoBehaviour
 
     private bool IsDontShowAgainOn()
     {
-        return PlayerPrefs.GetInt(DontShowAgainKey, DontShowAgainOffValue) == DontShowAgainOnValue;
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+        if (player == null)
+        {
+            return false;
+        }
+
+        return player.IsBattleTutorialDisabled;
     }
 
     private void SaveDontShowAgain()
@@ -131,8 +140,11 @@ public class HelpGuideUI : MonoBehaviour
             return;
         }
 
-        PlayerPrefs.SetInt(DontShowAgainKey, Toggle_DontShowAgain.isOn ? DontShowAgainOnValue : DontShowAgainOffValue);
-        PlayerPrefs.Save();
+        PlayerModel player = SaveManager.Inst.CurrentPlayerModel;
+        if (player != null)
+        {
+            player.IsBattleTutorialDisabled = Toggle_DontShowAgain.isOn;
+        }
     }
 
     //패널 영역 안을 클릭했는지 판별한다
